@@ -1,0 +1,9 @@
+---
+alwaysApply: true
+---
+
+After making any code changes make sure to run the following exactly:
+
+`uv run ruff check --fix . && uv run ruff format . && uv run pytest`
+
+Fix any errors or issues you find and then rerun until everything passes cleanly.
