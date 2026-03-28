@@ -23,9 +23,51 @@ The final output of the project includes:
 
 Overall, this project provides a practical introduction to deep learning for NLP while staying closely connected to real-world assistant and agent systems.
 
+# Using uv in this repo
 
-# Python Setup
-Run the following command to set up the Python environment:
+This project uses **uv** to manage dependencies and the local Python environment.
+
+## Dependency management
+The main source of truth for dependencies is:
+
+- `pyproject.toml`
+- `uv.lock`
+
+The local environment lives in:
+
+- `.venv/`
+
+A `requirements.txt` file may also be generated for compatibility, but it should be treated as a secondary export rather than the main dependency definition.
+
+---
+
+## First-time setup
+
+Run the bootstrap script from the project root:
+
 ```bash
 ./scripts/bootstrap.sh
+```
+
+## one-time setup
+```bash
+./scripts/bootstrap.sh
+```
+## run the project
+```bash
+uv run python main.py
+```
+## run notebook
+```bash
+uv run jupyter notebook
+```
+
+## add a package
+```bash
+uv add seaborn
+```
+
+## sync environment after changes
+```bash
+uv sync
 ```
