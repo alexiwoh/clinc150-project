@@ -1,0 +1,22 @@
+[project]
+name = "clinc150-project"
+version = "0.1.0"
+description = "Intent classification and out-of-scope detection on CLINC150 using PyTorch"
+requires-python = ">=3.11"
+dependencies = [
+  "torch",
+  "datasets",
+  "scikit-learn",
+  "pandas",
+  "numpy",
+  "matplotlib",
+  "tqdm",
+  "jupyter",
+  "ipykernel",
+]
+
+[dependency-groups]
+dev = [
+  "pytest",
+  "ruff",
+]

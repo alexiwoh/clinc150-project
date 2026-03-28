@@ -38,6 +38,8 @@ clinc150-project/
 │   └── artifacts/
 ├── notebooks/
 │   └── exploration.ipynb
+├── scripts/
+│   └── bootstrap.sh
 ├── src/
 │   ├── config.py
 │   ├── constants.py

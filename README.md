@@ -22,3 +22,10 @@ The final output of the project includes:
 - comparison of model size, training time, and common error patterns
 
 Overall, this project provides a practical introduction to deep learning for NLP while staying closely connected to real-world assistant and agent systems.
+
+
+# Python Setup
+Run the following command to set up the Python environment:
+```bash
+./scripts/bootstrap.sh
+```
