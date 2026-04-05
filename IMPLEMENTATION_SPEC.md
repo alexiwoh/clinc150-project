@@ -1,9 +1,22 @@
 # Implementation Spec / Project To-Do
 
 ## Project Goal
-Build and compare lightweight deep learning models for **intent classification** and **out-of-scope detection** on the **CLINC150** dataset using **PyTorch**.
+Build and compare lightweight deep learning models for **assistant-style intent classification** and **out-of-scope detection** on the **CLINC150** dataset using **PyTorch**.
 
 This project is intentionally scoped to be realistic for a 4-week timeline while also leaving room to learn core PyTorch concepts. The focus is on building a clean, reproducible NLP deep learning pipeline for assistant-style query understanding rather than exploring too many architectures or datasets.
+
+---
+
+## Project Framing
+This project can be framed as a study of lightweight NLP architectures for assistant-style query understanding. The comparison loosely reflects different eras of practical NLP modeling: sparse feature baselines, convolutional sequence models, and recurrent sequence models. The main focus is not historical completeness, but understanding how different representation and sequence-modeling choices affect intent classification and out-of-scope robustness.
+
+---
+
+## Runtime and Hardware Notes
+- Prefer Apple Silicon GPU acceleration through PyTorch MPS when available, but do not make MPS a hard requirement for the repository to run.
+- Device selection should be handled centrally and safely, with fallback behavior if MPS is unavailable.
+- Data loading and batching should be configurable through project settings rather than hardcoded.
+- If parallel data loading is used, keep it configurable and benchmarked for local stability on macOS rather than assuming one fixed worker count is always optimal.
 
 ---
 
@@ -109,6 +122,7 @@ clinc150-project/
   - tqdm
 - Verify PyTorch works on local machine
 - If available, test Apple Silicon MPS acceleration
+- Keep device selection and optional parallel data loading configurable rather than hardcoded
 - Add a `requirements.txt` file and confirm the environment is reproducible
 
 ---
@@ -221,7 +235,19 @@ clinc150-project/
 - Plot validation accuracy curves
 - Save confusion matrix image
 - Optionally create bar chart comparing model performance
+- Optionally create a per-class accuracy bar chart
 - Save all figures in report-ready format
+
+---
+
+## Additional Report-Ready Outputs
+In addition to the core metrics and plots, generate the following:
+- per-class accuracy bar chart
+- table of the most frequently confused intent pairs
+- summary table focused specifically on OOS precision, recall, and F1
+- a small set of representative misclassified examples for qualitative discussion
+
+These outputs are intended to strengthen the Numerical Results chapter without increasing modeling complexity.
 
 ---
 
@@ -255,6 +281,7 @@ Prepare outputs for the final paper:
 - Tune dropout / hidden size / learning rate
 - Add parameter-count comparison
 - Add threshold analysis for OOS detection
+- Add simple confidence-threshold analysis for OOS detection
 
 Do not start stretch goals until the main three-model comparison is already complete.
 
