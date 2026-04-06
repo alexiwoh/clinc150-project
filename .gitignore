@@ -197,6 +197,10 @@ cython_debug/
 data/raw/clinc___clinc_oos/
 *.arrow
 
+# Model checkpoints — large binary files, reproducible by rerunning training.
+# Keep .gitkeep files to preserve directory structure.
+outputs/checkpoints/*.pt
+
 # PyPI configuration file
 .pypirc
 
