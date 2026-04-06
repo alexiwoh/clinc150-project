@@ -36,7 +36,7 @@ def _load_label_mappings() -> tuple[dict[str, int], dict[int, str]]:
 
 def _extract_splits(ds):  # noqa: ANN001
     """Extract raw texts and integer labels from CLINCDataset for each split.
-    
+
     Args:
         ds: The CLINCDataset instance.
 

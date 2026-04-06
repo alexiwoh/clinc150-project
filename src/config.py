@@ -52,3 +52,44 @@ class PreprocessingConfig:
 
 
 PREPROCESSING_CONFIG: PreprocessingConfig = PreprocessingConfig()
+
+
+@dataclass(frozen=True)
+class MLPBaselineConfig:
+    """Hyperparameters for the TF-IDF + MLP baseline model."""
+
+    hidden_dim: int = 512
+    second_hidden_dim: int | None = None
+    dropout_rate: float = 0.3
+    learning_rate: float = 1e-3
+    weight_decay: float = 0.0
+    batch_size: int = 64
+    max_epochs: int = 100
+    early_stopping_patience: int = 10
+    optimizer: str = "adam"
+    activation: str = "relu"
+    use_class_weights: bool = False
+    use_lr_scheduler: bool = False
+    random_seed: int = 42
+    monitor_metric: str = "val_macro_f1"
+    oos_strategy: str = "explicit_class"
+
+    def to_dict(self) -> dict:
+        """Serialize config to a plain dict for checkpoints and run summaries."""
+        return {
+            "hidden_dim": self.hidden_dim,
+            "second_hidden_dim": self.second_hidden_dim,
+            "dropout_rate": self.dropout_rate,
+            "learning_rate": self.learning_rate,
+            "weight_decay": self.weight_decay,
+            "batch_size": self.batch_size,
+            "max_epochs": self.max_epochs,
+            "early_stopping_patience": self.early_stopping_patience,
+            "optimizer": self.optimizer,
+            "activation": self.activation,
+            "use_class_weights": self.use_class_weights,
+            "use_lr_scheduler": self.use_lr_scheduler,
+            "random_seed": self.random_seed,
+            "monitor_metric": self.monitor_metric,
+            "oos_strategy": self.oos_strategy,
+        }

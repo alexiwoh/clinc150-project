@@ -10,6 +10,7 @@ from collections import Counter
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any, TypedDict
 
 import numpy as np
 import torch
@@ -34,6 +35,15 @@ _SPLIT_NAMES = ("train", "validation", "test")
 # ---------------------------------------------------------------------------
 # Typed containers
 # ---------------------------------------------------------------------------
+class PreprocessingArtifacts(TypedDict):
+    """Artifacts loaded from disk for inference-time reuse."""
+
+    vocab: Vocabulary
+    vectorizer: TfidfVectorizer
+    summary: dict[str, Any]
+    seq_length_stats: dict[str, Any]
+
+
 @dataclass(frozen=True)
 class Vocabulary:
     """Immutable vocabulary mapping tokens <-> integer ids."""
@@ -208,7 +218,7 @@ def pad_or_truncate(
 # ---------------------------------------------------------------------------
 # OOV / truncation stats helpers
 # ---------------------------------------------------------------------------
-def compute_oov_stats(tokenized_texts: list[list[str]], vocab: Vocabulary) -> dict:
+def compute_oov_stats(tokenized_texts: list[list[str]], vocab: Vocabulary) -> dict[str, int | float]:
     """Compute OOV (unknown-token which are out of vocabulary) statistics for a set of tokenized texts."""
     total = 0
     unknown = 0
@@ -221,7 +231,7 @@ def compute_oov_stats(tokenized_texts: list[list[str]], vocab: Vocabulary) -> di
     return {"total_tokens": total, "unknown_tokens": unknown, "oov_rate": round(rate, 6)}
 
 
-def compute_truncation_stats(lengths: list[int], max_len: int) -> dict:
+def compute_truncation_stats(lengths: list[int], max_len: int) -> dict[str, int | float]:
     """Compute how many sequences exceed *max_len*."""
     n = len(lengths)
     truncated = sum(1 for length in lengths if length > max_len)
@@ -310,7 +320,7 @@ def export_preprocessing_artifacts(
     return paths
 
 
-def load_preprocessing_artifacts(artifacts_dir: Path = ARTIFACTS_DIR) -> dict:
+def load_preprocessing_artifacts(artifacts_dir: Path = ARTIFACTS_DIR) -> PreprocessingArtifacts:
     """Load saved preprocessing artifacts for inference-time reuse."""
     vocab_path = artifacts_dir / "vocab.json"
     vocab_data = json.loads(vocab_path.read_text())
