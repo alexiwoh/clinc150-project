@@ -1,0 +1,100 @@
+split,label,scope,query
+train,greeting,in_scope,"how are you doing today, ai"
+train,greeting,in_scope,"why, hello bandit"
+train,greeting,in_scope,just wanted to say hi
+train,goodbye,in_scope,nice to speak with you
+train,goodbye,in_scope,ai goodbye
+train,goodbye,in_scope,i had fun speaking with you
+train,book_flight,in_scope,"can you find me a flight from portland, oregon to portland, maine for under $500 on delta"
+train,book_flight,in_scope,i'm looking for a roundtrip flight from afw to dgb for tomorrow until next week
+train,book_flight,in_scope,could you check and let me know roundtrip flights from dallas to houston for march 7 and march 20
+train,weather,in_scope,what is the weather like in sparks right now
+train,weather,in_scope,what s the uv index tomorrow
+train,weather,in_scope,costa mesa weather
+train,translate,in_scope,"how would i say, 'i don't know the answer' in spanish"
+train,translate,in_scope,"how do they say ""how's it going"" in swahili"
+train,translate,in_scope,how do i say you're welcome in chinese
+train,balance,in_scope,how much do i have in savings
+train,balance,in_scope,what's my checking balance
+train,balance,in_scope,what is status of my bank account
+train,shopping_list,in_scope,what items are on my shopping list
+train,shopping_list,in_scope,do i have a big shopping list
+train,shopping_list,in_scope,list out my shopping list for me
+train,restaurant_reservation,in_scope,can you get me a table for 2 at mexico viejo at 3pm
+train,restaurant_reservation,in_scope,reserve a table for two for 7:30 pm at dibruno's under patrick donoghue
+train,restaurant_reservation,in_scope,you must reserve a table for 4 at red robin under the name kevin at 7
+train,alarm,in_scope,"at 9 tomorrow, set off the alarm"
+train,alarm,in_scope,set my alarm for 6am tomorrow
+train,alarm,in_scope,can you set alarm for me
+train,play_music,in_scope,can you play music
+train,play_music,in_scope,can you play everlong by foo fighters
+train,play_music,in_scope,please play even flow by pearl jam
+train,oos,oos,how much is an overdraft fee for bank
+train,oos,oos,why are exponents preformed before multiplication in the order of operations
+train,oos,oos,what size wipers does this car take
+validation,greeting,in_scope,how ya doin
+validation,greeting,in_scope,how ya been
+validation,greeting,in_scope,hows are ya
+validation,goodbye,in_scope,see ya!
+validation,goodbye,in_scope,"this was fun, see you around bye"
+validation,goodbye,in_scope,until next time
+validation,book_flight,in_scope,can you find me a round trip flight from denver international to new york international on the 3rd through the 7th
+validation,book_flight,in_scope,can you look for a denver international to new york international round trip flight for the 5th though 8th
+validation,book_flight,in_scope,can you find me a flight from denver international to new york international on the 4th for under 700 dollars
+validation,weather,in_scope,what's is the current weather forecast
+validation,weather,in_scope,tell me the forecast
+validation,weather,in_scope,what's the weather like
+validation,translate,in_scope,"in spanish, meet me tomorrow is said how"
+validation,translate,in_scope,"in french, how do i say, see you later"
+validation,translate,in_scope,how do you say hello in japanese
+validation,balance,in_scope,do i have more than $100 in my pnc account
+validation,balance,in_scope,what's my pnc balance
+validation,balance,in_scope,how much is in my pnc account
+validation,shopping_list,in_scope,will you please read the things on my shopping list
+validation,shopping_list,in_scope,what is on my shopping list
+validation,shopping_list,in_scope,can you read the things to me that are on my shopping list
+validation,restaurant_reservation,in_scope,please reserve a table for 2 at lucky's under the name melissa at 7 pm
+validation,restaurant_reservation,in_scope,i would like to reserve a table for 2 at sam's steakhouse under the name jessie at 6:30 pm
+validation,restaurant_reservation,in_scope,help me reserve a table for 3 at lucky's under the name crystal at 8 pm
+validation,alarm,in_scope,i'd like alarms set for 11am and 132pm
+validation,alarm,in_scope,i want you to set alarms for 2pm and 3pm
+validation,alarm,in_scope,i need alarm for both 4am and 7am
+validation,play_music,in_scope,let me hear the song sympathy for the devil
+validation,play_music,in_scope,please start the song penny lane
+validation,play_music,in_scope,i want to hear satisfaction
+validation,oos,oos,set a warning for when my bank account starts running low
+validation,oos,oos,a show on broadway
+validation,oos,oos,who has the best record in the nfl
+test,greeting,in_scope,how are you doing
+test,greeting,in_scope,are you okay
+test,greeting,in_scope,what are you feeling today
+test,goodbye,in_scope,good speaking to you
+test,goodbye,in_scope,it was really awesome to talk to you
+test,goodbye,in_scope,it was great to speak with you
+test,book_flight,in_scope,"book me a flight to jackson, mississippi from austin texas on american airlines"
+test,book_flight,in_scope,book me a place to chicago from atlanta united airlines
+test,book_flight,in_scope,can you book me a flight to memphis from st louis on delta airlines
+test,weather,in_scope,what is the weather
+test,weather,in_scope,current weather
+test,weather,in_scope,tell me the weather
+test,translate,in_scope,how would you say fly in italian
+test,translate,in_scope,what's the spanish word for pasta
+test,translate,in_scope,how would they say butter in zambia
+test,balance,in_scope,what are my coffers at
+test,balance,in_scope,tell me the current balance of my bank accounts
+test,balance,in_scope,what's my current bank account total
+test,shopping_list,in_scope,does my shopping list have pop tarts
+test,shopping_list,in_scope,can you check to see if my shopping list already has milk
+test,shopping_list,in_scope,did i remember to put oatmeal on my list
+test,restaurant_reservation,in_scope,"i'd like to make a reservation at rooth chris, can you do that"
+test,restaurant_reservation,in_scope,make a reservation for chik-fil-a at 3 o' clock please
+test,restaurant_reservation,in_scope,reserve a table for 3 at 7 for olive garden
+test,alarm,in_scope,i want to set an alarm
+test,alarm,in_scope,set an alarm for 6 am tomorrow
+test,alarm,in_scope,set an alarm for 8 tomorrow
+test,play_music,in_scope,play the song called baby shark
+test,play_music,in_scope,play the song called wreckless love
+test,play_music,in_scope,play the song called i want it that way
+test,oos,oos,how much has the dow changed today
+test,oos,oos,how many prime numbers are there between 0 and 100
+test,oos,oos,can you tell me how to solve simple algebraic equations with one variable

@@ -48,3 +48,6 @@ Reduce verbosity, redundancy, and contradictions in instructions wherever possib
 Document public APIs and any non-obvious logic.
 Use clear, self-describing identifiers.
 Seek clarification when requirements are incomplete or ambiguous.
+
+use uv to manage dependencies and the local Python environment.
+use ruff to lint and format code.

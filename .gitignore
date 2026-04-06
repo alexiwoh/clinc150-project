@@ -191,8 +191,17 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
+# HuggingFace datasets cache
+# The raw splits and all operation cache files are re-downloaded at runtime.
+# Only data/raw/.gitkeep is committed to preserve the empty directory.
+data/raw/clinc___clinc_oos/
+*.arrow
+
 # PyPI configuration file
 .pypirc
+
+# VS Code
+#.vscode/
 
 # Cursor
 #  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
