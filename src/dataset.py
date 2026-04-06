@@ -6,7 +6,11 @@ from collections import Counter
 from dataclasses import dataclass
 
 import pandas as pd
+import torch
 from datasets import ClassLabel, Dataset, DatasetDict, Value, load_dataset
+from scipy.sparse import issparse, spmatrix
+from torch.utils.data import DataLoader
+from torch.utils.data import Dataset as TorchDataset
 
 from src.config import DatasetConfig
 from src.constants import OOS_LABEL_ID
@@ -195,3 +199,65 @@ class CLINCDataset:
     def __getitem__(self, split: str) -> Dataset:
         """Direct access to the raw HuggingFace Dataset for a split."""
         return self._dataset[split]
+
+
+# ======================================================================
+# PyTorch Dataset wrappers (Step 3)
+# ======================================================================
+
+
+class IntentDataset(TorchDataset):
+    """PyTorch Dataset wrapping padded token-id sequences and labels."""
+
+    def __init__(self, sequences: torch.Tensor, labels: torch.Tensor) -> None:
+        assert sequences.shape[0] == labels.shape[0], "sequence/label count mismatch"
+        self._sequences = sequences
+        self._labels = labels
+
+    def __len__(self) -> int:
+        return self._sequences.shape[0]
+
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
+        return self._sequences[idx], self._labels[idx]
+
+
+class TFIDFDataset(TorchDataset):
+    """PyTorch Dataset wrapping TF-IDF sparse matrix rows and labels."""
+
+    def __init__(self, features: spmatrix, labels: torch.Tensor) -> None:
+        assert features.shape[0] == labels.shape[0], "feature/label count mismatch"
+        self._features = features
+        self._labels = labels
+
+    def __len__(self) -> int:
+        return self._features.shape[0]
+
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
+        row = self._features[idx]
+        if issparse(row):
+            row = row.toarray()
+        return torch.tensor(row, dtype=torch.float32).squeeze(0), self._labels[idx]
+
+
+def create_dataloaders(
+    datasets: dict[str, TorchDataset],
+    *,
+    batch_size: int,
+    num_workers: int,
+    pin_memory: bool,
+    random_seed: int = 42,
+) -> dict[str, DataLoader]:
+    """Create DataLoaders for each split. Only the train loader shuffles."""
+    loaders: dict[str, DataLoader] = {}
+    for split, ds in datasets.items():
+        shuffle = split == "train"
+        generator = torch.Generator().manual_seed(random_seed) if shuffle else None
+        loaders[split] = DataLoader(
+            ds,
+            batch_size=batch_size,
+            shuffle=shuffle,
+            num_workers=num_workers,
+            pin_memory=pin_memory,
+            generator=generator,
+        )
+    return loaders

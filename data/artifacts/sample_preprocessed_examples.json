@@ -1,0 +1,247 @@
+[
+  {
+    "split": "train",
+    "index": 0,
+    "raw_text": "can you walk me through setting up direct deposits to my bank of internet savings account",
+    "cleaned_text": "can you walk me through setting up direct deposits to my bank of internet savings account",
+    "tokens": [
+      "can",
+      "you",
+      "walk",
+      "me",
+      "through",
+      "setting",
+      "up",
+      "direct",
+      "deposits",
+      "to",
+      "my",
+      "bank",
+      "of",
+      "internet",
+      "savings",
+      "account"
+    ],
+    "token_ids": [
+      14,
+      6,
+      483,
+      10,
+      267,
+      542,
+      63,
+      156,
+      1373,
+      4,
+      2,
+      50,
+      17,
+      901,
+      159,
+      31
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "train",
+    "index": 1,
+    "raw_text": "i want to switch to direct deposit",
+    "cleaned_text": "i want to switch to direct deposit",
+    "tokens": [
+      "i",
+      "want",
+      "to",
+      "switch",
+      "to",
+      "direct",
+      "deposit"
+    ],
+    "token_ids": [
+      3,
+      38,
+      4,
+      227,
+      4,
+      156,
+      211
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "train",
+    "index": 2,
+    "raw_text": "set up direct deposit for me",
+    "cleaned_text": "set up direct deposit for me",
+    "tokens": [
+      "set",
+      "up",
+      "direct",
+      "deposit",
+      "for",
+      "me"
+    ],
+    "token_ids": [
+      74,
+      63,
+      156,
+      211,
+      7,
+      10
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "validation",
+    "index": 0,
+    "raw_text": "in spanish, meet me tomorrow is said how",
+    "cleaned_text": "in spanish, meet me tomorrow is said how",
+    "tokens": [
+      "in",
+      "spanish,",
+      "meet",
+      "me",
+      "tomorrow",
+      "is",
+      "said",
+      "how"
+    ],
+    "token_ids": [
+      16,
+      3970,
+      1200,
+      10,
+      228,
+      11,
+      715,
+      12
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "validation",
+    "index": 1,
+    "raw_text": "in french, how do i say, see you later",
+    "cleaned_text": "in french, how do i say, see you later",
+    "tokens": [
+      "in",
+      "french,",
+      "how",
+      "do",
+      "i",
+      "say,",
+      "see",
+      "you",
+      "later"
+    ],
+    "token_ids": [
+      16,
+      3032,
+      12,
+      13,
+      3,
+      3865,
+      136,
+      6,
+      605
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "validation",
+    "index": 2,
+    "raw_text": "how do you say hello in japanese",
+    "cleaned_text": "how do you say hello in japanese",
+    "tokens": [
+      "how",
+      "do",
+      "you",
+      "say",
+      "hello",
+      "in",
+      "japanese"
+    ],
+    "token_ids": [
+      12,
+      13,
+      6,
+      125,
+      455,
+      16,
+      902
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "test",
+    "index": 0,
+    "raw_text": "how would you say fly in italian",
+    "cleaned_text": "how would you say fly in italian",
+    "tokens": [
+      "how",
+      "would",
+      "you",
+      "say",
+      "fly",
+      "in",
+      "italian"
+    ],
+    "token_ids": [
+      12,
+      48,
+      6,
+      125,
+      1827,
+      16,
+      530
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "test",
+    "index": 1,
+    "raw_text": "what's the spanish word for pasta",
+    "cleaned_text": "what's the spanish word for pasta",
+    "tokens": [
+      "what's",
+      "the",
+      "spanish",
+      "word",
+      "for",
+      "pasta"
+    ],
+    "token_ids": [
+      34,
+      5,
+      426,
+      433,
+      7,
+      835
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "test",
+    "index": 2,
+    "raw_text": "how would they say butter in zambia",
+    "cleaned_text": "how would they say butter in zambia",
+    "tokens": [
+      "how",
+      "would",
+      "they",
+      "say",
+      "butter",
+      "in",
+      "zambia"
+    ],
+    "token_ids": [
+      12,
+      48,
+      199,
+      125,
+      1129,
+      16,
+      1
+    ],
+    "contains_unk": true
+  }
+]

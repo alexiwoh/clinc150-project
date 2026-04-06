@@ -33,3 +33,22 @@ class DatasetConfig:
 
 
 DATASET_CONFIG: DatasetConfig = DatasetConfig()
+
+
+@dataclass(frozen=True)
+class PreprocessingConfig:
+    """Settings for the text preprocessing pipeline."""
+
+    lowercase: bool = True
+    max_seq_length: int = 20
+    min_token_freq: int = 1
+    batch_size: int = 64
+    tfidf_max_features: int = 10_000
+    tfidf_ngram_range: tuple[int, int] = (1, 2)
+    padding_side: str = "right"
+    truncation_side: str = "right"
+    random_seed: int = 42
+    artifacts_dir: Path = constants.ARTIFACTS_DIR
+
+
+PREPROCESSING_CONFIG: PreprocessingConfig = PreprocessingConfig()
