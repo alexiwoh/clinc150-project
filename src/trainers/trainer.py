@@ -30,12 +30,14 @@ class Trainer:
         criterion: nn.Module,
         device: torch.device,
         scheduler: LRScheduler | None = None,
+        max_grad_norm: float | None = None,
     ) -> None:
         self.model: nn.Module = model
         self.optimizer: torch.optim.Optimizer = optimizer
         self.criterion: nn.Module = criterion
         self.device: torch.device = device
         self.scheduler: LRScheduler | None = scheduler
+        self.max_grad_norm: float | None = max_grad_norm
 
     def train_epoch(self, dataloader: DataLoader) -> dict[str, float]:
         """Run one training epoch. Returns ``{"loss": avg_loss}``."""
@@ -54,6 +56,8 @@ class Trainer:
             loss: torch.Tensor = self.criterion(logits, targets)
             assert not torch.isnan(loss), "NaN loss detected during training"
             loss.backward()
+            if self.max_grad_norm is not None:
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.max_grad_norm)
             self.optimizer.step()
 
             # Update the total loss and the number of batches
@@ -131,6 +135,7 @@ class Trainer:
         checkpoint_path = checkpoint_dir / f"{model_prefix}_best_{run_name}.pt"
 
         best_metric = -float("inf")
+        best_val_loss = float("inf")
         best_epoch = -1
         epochs_without_improvement = 0
         epoch_history: list[dict[str, Any]] = []
@@ -145,24 +150,34 @@ class Trainer:
             if self.scheduler is not None:
                 self.scheduler.step()
 
-            epoch_record = {
+            current_lr = self.optimizer.param_groups[0]["lr"]
+
+            metric_key = monitor_metric.replace("val_", "")
+            current_metric = val_metrics.get(metric_key, val_metrics.get("macro_f1"))
+            assert current_metric is not None, f"Monitor metric {monitor_metric} not found in val metrics"
+            current_val_loss: float = val_metrics["loss"]
+
+            is_improvement = current_metric > best_metric
+            if not is_improvement and current_metric == best_metric:
+                is_improvement = current_val_loss < best_val_loss
+
+            epoch_record: dict[str, Any] = {
                 "epoch": epoch,
                 "train_loss": train_metrics["loss"],
-                "val_loss": val_metrics["loss"],
+                "val_loss": current_val_loss,
                 "val_accuracy": val_metrics["accuracy"],
                 "val_macro_f1": val_metrics["macro_f1"],
                 "val_precision": val_metrics["precision"],
                 "val_recall": val_metrics["recall"],
                 "val_oos_f1": val_metrics["oos_f1"],
+                "learning_rate": current_lr,
+                "checkpoint_updated": is_improvement,
             }
             epoch_history.append(epoch_record)
 
-            metric_key = monitor_metric.replace("val_", "")
-            current_metric = val_metrics.get(metric_key, val_metrics.get("macro_f1"))
-            assert current_metric is not None, f"Monitor metric {monitor_metric} not found in val metrics"
-
-            if current_metric > best_metric:
+            if is_improvement:
                 best_metric = current_metric
+                best_val_loss = current_val_loss
                 best_epoch = epoch
                 epochs_without_improvement = 0
                 save_checkpoint(
@@ -186,9 +201,10 @@ class Trainer:
         assert checkpoint_path.exists(), f"Best checkpoint not saved: {checkpoint_path}"
 
         all_monitored = [h.get(monitor_metric, h.get(monitor_metric.replace("val_", ""))) for h in epoch_history]
-        true_best_idx = int(max(range(len(all_monitored)), key=lambda i: all_monitored[i]))
-        assert epoch_history[true_best_idx]["epoch"] == best_epoch, (
-            f"best_epoch {best_epoch} does not match true max at epoch {epoch_history[true_best_idx]['epoch']}"
+        max_metric_value = max(all_monitored)
+        best_epoch_metric = all_monitored[best_epoch - 1]
+        assert best_epoch_metric == max_metric_value, (
+            f"best_epoch {best_epoch} metric {best_epoch_metric} != max metric {max_metric_value}"
         )
 
         log_path = log_dir / f"{model_prefix}_training_log_{run_name}.json"

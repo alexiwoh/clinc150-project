@@ -1,7 +1,10 @@
 """Central configuration for hyperparameters, file paths, training settings, and model options."""
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import torch
 
@@ -143,4 +146,61 @@ class TextCNNConfig:
             "monitor_metric": self.monitor_metric,
             "oos_strategy": self.oos_strategy,
             "max_seq_length": self.max_seq_length,
+        }
+
+
+@dataclass(frozen=True)
+class BiLSTMConfig:
+    """Hyperparameters for the BiLSTM sentence classifier."""
+
+    vocab_size: int = 0
+    embedding_dim: int = 128
+    hidden_dim: int = 128
+    num_layers: int = 1
+    bidirectional: bool = True
+    dropout_rate: float = 0.3
+    learning_rate: float = 5e-4
+    weight_decay: float = 0.0
+    batch_size: int = 64
+    max_epochs: int = 100
+    early_stopping_patience: int = 10
+    optimizer: str = "adam"
+    trainable_embeddings: bool = True
+    use_class_weights: bool = False
+    use_lr_scheduler: bool = False
+    random_seed: int = 42
+    dataloader_seed: int = 42
+    monitor_metric: str = "val_macro_f1"
+    oos_strategy: str = "explicit_class"
+    max_seq_length: int = 20
+    summarization_mode: str = "concat_final_hidden"
+    gradient_clipping: bool = True
+    max_grad_norm: float = 1.0
+
+    def to_dict(self) -> dict[str, Any]:
+        """Serialize all fields to a plain dict for checkpoint/artifact saving."""
+        return {
+            "vocab_size": self.vocab_size,
+            "embedding_dim": self.embedding_dim,
+            "hidden_dim": self.hidden_dim,
+            "num_layers": self.num_layers,
+            "bidirectional": self.bidirectional,
+            "dropout_rate": self.dropout_rate,
+            "learning_rate": self.learning_rate,
+            "weight_decay": self.weight_decay,
+            "batch_size": self.batch_size,
+            "max_epochs": self.max_epochs,
+            "early_stopping_patience": self.early_stopping_patience,
+            "optimizer": self.optimizer,
+            "trainable_embeddings": self.trainable_embeddings,
+            "use_class_weights": self.use_class_weights,
+            "use_lr_scheduler": self.use_lr_scheduler,
+            "random_seed": self.random_seed,
+            "dataloader_seed": self.dataloader_seed,
+            "monitor_metric": self.monitor_metric,
+            "oos_strategy": self.oos_strategy,
+            "max_seq_length": self.max_seq_length,
+            "summarization_mode": self.summarization_mode,
+            "gradient_clipping": self.gradient_clipping,
+            "max_grad_norm": self.max_grad_norm,
         }

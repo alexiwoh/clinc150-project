@@ -15,7 +15,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import torch
 from torch.utils.data import DataLoader
 
-from src.config import DATASET_CONFIG, MLPBaselineConfig, TextCNNConfig, get_device
+from src.config import DATASET_CONFIG, BiLSTMConfig, MLPBaselineConfig, TextCNNConfig, get_device
 from src.constants import (
     ARTIFACTS_DIR,
     CHECKPOINTS_DIR,
@@ -26,6 +26,7 @@ from src.constants import (
     REPORTS_DIR,
 )
 from src.dataset import CLINCDataset, IntentDataset, TFIDFDataset, create_dataloaders
+from src.models.bilstm import BiLSTMClassifier
 from src.models.mlp import MLPClassifier
 from src.models.text_cnn import TextCNN
 from src.preprocessing import (
@@ -404,10 +405,10 @@ def _build_tuning_grid() -> list[MLPBaselineConfig]:
 
 def _validate_preprocessing_manifest(
     summary: dict[str, Any],
-    config: TextCNNConfig,
+    config: TextCNNConfig | BiLSTMConfig,
     label_to_id: dict[str, int],
 ) -> None:
-    """Validate the full preprocessing manifest against the TextCNN config.
+    """Validate the full preprocessing manifest against a neural model config.
 
     Fails loudly on any mismatch so stale artifacts are never used silently.
     vocab_size is read from the manifest as the source of truth rather than
@@ -446,7 +447,7 @@ def _validate_preprocessing_manifest(
 
 
 def load_neural_data(
-    config: TextCNNConfig,
+    config: TextCNNConfig | BiLSTMConfig,
 ) -> tuple[dict[str, DataLoader], NeuralMetadata]:
     """Load neural data from frozen Step 3 artifacts — never rebuilds vocab or TF-IDF.
 
@@ -1144,6 +1145,571 @@ def run_text_cnn_experiment() -> dict[str, Any]:
 
     print(f"\n{'=' * 60}")
     print("  Final Text CNN Test Results")
+    print(f"{'=' * 60}")
+    print(f"  Test accuracy:    {test_results['test_accuracy']:.4f}")
+    print(f"  Test macro F1:    {test_results['test_macro_f1']:.4f}")
+    print(f"  Test precision:   {test_results['test_precision']:.4f}")
+    print(f"  Test recall:      {test_results['test_recall']:.4f}")
+    print(f"  OOS precision:    {test_results['oos_precision']:.4f}")
+    print(f"  OOS recall:       {test_results['oos_recall']:.4f}")
+    print(f"  OOS F1:           {test_results['oos_f1']:.4f}")
+    print(f"  Inference:        {test_results['inference_latency']['avg_ms_per_example']:.2f} ms/example")
+
+    return {
+        "default_result": default_result,
+        "tuning_df": tuning_df,
+        "best_config": best_config,
+        "best_run_name": best_run_name,
+        "test_results": test_results,
+    }
+
+
+# ======================================================================
+# BiLSTM — training, tuning, and experiment pipeline
+# ======================================================================
+
+_BILSTM_TUNING_STAGE_1: dict[str, list[float]] = {
+    "learning_rate": [5e-4, 1e-3, 1e-4],
+    "dropout_rate": [0.3, 0.5],
+}
+
+_BILSTM_TUNING_STAGE_2: dict[str, list[int]] = {
+    "hidden_dim": [128, 256],
+    "embedding_dim": [64, 128, 256],
+}
+
+_BILSTM_TUNING_STAGE_3: list[dict[str, int | float]] = [
+    {"num_layers": 1, "weight_decay": 0.0},
+    {"num_layers": 2, "weight_decay": 0.0},
+    {"num_layers": 1, "weight_decay": 1e-4},
+]
+
+
+def build_bilstm(config: BiLSTMConfig, num_classes: int) -> BiLSTMClassifier:
+    """Construct a BiLSTMClassifier from config, with dimension assertions."""
+    assert config.vocab_size > 0, (
+        f"vocab_size must be positive (got {config.vocab_size}); "
+        "set it from NeuralMetadata['vocab_size'] before building the model"
+    )
+    assert num_classes == NUM_CLASSES, f"num_classes={num_classes} doesn't match NUM_CLASSES={NUM_CLASSES}"
+    return BiLSTMClassifier(
+        vocab_size=config.vocab_size,
+        embedding_dim=config.embedding_dim,
+        hidden_dim=config.hidden_dim,
+        num_classes=num_classes,
+        num_layers=config.num_layers,
+        dropout_rate=config.dropout_rate,
+        bidirectional=config.bidirectional,
+        trainable_embeddings=config.trainable_embeddings,
+    )
+
+
+def _bilstm_run_name(config: BiLSTMConfig) -> str:
+    """Build a deterministic, machine-readable run name for a BiLSTM config."""
+    lr_str = f"lr{config.learning_rate}".replace(".", "")
+    wd_str = f"wd{config.weight_decay}".replace(".", "")
+    return (
+        f"emb{config.embedding_dim}_h{config.hidden_dim}_L{config.num_layers}"
+        f"_d{config.dropout_rate}_{lr_str}_{wd_str}_s{config.random_seed}"
+    )
+
+
+def _one_batch_bilstm_smoke_test(
+    model: BiLSTMClassifier,
+    loader: DataLoader,
+    criterion: torch.nn.Module,
+    optimizer: torch.optim.Optimizer,
+    device: torch.device,
+    config: BiLSTMConfig,
+    num_classes: int,
+) -> None:
+    """One-batch forward/backward smoke test verifying all BiLSTM shapes."""
+    batch_x, batch_y = next(iter(loader))
+    assert batch_x.dtype == torch.long, f"Expected integer input, got {batch_x.dtype}"
+    assert batch_x.shape[1] == config.max_seq_length, f"seq_len mismatch: {batch_x.shape[1]} != {config.max_seq_length}"
+    batch_size: int = batch_x.shape[0]
+
+    batch_x = batch_x.to(device)
+    batch_y = batch_y.to(device)
+
+    model.train()
+
+    embedded: torch.Tensor = model.embedding(batch_x)
+    assert embedded.shape == (batch_size, config.max_seq_length, config.embedding_dim), (
+        f"Embedding shape {embedded.shape} != expected ({batch_size}, {config.max_seq_length}, {config.embedding_dim})"
+    )
+
+    num_directions: int = 2 if config.bidirectional else 1
+    lstm_output: torch.Tensor
+    h_n: torch.Tensor
+    lstm_output, (h_n, _c_n) = model.lstm(embedded)
+    assert lstm_output.shape == (batch_size, config.max_seq_length, config.hidden_dim * num_directions), (
+        f"LSTM output shape {lstm_output.shape} != expected "
+        f"({batch_size}, {config.max_seq_length}, {config.hidden_dim * num_directions})"
+    )
+    assert h_n.shape == (config.num_layers * num_directions, batch_size, config.hidden_dim), (
+        f"h_n shape {h_n.shape} != expected ({config.num_layers * num_directions}, {batch_size}, {config.hidden_dim})"
+    )
+
+    summarized: torch.Tensor
+    if config.bidirectional:
+        summarized = torch.cat([h_n[-2, :, :], h_n[-1, :, :]], dim=-1)
+    else:
+        summarized = h_n[-1, :, :]
+    expected_classifier_dim: int = config.hidden_dim * num_directions
+    assert summarized.shape == (batch_size, expected_classifier_dim), (
+        f"Summarization shape {summarized.shape} != expected ({batch_size}, {expected_classifier_dim})"
+    )
+
+    optimizer.zero_grad()
+    logits: torch.Tensor = model(batch_x)
+    assert logits.shape == (batch_size, num_classes), (
+        f"Logits shape {logits.shape} != expected ({batch_size}, {num_classes})"
+    )
+
+    loss: torch.Tensor = criterion(logits, batch_y)
+    assert not torch.isnan(loss), "NaN loss in smoke test"
+    loss.backward()
+
+    if config.gradient_clipping:
+        torch.nn.utils.clip_grad_norm_(model.parameters(), config.max_grad_norm)
+
+    optimizer.step()
+
+    print("  Smoke test batch shapes:")
+    print(f"    input:         {list(batch_x.shape)} dtype={batch_x.dtype}")
+    print(f"    embedding:     {list(embedded.shape)}")
+    print(f"    lstm_output:   {list(lstm_output.shape)}")
+    print(f"    h_n:           {list(h_n.shape)}")
+    print(f"    summarized:    {list(summarized.shape)}")
+    print(f"    logits:        {list(logits.shape)}")
+    logger.info("One-batch BiLSTM smoke test PASSED")
+
+
+def _bilstm_tuning_row(result: dict[str, Any]) -> dict[str, Any]:
+    """Extract a BiLSTM-specific tuning results row from a training run result."""
+    cfg = result.get("config", {})
+    return {
+        "run_name": result.get("run_name", "unknown"),
+        "best_epoch": result.get("best_epoch"),
+        "best_val_metric": result.get("best_val_metric"),
+        "best_val_loss": _get_best_val_loss(result),
+        "training_duration": result.get("training_duration"),
+        "checkpoint_path": result.get("checkpoint_path"),
+        "reason_for_stopping": result.get("reason_for_stopping"),
+        "failure_reason": result.get("failure_reason"),
+        "epochs_completed": result.get("stopping_epoch", result.get("epochs_completed", 0)),
+        "total_parameters": result.get("total_parameters"),
+        "trainable_parameters": result.get("trainable_parameters"),
+        "hidden_dim": cfg.get("hidden_dim"),
+        "num_layers": cfg.get("num_layers"),
+        "bidirectional": cfg.get("bidirectional"),
+        "embedding_dim": cfg.get("embedding_dim"),
+        "max_grad_norm": cfg.get("max_grad_norm"),
+        "summarization_mode": cfg.get("summarization_mode"),
+        "dropout_rate": cfg.get("dropout_rate"),
+        "learning_rate": cfg.get("learning_rate"),
+        "weight_decay": cfg.get("weight_decay"),
+    }
+
+
+def train_bilstm(
+    config: BiLSTMConfig,
+    loaders: dict[str, DataLoader],
+    num_classes: int,
+    metadata: NeuralMetadata,
+) -> dict[str, Any]:
+    """Train a single BiLSTM run. Never iterates the test loader.
+
+    Includes a one-batch smoke test before the full training loop.
+    """
+    device: torch.device = get_device()
+    set_seed(config.random_seed)
+
+    model: BiLSTMClassifier = build_bilstm(config, num_classes)
+    model.to(device)
+
+    total_params: int = sum(p.numel() for p in model.parameters())
+    trainable_params: int = count_parameters(model)
+    run_name: str = _bilstm_run_name(config)
+
+    optimizer: torch.optim.Adam = torch.optim.Adam(
+        model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay
+    )
+
+    class_weights: torch.Tensor | None = None
+    if config.use_class_weights:
+        train_ds = loaders["train"].dataset
+        assert hasattr(train_ds, "_labels"), "Expected IntentDataset with _labels attribute"
+        class_weights = compute_class_weights(train_ds._labels, num_classes, device)
+
+    criterion: torch.nn.CrossEntropyLoss = torch.nn.CrossEntropyLoss(weight=class_weights)
+
+    scheduler: torch.optim.lr_scheduler.StepLR | None = None
+    if config.use_lr_scheduler:
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
+
+    num_directions: int = 2 if config.bidirectional else 1
+    lstm_dropout_note: str = (
+        "no-op when num_layers=1; classifier-path dropout active"
+        if config.num_layers == 1
+        else f"LSTM inter-layer dropout={config.dropout_rate}; classifier-path dropout also active"
+    )
+
+    print(f"\n{'=' * 60}")
+    print(f"  BiLSTM Run: {run_name}")
+    print(f"{'=' * 60}")
+    print(f"  Preprocessing refs: {metadata['artifact_refs']}")
+    print(f"  Preprocessing manifest: {metadata['artifact_refs'].get('preprocessing_summary', 'N/A')}")
+    print(f"  Vocab size: {config.vocab_size}")
+    print(f"  Max seq length: {config.max_seq_length}")
+    print(f"  Num classes: {num_classes}")
+    print("  Architecture: BiLSTM sentence classifier")
+    print("  batch_first: True")
+    print(f"  Embedding dim: {config.embedding_dim} | trainable={config.trainable_embeddings}")
+    print(f"  Hidden dim: {config.hidden_dim}")
+    print(f"  Num layers: {config.num_layers} | bidirectional={config.bidirectional}")
+    print(f"  Summarization: {config.summarization_mode} (h_n[-2,:,:] || h_n[-1,:,:])")
+    clip_status: str = f"enabled (max_norm={config.max_grad_norm})" if config.gradient_clipping else "disabled"
+    print(f"  Gradient clipping: {clip_status}")
+    print(f"  LSTM dropout: {lstm_dropout_note}")
+    print(f"  Classifier input dim: {config.hidden_dim * num_directions}")
+    print(f"  Total parameters: {total_params:,}")
+    print(f"  Trainable parameters: {trainable_params:,}")
+    print(f"  Optimizer: {config.optimizer} | lr={config.learning_rate} | wd={config.weight_decay}")
+    print(f"  Dropout: {config.dropout_rate}")
+    print(f"  Monitor metric: {config.monitor_metric}")
+    print("  val_macro_f1 is the primary early-stopping / model-selection metric")
+    print(f"  Class weights: {'enabled' if config.use_class_weights else 'disabled (default)'}")
+    print(f"  DataLoader: train=shuffle(seed={config.dataloader_seed}), val/test=no shuffle")
+    print("  DataLoader: drop_last=False, num_workers=0, pin_memory=False")
+
+    _one_batch_bilstm_smoke_test(model, loaders["train"], criterion, optimizer, device, config, num_classes)
+
+    set_seed(config.random_seed)
+    model = build_bilstm(config, num_classes)
+    model.to(device)
+    optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
+    if config.use_lr_scheduler:
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
+    else:
+        scheduler = None
+
+    max_grad_norm: float | None = config.max_grad_norm if config.gradient_clipping else None
+    trainer: Trainer = Trainer(model, optimizer, criterion, device, scheduler=scheduler, max_grad_norm=max_grad_norm)
+
+    try:
+        fit_result = trainer.fit(
+            train_loader=loaders["train"],
+            val_loader=loaders["validation"],
+            max_epochs=config.max_epochs,
+            patience=config.early_stopping_patience,
+            checkpoint_dir=CHECKPOINTS_DIR,
+            run_name=run_name,
+            config=config.to_dict(),
+            artifact_refs=metadata["artifact_refs"],
+            log_dir=LOGS_DIR,
+            monitor_metric=config.monitor_metric,
+            model_prefix="bilstm",
+        )
+    except Exception as e:
+        logger.error("BiLSTM run %s FAILED: %s", run_name, e)
+        return {
+            "run_name": run_name,
+            "config": config.to_dict(),
+            "failure_reason": str(e),
+            "epochs_completed": 0,
+            "checkpoint_path": None,
+        }
+
+    for record in fit_result["epoch_history"]:
+        print(
+            f"  Epoch {record['epoch']:3d} | "
+            f"train_loss={record['train_loss']:.4f} | "
+            f"val_loss={record['val_loss']:.4f} | "
+            f"val_accuracy={record['val_accuracy']:.4f} | "
+            f"val_macro_f1={record['val_macro_f1']:.4f}"
+        )
+
+    print(f"  Stopped: {fit_result['reason_for_stopping']} at epoch {fit_result['stopping_epoch']}")
+    print(f"  Best epoch: {fit_result['best_epoch']} (val metric={fit_result['best_val_metric']:.4f})")
+    print(f"  Checkpoint: {fit_result['checkpoint_path']}")
+    print(f"  Training time: {fit_result['training_duration']:.1f}s")
+
+    fit_result["total_parameters"] = total_params
+    fit_result["trainable_parameters"] = trainable_params
+    fit_result["num_classes"] = num_classes
+    fit_result["device"] = str(device)
+    fit_result["training_seed"] = config.random_seed
+    fit_result["dataloader_seed"] = config.dataloader_seed
+    fit_result["python_version"] = platform.python_version()
+    fit_result["pytorch_version"] = torch.__version__
+
+    return fit_result
+
+
+def verify_bilstm_checkpoint(
+    checkpoint_path: str,
+    config: BiLSTMConfig,
+    val_loader: DataLoader,
+    num_classes: int,
+    expected_best_metric: float,
+) -> None:
+    """Fresh-process checkpoint reload verification for BiLSTM.
+
+    Loads a saved checkpoint, reconstructs the model, evaluates on the
+    validation set, and asserts the metric matches the saved best value.
+    """
+    device: torch.device = get_device()
+
+    model: BiLSTMClassifier = build_bilstm(config, num_classes)
+    meta: dict[str, Any] = load_checkpoint(checkpoint_path, model, device)
+    model.to(device)
+    model.eval()
+
+    assert "artifact_refs" in meta, "Checkpoint missing artifact_refs"
+    assert "config" in meta, "Checkpoint missing config"
+
+    criterion: torch.nn.CrossEntropyLoss = torch.nn.CrossEntropyLoss()
+    trainer: Trainer = Trainer(model, torch.optim.Adam(model.parameters()), criterion, device)
+    val_metrics: dict[str, Any] = trainer.evaluate(val_loader)
+
+    reloaded_f1: float = val_metrics["macro_f1"]
+    tolerance: float = 1e-3
+    assert abs(reloaded_f1 - expected_best_metric) < tolerance, (
+        f"Reloaded val macro_f1={reloaded_f1:.6f} differs from saved best={expected_best_metric:.6f} "
+        f"(tolerance={tolerance})"
+    )
+    logger.info(
+        "BiLSTM checkpoint reload PASSED: val macro_f1=%.6f (saved=%.6f)",
+        reloaded_f1,
+        expected_best_metric,
+    )
+
+
+def run_bilstm_default(
+    config: BiLSTMConfig | None = None,
+) -> dict[str, Any]:
+    """Run one default BiLSTM training end-to-end and verify checkpoint reload.
+
+    Returns the full run result dict including metadata.
+    """
+    loading_config: BiLSTMConfig = config if config is not None else BiLSTMConfig()
+    loaders: dict[str, DataLoader]
+    metadata: NeuralMetadata
+    loaders, metadata = load_neural_data(loading_config)
+    num_classes: int = metadata["num_classes"]
+    if config is None or config.vocab_size == 0:
+        config = BiLSTMConfig(vocab_size=metadata["vocab_size"])
+
+    print("\n=== Default BiLSTM Run ===")
+    result: dict[str, Any] = train_bilstm(config, loaders, num_classes, metadata)
+
+    if result.get("failure_reason"):
+        raise RuntimeError(f"Default BiLSTM run failed: {result['failure_reason']}")
+
+    print("\n=== Fresh-Process Checkpoint Reload Test ===")
+    verify_bilstm_checkpoint(
+        result["checkpoint_path"],
+        config,
+        loaders["validation"],
+        num_classes,
+        result["best_val_metric"],
+    )
+    print("  Reload test PASSED")
+
+    result["metadata"] = metadata
+    return result
+
+
+def run_bilstm_tuning(
+    loaders: dict[str, DataLoader],
+    num_classes: int,
+    metadata: NeuralMetadata,
+) -> pd.DataFrame:
+    """Run staged BiLSTM hyperparameter tuning. Returns results as a DataFrame."""
+    ensure_dir(REPORTS_DIR)
+    all_results: list[dict[str, Any]] = []
+    already_run: set[str] = set()
+    vocab_size: int = metadata["vocab_size"]
+
+    def _run_stage(configs: list[BiLSTMConfig], stage_name: str) -> list[dict[str, Any]]:
+        new_configs: list[BiLSTMConfig] = [c for c in configs if _bilstm_run_name(c) not in already_run]
+        skipped: int = len(configs) - len(new_configs)
+        if skipped > 0:
+            print(f"  Skipping {skipped} {stage_name} configs already run in earlier stages")
+        print(f"\n=== BiLSTM Tuning {stage_name} ({len(new_configs)} new runs) ===")
+        stage_results: list[dict[str, Any]] = []
+        for i, cfg in enumerate(new_configs, 1):
+            print(f"\n--- {stage_name} run {i}/{len(new_configs)} ---")
+            result: dict[str, Any] = train_bilstm(cfg, loaders, num_classes, metadata)
+            row: dict[str, Any] = _bilstm_tuning_row(result)
+            stage_results.append(row)
+            all_results.append(row)
+            already_run.add(row["run_name"])
+        return stage_results
+
+    # --- Stage 1: lr x dropout ---
+    stage_1_configs: list[BiLSTMConfig] = [
+        BiLSTMConfig(vocab_size=vocab_size, learning_rate=lr, dropout_rate=dr)
+        for lr in _BILSTM_TUNING_STAGE_1["learning_rate"]
+        for dr in _BILSTM_TUNING_STAGE_1["dropout_rate"]
+    ]
+    stage_1_results: list[dict[str, Any]] = _run_stage(stage_1_configs, "Stage 1: lr x dropout")
+    best_s1: dict[str, Any] = _select_best_from_rows(stage_1_results)
+    best_lr: float = best_s1["learning_rate"]
+    best_dr: float = best_s1["dropout_rate"]
+    print(f"\n  Stage 1 best: lr={best_lr}, dropout={best_dr}")
+
+    # --- Stage 2: hidden_dim x embedding_dim ---
+    stage_2_configs: list[BiLSTMConfig] = [
+        BiLSTMConfig(
+            vocab_size=vocab_size,
+            learning_rate=best_lr,
+            dropout_rate=best_dr,
+            hidden_dim=hd,
+            embedding_dim=ed,
+        )
+        for hd in _BILSTM_TUNING_STAGE_2["hidden_dim"]
+        for ed in _BILSTM_TUNING_STAGE_2["embedding_dim"]
+    ]
+    stage_2_results: list[dict[str, Any]] = _run_stage(stage_2_configs, "Stage 2: hidden_dim x emb_dim")
+    best_s2: dict[str, Any] = _select_best_from_rows(stage_2_results)
+    best_hd: int = best_s2["hidden_dim"]
+    best_ed: int = best_s2["embedding_dim"]
+    print(f"\n  Stage 2 best: hidden_dim={best_hd}, emb_dim={best_ed}")
+
+    # --- Stage 3: num_layers x weight_decay ---
+    stage_3_configs: list[BiLSTMConfig] = [
+        BiLSTMConfig(
+            vocab_size=vocab_size,
+            learning_rate=best_lr,
+            dropout_rate=best_dr,
+            hidden_dim=best_hd,
+            embedding_dim=best_ed,
+            num_layers=overrides["num_layers"],
+            weight_decay=overrides["weight_decay"],
+        )
+        for overrides in _BILSTM_TUNING_STAGE_3
+    ]
+    _run_stage(stage_3_configs, "Stage 3: num_layers x wd")
+
+    df = pd.DataFrame(all_results)
+    df.to_csv(REPORTS_DIR / "bilstm_tuning_results.csv", index=False)
+    return df
+
+
+def _get_bilstm_test_texts() -> list[str]:
+    """Load and clean test-split texts for BiLSTM error analysis."""
+    dataset = CLINCDataset.load(DATASET_CONFIG)
+    raw = dataset["test"]
+    return [clean_text(t) for t in raw["text"]]
+
+
+def run_bilstm_experiment() -> dict[str, Any]:
+    """Full BiLSTM workflow: load data, default run, tuning, select best, final test eval.
+
+    Final-model selection rule: use the single best validation-selected tuning run
+    directly; do NOT retrain.
+    Tie-break: (1) lower val loss, (2) fewer trainable params, (3) faster training,
+    (4) lexicographic run_name.
+    """
+    from src.evaluate import evaluate_bilstm
+
+    initial_config = BiLSTMConfig()
+    loaders, metadata = load_neural_data(initial_config)
+    num_classes: int = metadata["num_classes"]
+    vocab_size: int = metadata["vocab_size"]
+    default_config = BiLSTMConfig(vocab_size=vocab_size)
+
+    # --- Phase 1 verification: default run + checkpoint reload ---
+    print("\n=== Default BiLSTM Run ===")
+    default_result = train_bilstm(default_config, loaders, num_classes, metadata)
+    if default_result.get("failure_reason"):
+        raise RuntimeError(f"Default BiLSTM run failed: {default_result['failure_reason']}")
+
+    print("\n=== Fresh-Process Checkpoint Reload Test ===")
+    verify_bilstm_checkpoint(
+        default_result["checkpoint_path"],
+        default_config,
+        loaders["validation"],
+        num_classes,
+        default_result["best_val_metric"],
+    )
+    print("  Reload test PASSED")
+
+    # --- Phase 2: staged tuning ---
+    print("\n=== BiLSTM Hyperparameter Tuning ===")
+    tuning_df = run_bilstm_tuning(loaders, num_classes, metadata)
+
+    # --- Select best config ---
+    valid_mask = tuning_df["best_val_metric"].notna()
+    valid_df = tuning_df[valid_mask].copy()
+    assert len(valid_df) > 0, "No valid tuning runs completed"
+
+    valid_df = valid_df.sort_values(
+        by=["best_val_metric", "best_val_loss", "trainable_parameters", "training_duration", "run_name"],
+        ascending=[False, True, True, True, True],
+    ).reset_index(drop=True)
+    best_row = valid_df.iloc[0]
+    best_checkpoint: str = best_row["checkpoint_path"]
+    best_run_name: str = best_row["run_name"]
+
+    best_config = BiLSTMConfig(
+        vocab_size=vocab_size,
+        embedding_dim=int(best_row["embedding_dim"]),
+        hidden_dim=int(best_row["hidden_dim"]),
+        num_layers=int(best_row["num_layers"]),
+        bidirectional=bool(best_row["bidirectional"]),
+        dropout_rate=float(best_row["dropout_rate"]),
+        learning_rate=float(best_row["learning_rate"]),
+        weight_decay=float(best_row["weight_decay"]),
+        max_grad_norm=float(best_row["max_grad_norm"]),
+    )
+
+    print(f"\n=== Best config: {best_run_name} (val_macro_f1={best_row['best_val_metric']:.4f}) ===")
+
+    assert best_checkpoint is not None, "Model selection not complete before test evaluation"
+
+    # --- Final test evaluation ---
+    print("=== Final Test Evaluation ===")
+    test_texts = _get_bilstm_test_texts()
+
+    best_training_result: dict[str, Any] = {
+        "run_name": best_run_name,
+        "training_duration": (
+            float(best_row["training_duration"]) if pd.notna(best_row["training_duration"]) else None
+        ),
+        "total_parameters": int(best_row["total_parameters"]) if pd.notna(best_row.get("total_parameters")) else None,
+        "trainable_parameters": (
+            int(best_row["trainable_parameters"]) if pd.notna(best_row.get("trainable_parameters")) else None
+        ),
+        "best_epoch": int(best_row["best_epoch"]) if pd.notna(best_row["best_epoch"]) else None,
+        "best_val_metric": float(best_row["best_val_metric"]),
+        "checkpoint_path": best_checkpoint,
+        "config": best_config.to_dict(),
+        "device": str(get_device()),
+        "training_seed": best_config.random_seed,
+        "dataloader_seed": best_config.dataloader_seed,
+        "python_version": platform.python_version(),
+        "pytorch_version": torch.__version__,
+    }
+
+    log_path = LOGS_DIR / f"bilstm_training_log_{best_run_name}.json"
+    if log_path.exists():
+        best_training_result["epoch_history"] = json.loads(log_path.read_text())
+
+    test_results = evaluate_bilstm(
+        best_checkpoint,
+        best_config,
+        best_training_result,
+        metadata,
+        loaders["test"],
+        test_texts,
+    )
+
+    print(f"\n{'=' * 60}")
+    print("  Final BiLSTM Test Results")
     print(f"{'=' * 60}")
     print(f"  Test accuracy:    {test_results['test_accuracy']:.4f}")
     print(f"  Test macro F1:    {test_results['test_macro_f1']:.4f}")
