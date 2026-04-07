@@ -124,6 +124,7 @@ clinc150-project/
 - If available, test Apple Silicon MPS acceleration
 - Keep device selection and optional parallel data loading configurable rather than hardcoded
 - Add a `requirements.txt` file and confirm the environment is reproducible
+- Define a reproducible multi-run evaluation protocol with configurable seeds and run counts
 
 ---
 
@@ -212,6 +213,10 @@ clinc150-project/
 - Generate confusion matrix for best model
 - Identify most commonly confused intent pairs
 - Make sure metrics are computed consistently across all models
+- Run each model multiple times with different random seeds
+- Record per-run validation and test metrics separately
+- Compute aggregated metrics across runs, including mean and standard deviation
+- Use the same seed list and evaluation protocol for all models to keep comparisons fair
 
 ---
 
@@ -227,6 +232,19 @@ clinc150-project/
   - training time
   - final test metrics
 - Keep experiment outputs organized so they can be reused directly in the report
+- Save seed, run index, and model configuration for every run
+- Keep per-run metrics separate from aggregated summary metrics
+- Save final comparison tables with both mean metrics and variability across runs
+
+---
+
+## Repeated-Run Evaluation Protocol
+- Use repeated runs to reduce dependence on a single random seed
+- Start with **3 runs per model** as the default protocol
+- Increase to **5 runs per model** if runtime allows and metric variance appears meaningful
+- Change the seed across runs while keeping the data split and evaluation procedure fixed
+- Use aggregated results for the final comparison tables in the report
+- Optionally identify the single best run per model for confusion matrix generation and qualitative error analysis, while clearly separating this from the aggregated reporting protocol
 
 ---
 
@@ -293,5 +311,6 @@ Do not start stretch goals until the main three-model comparison is already comp
 - Evaluation scripts
 - Saved plots and confusion matrix
 - Final metrics table
+- Per-run and aggregated metrics tables with mean and standard deviation
 - Report-ready findings
 - A reproducible implementation flow that matches the intended project scope
