@@ -1,0 +1,24 @@
+{
+  "model_name": "text_cnn",
+  "input_type": "token_sequences",
+  "primary_val_metric": "val_macro_f1",
+  "best_val_macro_f1": 0.8565651425799921,
+  "test_accuracy": 0.7516363636363637,
+  "test_macro_f1": 0.8177435695244963,
+  "test_precision": 0.7868710851409308,
+  "test_recall": 0.8774657836644592,
+  "oos_precision": 0.9010989010989011,
+  "oos_recall": 0.164,
+  "oos_f1": 0.27749576988155666,
+  "training_time": 52.4184787273407,
+  "inference_latency": {
+    "total_seconds": 0.24483609199523926,
+    "avg_ms_per_example": 0.0445156530900435,
+    "examples_per_sec": 22464.008288888002
+  },
+  "parameter_count": 1379767,
+  "trainable_parameter_count": 1379767,
+  "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/text_cnn_best_emb256_nf100_ks2x3x4_d0.5_lr00005_wd00_s42.pt",
+  "preprocessing_artifact_refs": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts",
+  "notes": "Kim-style Text CNN; best tuning run used directly (no retraining)."
+}

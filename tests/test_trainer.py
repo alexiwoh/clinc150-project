@@ -242,6 +242,70 @@ class TestTrainerCheckpoint:
         assert meta["epoch"] == result["best_epoch"]
 
 
+class TestTrainerIntegerInputs:
+    """Trainer must handle integer-tensor inputs (e.g. token-id sequences for CNN/BiLSTM)."""
+
+    def test_trains_with_int_inputs(self, tmp_path) -> None:
+        """Verify trainer works with nn.Embedding + integer inputs (spec U2)."""
+        n = 64
+        seq_len = 10
+        vocab_size = 50
+        num_classes = 5
+        rng = torch.Generator().manual_seed(42)
+
+        x = torch.randint(0, vocab_size, (n, seq_len), generator=rng)
+        y = torch.randint(0, num_classes, (n,), generator=rng)
+
+        split = n // 2
+        train_ds = TensorDataset(x[:split], y[:split])
+        val_ds = TensorDataset(x[split:], y[split:])
+        train_loader = DataLoader(train_ds, batch_size=16)
+        val_loader = DataLoader(val_ds, batch_size=16)
+
+        model = nn.Sequential(
+            nn.Embedding(vocab_size, 16),
+            nn.Flatten(),
+            nn.Linear(seq_len * 16, num_classes),
+        )
+        optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
+        criterion = nn.CrossEntropyLoss()
+        trainer = Trainer(model, optimizer, criterion, torch.device("cpu"))
+
+        result = trainer.fit(
+            train_loader,
+            val_loader,
+            max_epochs=3,
+            patience=5,
+            checkpoint_dir=tmp_path / "ckpt",
+            run_name="int_input_test",
+            config={"test": True},
+            artifact_refs={"test": "path"},
+            log_dir=tmp_path / "logs",
+            model_prefix="dummy",
+        )
+
+        assert result["best_epoch"] >= 1
+        assert len(result["epoch_history"]) == 3
+
+    def test_int_inputs_skip_finite_check(self) -> None:
+        """Verify integer inputs don't trigger the isfinite assertion (spec U2)."""
+        x = torch.randint(0, 50, (4, 10))
+        y = torch.zeros(4, dtype=torch.long)
+        loader = DataLoader(TensorDataset(x, y), batch_size=4)
+
+        model = nn.Sequential(
+            nn.Embedding(50, 8),
+            nn.Flatten(),
+            nn.Linear(80, 3),
+        )
+        optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
+        criterion = nn.CrossEntropyLoss()
+        trainer = Trainer(model, optimizer, criterion, torch.device("cpu"))
+
+        metrics = trainer.train_epoch(loader)
+        assert "loss" in metrics
+
+
 class TestTrainerFiniteChecks:
     def test_nan_input_raises(self) -> None:
         x = torch.full((4, 10), float("nan"))

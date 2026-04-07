@@ -214,6 +214,8 @@ outputs/checkpoints/*.pt
 .cursorignore
 .cursorindexingignore
 
+.cursor/plans/*
+
 # Marimo
 marimo/_static/
 marimo/_lsp/

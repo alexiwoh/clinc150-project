@@ -43,8 +43,8 @@ class Trainer:
         total_loss = 0.0
         n_batches = 0
         for inputs, targets in dataloader:
-            # Check if the inputs are finite then convert them to the device
-            assert torch.isfinite(inputs).all(), "Non-finite values in training inputs"
+            if inputs.is_floating_point():
+                assert torch.isfinite(inputs).all(), "Non-finite values in training inputs"
             inputs: torch.Tensor = inputs.to(self.device)
             targets: torch.Tensor = targets.to(self.device)
 
@@ -72,8 +72,8 @@ class Trainer:
 
         with torch.no_grad():
             for inputs, targets in dataloader:
-                # Check if the inputs are finite then convert them to the device
-                assert torch.isfinite(inputs).all(), "Non-finite values in evaluation inputs"
+                if inputs.is_floating_point():
+                    assert torch.isfinite(inputs).all(), "Non-finite values in evaluation inputs"
                 inputs: torch.Tensor = inputs.to(self.device)
                 targets: torch.Tensor = targets.to(self.device)
 
@@ -117,6 +117,7 @@ class Trainer:
         artifact_refs: dict[str, str],
         log_dir: Path | str,
         monitor_metric: str = "val_macro_f1",
+        model_prefix: str = "mlp",
     ) -> dict[str, Any]:
         """Full training loop with early stopping, checkpointing, and logging.
 
@@ -127,7 +128,7 @@ class Trainer:
         checkpoint_dir.mkdir(parents=True, exist_ok=True)
         log_dir.mkdir(parents=True, exist_ok=True)
 
-        checkpoint_path = checkpoint_dir / f"mlp_best_{run_name}.pt"
+        checkpoint_path = checkpoint_dir / f"{model_prefix}_best_{run_name}.pt"
 
         best_metric = -float("inf")
         best_epoch = -1
@@ -190,7 +191,7 @@ class Trainer:
             f"best_epoch {best_epoch} does not match true max at epoch {epoch_history[true_best_idx]['epoch']}"
         )
 
-        log_path = log_dir / f"mlp_training_log_{run_name}.json"
+        log_path = log_dir / f"{model_prefix}_training_log_{run_name}.json"
         log_path.write_text(json.dumps(epoch_history, indent=2))
 
         return {

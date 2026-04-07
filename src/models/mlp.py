@@ -31,14 +31,14 @@ class MLPClassifier(nn.Module):
     ) -> None:
         super().__init__()
         assert activation in _ACTIVATIONS, f"Unsupported activation: {activation!r}. Choose from {list(_ACTIVATIONS)}"
-        act_cls = _ACTIVATIONS[activation]
+        act_cls: type[nn.Module] = _ACTIVATIONS[activation]
 
         layers: list[nn.Module] = [
             nn.Linear(input_dim, hidden_dim),
             act_cls(),
             nn.Dropout(dropout_rate),
         ]
-        last_dim = hidden_dim
+        last_dim: int = hidden_dim
 
         if second_hidden_dim is not None:
             layers.extend(
