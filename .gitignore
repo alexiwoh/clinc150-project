@@ -217,9 +217,6 @@ outputs_small_archive/checkpoints/*.pt
 
 .cursor/plans/*
 
-# Archived outputs from previous subset runs
-#outputs_small_archive/
-
 # Marimo
 marimo/_static/
 marimo/_lsp/

@@ -1,0 +1,23 @@
+{
+  "model_name": "mlp_baseline",
+  "input_type": "tfidf",
+  "primary_val_metric": "val_macro_f1",
+  "best_val_macro_f1": 0.9150108071290272,
+  "test_accuracy": 0.8232727272727273,
+  "test_macro_f1": 0.8662969783407675,
+  "test_precision": 0.8349385003126186,
+  "test_recall": 0.9136931567328919,
+  "oos_precision": 0.899103139013453,
+  "oos_recall": 0.401,
+  "oos_f1": 0.5546334716459198,
+  "training_time": 117.43053007125854,
+  "inference_latency": {
+    "total_seconds": 0.417208194732666,
+    "avg_ms_per_example": 0.07585603540593927,
+    "examples_per_sec": 13182.86665851381
+  },
+  "parameter_count": 5197975,
+  "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/mlp_best_h512_d0.2_lr00005_wd00001_1layer_s42.pt",
+  "preprocessing_artifact_refs": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts",
+  "notes": "TF-IDF + MLP baseline; best tuning run used directly (no retraining)."
+}

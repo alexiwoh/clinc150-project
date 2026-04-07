@@ -1,73 +1,73 @@
 {
   "greeting": [
-    "how are you doing today, ai",
-    "why, hello bandit",
-    "just wanted to say hi",
-    "hey what's up",
-    "hey how's it hanging"
+    "how's everything",
+    "how are things going",
+    "hello, anyone there",
+    "are you okay right now",
+    "are you doing okay"
   ],
   "book_flight": [
-    "can you find me a flight from portland, oregon to portland, maine for under $500 on delta",
-    "i'm looking for a roundtrip flight from afw to dgb for tomorrow until next week",
-    "could you check and let me know roundtrip flights from dallas to houston for march 7 and march 20",
-    "find me round trip flights out of lax to sfox",
-    "i need to get a flight out of my local airport to england on monday, the 23rd for under a grand"
+    "what's the cheapest fares from lax to sfo for round trip flights leaving april 1st and returning april 7th",
+    "for the dates april 1st to the 7th, find me round trip air tickets from la to sfo",
+    "what southwest flights are there for lax to sfo arriving april 1st and returning april 7th",
+    "what airlines have flights round trip on april 1st to april 7th from lax to sfo",
+    "find me round trip flights out of lax to sfox"
   ],
   "flight_status": [
-    "whats my delta flight's status",
-    "when is my flight due to arrive",
-    "when does my flight arrive",
-    "is there an update on flight dl123",
-    "when does boarding for my flight begin"
+    "what is the projected time frame for the flight to land",
+    "is there any news on flight dl123",
+    "what is the word on flight dl123",
+    "when will we begin to board my scheduled flight",
+    "whats the status of my frontier flight"
   ],
   "weather": [
-    "what is the weather like in sparks right now",
-    "what s the uv index tomorrow",
-    "costa mesa weather",
-    "what will the low temperatures be over the weekend",
-    "what is the high temperature for tomorrow"
+    "what are the conditions like in orlando",
+    "what's the temperature like in tampa",
+    "what's the forecast like for pittsburgh",
+    "what are the conditions like in sarasota",
+    "what's the climate like in chicago"
   ],
   "translate": [
-    "how would i say, 'i don't know the answer' in spanish",
-    "how do they say \"how's it going\" in swahili",
-    "how do i say you're welcome in chinese",
-    "what is latin for i love you",
-    "how do i say thank you in japanese"
+    "what expression would i use to say i love you if i were an italian",
+    "can you tell me how to say 'i do not speak much spanish', in spanish",
+    "what is the equivalent of, 'life is good' in french",
+    "tell me how to say, 'it is a beautiful morning' in italian",
+    "if i were mongolian, how would i say that i am a tourist"
   ],
   "balance": [
-    "how much do i have in savings",
-    "what's my checking balance",
-    "what is status of my bank account",
-    "what's my current bank savings",
-    "what is my money market account balance"
+    "savings account balance at chase bank please",
+    "check chase bank for my checking balance",
+    "what is my checking account balance at chase",
+    "i want my checking balance at chase",
+    "what's my savings balance at chase"
   ],
   "shopping_list": [
-    "what items are on my shopping list",
-    "do i have a big shopping list",
-    "list out my shopping list for me",
-    "does my shopping list consist of chips",
-    "i need to know what is on my shopping list"
+    "would you let me know what is on my shopping list",
+    "list out what is on my shopping list",
+    "i need for you to tell me what is on my shopping list",
+    "do you want me to shop for peanut butter",
+    "do you want peanut butter for your lunches this week"
   ],
   "shopping_list_update": [
-    "can you add cherrios to my shopping list",
-    "add eggs to my shopping list and remove cheese",
-    "write apples on my shopping list",
-    "i want you to add milk on my shopping list unless it is already on it",
-    "my shopping list should have carrots on it"
+    "delete fries from shopping list",
+    "take off fries from the shopping list",
+    "please take away the fries from the shopping list",
+    "remove fries from my shopping list",
+    "we no longer need fries on the shopping lisr"
   ],
   "pto_request": [
-    "can i put in a vacation request with you",
-    "can you set up a pto request for me for march 20th to april 12th",
-    "can you put in a pto request for me from march 1-7",
-    "i need help making a pto request for march 3-10",
+    "how do i put in a pto request for the first to the ninth",
+    "am i allowed to put in a pto request for now to april",
+    "is there a time i can put in a pto request for dec 2 to new years",
+    "when can i put a pto request in for feb 22 to march 1",
     "i need a pto request on march 1 to 2"
   ],
   "pto_request_status": [
-    "am i approved for vacation yet",
-    "i'm i okayed for vacation time",
-    "have i been approved for vacation yet",
-    "update on vacation request",
-    "i requested some vacation time; has it been approved"
+    "have they approved my vacation request yet",
+    "give me the status of my vacation request",
+    "am i going to be able to get my vacation request",
+    "i want to check on my vacation request",
+    "is my vacation approved yet"
   ],
   "oos": [
     "how much is an overdraft fee for bank",

@@ -1,0 +1,145 @@
+{
+  "selection_rule": "All misclassified examples sorted by (true_label, predicted_label, text); first top_k returned.",
+  "errors": [
+    {
+      "text": "can i reserve tables at the new york restaurant",
+      "true_label": "accept_reservations",
+      "predicted_label": "restaurant_reservation",
+      "true_id": 9,
+      "predicted_id": 23
+    },
+    {
+      "text": "do you think they'll let me reserve a table at the olive garden",
+      "true_label": "accept_reservations",
+      "predicted_label": "restaurant_reservation",
+      "true_id": 9,
+      "predicted_id": 23
+    },
+    {
+      "text": "is it possible to reserve a table at white castle",
+      "true_label": "accept_reservations",
+      "predicted_label": "restaurant_reservation",
+      "true_id": 9,
+      "predicted_id": 23
+    },
+    {
+      "text": "is there a reason you put a hold on my chase account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
+      "text": "reasons that us bank would place a hold on my account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
+      "text": "what could cause a hold on my savings account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
+      "text": "i need to up by noon",
+      "true_label": "alarm",
+      "predicted_label": "directions",
+      "true_id": 83,
+      "predicted_id": 72
+    },
+    {
+      "text": "what are my coffers at",
+      "true_label": "balance",
+      "predicted_label": "current_location",
+      "true_id": 35,
+      "predicted_id": 136
+    },
+    {
+      "text": "how expensive is my internet",
+      "true_label": "bill_balance",
+      "predicted_label": "oos",
+      "true_id": 27,
+      "predicted_id": 42
+    },
+    {
+      "text": "i need to know the price of my car payment and insurance please",
+      "true_label": "bill_balance",
+      "predicted_label": "pay_bill",
+      "true_id": 27,
+      "predicted_id": 111
+    },
+    {
+      "text": "is the phone bill the same as last month",
+      "true_label": "bill_balance",
+      "predicted_label": "transactions",
+      "true_id": 27,
+      "predicted_id": 68
+    },
+    {
+      "text": "i need to know the next billing date of my american express card",
+      "true_label": "bill_due",
+      "predicted_label": "expiration_date",
+      "true_id": 56,
+      "predicted_id": 44
+    },
+    {
+      "text": "when does the current billing cycle end",
+      "true_label": "bill_due",
+      "predicted_label": "oos",
+      "true_id": 56,
+      "predicted_id": 42
+    },
+    {
+      "text": "tell me the last day i can pay my gas bill",
+      "true_label": "bill_due",
+      "predicted_label": "pay_bill",
+      "true_id": 56,
+      "predicted_id": 111
+    },
+    {
+      "text": "what's the latest i can pay my cellular bill",
+      "true_label": "bill_due",
+      "predicted_label": "pay_bill",
+      "true_id": 56,
+      "predicted_id": 111
+    },
+    {
+      "text": "book me a place to chicago from atlanta united airlines",
+      "true_label": "book_flight",
+      "predicted_label": "book_hotel",
+      "true_id": 63,
+      "predicted_id": 116
+    },
+    {
+      "text": "i'm travelling to boston on march 2 until march 4 please make a hotel reservation for me",
+      "true_label": "book_hotel",
+      "predicted_label": "book_flight",
+      "true_id": 116,
+      "predicted_id": 63
+    },
+    {
+      "text": "i spent 34 dollars for 12 gallons of paint what is the average price for each gallon",
+      "true_label": "calculator",
+      "predicted_label": "exchange_rate",
+      "true_id": 138,
+      "predicted_id": 38
+    },
+    {
+      "text": "i bought 6 shirts at $499 each what was my total expenditure for them",
+      "true_label": "calculator",
+      "predicted_label": "income",
+      "true_id": 138,
+      "predicted_id": 93
+    },
+    {
+      "text": "what is the average of 54, 23, 43, 12, and 442",
+      "true_label": "calculator",
+      "predicted_label": "oos",
+      "true_id": 138,
+      "predicted_id": 42
+    }
+  ]
+}
