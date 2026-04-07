@@ -19,7 +19,7 @@ def figures_dir(tmp_path: Path) -> Path:
 
 class TestPlotSplitSizes:
     def test_creates_file(self, figures_dir: Path) -> None:
-        sizes = {"train": 7600, "validation": 3100, "test": 5500}
+        sizes = {"train": 15250, "validation": 3100, "test": 5500}
         out = figures_dir / "split_sizes.png"
         DatasetVisualizer.plot_split_sizes(sizes, out)
         assert out.exists() and out.stat().st_size > 0
@@ -47,8 +47,8 @@ class TestPlotClassDistribution:
 
 class TestPlotOosVsInscope:
     def test_creates_file(self, figures_dir: Path) -> None:
-        oos = {"train": 100, "validation": 100, "test": 1000}
-        ins = {"train": 7500, "validation": 3000, "test": 4500}
+        oos = {"train": 250, "validation": 100, "test": 1000}
+        ins = {"train": 15000, "validation": 3000, "test": 4500}
         out = figures_dir / "oos_vs_inscope.png"
         DatasetVisualizer.plot_oos_vs_inscope(oos, ins, out)
         assert out.exists() and out.stat().st_size > 0

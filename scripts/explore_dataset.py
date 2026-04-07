@@ -37,8 +37,8 @@ OOS_EVAL_STRATEGY = (
 
 QUIRKS_AND_CAVEATS = [
     "Test split has ~18% OOS examples vs ~1% in train — heavy distribution shift.",
-    "In-scope classes are perfectly balanced at 50 train examples each in the 'small' subset.",
-    "OOS has 100 train examples (2x any single in-scope class).",
+    f"In-scope classes are perfectly balanced in the '{DATASET_CONFIG.subset}' subset.",
+    "OOS has 100 train examples (2x any single in-scope class in 'small'; ~0.67x in 'plus').",
 ]
 
 

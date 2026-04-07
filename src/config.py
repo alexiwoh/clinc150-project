@@ -28,7 +28,7 @@ class DatasetConfig:
     """Experiment-level dataset settings."""
 
     name: str = "clinc/clinc_oos"
-    subset: str = "small"
+    subset: str = "plus"
     cache_dir: Path = constants.RAW_DIR
 
 
@@ -99,7 +99,7 @@ class MLPBaselineConfig:
 class TextCNNConfig:
     """Hyperparameters for the Text CNN (Kim-style) model."""
 
-    vocab_size: int = 4311
+    vocab_size: int = 0
     embedding_dim: int = 128
     num_filters: int = 100
     kernel_sizes: tuple[int, ...] = (3, 4, 5)

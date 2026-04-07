@@ -10,7 +10,7 @@ from src.dataset import CLINCDataset
 
 EXPECTED_SPLIT_NAMES = {"train", "validation", "test"}
 EXPECTED_COLUMNS = {"text", "intent"}
-EXPECTED_TRAIN_SIZE = 7600
+EXPECTED_TRAIN_SIZE = 15250
 
 
 @pytest.fixture(scope="session")

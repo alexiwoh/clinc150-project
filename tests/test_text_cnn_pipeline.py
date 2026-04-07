@@ -51,12 +51,20 @@ class TestManifestValidation:
         config = TextCNNConfig()
         _validate_preprocessing_manifest(summary, config, label_to_id)
 
-    def test_wrong_vocab_size_raises(self) -> None:
+    def test_non_positive_vocab_size_raises(self) -> None:
         summary = _make_valid_summary()
-        summary["vocabulary_size"] = 9999
+        summary["vocabulary_size"] = 0
         label_to_id = _make_valid_label_to_id()
         config = TextCNNConfig()
-        with pytest.raises(AssertionError, match="vocab_size"):
+        with pytest.raises(AssertionError, match="vocabulary_size"):
+            _validate_preprocessing_manifest(summary, config, label_to_id)
+
+    def test_negative_vocab_size_raises(self) -> None:
+        summary = _make_valid_summary()
+        summary["vocabulary_size"] = -1
+        label_to_id = _make_valid_label_to_id()
+        config = TextCNNConfig()
+        with pytest.raises(AssertionError, match="vocabulary_size"):
             _validate_preprocessing_manifest(summary, config, label_to_id)
 
     def test_wrong_max_seq_length_raises(self) -> None:

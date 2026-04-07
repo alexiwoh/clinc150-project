@@ -473,7 +473,7 @@ def _build_text_cnn_run_summary(
         # 4-6
         "vocab_size": config["vocab_size"],
         "max_sequence_length": config["max_seq_length"],
-        "number_of_classes": results.get("total_parameters") and metadata["num_classes"],
+        "number_of_classes": metadata["num_classes"],
         # 7-10
         "model_architecture": "TextCNN (Kim-style sentence CNN)",
         "embedding_policy": {

@@ -81,6 +81,7 @@ class NeuralMetadata(TypedDict):
     label_to_id: dict[str, int]
     id_to_label: dict[int, str]
     num_classes: int
+    vocab_size: int
     oov_stats: dict[str, dict[str, int | float]]
     truncation_stats: dict[str, dict[str, int | float]]
     preprocessing_policy: dict[str, bool | str]
@@ -409,9 +410,11 @@ def _validate_preprocessing_manifest(
     """Validate the full preprocessing manifest against the TextCNN config.
 
     Fails loudly on any mismatch so stale artifacts are never used silently.
+    vocab_size is read from the manifest as the source of truth rather than
+    cross-checked against a config default.
     """
-    assert summary["vocabulary_size"] == config.vocab_size, (
-        f"Manifest vocab_size={summary['vocabulary_size']} != config.vocab_size={config.vocab_size}"
+    assert isinstance(summary["vocabulary_size"], int) and summary["vocabulary_size"] > 0, (
+        f"Manifest vocabulary_size must be a positive int, got {summary['vocabulary_size']!r}"
     )
 
     special_tokens = summary["special_tokens"]
@@ -567,6 +570,7 @@ def load_neural_data(
         "label_to_id": label_to_id,
         "id_to_label": id_to_label,
         "num_classes": num_classes,
+        "vocab_size": summary["vocabulary_size"],
         "oov_stats": oov_stats,
         "truncation_stats": truncation_stats,
         "preprocessing_policy": preprocessing_policy,
@@ -578,6 +582,10 @@ def load_neural_data(
 
 def build_text_cnn(config: TextCNNConfig, num_classes: int) -> TextCNN:
     """Construct a TextCNN model from config, with dimension assertions."""
+    assert config.vocab_size > 0, (
+        f"vocab_size must be positive (got {config.vocab_size}); "
+        "set it from NeuralMetadata['vocab_size'] before building the model"
+    )
     assert num_classes == NUM_CLASSES, f"num_classes={num_classes} doesn't match NUM_CLASSES={NUM_CLASSES}"
     return TextCNN(
         vocab_size=config.vocab_size,
@@ -814,13 +822,13 @@ def run_text_cnn_default(
 
     Returns the full run result dict including metadata.
     """
-    if config is None:
-        config = TextCNNConfig()
-
+    loading_config = config if config is not None else TextCNNConfig()
     loaders: dict[str, DataLoader]
     metadata: NeuralMetadata
-    loaders, metadata = load_neural_data(config)
+    loaders, metadata = load_neural_data(loading_config)
     num_classes: int = metadata["num_classes"]
+    if config is None or config.vocab_size == 0:
+        config = TextCNNConfig(vocab_size=metadata["vocab_size"])
 
     print("\n=== Default Text CNN Run ===")
     result: dict[str, Any] = train_text_cnn(config, loaders, num_classes, metadata)
@@ -889,20 +897,24 @@ def run_text_cnn_tuning(
     """Run staged Text CNN hyperparameter tuning. Returns results as a DataFrame."""
     ensure_dir(REPORTS_DIR)
     all_results: list[dict[str, Any]] = []
+    vocab_size: int = metadata["vocab_size"]
 
     # --- Stage 1: lr x dropout ---
     stage_1_configs: list[TextCNNConfig] = [
-        TextCNNConfig(learning_rate=lr, dropout_rate=dr)
+        TextCNNConfig(vocab_size=vocab_size, learning_rate=lr, dropout_rate=dr)
         for lr in _CNN_TUNING_STAGE_1["learning_rate"]
         for dr in _CNN_TUNING_STAGE_1["dropout_rate"]
     ]
     print(f"\n=== Text CNN Tuning Stage 1: lr x dropout ({len(stage_1_configs)} runs) ===")
+    stage_1_results: list[dict[str, Any]] = []
     for i, cfg in enumerate(stage_1_configs, 1):
         print(f"\n--- Stage 1 run {i}/{len(stage_1_configs)} ---")
         result = train_text_cnn(cfg, loaders, num_classes, metadata)
-        all_results.append(_tuning_row(result))
+        row = _tuning_row(result)
+        stage_1_results.append(row)
+        all_results.append(row)
 
-    best_s1 = _select_best_from_rows(all_results)
+    best_s1 = _select_best_from_rows(stage_1_results)
     best_lr = best_s1["learning_rate"]
     best_dr = best_s1["dropout_rate"]
     print(f"\n  Stage 1 best: lr={best_lr}, dropout={best_dr}")
@@ -910,6 +922,7 @@ def run_text_cnn_tuning(
     # --- Stage 2: embedding_dim x num_filters ---
     stage_2_configs: list[TextCNNConfig] = [
         TextCNNConfig(
+            vocab_size=vocab_size,
             learning_rate=best_lr,
             dropout_rate=best_dr,
             embedding_dim=ed,
@@ -919,12 +932,15 @@ def run_text_cnn_tuning(
         for nf in _CNN_TUNING_STAGE_2["num_filters"]
     ]
     print(f"\n=== Text CNN Tuning Stage 2: emb_dim x num_filters ({len(stage_2_configs)} runs) ===")
+    stage_2_results: list[dict[str, Any]] = []
     for i, cfg in enumerate(stage_2_configs, 1):
         print(f"\n--- Stage 2 run {i}/{len(stage_2_configs)} ---")
         result = train_text_cnn(cfg, loaders, num_classes, metadata)
-        all_results.append(_tuning_row(result))
+        row = _tuning_row(result)
+        stage_2_results.append(row)
+        all_results.append(row)
 
-    best_s2 = _select_best_from_rows(all_results)
+    best_s2 = _select_best_from_rows(stage_2_results)
     best_ed = best_s2["embedding_dim"]
     best_nf = best_s2["num_filters"]
     print(f"\n  Stage 2 best: emb_dim={best_ed}, num_filters={best_nf}")
@@ -932,6 +948,7 @@ def run_text_cnn_tuning(
     # --- Stage 3: kernel combos x weight_decay ---
     stage_3_configs: list[TextCNNConfig] = [
         TextCNNConfig(
+            vocab_size=vocab_size,
             learning_rate=best_lr,
             dropout_rate=best_dr,
             embedding_dim=best_ed,
@@ -942,9 +959,13 @@ def run_text_cnn_tuning(
         for ks in _CNN_TUNING_STAGE_3_KERNELS
         for wd in _CNN_TUNING_STAGE_3_WD
     ]
-    print(f"\n=== Text CNN Tuning Stage 3: kernels x wd ({len(stage_3_configs)} runs) ===")
-    for i, cfg in enumerate(stage_3_configs, 1):
-        print(f"\n--- Stage 3 run {i}/{len(stage_3_configs)} ---")
+    already_run: set[str] = {r["run_name"] for r in all_results}
+    stage_3_new = [c for c in stage_3_configs if _text_cnn_run_name(c) not in already_run]
+    if len(stage_3_new) < len(stage_3_configs):
+        print(f"  Skipping {len(stage_3_configs) - len(stage_3_new)} stage-3 configs already run in earlier stages")
+    print(f"\n=== Text CNN Tuning Stage 3: kernels x wd ({len(stage_3_new)} new runs) ===")
+    for i, cfg in enumerate(stage_3_new, 1):
+        print(f"\n--- Stage 3 run {i}/{len(stage_3_new)} ---")
         result = train_text_cnn(cfg, loaders, num_classes, metadata)
         all_results.append(_tuning_row(result))
 
@@ -1029,9 +1050,11 @@ def run_text_cnn_experiment() -> dict[str, Any]:
     """
     from src.evaluate import evaluate_text_cnn
 
-    default_config = TextCNNConfig()
-    loaders, metadata = load_neural_data(default_config)
+    initial_config = TextCNNConfig()
+    loaders, metadata = load_neural_data(initial_config)
     num_classes: int = metadata["num_classes"]
+    vocab_size: int = metadata["vocab_size"]
+    default_config = TextCNNConfig(vocab_size=vocab_size)
 
     # --- Phase 1 verification: default run + checkpoint reload ---
     print("\n=== Default Text CNN Run ===")
@@ -1067,6 +1090,7 @@ def run_text_cnn_experiment() -> dict[str, Any]:
     best_run_name: str = best_row["run_name"]
 
     best_config = TextCNNConfig(
+        vocab_size=vocab_size,
         embedding_dim=int(best_row["embedding_dim"]),
         num_filters=int(best_row["num_filters"]),
         kernel_sizes=tuple(int(x) for x in best_row["kernel_sizes"].strip("[]()").split(",")),

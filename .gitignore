@@ -200,6 +200,7 @@ data/raw/clinc___clinc_oos/
 # Model checkpoints — large binary files, reproducible by rerunning training.
 # Keep .gitkeep files to preserve directory structure.
 outputs/checkpoints/*.pt
+outputs_small_archive/checkpoints/*.pt
 
 # PyPI configuration file
 .pypirc
@@ -215,6 +216,9 @@ outputs/checkpoints/*.pt
 .cursorindexingignore
 
 .cursor/plans/*
+
+# Archived outputs from previous subset runs
+#outputs_small_archive/
 
 # Marimo
 marimo/_static/
