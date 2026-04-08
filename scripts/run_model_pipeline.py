@@ -25,6 +25,7 @@ from src.repeated_evaluation import (
     extract_and_freeze_configs,
     run_all_repeated_evaluations,
 )
+from src.analysis import run_error_analysis
 from src.report_figure_generation import run_report_figure_generation
 
 logger = logging.getLogger(__name__)
@@ -144,16 +145,24 @@ def main(argv: list[str] | None = None) -> None:
     # Report-ready figure generation and error-analysis handoff
     visualization_success = run_report_figure_generation(models)
 
+    # Error analysis (Step 10)
+    analysis_success = run_error_analysis(models)
+
     print("=" * 60)
     print("  Pipeline Summary")
     print("=" * 60)
     print("  Repeated evaluation: complete")
     print(f"  Experiment tracking: {'PASS' if tracking_success else 'FAIL'}")
     print(f"  Visualization:       {'PASS' if visualization_success else 'FAIL'}")
+    print(f"  Error analysis:      {'PASS' if analysis_success else 'FAIL'}")
     print("=" * 60)
 
     if not visualization_success:
         print("Report figure generation failed. Review errors above.")
+        sys.exit(1)
+
+    if not analysis_success:
+        print("Error analysis failed. Review errors above.")
         sys.exit(1)
 
     print("Model pipeline complete.")

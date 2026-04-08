@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "bilstm",
+  "model_name": "BiLSTM",
+  "representative_run_id": "run_02_seed_1337",
+  "ece": 0.11253382217884061,
+  "mce": 0.4093617286000933,
+  "brier_score": 0.32349875569343567,
+  "nll": 1.2144763469696045,
+  "n_bins": 15,
+  "bin_data": [
+    {
+      "bin_lower": 0.0,
+      "bin_upper": 0.06666666666666667,
+      "count": 0,
+      "accuracy": 0.0,
+      "confidence": 0.0
+    },
+    {
+      "bin_lower": 0.06666666666666667,
+      "bin_upper": 0.13333333333333333,
+      "count": 2,
+      "accuracy": 0.0,
+      "confidence": 0.1116548627614975
+    },
+    {
+      "bin_lower": 0.13333333333333333,
+      "bin_upper": 0.2,
+      "count": 20,
+      "accuracy": 0.15,
+      "confidence": 0.1779969036579132
+    },
+    {
+      "bin_lower": 0.2,
+      "bin_upper": 0.26666666666666666,
+      "count": 62,
+      "accuracy": 0.1774193548387097,
+      "confidence": 0.2375197857618332
+    },
+    {
+      "bin_lower": 0.26666666666666666,
+      "bin_upper": 0.3333333333333333,
+      "count": 78,
+      "accuracy": 0.11538461538461539,
+      "confidence": 0.30243828892707825
+    },
+    {
+      "bin_lower": 0.3333333333333333,
+      "bin_upper": 0.4,
+      "count": 99,
+      "accuracy": 0.18181818181818182,
+      "confidence": 0.36518728733062744
+    },
+    {
+      "bin_lower": 0.4,
+      "bin_upper": 0.4666666666666667,
+      "count": 111,
+      "accuracy": 0.2702702702702703,
+      "confidence": 0.43438756465911865
+    },
+    {
+      "bin_lower": 0.4666666666666667,
+      "bin_upper": 0.5333333333333333,
+      "count": 138,
+      "accuracy": 0.2826086956521739,
+      "confidence": 0.4974897503852844
+    },
+    {
+      "bin_lower": 0.5333333333333333,
+      "bin_upper": 0.6,
+      "count": 124,
+      "accuracy": 0.2903225806451613,
+      "confidence": 0.5686355233192444
+    },
+    {
+      "bin_lower": 0.6,
+      "bin_upper": 0.6666666666666666,
+      "count": 115,
+      "accuracy": 0.2956521739130435,
+      "confidence": 0.630465030670166
+    },
+    {
+      "bin_lower": 0.6666666666666666,
+      "bin_upper": 0.7333333333333333,
+      "count": 139,
+      "accuracy": 0.41007194244604317,
+      "confidence": 0.7010993361473083
+    },
+    {
+      "bin_lower": 0.7333333333333333,
+      "bin_upper": 0.8,
+      "count": 140,
+      "accuracy": 0.35714285714285715,
+      "confidence": 0.7665045857429504
+    },
+    {
+      "bin_lower": 0.8,
+      "bin_upper": 0.8666666666666667,
+      "count": 187,
+      "accuracy": 0.5721925133689839,
+      "confidence": 0.8340924978256226
+    },
+    {
+      "bin_lower": 0.8666666666666667,
+      "bin_upper": 0.9333333333333333,
+      "count": 230,
+      "accuracy": 0.5695652173913044,
+      "confidence": 0.9026182889938354
+    },
+    {
+      "bin_lower": 0.9333333333333333,
+      "bin_upper": 1.0,
+      "count": 4055,
+      "accuracy": 0.9363748458692972,
+      "confidence": 0.9949339032173157
+    }
+  ],
+  "confidence_statistics": {
+    "correct_max_confidence_mean": 0.9611595869064331,
+    "correct_max_confidence_std": 0.11496389657258987,
+    "incorrect_max_confidence_mean": 0.6679146885871887,
+    "incorrect_max_confidence_std": 0.2492549568414688,
+    "prediction_entropy_mean": 0.3429349660873413,
+    "prediction_entropy_std": 0.6258046627044678,
+    "correct_margin_mean": 0.939268171787262,
+    "correct_margin_std": 0.17442399263381958,
+    "incorrect_margin_mean": 0.5204535126686096,
+    "incorrect_margin_std": 0.33946138620376587
+  },
+  "source_artifact": "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
+}

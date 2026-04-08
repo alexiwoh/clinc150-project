@@ -7,17 +7,17 @@ from typing import Any
 
 from src.analysis.utils import (
     HandoffContext,
+    load_confidences,
+    load_predictions,
     read_json,
     resolve_handoff,
     validate_consistency,
-    load_confidences,
-    load_predictions,
 )
 from src.constants import (
     AGGREGATE_SUBDIR,
+    PROJECT_ROOT,
     SHARED_DIR,
     model_output_dir,
-    PROJECT_ROOT,
 )
 from src.enums import ModelID
 from src.report_figure_generation import FigureRecord
@@ -83,7 +83,7 @@ def run_preflight_validation(model_ids: list[ModelID]) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Per-model analysis orchestration (Sections B-G)
+# Per-model analysis orchestration (Sections B-K)
 # ---------------------------------------------------------------------------
 
 
@@ -94,9 +94,11 @@ def _run_per_model_analysis(ctx: HandoffContext) -> tuple[dict[str, dict[str, An
     maps section keys to their saved artifact dicts.
     """
     from src.analysis.calibration import compute_and_save_calibration
+    from src.analysis.class_analysis import compute_and_save_confusion_stability, compute_and_save_worst_classes
     from src.analysis.confidence import compute_and_save_confidence_stratification
     from src.analysis.extended_metrics import compute_and_save_extended_metrics
     from src.analysis.oos_analysis import compute_and_save_oos_deep_dive, compute_and_save_oos_threshold
+    from src.analysis.slicing import compute_and_save_frequency_analysis, compute_and_save_length_analysis
     from src.analysis.taxonomy import compute_and_save_error_taxonomy
 
     conf = load_confidences(ctx.confidences_path)
@@ -134,11 +136,28 @@ def _run_per_model_analysis(ctx: HandoffContext) -> tuple[dict[str, dict[str, An
     section_artifacts["confidence_stratification"] = conf_strat
     all_records.extend(conf_records)
 
+    # Section H: Length and frequency slicing
+    length = compute_and_save_length_analysis(ctx)
+    section_artifacts["length_slice"] = length
+
+    frequency = compute_and_save_frequency_analysis(ctx)
+    section_artifacts["frequency_slice"] = frequency
+
+    # Section J: Worst classes deep dive
+    worst_classes, wc_records = compute_and_save_worst_classes(ctx)
+    section_artifacts["worst_classes"] = worst_classes
+    all_records.extend(wc_records)
+
+    # Section K: Confusion stability
+    stability, stab_records = compute_and_save_confusion_stability(ctx)
+    section_artifacts["confusion_stability"] = stability
+    all_records.extend(stab_records)
+
     return section_artifacts, all_records
 
 
 # ---------------------------------------------------------------------------
-# Shared comparison generation (Sections B-G cross-model)
+# Shared comparison generation
 # ---------------------------------------------------------------------------
 
 
@@ -146,11 +165,13 @@ def _run_shared_comparisons(
     model_ids: list[ModelID],
     all_model_artifacts: dict[str, dict[str, dict[str, Any]]],
 ) -> list[FigureRecord]:
-    """Generate all shared cross-model comparison artifacts and figures for Phase 1."""
+    """Generate all shared cross-model comparison artifacts and figures."""
     from src.analysis.calibration import generate_calibration_comparison
+    from src.analysis.class_analysis import generate_worst_classes_comparison
     from src.analysis.confidence import generate_confidence_comparison
     from src.analysis.extended_metrics import generate_extended_metrics_comparison
     from src.analysis.oos_analysis import generate_oos_error_comparison, generate_oos_threshold_comparison
+    from src.analysis.slicing import generate_slice_comparisons
     from src.analysis.taxonomy import generate_taxonomy_summary, save_intent_domain_mapping
 
     all_records: list[FigureRecord] = []
@@ -187,6 +208,16 @@ def _run_shared_comparisons(
     conf_records = generate_confidence_comparison(model_ids, conf_strat)
     all_records.extend(conf_records)
 
+    # Section H: Slice comparisons
+    length_data = {mid: all_model_artifacts[mid]["length_slice"] for mid in all_model_artifacts}
+    freq_data = {mid: all_model_artifacts[mid]["frequency_slice"] for mid in all_model_artifacts}
+    slice_records = generate_slice_comparisons(model_ids, length_data, freq_data)
+    all_records.extend(slice_records)
+
+    # Section J2: Worst classes comparison
+    worst_data = {mid: all_model_artifacts[mid]["worst_classes"] for mid in all_model_artifacts}
+    generate_worst_classes_comparison(model_ids, worst_data)
+
     return all_records
 
 
@@ -206,7 +237,7 @@ def run_error_analysis(model_ids: list[ModelID]) -> bool:
         all_records: list[FigureRecord] = []
         all_model_artifacts: dict[str, dict[str, dict[str, Any]]] = {}
 
-        # Phase 1: Per-model analyses (Sections B-G)
+        # Per-model analyses (Sections B-K)
         for mid in model_ids:
             logger.info("Running per-model analysis for %s ...", mid.display_name)
             ctx = resolve_handoff(mid)
@@ -214,13 +245,49 @@ def run_error_analysis(model_ids: list[ModelID]) -> bool:
             all_model_artifacts[str(mid)] = section_artifacts
             all_records.extend(records)
 
-        # Phase 1: Shared comparisons
+        # Shared comparisons (Sections B-K cross-model)
         logger.info("Generating shared comparison artifacts ...")
         shared_records = _run_shared_comparisons(model_ids, all_model_artifacts)
         all_records.extend(shared_records)
 
-        # Phase 2 hooks (slicing, cross-model, class analysis, curation, summary, handoff)
-        # will be wired here in Phase 2 implementation
+        # Section I: Cross-model error comparison
+        from src.analysis.cross_model import compute_and_save_cross_model_comparison
+
+        logger.info("Running cross-model error comparison ...")
+        _, cross_records = compute_and_save_cross_model_comparison(model_ids)
+        all_records.extend(cross_records)
+
+        # Section L: Curated report examples
+        from src.analysis.curation import curate_report_examples
+
+        logger.info("Curating report examples ...")
+        curate_report_examples(model_ids)
+
+        # Section M: Error analysis summary and notes
+        from src.analysis.summary import generate_error_analysis_notes, generate_error_analysis_summary
+
+        logger.info("Generating error analysis summary ...")
+        generate_error_analysis_summary(model_ids)
+        generate_error_analysis_notes(model_ids)
+
+        # Section N: Step 11 handoff and figure manifest
+        from src.analysis.handoff import (
+            generate_step11_handoff,
+            update_figure_manifest,
+            validate_handoff_paths,
+            validate_manifest_paths,
+        )
+
+        logger.info("Building Step 11 handoff ...")
+        generate_step11_handoff(model_ids, all_records)
+        update_figure_manifest(all_records)
+
+        from src.analysis.utils import shared_analysis_dir
+        from src.analysis.constants import STEP11_HANDOFF_FILENAME
+
+        handoff_path = shared_analysis_dir() / STEP11_HANDOFF_FILENAME
+        validate_handoff_paths(handoff_path)
+        validate_manifest_paths(SHARED_DIR / "figure_manifest.json")
 
         logger.info(
             "Step 10 error analysis complete — %d figures generated, %d models analyzed.",

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "mlp",
+  "model_name": "TF-IDF + MLP",
+  "representative_run_id": "run_01_seed_42",
+  "macro_f1": 0.8742423850285791,
+  "micro_f1": 0.84,
+  "weighted_f1": 0.8326351147423667,
+  "macro_precision": 0.8492162391284832,
+  "macro_recall": 0.9121611479028697,
+  "micro_precision": 0.84,
+  "micro_recall": 0.84,
+  "weighted_precision": 0.8534573700862275,
+  "weighted_recall": 0.84,
+  "accuracy": 0.84,
+  "source_artifact": "outputs/mlp/final_runs/run_01_seed_42/final_predictions.csv"
+}

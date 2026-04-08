@@ -1,0 +1,218 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "text_cnn",
+  "model_name": "Text CNN",
+  "representative_run_id": "run_03_seed_2024",
+  "strata": [
+    {
+      "bin_label": "[0.0, 0.2)",
+      "bin_lower": 0.0,
+      "bin_upper": 0.2,
+      "count": 294,
+      "accuracy": 0.24489795918367346,
+      "error_count": 222,
+      "error_fraction_of_total": 0.22560975609756098
+    },
+    {
+      "bin_label": "[0.2, 0.4)",
+      "bin_lower": 0.2,
+      "bin_upper": 0.4,
+      "count": 379,
+      "accuracy": 0.33773087071240104,
+      "error_count": 251,
+      "error_fraction_of_total": 0.2550813008130081
+    },
+    {
+      "bin_label": "[0.4, 0.6)",
+      "bin_lower": 0.4,
+      "bin_upper": 0.6,
+      "count": 344,
+      "accuracy": 0.4738372093023256,
+      "error_count": 181,
+      "error_fraction_of_total": 0.1839430894308943
+    },
+    {
+      "bin_label": "[0.6, 0.8)",
+      "bin_lower": 0.6,
+      "bin_upper": 0.8,
+      "count": 384,
+      "accuracy": 0.6302083333333334,
+      "error_count": 142,
+      "error_fraction_of_total": 0.1443089430894309
+    },
+    {
+      "bin_label": "[0.8, 1.0]",
+      "bin_lower": 0.8,
+      "bin_upper": 1.0,
+      "count": 4099,
+      "accuracy": 0.9541351549158331,
+      "error_count": 188,
+      "error_fraction_of_total": 0.1910569105691057
+    }
+  ],
+  "high_confidence_errors": [
+    {
+      "text": "how many calories does doing 20 situps burn",
+      "true_label_name": "oos",
+      "predicted_label_name": "calories",
+      "max_confidence": 0.9999847412109375,
+      "prediction_entropy": 0.00021646889217663556,
+      "confidence_margin": 0.9999789595603943
+    },
+    {
+      "text": "give me the weather forecast for today",
+      "true_label_name": "oos",
+      "predicted_label_name": "weather",
+      "max_confidence": 0.9999822378158569,
+      "prediction_entropy": 0.00026078528026118875,
+      "confidence_margin": 0.9999761581420898
+    },
+    {
+      "text": "how many calories does jumping up and down burn",
+      "true_label_name": "oos",
+      "predicted_label_name": "calories",
+      "max_confidence": 0.9999232292175293,
+      "prediction_entropy": 0.0009218725608661771,
+      "confidence_margin": 0.9998743534088135
+    },
+    {
+      "text": "call an uber to take me to the closest grocery store",
+      "true_label_name": "oos",
+      "predicted_label_name": "uber",
+      "max_confidence": 0.9998862743377686,
+      "prediction_entropy": 0.0014285387005656958,
+      "confidence_margin": 0.9998416900634766
+    },
+    {
+      "text": "what's the current prevailing interest rate for mortgages in my area",
+      "true_label_name": "oos",
+      "predicted_label_name": "interest_rate",
+      "max_confidence": 0.9995094537734985,
+      "prediction_entropy": 0.005617657210677862,
+      "confidence_margin": 0.9993981719017029
+    },
+    {
+      "text": "accept incoming phone call",
+      "true_label_name": "oos",
+      "predicted_label_name": "make_call",
+      "max_confidence": 0.9989433884620667,
+      "prediction_entropy": 0.009747512638568878,
+      "confidence_margin": 0.9982171654701233
+    },
+    {
+      "text": "add mary to my phone plan, please",
+      "true_label_name": "oos",
+      "predicted_label_name": "sync_device",
+      "max_confidence": 0.9987106323242188,
+      "prediction_entropy": 0.013182255439460278,
+      "confidence_margin": 0.9984562993049622
+    },
+    {
+      "text": "please read the text message i just received",
+      "true_label_name": "oos",
+      "predicted_label_name": "text",
+      "max_confidence": 0.9986090064048767,
+      "prediction_entropy": 0.012298520654439926,
+      "confidence_margin": 0.9976258277893066
+    },
+    {
+      "text": "deny incoming phone call",
+      "true_label_name": "oos",
+      "predicted_label_name": "make_call",
+      "max_confidence": 0.9985815286636353,
+      "prediction_entropy": 0.012632867321372032,
+      "confidence_margin": 0.9976012706756592
+    },
+    {
+      "text": "who is responsible for your employment",
+      "true_label_name": "who_do_you_work_for",
+      "predicted_label_name": "who_made_you",
+      "max_confidence": 0.998573899269104,
+      "prediction_entropy": 0.01312840823084116,
+      "confidence_margin": 0.997613787651062
+    },
+    {
+      "text": "i'm trying to raise my credit score can you tell me what it is now",
+      "true_label_name": "credit_score",
+      "predicted_label_name": "improve_credit_score",
+      "max_confidence": 0.9985254406929016,
+      "prediction_entropy": 0.0132999736815691,
+      "confidence_margin": 0.9976893663406372
+    },
+    {
+      "text": "when should i remove my snow tires",
+      "true_label_name": "oos",
+      "predicted_label_name": "tire_change",
+      "max_confidence": 0.9981032609939575,
+      "prediction_entropy": 0.01874607428908348,
+      "confidence_margin": 0.9975625276565552
+    },
+    {
+      "text": "repeat what the weather will be like",
+      "true_label_name": "transfer",
+      "predicted_label_name": "weather",
+      "max_confidence": 0.997438907623291,
+      "prediction_entropy": 0.02483191341161728,
+      "confidence_margin": 0.9966238141059875
+    },
+    {
+      "text": "can i get a table for four at 8:00",
+      "true_label_name": "how_busy",
+      "predicted_label_name": "restaurant_reservation",
+      "max_confidence": 0.9972242116928101,
+      "prediction_entropy": 0.023745743557810783,
+      "confidence_margin": 0.99598628282547
+    },
+    {
+      "text": "can you order some ointment for me",
+      "true_label_name": "oos",
+      "predicted_label_name": "order",
+      "max_confidence": 0.9960309863090515,
+      "prediction_entropy": 0.030265308916568756,
+      "confidence_margin": 0.9938783049583435
+    },
+    {
+      "text": "what time is it in phoenix",
+      "true_label_name": "timezone",
+      "predicted_label_name": "time",
+      "max_confidence": 0.9958788156509399,
+      "prediction_entropy": 0.03316910192370415,
+      "confidence_margin": 0.9933091402053833
+    },
+    {
+      "text": "look up the conversion rate for the euro to dollar exchange",
+      "true_label_name": "oos",
+      "predicted_label_name": "exchange_rate",
+      "max_confidence": 0.9958720803260803,
+      "prediction_entropy": 0.04151871055364609,
+      "confidence_margin": 0.9952273964881897
+    },
+    {
+      "text": "what is my current location",
+      "true_label_name": "share_location",
+      "predicted_label_name": "current_location",
+      "max_confidence": 0.995576024055481,
+      "prediction_entropy": 0.03254900500178337,
+      "confidence_margin": 0.9918844103813171
+    },
+    {
+      "text": "how can i request a new credit card",
+      "true_label_name": "replacement_card_duration",
+      "predicted_label_name": "new_card",
+      "max_confidence": 0.9951135516166687,
+      "prediction_entropy": 0.036309462040662766,
+      "confidence_margin": 0.9920492768287659
+    },
+    {
+      "text": "forward the text i just got from henry to giselle",
+      "true_label_name": "oos",
+      "predicted_label_name": "text",
+      "max_confidence": 0.9938867688179016,
+      "prediction_entropy": 0.05312560498714447,
+      "confidence_margin": 0.9923245906829834
+    }
+  ],
+  "high_confidence_threshold": 0.8,
+  "source_artifact": "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
+}

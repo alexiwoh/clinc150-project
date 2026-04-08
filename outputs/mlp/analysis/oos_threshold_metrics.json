@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "mlp",
+  "model_name": "TF-IDF + MLP",
+  "representative_run_id": "run_01_seed_42",
+  "method": "explicit_oos_class_probability",
+  "auroc": 0.9415123333333333,
+  "aupr": 0.7984072874439447,
+  "fpr_at_95tpr": 0.2388888888888889,
+  "fpr_at_90tpr": 0.15311111111111111,
+  "msp_baseline": {
+    "msp_auroc": 0.8901287777777778,
+    "msp_aupr": 0.6180150617979561
+  },
+  "source_artifact": "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
+}

@@ -339,6 +339,408 @@
       "source_artifact_paths": [
         "outputs/shared/efficiency_summary_table.json"
       ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/analysis/reliability_diagram.png",
+      "figure_type": "reliability_diagram",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/analysis/confidence_histogram.png",
+      "figure_type": "confidence_histogram",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/analysis/oos_roc_curve.png",
+      "figure_type": "oos_roc_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/analysis/oos_pr_curve.png",
+      "figure_type": "oos_pr_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/analysis/oos_error_breakdown.png",
+      "figure_type": "oos_error_breakdown",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/final_predictions.csv"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/analysis/confidence_vs_accuracy.png",
+      "figure_type": "confidence_vs_accuracy",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/analysis/worst_classes_confusion_heatmap.png",
+      "figure_type": "worst_classes_heatmap",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/confusion_matrix.csv"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/analysis/confusion_stability.png",
+      "figure_type": "confusion_stability",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/confusion_matrix.csv",
+        "outputs/mlp/final_runs/run_02_seed_1337/confusion_matrix.csv",
+        "outputs/mlp/final_runs/run_03_seed_2024/confusion_matrix.csv"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/analysis/reliability_diagram.png",
+      "figure_type": "reliability_diagram",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/analysis/confidence_histogram.png",
+      "figure_type": "confidence_histogram",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/analysis/oos_roc_curve.png",
+      "figure_type": "oos_roc_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/analysis/oos_pr_curve.png",
+      "figure_type": "oos_pr_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/analysis/oos_error_breakdown.png",
+      "figure_type": "oos_error_breakdown",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/final_predictions.csv"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/analysis/confidence_vs_accuracy.png",
+      "figure_type": "confidence_vs_accuracy",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/analysis/worst_classes_confusion_heatmap.png",
+      "figure_type": "worst_classes_heatmap",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/confusion_matrix.csv"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/analysis/confusion_stability.png",
+      "figure_type": "confusion_stability",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_01_seed_42/confusion_matrix.csv",
+        "outputs/text_cnn/final_runs/run_02_seed_1337/confusion_matrix.csv",
+        "outputs/text_cnn/final_runs/run_03_seed_2024/confusion_matrix.csv"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/analysis/reliability_diagram.png",
+      "figure_type": "reliability_diagram",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/analysis/confidence_histogram.png",
+      "figure_type": "confidence_histogram",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/analysis/oos_roc_curve.png",
+      "figure_type": "oos_roc_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/analysis/oos_pr_curve.png",
+      "figure_type": "oos_pr_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/analysis/oos_error_breakdown.png",
+      "figure_type": "oos_error_breakdown",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/analysis/confidence_vs_accuracy.png",
+      "figure_type": "confidence_vs_accuracy",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/analysis/worst_classes_confusion_heatmap.png",
+      "figure_type": "worst_classes_heatmap",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/confusion_matrix.csv"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/analysis/confusion_stability.png",
+      "figure_type": "confusion_stability",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_01_seed_42/confusion_matrix.csv",
+        "outputs/bilstm/final_runs/run_02_seed_1337/confusion_matrix.csv",
+        "outputs/bilstm/final_runs/run_03_seed_2024/confusion_matrix.csv"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/analysis/calibration_comparison.png",
+      "figure_type": "calibration_comparison",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/mlp/analysis/calibration_metrics.json",
+        "outputs/text_cnn/analysis/calibration_metrics.json",
+        "outputs/bilstm/analysis/calibration_metrics.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/analysis/oos_roc_comparison.png",
+      "figure_type": "oos_roc_comparison",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/mlp/analysis/oos_threshold_metrics.json",
+        "outputs/text_cnn/analysis/oos_threshold_metrics.json",
+        "outputs/bilstm/analysis/oos_threshold_metrics.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/analysis/oos_pr_comparison.png",
+      "figure_type": "oos_pr_comparison",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/mlp/analysis/oos_threshold_metrics.json",
+        "outputs/text_cnn/analysis/oos_threshold_metrics.json",
+        "outputs/bilstm/analysis/oos_threshold_metrics.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/analysis/error_taxonomy_comparison.png",
+      "figure_type": "error_taxonomy",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/mlp/analysis/error_taxonomy.json",
+        "outputs/text_cnn/analysis/error_taxonomy.json",
+        "outputs/bilstm/analysis/error_taxonomy.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/analysis/oos_error_comparison.png",
+      "figure_type": "oos_error_comparison",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/mlp/analysis/oos_error_deep_dive.json",
+        "outputs/text_cnn/analysis/oos_error_deep_dive.json",
+        "outputs/bilstm/analysis/oos_error_deep_dive.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/analysis/confidence_accuracy_comparison.png",
+      "figure_type": "confidence_vs_accuracy",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/mlp/analysis/confidence_stratification.json",
+        "outputs/text_cnn/analysis/confidence_stratification.json",
+        "outputs/bilstm/analysis/confidence_stratification.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/analysis/length_slice_comparison.png",
+      "figure_type": "length_slice",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/mlp/analysis/length_slice_analysis.json",
+        "outputs/text_cnn/analysis/length_slice_analysis.json",
+        "outputs/bilstm/analysis/length_slice_analysis.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/analysis/frequency_slice_comparison.png",
+      "figure_type": "frequency_slice",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/mlp/analysis/frequency_slice_analysis.json",
+        "outputs/text_cnn/analysis/frequency_slice_analysis.json",
+        "outputs/bilstm/analysis/frequency_slice_analysis.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/analysis/cross_model_error_overlap.png",
+      "figure_type": "cross_model_error_overlap",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/final_predictions.csv",
+        "outputs/text_cnn/final_runs/run_03_seed_2024/final_predictions.csv",
+        "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv"
+      ]
     }
   ]
 }

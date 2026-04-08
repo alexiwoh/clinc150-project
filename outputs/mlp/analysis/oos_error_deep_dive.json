@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "mlp",
+  "model_name": "TF-IDF + MLP",
+  "representative_run_id": "run_01_seed_42",
+  "false_accepts": {
+    "count": 497,
+    "mean_confidence": 0.3249993622303009,
+    "std_confidence": 0.2310127168893814,
+    "top_capturing_intents": [
+      {
+        "intent": "w2",
+        "count": 19,
+        "mean_confidence": 0.34885698556900024
+      },
+      {
+        "intent": "calculator",
+        "count": 19,
+        "mean_confidence": 0.28365883231163025
+      },
+      {
+        "intent": "recipe",
+        "count": 16,
+        "mean_confidence": 0.3261868357658386
+      },
+      {
+        "intent": "smart_home",
+        "count": 16,
+        "mean_confidence": 0.2324816882610321
+      },
+      {
+        "intent": "directions",
+        "count": 13,
+        "mean_confidence": 0.4001738727092743
+      },
+      {
+        "intent": "spelling",
+        "count": 10,
+        "mean_confidence": 0.2768571078777313
+      },
+      {
+        "intent": "income",
+        "count": 10,
+        "mean_confidence": 0.3813478648662567
+      },
+      {
+        "intent": "order",
+        "count": 10,
+        "mean_confidence": 0.48959827423095703
+      },
+      {
+        "intent": "travel_suggestion",
+        "count": 10,
+        "mean_confidence": 0.2910885214805603
+      },
+      {
+        "intent": "ingredient_substitution",
+        "count": 9,
+        "mean_confidence": 0.21242903172969818
+      }
+    ],
+    "top_examples": [
+      {
+        "text": "ignore call",
+        "true_label_name": "oos",
+        "predicted_label_name": "make_call",
+        "max_confidence": 0.998011589050293
+      },
+      {
+        "text": "deny incoming phone call",
+        "true_label_name": "oos",
+        "predicted_label_name": "make_call",
+        "max_confidence": 0.9972057938575745
+      },
+      {
+        "text": "give me the weather forecast for today",
+        "true_label_name": "oos",
+        "predicted_label_name": "weather",
+        "max_confidence": 0.9908979535102844
+      },
+      {
+        "text": "accept incoming phone call",
+        "true_label_name": "oos",
+        "predicted_label_name": "make_call",
+        "max_confidence": 0.9898051023483276
+      },
+      {
+        "text": "read text",
+        "true_label_name": "oos",
+        "predicted_label_name": "text",
+        "max_confidence": 0.9893794655799866
+      }
+    ]
+  },
+  "false_rejects": {
+    "count": 73,
+    "mean_confidence": 0.31055745482444763,
+    "std_confidence": 0.20251969993114471,
+    "top_rejected_intents": [
+      {
+        "intent": "restaurant_reviews",
+        "count": 5,
+        "mean_confidence": 0.46424493193626404
+      },
+      {
+        "intent": "spending_history",
+        "count": 4,
+        "mean_confidence": 0.15704286098480225
+      },
+      {
+        "intent": "carry_on",
+        "count": 4,
+        "mean_confidence": 0.24798768758773804
+      },
+      {
+        "intent": "how_busy",
+        "count": 4,
+        "mean_confidence": 0.24675340950489044
+      },
+      {
+        "intent": "order",
+        "count": 3,
+        "mean_confidence": 0.5665642619132996
+      },
+      {
+        "intent": "measurement_conversion",
+        "count": 3,
+        "mean_confidence": 0.42526426911354065
+      },
+      {
+        "intent": "yes",
+        "count": 2,
+        "mean_confidence": 0.046660374850034714
+      },
+      {
+        "intent": "next_holiday",
+        "count": 2,
+        "mean_confidence": 0.6244210004806519
+      },
+      {
+        "intent": "international_visa",
+        "count": 2,
+        "mean_confidence": 0.5546003580093384
+      },
+      {
+        "intent": "interest_rate",
+        "count": 2,
+        "mean_confidence": 0.271362841129303
+      }
+    ],
+    "top_examples": [
+      {
+        "text": "undecided",
+        "true_label_name": "maybe",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.046660374850034714
+      },
+      {
+        "text": "i agree",
+        "true_label_name": "yes",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.046660374850034714
+      },
+      {
+        "text": "yup",
+        "true_label_name": "yes",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.046660374850034714
+      },
+      {
+        "text": "regards",
+        "true_label_name": "goodbye",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.046660374850034714
+      },
+      {
+        "text": "hush",
+        "true_label_name": "cancel",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.046660374850034714
+      }
+    ]
+  },
+  "source_artifact": "outputs/mlp/final_runs/run_01_seed_42/final_predictions.csv"
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "text_cnn",
+  "model_name": "Text CNN",
+  "representative_run_id": "run_03_seed_2024",
+  "macro_f1": 0.8657989196294426,
+  "micro_f1": 0.8210909090909091,
+  "weighted_f1": 0.8072145415630231,
+  "macro_precision": 0.8315475478073038,
+  "macro_recall": 0.9170397350993378,
+  "micro_precision": 0.8210909090909091,
+  "micro_recall": 0.8210909090909091,
+  "weighted_precision": 0.8501783169683417,
+  "weighted_recall": 0.8210909090909091,
+  "accuracy": 0.8210909090909091,
+  "source_artifact": "outputs/text_cnn/final_runs/run_03_seed_2024/final_predictions.csv"
+}

@@ -72,6 +72,9 @@ def compute_and_save_oos_threshold(ctx: HandoffContext) -> tuple[dict[str, Any],
     write_json(out_dir / OOS_THRESHOLD_METRICS_FILENAME, artifact)
     logger.info("Saved: %s", out_dir / OOS_THRESHOLD_METRICS_FILENAME)
 
+    artifact["roc_curve"] = oos_metrics["roc_curve"]
+    artifact["pr_curve"] = oos_metrics["pr_curve"]
+
     src_paths = [repo_relative(ctx.confidences_path)]
 
     # ROC curve
@@ -136,23 +139,22 @@ def generate_oos_threshold_comparison(
         src = analysis_output_dir(mid) / OOS_THRESHOLD_METRICS_FILENAME
         source_paths.append(repo_relative(src))
 
-        oos_full = _load_oos_with_curves(mid)
-        if oos_full and "roc_curve" in oos_full:
+        if "roc_curve" in oos:
             roc_curves.append(
                 {
-                    "x": oos_full["roc_curve"]["fpr"],
-                    "y": oos_full["roc_curve"]["tpr"],
+                    "x": oos["roc_curve"]["fpr"],
+                    "y": oos["roc_curve"]["tpr"],
                     "label": mid.display_name,
-                    "auc_value": oos_full["auroc"],
+                    "auc_value": oos["auroc"],
                 }
             )
-        if oos_full and "pr_curve" in oos_full:
+        if "pr_curve" in oos:
             pr_curves.append(
                 {
-                    "x": oos_full["pr_curve"]["recall"],
-                    "y": oos_full["pr_curve"]["precision"],
+                    "x": oos["pr_curve"]["recall"],
+                    "y": oos["pr_curve"]["precision"],
                     "label": mid.display_name,
-                    "auc_value": oos_full["aupr"],
+                    "auc_value": oos["aupr"],
                 }
             )
 
@@ -192,16 +194,6 @@ def generate_oos_threshold_comparison(
         )
 
     return records
-
-
-def _load_oos_with_curves(model_id: ModelID) -> dict[str, Any] | None:
-    """Re-read the per-model OOS threshold artifact (includes full curve data)."""
-    from src.analysis.utils import read_json
-
-    path = analysis_output_dir(model_id) / OOS_THRESHOLD_METRICS_FILENAME
-    if path.exists():
-        return read_json(path)
-    return None
 
 
 # ---------------------------------------------------------------------------

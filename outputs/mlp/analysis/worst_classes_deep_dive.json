@@ -1,0 +1,364 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "mlp",
+  "model_name": "TF-IDF + MLP",
+  "representative_run_id": "run_01_seed_42",
+  "k": 15,
+  "worst_classes": [
+    {
+      "label_name": "oos",
+      "precision": 0.8732638888888888,
+      "recall": 0.503,
+      "f1": 0.6383248730964467,
+      "support": 1000,
+      "domain": "unknown",
+      "top_confusion_targets": [
+        {
+          "target_class": "w2",
+          "count": 19,
+          "shares_domain": false
+        },
+        {
+          "target_class": "calculator",
+          "count": 19,
+          "shares_domain": false
+        },
+        {
+          "target_class": "smart_home",
+          "count": 16,
+          "shares_domain": false
+        }
+      ],
+      "mean_confidence_misclassified": 0.3249993622303009
+    },
+    {
+      "label_name": "yes",
+      "precision": 0.7391304347826086,
+      "recall": 0.5666666666666667,
+      "f1": 0.6415094339622641,
+      "support": 30,
+      "domain": "meta",
+      "top_confusion_targets": [
+        {
+          "target_class": "no",
+          "count": 2,
+          "shares_domain": true
+        },
+        {
+          "target_class": "oos",
+          "count": 2,
+          "shares_domain": false
+        },
+        {
+          "target_class": "cancel",
+          "count": 2,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.2976883351802826
+    },
+    {
+      "label_name": "distance",
+      "precision": 0.6785714285714286,
+      "recall": 0.6333333333333333,
+      "f1": 0.6551724137931034,
+      "support": 30,
+      "domain": "auto_and_commute",
+      "top_confusion_targets": [
+        {
+          "target_class": "time",
+          "count": 2,
+          "shares_domain": false
+        },
+        {
+          "target_class": "directions",
+          "count": 2,
+          "shares_domain": true
+        },
+        {
+          "target_class": "flight_status",
+          "count": 2,
+          "shares_domain": false
+        }
+      ],
+      "mean_confidence_misclassified": 0.2587023079395294
+    },
+    {
+      "label_name": "order",
+      "precision": 0.5434782608695652,
+      "recall": 0.8333333333333334,
+      "f1": 0.6578947368421053,
+      "support": 30,
+      "domain": "home",
+      "top_confusion_targets": [
+        {
+          "target_class": "oos",
+          "count": 3,
+          "shares_domain": false
+        },
+        {
+          "target_class": "order_status",
+          "count": 2,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.6105197668075562
+    },
+    {
+      "label_name": "recipe",
+      "precision": 0.5434782608695652,
+      "recall": 0.8333333333333334,
+      "f1": 0.6578947368421053,
+      "support": 30,
+      "domain": "kitchen_and_dining",
+      "top_confusion_targets": [
+        {
+          "target_class": "oos",
+          "count": 2,
+          "shares_domain": false
+        },
+        {
+          "target_class": "ingredients_list",
+          "count": 2,
+          "shares_domain": true
+        },
+        {
+          "target_class": "ingredient_substitution",
+          "count": 1,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.3545651435852051
+    },
+    {
+      "label_name": "calculator",
+      "precision": 0.5625,
+      "recall": 0.9,
+      "f1": 0.6923076923076923,
+      "support": 30,
+      "domain": "utility",
+      "top_confusion_targets": [
+        {
+          "target_class": "oos",
+          "count": 2,
+          "shares_domain": false
+        },
+        {
+          "target_class": "income",
+          "count": 1,
+          "shares_domain": false
+        }
+      ],
+      "mean_confidence_misclassified": 0.28874102234840393
+    },
+    {
+      "label_name": "smart_home",
+      "precision": 0.5686274509803921,
+      "recall": 0.9666666666666667,
+      "f1": 0.7160493827160493,
+      "support": 30,
+      "domain": "home",
+      "top_confusion_targets": [
+        {
+          "target_class": "timer",
+          "count": 1,
+          "shares_domain": false
+        }
+      ],
+      "mean_confidence_misclassified": 0.3300192654132843
+    },
+    {
+      "label_name": "restaurant_reviews",
+      "precision": 0.8260869565217391,
+      "recall": 0.6333333333333333,
+      "f1": 0.7169811320754716,
+      "support": 30,
+      "domain": "kitchen_and_dining",
+      "top_confusion_targets": [
+        {
+          "target_class": "oos",
+          "count": 5,
+          "shares_domain": false
+        },
+        {
+          "target_class": "restaurant_reservation",
+          "count": 3,
+          "shares_domain": true
+        },
+        {
+          "target_class": "translate",
+          "count": 1,
+          "shares_domain": false
+        }
+      ],
+      "mean_confidence_misclassified": 0.3085872530937195
+    },
+    {
+      "label_name": "calendar",
+      "precision": 0.75,
+      "recall": 0.7,
+      "f1": 0.7241379310344828,
+      "support": 30,
+      "domain": "home",
+      "top_confusion_targets": [
+        {
+          "target_class": "calendar_update",
+          "count": 7,
+          "shares_domain": true
+        },
+        {
+          "target_class": "schedule_meeting",
+          "count": 1,
+          "shares_domain": false
+        },
+        {
+          "target_class": "meeting_schedule",
+          "count": 1,
+          "shares_domain": false
+        }
+      ],
+      "mean_confidence_misclassified": 0.5795557498931885
+    },
+    {
+      "label_name": "todo_list",
+      "precision": 0.6341463414634146,
+      "recall": 0.8666666666666667,
+      "f1": 0.7323943661971831,
+      "support": 30,
+      "domain": "home",
+      "top_confusion_targets": [
+        {
+          "target_class": "todo_list_update",
+          "count": 4,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.6640509963035583
+    },
+    {
+      "label_name": "w2",
+      "precision": 0.5918367346938775,
+      "recall": 0.9666666666666667,
+      "f1": 0.7341772151898734,
+      "support": 30,
+      "domain": "work",
+      "top_confusion_targets": [
+        {
+          "target_class": "oos",
+          "count": 1,
+          "shares_domain": false
+        }
+      ],
+      "mean_confidence_misclassified": 0.4718267619609833
+    },
+    {
+      "label_name": "shopping_list",
+      "precision": 0.9047619047619048,
+      "recall": 0.6333333333333333,
+      "f1": 0.7450980392156863,
+      "support": 30,
+      "domain": "home",
+      "top_confusion_targets": [
+        {
+          "target_class": "todo_list",
+          "count": 4,
+          "shares_domain": true
+        },
+        {
+          "target_class": "order",
+          "count": 3,
+          "shares_domain": true
+        },
+        {
+          "target_class": "shopping_list_update",
+          "count": 3,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.41809237003326416
+    },
+    {
+      "label_name": "income",
+      "precision": 0.6666666666666666,
+      "recall": 0.8666666666666667,
+      "f1": 0.7536231884057971,
+      "support": 30,
+      "domain": "work",
+      "top_confusion_targets": [
+        {
+          "target_class": "oos",
+          "count": 2,
+          "shares_domain": false
+        },
+        {
+          "target_class": "bill_balance",
+          "count": 1,
+          "shares_domain": false
+        },
+        {
+          "target_class": "payday",
+          "count": 1,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.39145907759666443
+    },
+    {
+      "label_name": "meal_suggestion",
+      "precision": 0.6944444444444444,
+      "recall": 0.8333333333333334,
+      "f1": 0.7575757575757576,
+      "support": 30,
+      "domain": "kitchen_and_dining",
+      "top_confusion_targets": [
+        {
+          "target_class": "restaurant_suggestion",
+          "count": 3,
+          "shares_domain": true
+        },
+        {
+          "target_class": "do_you_have_pets",
+          "count": 1,
+          "shares_domain": false
+        },
+        {
+          "target_class": "food_last",
+          "count": 1,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.2742171883583069
+    },
+    {
+      "label_name": "how_busy",
+      "precision": 0.7666666666666667,
+      "recall": 0.7666666666666667,
+      "f1": 0.7666666666666667,
+      "support": 30,
+      "domain": "kitchen_and_dining",
+      "top_confusion_targets": [
+        {
+          "target_class": "oos",
+          "count": 4,
+          "shares_domain": false
+        },
+        {
+          "target_class": "restaurant_reservation",
+          "count": 2,
+          "shares_domain": true
+        },
+        {
+          "target_class": "meal_suggestion",
+          "count": 1,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.3724519610404968
+    }
+  ],
+  "source_artifacts": {
+    "per_class_metrics": "outputs/mlp/final_runs/run_01_seed_42/per_class_metrics.json",
+    "confusion_matrix": "outputs/mlp/final_runs/run_01_seed_42/confusion_matrix.csv"
+  }
+}

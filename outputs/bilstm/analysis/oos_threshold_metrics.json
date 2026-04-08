@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "bilstm",
+  "model_name": "BiLSTM",
+  "representative_run_id": "run_02_seed_1337",
+  "method": "explicit_oos_class_probability",
+  "auroc": 0.9435813333333335,
+  "aupr": 0.8054806063559163,
+  "fpr_at_95tpr": 0.2308888888888889,
+  "fpr_at_90tpr": 0.14355555555555555,
+  "msp_baseline": {
+    "msp_auroc": 0.8746905555555556,
+    "msp_aupr": 0.5452972402779862
+  },
+  "source_artifact": "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
+}

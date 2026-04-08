@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "bilstm",
+  "model_name": "BiLSTM",
+  "representative_run_id": "run_02_seed_1337",
+  "macro_f1": 0.8354130867632543,
+  "micro_f1": 0.7858181818181819,
+  "weighted_f1": 0.7727104999550869,
+  "macro_precision": 0.8062034256315256,
+  "macro_recall": 0.8838498896247242,
+  "micro_precision": 0.7858181818181819,
+  "micro_recall": 0.7858181818181819,
+  "weighted_precision": 0.8216404543704074,
+  "weighted_recall": 0.7858181818181819,
+  "accuracy": 0.7858181818181819,
+  "source_artifact": "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv"
+}

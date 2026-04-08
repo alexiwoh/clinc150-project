@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "rows": [
+    {
+      "model_id": "mlp",
+      "model_name": "TF-IDF + MLP",
+      "ece": 0.10269777552241628,
+      "mce": 0.257983095766533,
+      "brier_score": 0.25321492552757263,
+      "nll": 0.7303420901298523
+    },
+    {
+      "model_id": "text_cnn",
+      "model_name": "Text CNN",
+      "ece": 0.03743301824548027,
+      "mce": 0.18345639755328497,
+      "brier_score": 0.2566530406475067,
+      "nll": 0.8647394180297852
+    },
+    {
+      "model_id": "bilstm",
+      "model_name": "BiLSTM",
+      "ece": 0.11253382217884061,
+      "mce": 0.4093617286000933,
+      "brier_score": 0.32349875569343567,
+      "nll": 1.2144763469696045
+    }
+  ]
+}
