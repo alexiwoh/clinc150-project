@@ -21,7 +21,8 @@
   "tfidf_input_dim": 10000,
   "num_classes": 151,
   "model_architecture": "MLPClassifier",
-  "parameter_count": 5197975,
+  "total_parameters": 5197975,
+  "trainable_parameters": 5197975,
   "optimizer_settings": {
     "type": "adam",
     "lr": 0.0005,
@@ -34,18 +35,25 @@
   "best_epoch": 28,
   "best_val_metric": 0.9150108071290272,
   "primary_model_selection_metric": "val_macro_f1",
-  "training_duration": 117.43053007125854,
+  "training_duration": 96.9350860118866,
   "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/mlp_best_h512_d0.2_lr00005_wd00001_1layer_s42.pt",
   "oos_strategy": "explicit_class",
   "class_weight_policy": "disabled (default)",
   "tfidf_input_format": "sparse-origin, dense float32 per-row in TFIDFDataset.__getitem__",
   "inference_latency": {
-    "total_seconds": 0.417208194732666,
-    "avg_ms_per_example": 0.07585603540593927,
-    "examples_per_sec": 13182.86665851381
+    "total_seconds": 0.3932662010192871,
+    "avg_ms_per_example": 0.07150294563987039,
+    "examples_per_sec": 13985.43781729735
   },
-  "lr_scheduling_used": false,
-  "shuffle_policy": "train=shuffled (seeded Generator), val/test=no shuffle",
+  "lr_scheduling_policy": {
+    "used": false,
+    "justification": "not used; fixed learning rate; compact search space and early stopping control training length"
+  },
+  "shuffle_policy": {
+    "train": "shuffled (seeded Generator, seed=42)",
+    "validation": "no shuffle",
+    "test": "no shuffle"
+  },
   "preprocessing_refs_for_comparison": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts",
   "label_name_ordering": [
     "restaurant_reviews",
@@ -199,5 +207,20 @@
     "pto_used",
     "travel_suggestion",
     "change_volume"
-  ]
+  ],
+  "device_and_environment": {
+    "device": "mps",
+    "python_version": "3.12.0",
+    "pytorch_version": "2.11.0"
+  },
+  "final_model_selection_rule": "single best validation run used directly; no retraining",
+  "confidence_saving_decision": "test-split softmax probabilities saved to mlp_confidences.npz",
+  "training_seed": 42,
+  "test_accuracy": 0.8232727272727273,
+  "test_macro_f1": 0.8662969783407675,
+  "test_precision": 0.8349385003126186,
+  "test_recall": 0.9136931567328919,
+  "oos_precision": 0.899103139013453,
+  "oos_recall": 0.401,
+  "oos_f1": 0.5546334716459198
 }

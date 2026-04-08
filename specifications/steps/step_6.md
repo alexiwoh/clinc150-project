@@ -81,13 +81,21 @@ Implementation requirements:
 A. Create a clean BiLSTM training entry point
 - Add BiLSTM training entry logic in src/train.py and/or main.py
 - Keep the BiLSTM workflow easy to run independently
+- In addition to standalone use, this step must expose a pipeline-invocable entry path for `scripts/run_model_pipeline.py --model bilstm`
 - Prefer explicit functions such as:
   - build_bilstm(...)
   - train_bilstm(...)
   - evaluate_bilstm(...)
   - run_bilstm_experiment(...)
+  - tune_bilstm(...)
+  - train_bilstm_final_once(...)
 - Make the training path reusable for later comparisons and report generation
 - Ensure this step reads preprocessing artifacts from Step 3 rather than re-fitting vocabulary or recreating sequence tensors
+- The shared pipeline runner must be able to call this step to:
+  - run or reuse tuning
+  - write the model's tuning artifacts
+  - launch one final-train/evaluate run from frozen hyperparameters
+- By default, the pipeline runner should reuse valid existing tuning artifacts and only rerun tuning for BiLSTM when artifacts are missing, invalid, or `--retune` is passed
 
 A2. Preprocessing manifest and frozen-artifact gate
 - Require one saved preprocessing manifest from Step 3 that Step 6 loads before training begins
@@ -226,6 +234,7 @@ F. Hyperparameter tuning expectations
 - Use a hard cap on total Step 6 tuning runs
 - Recommended cap: at most 15 total tuning runs unless explicitly justified
 - Prefer a staged tuning order rather than a flat search
+- Emit tuning outputs in a stable machine-readable form so the shared pipeline runner can detect and reuse them without guessing filenames or recomputing the selection result
 
 Recommended bias:
 Use a restrained search over a few plausible settings, for example:

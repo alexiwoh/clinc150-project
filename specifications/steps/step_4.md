@@ -43,13 +43,21 @@ Implementation requirements:
 A. Create a clean baseline training entry point
 - Add baseline model training entry logic in src/train.py and/or main.py
 - Keep the baseline workflow easy to run independently
+- In addition to standalone use, this step must expose a pipeline-invocable entry path for `scripts/run_model_pipeline.py --model mlp`
 - Prefer explicit functions such as:
   - build_mlp_baseline(...)
   - train_mlp_baseline(...)
   - evaluate_mlp_baseline(...)
   - run_mlp_experiment(...)
+  - tune_mlp_baseline(...)
+  - train_mlp_final_once(...)
 - Make the training path reusable for later comparisons and report generation
 - Ensure this step reads preprocessing artifacts from Step 3 rather than re-fitting TF-IDF
+- The shared pipeline runner must be able to call this step to:
+  - run or reuse tuning
+  - write the model's tuning artifacts
+  - launch one final-train/evaluate run from frozen hyperparameters
+- By default, the pipeline runner should reuse valid existing tuning artifacts and only rerun tuning for MLP when artifacts are missing, invalid, or `--retune` is passed
 
 B. Implement the MLP model cleanly
 - Add the baseline model to src/models/mlp.py
@@ -115,6 +123,7 @@ E. Hyperparameter tuning expectations
 - Do not touch test data until the final best configuration is selected
 - Prefer a compact experiment grid or staged tuning approach rather than an enormous exhaustive search
 - Save every tried configuration and its validation result
+- Emit tuning outputs in a stable machine-readable form so the shared pipeline runner can detect and reuse them without guessing filenames or recomputing the selection result
 
 Recommended bias:
 Use a restrained search over a few plausible settings, for example:

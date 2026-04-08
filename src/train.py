@@ -7,6 +7,7 @@ import logging
 import platform
 from collections import Counter
 from itertools import product
+from pathlib import Path
 from typing import Any, TypedDict
 
 import numpy as np
@@ -242,8 +243,18 @@ def train_mlp_baseline(
     input_dim: int,
     num_classes: int,
     metadata: TFIDFMetadata,
+    checkpoint_dir: Path | str | None = None,
+    log_dir: Path | str | None = None,
 ) -> dict[str, Any]:
-    """Train a single MLP baseline run. Never iterates the test loader."""
+    """Train a single MLP baseline run. Never iterates the test loader.
+
+    Args:
+        checkpoint_dir: Directory for saving checkpoints. Defaults to CHECKPOINTS_DIR.
+        log_dir: Directory for saving training logs. Defaults to LOGS_DIR.
+    """
+    effective_checkpoint_dir = Path(checkpoint_dir) if checkpoint_dir is not None else CHECKPOINTS_DIR
+    effective_log_dir = Path(log_dir) if log_dir is not None else LOGS_DIR
+
     device = get_device()
     set_seed(config.random_seed)
 
@@ -287,11 +298,11 @@ def train_mlp_baseline(
         val_loader=loaders["validation"],
         max_epochs=config.max_epochs,
         patience=config.early_stopping_patience,
-        checkpoint_dir=CHECKPOINTS_DIR,
+        checkpoint_dir=effective_checkpoint_dir,
         run_name=run_name,
         config=config.to_dict(),
         artifact_refs=metadata["artifact_refs"],
-        log_dir=LOGS_DIR,
+        log_dir=effective_log_dir,
         monitor_metric=config.monitor_metric,
     )
 
@@ -344,23 +355,78 @@ def run_mlp_tuning(
     return df
 
 
+def verify_mlp_checkpoint(
+    checkpoint_path: str,
+    config: MLPBaselineConfig,
+    val_loader: DataLoader,
+    input_dim: int,
+    num_classes: int,
+    expected_best_metric: float,
+) -> None:
+    """Fresh-process checkpoint reload verification for MLP.
+
+    Loads a saved checkpoint, reconstructs the model, evaluates on the
+    validation set, and asserts the metric matches the saved best value.
+    """
+    device: torch.device = get_device()
+
+    model: MLPClassifier = build_mlp_baseline(config, input_dim, num_classes)
+    meta: dict[str, Any] = load_checkpoint(checkpoint_path, model, device)
+    model.to(device)
+    model.eval()
+
+    assert "artifact_refs" in meta, "Checkpoint missing artifact_refs"
+    assert "config" in meta, "Checkpoint missing config"
+
+    criterion: torch.nn.CrossEntropyLoss = torch.nn.CrossEntropyLoss()
+    trainer: Trainer = Trainer(model, torch.optim.Adam(model.parameters()), criterion, device)
+    val_metrics: dict[str, Any] = trainer.evaluate(val_loader)
+
+    reloaded_f1: float = val_metrics["macro_f1"]
+    tolerance: float = 1e-3
+    assert abs(reloaded_f1 - expected_best_metric) < tolerance, (
+        f"Reloaded val macro_f1={reloaded_f1:.6f} differs from saved best={expected_best_metric:.6f} "
+        f"(tolerance={tolerance})"
+    )
+    logger.info(
+        "MLP checkpoint reload PASSED: val macro_f1=%.6f (saved=%.6f)",
+        reloaded_f1,
+        expected_best_metric,
+    )
+
+
 def run_mlp_experiment() -> dict[str, Any]:
-    """Full workflow: load data, default run, tuning, select best, final test eval."""
+    """Full workflow: load data, default run, checkpoint verify, tuning, select best, final test eval."""
     from src.evaluate import evaluate_mlp_baseline
 
     default_config = MLPBaselineConfig()
     loaders, input_dim, num_classes, metadata = load_tfidf_data(default_config)
 
+    # --- Phase 1 verification: default run + checkpoint reload ---
     print("\n=== Default Baseline Run ===")
     default_result = train_mlp_baseline(default_config, loaders, input_dim, num_classes, metadata)
 
+    print("\n=== Fresh-Process Checkpoint Reload Test ===")
+    verify_mlp_checkpoint(
+        default_result["checkpoint_path"],
+        default_config,
+        loaders["validation"],
+        input_dim,
+        num_classes,
+        default_result["best_val_metric"],
+    )
+    print("  Reload test PASSED")
+
+    # --- Phase 2: staged tuning ---
     tuning_grid = _build_tuning_grid()
     print(f"\n=== Hyperparameter Tuning ({len(tuning_grid)} configs) ===")
     tuning_df = run_mlp_tuning(tuning_grid, loaders, input_dim, num_classes, metadata)
 
+    # --- Select best config ---
     best_idx = int(tuning_df["best_val_metric"].idxmax())
     best_row = tuning_df.iloc[best_idx]
     best_checkpoint = best_row["checkpoint_path"]
+    best_run_name: str = best_row["run_name"]
     best_config = MLPBaselineConfig(
         hidden_dim=int(best_row["hidden_dim"]),
         second_hidden_dim=int(best_row["second_hidden_dim"]) if pd.notna(best_row.get("second_hidden_dim")) else None,
@@ -373,17 +439,56 @@ def run_mlp_experiment() -> dict[str, Any]:
         random_seed=int(best_row["random_seed"]),
     )
 
-    best_training_duration = float(best_row["training_duration"])
+    print(f"\n=== Best config: {best_run_name} (val_metric={best_row['best_val_metric']:.4f}) ===")
 
-    print(f"\n=== Best config: {best_row['run_name']} (val_metric={best_row['best_val_metric']:.4f}) ===")
+    # --- Test-eval ordering guard ---
+    assert best_checkpoint is not None, "Model selection not complete before test evaluation"
+
+    # --- Final test evaluation ---
     print("=== Final Test Evaluation ===")
 
-    test_results = evaluate_mlp_baseline(best_checkpoint, best_config, training_duration=best_training_duration)
+    best_training_result: dict[str, Any] = {
+        "run_name": best_run_name,
+        "training_duration": (
+            float(best_row["training_duration"]) if pd.notna(best_row["training_duration"]) else None
+        ),
+        "best_epoch": int(best_row["best_epoch"]) if pd.notna(best_row["best_epoch"]) else None,
+        "best_val_metric": float(best_row["best_val_metric"]),
+        "checkpoint_path": best_checkpoint,
+        "config": best_config.to_dict(),
+        "device": str(get_device()),
+        "training_seed": best_config.random_seed,
+        "python_version": platform.python_version(),
+        "pytorch_version": torch.__version__,
+    }
+
+    log_path = LOGS_DIR / f"mlp_training_log_{best_run_name}.json"
+    if log_path.exists():
+        best_training_result["epoch_history"] = json.loads(log_path.read_text())
+
+    test_results = evaluate_mlp_baseline(
+        best_checkpoint,
+        best_config,
+        training_result=best_training_result,
+    )
+
+    print(f"\n{'=' * 60}")
+    print("  Final MLP Test Results")
+    print(f"{'=' * 60}")
+    print(f"  Test accuracy:    {test_results['test_accuracy']:.4f}")
+    print(f"  Test macro F1:    {test_results['test_macro_f1']:.4f}")
+    print(f"  Test precision:   {test_results['test_precision']:.4f}")
+    print(f"  Test recall:      {test_results['test_recall']:.4f}")
+    print(f"  OOS precision:    {test_results['oos_precision']:.4f}")
+    print(f"  OOS recall:       {test_results['oos_recall']:.4f}")
+    print(f"  OOS F1:           {test_results['oos_f1']:.4f}")
+    print(f"  Inference:        {test_results['inference_latency']['avg_ms_per_example']:.2f} ms/example")
 
     return {
         "default_result": default_result,
         "tuning_df": tuning_df,
         "best_config": best_config,
+        "best_run_name": best_run_name,
         "test_results": test_results,
     }
 
@@ -665,11 +770,20 @@ def train_text_cnn(
     loaders: dict[str, DataLoader],
     num_classes: int,
     metadata: NeuralMetadata,
+    checkpoint_dir: Path | str | None = None,
+    log_dir: Path | str | None = None,
 ) -> dict[str, Any]:
     """Train a single Text CNN run. Never iterates the test loader.
 
     Includes a one-batch smoke test before the full training loop.
+
+    Args:
+        checkpoint_dir: Directory for saving checkpoints. Defaults to CHECKPOINTS_DIR.
+        log_dir: Directory for saving training logs. Defaults to LOGS_DIR.
     """
+    effective_checkpoint_dir = Path(checkpoint_dir) if checkpoint_dir is not None else CHECKPOINTS_DIR
+    effective_log_dir = Path(log_dir) if log_dir is not None else LOGS_DIR
+
     device: torch.device = get_device()
     set_seed(config.random_seed)
 
@@ -733,11 +847,11 @@ def train_text_cnn(
             val_loader=loaders["validation"],
             max_epochs=config.max_epochs,
             patience=config.early_stopping_patience,
-            checkpoint_dir=CHECKPOINTS_DIR,
+            checkpoint_dir=effective_checkpoint_dir,
             run_name=run_name,
             config=config.to_dict(),
             artifact_refs=metadata["artifact_refs"],
-            log_dir=LOGS_DIR,
+            log_dir=effective_log_dir,
             monitor_metric=config.monitor_metric,
             model_prefix="text_cnn",
         )
@@ -1318,11 +1432,20 @@ def train_bilstm(
     loaders: dict[str, DataLoader],
     num_classes: int,
     metadata: NeuralMetadata,
+    checkpoint_dir: Path | str | None = None,
+    log_dir: Path | str | None = None,
 ) -> dict[str, Any]:
     """Train a single BiLSTM run. Never iterates the test loader.
 
     Includes a one-batch smoke test before the full training loop.
+
+    Args:
+        checkpoint_dir: Directory for saving checkpoints. Defaults to CHECKPOINTS_DIR.
+        log_dir: Directory for saving training logs. Defaults to LOGS_DIR.
     """
+    effective_checkpoint_dir = Path(checkpoint_dir) if checkpoint_dir is not None else CHECKPOINTS_DIR
+    effective_log_dir = Path(log_dir) if log_dir is not None else LOGS_DIR
+
     device: torch.device = get_device()
     set_seed(config.random_seed)
 
@@ -1404,11 +1527,11 @@ def train_bilstm(
             val_loader=loaders["validation"],
             max_epochs=config.max_epochs,
             patience=config.early_stopping_patience,
-            checkpoint_dir=CHECKPOINTS_DIR,
+            checkpoint_dir=effective_checkpoint_dir,
             run_name=run_name,
             config=config.to_dict(),
             artifact_refs=metadata["artifact_refs"],
-            log_dir=LOGS_DIR,
+            log_dir=effective_log_dir,
             monitor_metric=config.monitor_metric,
             model_prefix="bilstm",
         )

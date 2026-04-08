@@ -1,17 +1,17 @@
 {
-  "test_accuracy": 0.816,
-  "test_macro_f1": 0.8601038163793316,
-  "test_precision": 0.8260991090969404,
-  "test_recall": 0.910216335540839,
-  "oos_precision": 0.9193154034229829,
-  "oos_recall": 0.376,
-  "oos_f1": 0.5337118523775728,
+  "test_accuracy": 0.8178181818181818,
+  "test_macro_f1": 0.8642123575121965,
+  "test_precision": 0.8282376099768082,
+  "test_recall": 0.9173487858719649,
+  "oos_precision": 0.9363395225464191,
+  "oos_recall": 0.353,
+  "oos_f1": 0.5127087872185911,
   "inference_latency": {
-    "total_seconds": 0.26175689697265625,
-    "avg_ms_per_example": 0.0475921630859375,
-    "examples_per_sec": 21011.86277653094
+    "total_seconds": 0.2972748279571533,
+    "avg_ms_per_example": 0.05404996871948242,
+    "examples_per_sec": 18501.398311439687
   },
-  "total_parameters": 1930647,
-  "trainable_parameters": 1930647,
-  "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/text_cnn_best_emb256_nf128_ks2x3x4_d0.3_lr00005_wd00001_s42.pt"
+  "total_parameters": 1930167,
+  "trainable_parameters": 1930167,
+  "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/text_cnn_best_emb256_nf100_ks3x4x5_d0.5_lr0001_wd00001_s42.pt"
 }

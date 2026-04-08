@@ -155,6 +155,13 @@
   ],
   "errors": [
     {
+      "text": "can i reserve tables at the new york restaurant",
+      "true_label": "accept_reservations",
+      "predicted_label": "how_busy",
+      "true_id": 9,
+      "predicted_id": 102
+    },
+    {
       "text": "do you think they'll let me reserve a table at the olive garden",
       "true_label": "accept_reservations",
       "predicted_label": "restaurant_reservation",
@@ -169,14 +176,14 @@
       "predicted_id": 23
     },
     {
-      "text": "can i reserve tables at the new york restaurant",
-      "true_label": "accept_reservations",
-      "predicted_label": "restaurant_suggestion",
-      "true_id": 9,
-      "predicted_id": 145
+      "text": "reasons that us bank would place a hold on my account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
     },
     {
-      "text": "reasons that us bank would place a hold on my account",
+      "text": "there seems to be an issue with my account",
       "true_label": "account_blocked",
       "predicted_label": "freeze_account",
       "true_id": 2,
@@ -190,11 +197,11 @@
       "predicted_id": 144
     },
     {
-      "text": "is your voice from a human or is it synthesized",
-      "true_label": "are_you_a_bot",
-      "predicted_label": "who_made_you",
-      "true_id": 117,
-      "predicted_id": 96
+      "text": "what the numerical number inside my bank accounts",
+      "true_label": "balance",
+      "predicted_label": "account_blocked",
+      "true_id": 35,
+      "predicted_id": 2
     },
     {
       "text": "what are my coffers at",
@@ -204,13 +211,6 @@
       "predicted_id": 93
     },
     {
-      "text": "what the numerical number inside my bank accounts",
-      "true_label": "balance",
-      "predicted_label": "oos",
-      "true_id": 35,
-      "predicted_id": 42
-    },
-    {
       "text": "what price is my credit card and my water bill at",
       "true_label": "bill_balance",
       "predicted_label": "bill_due",
@@ -218,11 +218,32 @@
       "predicted_id": 56
     },
     {
+      "text": "how much do i owe visa",
+      "true_label": "bill_balance",
+      "predicted_label": "credit_limit",
+      "true_id": 27,
+      "predicted_id": 41
+    },
+    {
+      "text": "what is the amount due on my visa",
+      "true_label": "bill_balance",
+      "predicted_label": "credit_limit",
+      "true_id": 27,
+      "predicted_id": 41
+    },
+    {
       "text": "whens my insurance due and how much does it cost",
       "true_label": "bill_balance",
-      "predicted_label": "insurance",
+      "predicted_label": "insurance_change",
       "true_id": 27,
-      "predicted_id": 74
+      "predicted_id": 64
+    },
+    {
+      "text": "is the phone bill the same as last month",
+      "true_label": "bill_balance",
+      "predicted_label": "min_payment",
+      "true_id": 27,
+      "predicted_id": 143
     },
     {
       "text": "how expensive is my internet",
@@ -232,7 +253,7 @@
       "predicted_id": 42
     },
     {
-      "text": "is the phone bill the same as last month",
+      "text": "i need to know the price of my car payment and insurance please",
       "true_label": "bill_balance",
       "predicted_label": "pay_bill",
       "true_id": 27,
@@ -246,13 +267,6 @@
       "predicted_id": 44
     },
     {
-      "text": "what's the latest i can pay my cellular bill",
-      "true_label": "bill_due",
-      "predicted_label": "min_payment",
-      "true_id": 56,
-      "predicted_id": 143
-    },
-    {
       "text": "when does the current billing cycle end",
       "true_label": "bill_due",
       "predicted_label": "oos",
@@ -260,7 +274,7 @@
       "predicted_id": 42
     },
     {
-      "text": "tell me the last day i can pay my gas bill",
+      "text": "what's the latest i can pay my cellular bill",
       "true_label": "bill_due",
       "predicted_label": "pay_bill",
       "true_id": 56,
@@ -279,20 +293,6 @@
       "predicted_label": "restaurant_reservation",
       "true_id": 116,
       "predicted_id": 23
-    },
-    {
-      "text": "what's 15% of 68",
-      "true_label": "calculator",
-      "predicted_label": "oos",
-      "true_id": 138,
-      "predicted_id": 42
-    },
-    {
-      "text": "i bought 6 shirts at $499 each what was my total expenditure for them",
-      "true_label": "calculator",
-      "predicted_label": "spending_history",
-      "true_id": 138,
-      "predicted_id": 71
     }
   ]
 }

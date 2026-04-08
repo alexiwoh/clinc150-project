@@ -36,15 +36,26 @@ from src.utils import count_parameters, ensure_dir, load_checkpoint
 def evaluate_mlp_baseline(
     checkpoint_path: str | Path,
     config: MLPBaselineConfig,
+    training_result: dict[str, Any] | None = None,
     training_duration: float | None = None,
+    output_dir: Path | str | None = None,
 ) -> dict[str, Any]:
     """Evaluate an MLP baseline from a saved checkpoint (standalone, no re-training).
 
     Loads the vectorizer, dataset, and label mapping from disk artifacts.
+
+    Args:
+        training_result: Optional training context dict with run_name, epoch_history,
+            device info, etc. When provided, enables saving epoch_history.csv and
+            richer run summaries (matching Text CNN / BiLSTM evaluate patterns).
+        training_duration: Legacy parameter kept for backward compat; ignored when
+            training_result is provided.
+        output_dir: Directory for saving artifacts. Defaults to REPORTS_DIR.
     """
     checkpoint_path = Path(checkpoint_path)
     assert checkpoint_path.exists(), f"Checkpoint not found: {checkpoint_path}"
 
+    reports_dir: Path | str = output_dir if output_dir is not None else REPORTS_DIR
     device = get_device()
 
     artifacts: PreprocessingArtifacts = load_preprocessing_artifacts(ARTIFACTS_DIR)
@@ -83,12 +94,14 @@ def evaluate_mlp_baseline(
 
     all_preds: list[int] = []
     all_targets: list[int] = []
+    all_logits: list[np.ndarray] = []
 
     start_time = time.time()
     with torch.no_grad():
         for inputs, targets in test_loader:
             inputs = inputs.to(device)
             logits = model(inputs)
+            all_logits.append(logits.cpu().numpy())
             preds = logits.argmax(dim=1).cpu().tolist()
             all_preds.extend(preds)
             all_targets.extend(targets.tolist())
@@ -105,7 +118,22 @@ def evaluate_mlp_baseline(
     top_confusions = find_top_confusions(confusion_df)
     top_errors = find_top_errors(all_targets, all_preds, test_texts, label_names)
 
-    param_count = count_parameters(model)
+    logits_array = np.concatenate(all_logits, axis=0)
+    probs_array = _softmax(logits_array)
+
+    per_class_report = classification_report(
+        all_targets,
+        all_preds,
+        labels=list(range(num_classes)),
+        target_names=label_names,
+        output_dict=True,
+        zero_division=0,
+    )
+
+    total_params: int = sum(p.numel() for p in model.parameters())
+    trainable_params: int = count_parameters(model)
+
+    effective_duration = training_result.get("training_duration") if training_result else training_duration
 
     results: dict[str, Any] = {
         "test_accuracy": cls_metrics["accuracy"],
@@ -120,7 +148,8 @@ def evaluate_mlp_baseline(
             "avg_ms_per_example": avg_ms_per_example,
             "examples_per_sec": examples_per_sec,
         },
-        "parameter_count": param_count,
+        "total_parameters": total_params,
+        "trainable_parameters": trainable_params,
         "checkpoint_path": str(checkpoint_path),
         "checkpoint_epoch": meta["epoch"],
         "checkpoint_best_metric": meta["best_metric"],
@@ -131,19 +160,30 @@ def evaluate_mlp_baseline(
         "config": config.to_dict(),
         "predictions": all_preds,
         "targets": all_targets,
+        "per_class_report": per_class_report,
+        "probabilities": probs_array,
         "input_dim": input_dim,
-        "training_duration": training_duration,
+        "training_duration": effective_duration,
+        "training_result": training_result or {},
+        "id_to_label": id_to_label,
+        "test_texts": test_texts,
     }
 
-    save_test_artifacts(results, REPORTS_DIR)
+    save_test_artifacts(results, reports_dir)
 
     return results
 
 
 def save_test_artifacts(results: dict[str, Any], reports_dir: Path | str) -> None:
-    """Save all test evaluation artifacts to disk."""
-    reports_dir = ensure_dir(reports_dir)
+    """Save all MLP test evaluation artifacts to disk (12 files, matching Text CNN / BiLSTM parity)."""
+    import pandas as pd
 
+    reports_dir = ensure_dir(reports_dir)
+    config = results.get("config", {})
+    label_names: list[str] = results["label_names"]
+    training_result: dict[str, Any] = results.get("training_result", {})
+
+    # 1. Test metrics (schema matches Text CNN / BiLSTM)
     test_metrics = {
         "test_accuracy": results["test_accuracy"],
         "test_macro_f1": results["test_macro_f1"],
@@ -153,28 +193,55 @@ def save_test_artifacts(results: dict[str, Any], reports_dir: Path | str) -> Non
         "oos_recall": results["oos_recall"],
         "oos_f1": results["oos_f1"],
         "inference_latency": results["inference_latency"],
-        "parameter_count": results["parameter_count"],
+        "total_parameters": results["total_parameters"],
+        "trainable_parameters": results["trainable_parameters"],
         "checkpoint_path": results["checkpoint_path"],
     }
     (reports_dir / "mlp_test_metrics.json").write_text(json.dumps(test_metrics, indent=2))
 
+    # 2. Confusion matrix
     results["confusion_matrix"].to_csv(reports_dir / "mlp_confusion_matrix.csv")
 
+    # 3. Top confusions
     (reports_dir / "mlp_top_confusions.json").write_text(json.dumps(results["top_confusions"], indent=2))
 
+    # 4. Top errors (with label_ordering, matching Text CNN / BiLSTM)
     top_errors_artifact = {
         "selection_rule": (
             "All misclassified examples sorted by (true_label, predicted_label, text); first top_k returned."
         ),
+        "label_ordering": label_names,
         "errors": results["top_errors"],
     }
     (reports_dir / "mlp_top_errors.json").write_text(json.dumps(top_errors_artifact, indent=2))
 
-    config = results.get("config", {})
-    run_name = _run_name_from_config(config)
+    # 5. Per-class metrics with embedded label ordering
+    per_class_out = {
+        "label_ordering": label_names,
+        "per_class_metrics": {
+            name: results["per_class_report"][name] for name in label_names if name in results["per_class_report"]
+        },
+        "macro_avg": results["per_class_report"].get("macro avg"),
+        "weighted_avg": results["per_class_report"].get("weighted avg"),
+    }
+    (reports_dir / "mlp_per_class_metrics.json").write_text(json.dumps(per_class_out, indent=2))
 
+    # 6. Label order standalone artifact
+    (reports_dir / "mlp_label_order.json").write_text(json.dumps(label_names, indent=2))
+
+    # 7. Confidence / probability outputs
+    np.savez_compressed(
+        reports_dir / "mlp_confidences.npz",
+        probabilities=results["probabilities"],
+        predictions=np.array(results["predictions"]),
+        targets=np.array(results["targets"]),
+        label_names=np.array(label_names),
+    )
+
+    # 8. Comparison row (canonical model_name = "mlp", matches Text CNN / BiLSTM schema)
+    run_name = _run_name_from_config(config)
     comparison_row = {
-        "model_name": "mlp_baseline",
+        "model_name": "mlp",
         "input_type": "tfidf",
         "primary_val_metric": config.get("monitor_metric", "val_macro_f1"),
         "best_val_macro_f1": results.get("checkpoint_best_metric"),
@@ -187,15 +254,42 @@ def save_test_artifacts(results: dict[str, Any], reports_dir: Path | str) -> Non
         "oos_f1": results["oos_f1"],
         "training_time": results.get("training_duration"),
         "inference_latency": results["inference_latency"],
-        "parameter_count": results["parameter_count"],
+        "parameter_count": results["total_parameters"],
+        "trainable_parameter_count": results["trainable_parameters"],
         "checkpoint_path": results["checkpoint_path"],
         "preprocessing_artifact_refs": str(ARTIFACTS_DIR),
         "notes": "TF-IDF + MLP baseline; best tuning run used directly (no retraining).",
     }
     (reports_dir / "mlp_comparison_row.json").write_text(json.dumps(comparison_row, indent=2))
 
+    # 9. Run summary
     run_summary = _build_run_summary(results, run_name)
     (reports_dir / f"mlp_run_summary_{run_name}.json").write_text(json.dumps(run_summary, indent=2))
+
+    # 10. Epoch history CSV
+    epoch_history = training_result.get("epoch_history", [])
+    if epoch_history:
+        pd.DataFrame(epoch_history).to_csv(reports_dir / "mlp_epoch_history.csv", index=False)
+
+    # 11. Final predictions CSV (matching BiLSTM pattern)
+    preds = results["predictions"]
+    targets = results["targets"]
+    texts = results.get("test_texts", [])
+    probs = results["probabilities"]
+    max_confidences = probs.max(axis=1).tolist()
+
+    id_to_label: dict[int, str] = results.get("id_to_label", {i: label_names[i] for i in range(len(label_names))})
+    pred_df = pd.DataFrame(
+        {
+            "y_true": targets,
+            "y_pred": preds,
+            "true_label_name": [id_to_label[t] for t in targets],
+            "pred_label_name": [id_to_label[p] for p in preds],
+            "text": texts if len(texts) == len(targets) else [""] * len(targets),
+            "max_confidence": max_confidences,
+        }
+    )
+    pred_df.to_csv(reports_dir / "mlp_final_predictions.csv", index=False)
 
 
 def _run_name_from_config(config: dict[str, Any]) -> str:
@@ -213,6 +307,7 @@ def _run_name_from_config(config: dict[str, Any]) -> str:
 
 def _build_run_summary(results: dict[str, Any], run_name: str) -> dict[str, Any]:
     config = results.get("config", {})
+    training_result = results.get("training_result", {})
     return {
         "run_name": run_name,
         "config_snapshot": config,
@@ -220,7 +315,8 @@ def _build_run_summary(results: dict[str, Any], run_name: str) -> dict[str, Any]
         "tfidf_input_dim": results.get("input_dim"),
         "num_classes": NUM_CLASSES,
         "model_architecture": "MLPClassifier",
-        "parameter_count": results["parameter_count"],
+        "total_parameters": results["total_parameters"],
+        "trainable_parameters": results["trainable_parameters"],
         "optimizer_settings": {
             "type": config.get("optimizer", "adam"),
             "lr": config.get("learning_rate"),
@@ -239,10 +335,34 @@ def _build_run_summary(results: dict[str, Any], run_name: str) -> dict[str, Any]
         "class_weight_policy": "enabled" if config.get("use_class_weights") else "disabled (default)",
         "tfidf_input_format": "sparse-origin, dense float32 per-row in TFIDFDataset.__getitem__",
         "inference_latency": results["inference_latency"],
-        "lr_scheduling_used": config.get("use_lr_scheduler", False),
-        "shuffle_policy": "train=shuffled (seeded Generator), val/test=no shuffle",
+        "lr_scheduling_policy": {
+            "used": config.get("use_lr_scheduler", False),
+            "justification": (
+                "not used; fixed learning rate; compact search space and early stopping control training length"
+            ),
+        },
+        "shuffle_policy": {
+            "train": f"shuffled (seeded Generator, seed={config.get('random_seed', 42)})",
+            "validation": "no shuffle",
+            "test": "no shuffle",
+        },
         "preprocessing_refs_for_comparison": str(ARTIFACTS_DIR),
         "label_name_ordering": results.get("label_names"),
+        "device_and_environment": {
+            "device": training_result.get("device", str(get_device())),
+            "python_version": training_result.get("python_version", platform.python_version()),
+            "pytorch_version": training_result.get("pytorch_version", torch.__version__),
+        },
+        "final_model_selection_rule": "single best validation run used directly; no retraining",
+        "confidence_saving_decision": "test-split softmax probabilities saved to mlp_confidences.npz",
+        "training_seed": config.get("random_seed", 42),
+        "test_accuracy": results["test_accuracy"],
+        "test_macro_f1": results["test_macro_f1"],
+        "test_precision": results["test_precision"],
+        "test_recall": results["test_recall"],
+        "oos_precision": results["oos_precision"],
+        "oos_recall": results["oos_recall"],
+        "oos_f1": results["oos_f1"],
     }
 
 
@@ -258,11 +378,15 @@ def evaluate_text_cnn(
     metadata: NeuralMetadata,
     test_loader: DataLoader,
     test_texts: list[str],
+    output_dir: Path | str | None = None,
 ) -> dict[str, Any]:
     """Evaluate a Text CNN from a saved checkpoint on the test split.
 
     Loads the best checkpoint (not last epoch state), computes test metrics,
     confusion matrix, per-class metrics, top errors, and saves all artifacts.
+
+    Args:
+        output_dir: Directory for saving artifacts. Defaults to REPORTS_DIR.
     """
     checkpoint_path = Path(checkpoint_path)
     assert checkpoint_path.exists(), f"Checkpoint not found: {checkpoint_path}"
@@ -345,9 +469,10 @@ def evaluate_text_cnn(
         "probabilities": probs_array,
         "training_result": training_result,
         "metadata": metadata,
+        "test_texts": test_texts,
     }
 
-    _save_text_cnn_artifacts(results, REPORTS_DIR)
+    _save_text_cnn_artifacts(results, output_dir if output_dir is not None else REPORTS_DIR)
 
     return results
 
@@ -456,6 +581,28 @@ def _save_text_cnn_artifacts(results: dict[str, Any], reports_dir: Path | str) -
         import pandas as pd
 
         pd.DataFrame(epoch_history).to_csv(reports_dir / "text_cnn_epoch_history.csv", index=False)
+
+    # Final predictions CSV (matching BiLSTM pattern)
+    import pandas as pd
+
+    preds = results["predictions"]
+    targets = results["targets"]
+    texts = results.get("test_texts", [])
+    probs = results["probabilities"]
+    max_confidences = probs.max(axis=1).tolist()
+
+    id_to_label: dict[int, str] = metadata["id_to_label"]
+    pred_df = pd.DataFrame(
+        {
+            "y_true": targets,
+            "y_pred": preds,
+            "true_label_name": [id_to_label[t] for t in targets],
+            "pred_label_name": [id_to_label[p] for p in preds],
+            "text": texts if len(texts) == len(targets) else [""] * len(targets),
+            "max_confidence": max_confidences,
+        }
+    )
+    pred_df.to_csv(reports_dir / "text_cnn_final_predictions.csv", index=False)
 
 
 def _build_text_cnn_run_summary(
@@ -590,11 +737,15 @@ def evaluate_bilstm(
     metadata: NeuralMetadata,
     test_loader: DataLoader,
     test_texts: list[str],
+    output_dir: Path | str | None = None,
 ) -> dict[str, Any]:
     """Evaluate a BiLSTM from a saved checkpoint on the test split.
 
     Loads the best checkpoint (not last epoch state), computes test metrics,
     confusion matrix, per-class metrics, top errors, and saves all artifacts.
+
+    Args:
+        output_dir: Directory for saving artifacts. Defaults to REPORTS_DIR.
     """
     checkpoint_path = Path(checkpoint_path)
     assert checkpoint_path.exists(), f"Checkpoint not found: {checkpoint_path}"
@@ -680,7 +831,7 @@ def evaluate_bilstm(
         "test_texts": test_texts,
     }
 
-    _save_bilstm_artifacts(results, REPORTS_DIR)
+    _save_bilstm_artifacts(results, output_dir if output_dir is not None else REPORTS_DIR)
 
     return results
 

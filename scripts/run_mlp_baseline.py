@@ -79,19 +79,18 @@ def main() -> None:
 
     test_results = experiment_results["test_results"]
     print(f"\n{'=' * 60}")
-    print("  Final Baseline Test Metrics")
-    print("=" * 60)
-    print(f"  Test Accuracy:   {test_results['test_accuracy']:.4f}")
-    print(f"  Test Macro F1:   {test_results['test_macro_f1']:.4f}")
-    print(f"  Test Precision:  {test_results['test_precision']:.4f}")
-    print(f"  Test Recall:     {test_results['test_recall']:.4f}")
-    print(f"  OOS Precision:   {test_results['oos_precision']:.4f}")
-    print(f"  OOS Recall:      {test_results['oos_recall']:.4f}")
-    print(f"  OOS F1:          {test_results['oos_f1']:.4f}")
-    latency = test_results["inference_latency"]
-    print(f"  Avg ms/example:  {latency['avg_ms_per_example']:.3f}")
-    print(f"  Examples/sec:    {latency['examples_per_sec']:.0f}")
-    print(f"  Parameter count: {test_results['parameter_count']:,}")
+    print("  Step 4 COMPLETE — Final Summary")
+    print(f"{'=' * 60}")
+    print(f"  Best run:            {experiment_results['best_run_name']}")
+    print(f"  Test accuracy:       {test_results['test_accuracy']:.4f}")
+    print(f"  Test macro F1:       {test_results['test_macro_f1']:.4f}")
+    print(f"  Test precision:      {test_results['test_precision']:.4f}")
+    print(f"  Test recall:         {test_results['test_recall']:.4f}")
+    print(f"  OOS F1:              {test_results['oos_f1']:.4f}")
+    print(f"  Inference:           {test_results['inference_latency']['avg_ms_per_example']:.2f} ms/example")
+    print(f"  Total params:        {test_results['total_parameters']:,}")
+    print(f"  Trainable params:    {test_results['trainable_parameters']:,}")
+    print(f"  Checkpoint:          {test_results['checkpoint_path']}")
 
     _step56_smoke_test()
 

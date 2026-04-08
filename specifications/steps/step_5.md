@@ -49,13 +49,21 @@ Implementation requirements:
 A. Create a clean Text CNN training entry point
 - Add Text CNN training entry logic in src/train.py and/or main.py
 - Keep the CNN workflow easy to run independently
+- In addition to standalone use, this step must expose a pipeline-invocable entry path for `scripts/run_model_pipeline.py --model text_cnn`
 - Prefer explicit functions such as:
   - build_text_cnn(...)
   - train_text_cnn(...)
   - evaluate_text_cnn(...)
   - run_text_cnn_experiment(...)
+  - tune_text_cnn(...)
+  - train_text_cnn_final_once(...)
 - Make the training path reusable for later comparisons and report generation
 - Ensure this step reads preprocessing artifacts from Step 3 rather than re-fitting vocabulary or recreating sequence tensors
+- The shared pipeline runner must be able to call this step to:
+  - run or reuse tuning
+  - write the model's tuning artifacts
+  - launch one final-train/evaluate run from frozen hyperparameters
+- By default, the pipeline runner should reuse valid existing tuning artifacts and only rerun tuning for Text CNN when artifacts are missing, invalid, or `--retune` is passed
 
 A2. Preprocessing manifest and frozen-artifact gate
 - Require one saved preprocessing manifest from Step 3 that Step 5 loads before training begins
@@ -162,6 +170,7 @@ E. Hyperparameter tuning expectations
 - Save every tried configuration and its validation result
 - Define and follow a rough cap on the number of Step 5 tuning runs so the CNN does not quietly become a mini research project
 - Prefer a staged tuning order rather than a flat search
+- Emit tuning outputs in a stable machine-readable form so the shared pipeline runner can detect and reuse them without guessing filenames or recomputing the selection result
 
 Recommended bias:
 Use a restrained search over a few plausible settings, for example:

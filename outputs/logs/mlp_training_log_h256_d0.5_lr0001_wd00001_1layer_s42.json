@@ -7,7 +7,9 @@
     "val_macro_f1": 0.6754587196489508,
     "val_precision": 0.8348217138087217,
     "val_recall": 0.6406622516556292,
-    "val_oos_f1": 0.20085470085470086
+    "val_oos_f1": 0.20085470085470086,
+    "learning_rate": 0.001,
+    "checkpoint_updated": true
   },
   {
     "epoch": 2,
@@ -17,7 +19,9 @@
     "val_macro_f1": 0.8547013928717114,
     "val_precision": 0.8811995014178408,
     "val_recall": 0.8484105960264902,
-    "val_oos_f1": 0.4930555555555556
+    "val_oos_f1": 0.4930555555555556,
+    "learning_rate": 0.001,
+    "checkpoint_updated": true
   },
   {
     "epoch": 3,
@@ -27,7 +31,9 @@
     "val_macro_f1": 0.8799580339708232,
     "val_precision": 0.9013458859312853,
     "val_recall": 0.8749668874172186,
-    "val_oos_f1": 0.5173745173745173
+    "val_oos_f1": 0.5173745173745173,
+    "learning_rate": 0.001,
+    "checkpoint_updated": true
   },
   {
     "epoch": 4,
@@ -37,7 +43,9 @@
     "val_macro_f1": 0.8952786118521606,
     "val_precision": 0.9208041202236583,
     "val_recall": 0.8825165562913907,
-    "val_oos_f1": 0.5126582278481012
+    "val_oos_f1": 0.5126582278481012,
+    "learning_rate": 0.001,
+    "checkpoint_updated": true
   },
   {
     "epoch": 5,
@@ -47,7 +55,9 @@
     "val_macro_f1": 0.9034741661781113,
     "val_precision": 0.9203058133411472,
     "val_recall": 0.8960927152317881,
-    "val_oos_f1": 0.5650557620817844
+    "val_oos_f1": 0.5650557620817844,
+    "learning_rate": 0.001,
+    "checkpoint_updated": true
   },
   {
     "epoch": 6,
@@ -57,7 +67,9 @@
     "val_macro_f1": 0.9050087017875019,
     "val_precision": 0.9173154594943956,
     "val_recall": 0.9017880794701988,
-    "val_oos_f1": 0.5826086956521739
+    "val_oos_f1": 0.5826086956521739,
+    "learning_rate": 0.001,
+    "checkpoint_updated": true
   },
   {
     "epoch": 7,
@@ -67,7 +79,9 @@
     "val_macro_f1": 0.9078493617801083,
     "val_precision": 0.92086406796125,
     "val_recall": 0.9034437086092715,
-    "val_oos_f1": 0.5950413223140496
+    "val_oos_f1": 0.5950413223140496,
+    "learning_rate": 0.001,
+    "checkpoint_updated": true
   },
   {
     "epoch": 8,
@@ -77,7 +91,9 @@
     "val_macro_f1": 0.9086344911348839,
     "val_precision": 0.923947441871525,
     "val_recall": 0.9025827814569536,
-    "val_oos_f1": 0.6171875
+    "val_oos_f1": 0.6171875,
+    "learning_rate": 0.001,
+    "checkpoint_updated": true
   },
   {
     "epoch": 9,
@@ -87,7 +103,9 @@
     "val_macro_f1": 0.9083451850420469,
     "val_precision": 0.9184292948381616,
     "val_recall": 0.9058278145695362,
-    "val_oos_f1": 0.5991189427312775
+    "val_oos_f1": 0.5991189427312775,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   },
   {
     "epoch": 10,
@@ -97,7 +115,9 @@
     "val_macro_f1": 0.908786536626003,
     "val_precision": 0.9207591993382463,
     "val_recall": 0.9046357615894037,
-    "val_oos_f1": 0.625
+    "val_oos_f1": 0.625,
+    "learning_rate": 0.001,
+    "checkpoint_updated": true
   },
   {
     "epoch": 11,
@@ -107,7 +127,9 @@
     "val_macro_f1": 0.9140523770471659,
     "val_precision": 0.9234419974804182,
     "val_recall": 0.9115894039735097,
-    "val_oos_f1": 0.6278026905829597
+    "val_oos_f1": 0.6278026905829597,
+    "learning_rate": 0.001,
+    "checkpoint_updated": true
   },
   {
     "epoch": 12,
@@ -117,7 +139,9 @@
     "val_macro_f1": 0.9094354438949002,
     "val_precision": 0.9196984211715568,
     "val_recall": 0.9070860927152318,
-    "val_oos_f1": 0.6371681415929203
+    "val_oos_f1": 0.6371681415929203,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   },
   {
     "epoch": 13,
@@ -127,7 +151,9 @@
     "val_macro_f1": 0.9114091224298468,
     "val_precision": 0.9219563817604074,
     "val_recall": 0.9088079470198677,
-    "val_oos_f1": 0.6431718061674009
+    "val_oos_f1": 0.6431718061674009,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   },
   {
     "epoch": 14,
@@ -137,7 +163,9 @@
     "val_macro_f1": 0.9086839037164716,
     "val_precision": 0.9184989721874252,
     "val_recall": 0.9064900662251657,
-    "val_oos_f1": 0.6126126126126126
+    "val_oos_f1": 0.6126126126126126,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   },
   {
     "epoch": 15,
@@ -147,7 +175,9 @@
     "val_macro_f1": 0.9114304313146105,
     "val_precision": 0.9212123356308217,
     "val_recall": 0.909072847682119,
-    "val_oos_f1": 0.6371681415929203
+    "val_oos_f1": 0.6371681415929203,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   },
   {
     "epoch": 16,
@@ -157,7 +187,9 @@
     "val_macro_f1": 0.91202792508249,
     "val_precision": 0.9219621758877328,
     "val_recall": 0.909072847682119,
-    "val_oos_f1": 0.631578947368421
+    "val_oos_f1": 0.631578947368421,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   },
   {
     "epoch": 17,
@@ -167,7 +199,9 @@
     "val_macro_f1": 0.910424065775165,
     "val_precision": 0.918311632276016,
     "val_recall": 0.9089403973509934,
-    "val_oos_f1": 0.5990783410138248
+    "val_oos_f1": 0.5990783410138248,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   },
   {
     "epoch": 18,
@@ -177,7 +211,9 @@
     "val_macro_f1": 0.91154623852406,
     "val_precision": 0.9193864167789441,
     "val_recall": 0.9109933774834438,
-    "val_oos_f1": 0.6567164179104478
+    "val_oos_f1": 0.6567164179104478,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   },
   {
     "epoch": 19,
@@ -187,7 +223,9 @@
     "val_macro_f1": 0.912553091658029,
     "val_precision": 0.9202205365710051,
     "val_recall": 0.9117880794701987,
-    "val_oos_f1": 0.6601941747572816
+    "val_oos_f1": 0.6601941747572816,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   },
   {
     "epoch": 20,
@@ -197,7 +235,9 @@
     "val_macro_f1": 0.9088647824829785,
     "val_precision": 0.9154665094810907,
     "val_recall": 0.9100000000000001,
-    "val_oos_f1": 0.6455026455026455
+    "val_oos_f1": 0.6455026455026455,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   },
   {
     "epoch": 21,
@@ -207,6 +247,8 @@
     "val_macro_f1": 0.9093013528337762,
     "val_precision": 0.9164983877188044,
     "val_recall": 0.9098013245033112,
-    "val_oos_f1": 0.6395939086294417
+    "val_oos_f1": 0.6395939086294417,
+    "learning_rate": 0.001,
+    "checkpoint_updated": false
   }
 ]

@@ -100,11 +100,31 @@ clinc150-project/
 - `src/metrics/classification_metrics.py`: accuracy, precision, recall, macro F1, and OOS metric helpers
 - `src/trainers/trainer.py`: reusable training and validation loop logic shared across models
 - `main.py`: top-level project entry point for training, evaluation, or experiment execution
+- `scripts/run_model_pipeline.py`: canonical user-facing pipeline runner for tuning reuse, repeated evaluation, tracking, and visualization
 - `notebooks/exploration.ipynb`: optional notebook for exploratory analysis, data inspection, and quick visualizations
 - `outputs/checkpoints/`: saved trained model checkpoints
 - `outputs/figures/`: saved plots, charts, and confusion matrices
 - `outputs/logs/`: experiment logs and run summaries
 - `outputs/reports/`: report-ready tables, exported metrics, and related artifacts
+
+---
+
+## Recommended Execution Path
+- Use `python scripts/run_model_pipeline.py --model all --run-count 3` as the canonical common-case command
+- The pipeline runner should accept:
+  - `--model {mlp,text_cnn,bilstm,all}`
+  - `--run-count N`
+  - optional `--retune`
+- Default behavior for each selected model:
+  - validate required preprocessing artifacts
+  - reuse valid tuning outputs if they already exist
+  - retune only when artifacts are missing, invalid, or `--retune` is passed
+  - freeze the winning validation-selected config
+  - run repeated final training and evaluation
+  - build aggregate and representative-run artifacts
+  - run tracking and visualization stages
+  - emit `step10_handoff.json`
+- `main.py` may delegate to this runner, but the pipeline contract should remain explicit and stage-specific scripts should still be available for targeted reruns
 
 ---
 
@@ -202,39 +222,44 @@ clinc150-project/
 
 ## Step 7: Evaluation metrics
 - Compute for each model:
-  - test accuracy
-  - macro F1
-  - precision
-  - recall
+  - validation and test accuracy
+  - validation and test macro F1
+  - validation and test precision
+  - validation and test recall
 - Compute OOS metrics:
   - OOS precision
   - OOS recall
   - OOS F1
-- Generate confusion matrix for best model
+- Freeze one validation-selected final config per model from the existing tuning outputs
+- Run each model multiple times with the same shared seed list
+- Save per-run artifacts and per-model aggregate mean/std summaries
+- Choose one representative run per model for confusion matrices and qualitative error analysis
 - Identify most commonly confused intent pairs
 - Make sure metrics are computed consistently across all models
-- Run each model multiple times with different random seeds
-- Record per-run validation and test metrics separately
-- Compute aggregated metrics across runs, including mean and standard deviation
+- Keep aggregate reporting separate from representative-run diagnostics
 - Use the same seed list and evaluation protocol for all models to keep comparisons fair
 
 ---
 
 ## Step 8: Experiment tracking
 - Save:
-  - hyperparameters
+  - frozen configs
   - model checkpoints
   - training logs
-  - evaluation metrics
-- Create a summary results table comparing all models
+  - per-run metadata and metrics
+  - aggregate summaries and ledgers
+- Validate and organize artifacts under the canonical repeated-run directory layout
+- Create shared comparison tables comparing all models
 - Track:
   - parameter count
-  - training time
-  - final test metrics
+  - trainable parameter count
+  - training and inference timing
+  - final test and OOS metrics
 - Keep experiment outputs organized so they can be reused directly in the report
 - Save seed, run index, and model configuration for every run
 - Keep per-run metrics separate from aggregated summary metrics
 - Save final comparison tables with both mean metrics and variability across runs
+- Do not retrain or reevaluate models in this step
 
 ---
 
@@ -244,37 +269,38 @@ clinc150-project/
 - Increase to **5 runs per model** if runtime allows and metric variance appears meaningful
 - Change the seed across runs while keeping the data split and evaluation procedure fixed
 - Use aggregated results for the final comparison tables in the report
-- Optionally identify the single best run per model for confusion matrix generation and qualitative error analysis, while clearly separating this from the aggregated reporting protocol
+- Identify one representative run per model for confusion matrix generation and qualitative error analysis, while clearly separating this from the aggregated reporting protocol
 
 ---
 
 ## Step 9: Visualization
-- Plot training loss curves
-- Plot validation accuracy curves
-- Save confusion matrix image
-- Optionally create bar chart comparing model performance
-- Optionally create a per-class accuracy bar chart
-- Save all figures in report-ready format
+- Generate representative training curves, confusion figures, bottom-classes-by-F1 diagnostics, and OOS diagnostics from saved artifacts
+- Generate aggregate cross-model comparison figures from the shared comparison tables
+- Save all figures in report-ready format under canonical filenames
+- Save `figure_manifest.json`, `representative_examples_index.json`, and one `step10_handoff.json` per model
+- Do not retrain models to generate figures
 
 ---
 
 ## Additional Report-Ready Outputs
 In addition to the core metrics and plots, generate the following:
-- per-class accuracy bar chart
+- bottom-classes-by-F1 figure
 - table of the most frequently confused intent pairs
 - summary table focused specifically on OOS precision, recall, and F1
 - a small set of representative misclassified examples for qualitative discussion
+- efficiency comparison figure
 
 These outputs are intended to strengthen the Numerical Results chapter without increasing modeling complexity.
 
 ---
 
 ## Step 10: Error analysis
-- Review misclassified samples from best model
+- Review representative misclassified samples from the Step 9 handoff bundle
 - Identify patterns such as:
   - semantically similar intents
   - short ambiguous queries
   - OOS queries predicted as valid intents
+- Keep aggregate claims grounded in the repeated-run comparison tables
 - Write notes for report discussion section
 - Save representative examples for later inclusion in the final write-up
 

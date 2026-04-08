@@ -157,9 +157,9 @@
     {
       "text": "can i reserve tables at the new york restaurant",
       "true_label": "accept_reservations",
-      "predicted_label": "how_busy",
+      "predicted_label": "make_call",
       "true_id": 9,
-      "predicted_id": 102
+      "predicted_id": 25
     },
     {
       "text": "do you think they'll let me reserve a table at the olive garden",
@@ -176,39 +176,74 @@
       "predicted_id": 23
     },
     {
+      "text": "how can i unfreeze my bank account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
+      "text": "how do i unlock my bank account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
+      "text": "is there a reason you put a hold on my chase account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
       "text": "i need to up by noon",
       "true_label": "alarm",
-      "predicted_label": "make_call",
+      "predicted_label": "directions",
       "true_id": 83,
-      "predicted_id": 25
-    },
-    {
-      "text": "is your voice from a human or is it synthesized",
-      "true_label": "are_you_a_bot",
-      "predicted_label": "change_accent",
-      "true_id": 117,
-      "predicted_id": 51
-    },
-    {
-      "text": "what are my coffers at",
-      "true_label": "balance",
-      "predicted_label": "income",
-      "true_id": 35,
-      "predicted_id": 93
+      "predicted_id": 72
     },
     {
       "text": "what the numerical number inside my bank accounts",
       "true_label": "balance",
-      "predicted_label": "routing",
+      "predicted_label": "oos",
       "true_id": 35,
-      "predicted_id": 45
+      "predicted_id": 42
     },
     {
-      "text": "i think all my bills are paid, but can you double check",
+      "text": "what are my coffers at",
+      "true_label": "balance",
+      "predicted_label": "transactions",
+      "true_id": 35,
+      "predicted_id": 68
+    },
+    {
+      "text": "i think i owe about 100 left on my bills, am i forgetting anything",
       "true_label": "bill_balance",
-      "predicted_label": "fun_fact",
+      "predicted_label": "calendar_update",
       "true_id": 27,
-      "predicted_id": 129
+      "predicted_id": 105
+    },
+    {
+      "text": "what would you say my gas and phone bills are at",
+      "true_label": "bill_balance",
+      "predicted_label": "confirm_reservation",
+      "true_id": 27,
+      "predicted_id": 85
+    },
+    {
+      "text": "what is the amount due on my visa",
+      "true_label": "bill_balance",
+      "predicted_label": "credit_limit",
+      "true_id": 27,
+      "predicted_id": 41
+    },
+    {
+      "text": "how much is my water and sewer",
+      "true_label": "bill_balance",
+      "predicted_label": "income",
+      "true_id": 27,
+      "predicted_id": 93
     },
     {
       "text": "i need to know the price of my car payment and insurance please",
@@ -218,6 +253,13 @@
       "predicted_id": 74
     },
     {
+      "text": "whens my insurance due and how much does it cost",
+      "true_label": "bill_balance",
+      "predicted_label": "insurance_change",
+      "true_id": 27,
+      "predicted_id": 64
+    },
+    {
       "text": "how expensive is my internet",
       "true_label": "bill_balance",
       "predicted_label": "oos",
@@ -225,11 +267,11 @@
       "predicted_id": 42
     },
     {
-      "text": "i think i owe about 100 left on my bills, am i forgetting anything",
+      "text": "is the phone bill the same as last month",
       "true_label": "bill_balance",
-      "predicted_label": "tire_change",
+      "predicted_label": "oos",
       "true_id": 27,
-      "predicted_id": 47
+      "predicted_id": 42
     },
     {
       "text": "i need to know the next billing date of my american express card",
@@ -239,60 +281,18 @@
       "predicted_id": 44
     },
     {
-      "text": "tell me the last day i can pay my gas bill",
-      "true_label": "bill_due",
-      "predicted_label": "min_payment",
-      "true_id": 56,
-      "predicted_id": 143
-    },
-    {
-      "text": "what's the ultimate day for me to pay the internet bill",
-      "true_label": "bill_due",
-      "predicted_label": "min_payment",
-      "true_id": 56,
-      "predicted_id": 143
-    },
-    {
       "text": "what's the latest i can pay my cellular bill",
       "true_label": "bill_due",
-      "predicted_label": "pay_bill",
+      "predicted_label": "min_payment",
       "true_id": 56,
-      "predicted_id": 111
+      "predicted_id": 143
     },
     {
       "text": "when does the current billing cycle end",
       "true_label": "bill_due",
-      "predicted_label": "time",
+      "predicted_label": "oos",
       "true_id": 56,
-      "predicted_id": 4
-    },
-    {
-      "text": "\"i\"m headed out to lax and going to phl for a low price of $120 this weekend on the 12th",
-      "true_label": "book_flight",
-      "predicted_label": "traffic",
-      "true_id": 63,
-      "predicted_id": 24
-    },
-    {
-      "text": "\"i'll leave to lax and go to phl for $120 on nov 5th",
-      "true_label": "book_flight",
-      "predicted_label": "uber",
-      "true_id": 63,
-      "predicted_id": 39
-    },
-    {
-      "text": "i'm travelling to boston on march 2 until march 4 please make a hotel reservation for me",
-      "true_label": "book_hotel",
-      "predicted_label": "book_flight",
-      "true_id": 116,
-      "predicted_id": 63
-    },
-    {
-      "text": "what is the average of 54, 23, 43, 12, and 442",
-      "true_label": "calculator",
-      "predicted_label": "current_location",
-      "true_id": 138,
-      "predicted_id": 136
+      "predicted_id": 42
     }
   ]
 }
