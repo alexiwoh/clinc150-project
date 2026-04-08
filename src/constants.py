@@ -31,6 +31,7 @@ TUNING_SUBDIR: str = "tuning"
 FINAL_RUNS_SUBDIR: str = "final_runs"
 AGGREGATE_SUBDIR: str = "aggregate"
 MODEL_FIGURES_SUBDIR: str = "figures"
+ANALYSIS_SUBDIR: str = "analysis"
 RUN_CHECKPOINT_SUBDIR: str = "checkpoint"
 RUN_LOGS_SUBDIR: str = "logs"
 
