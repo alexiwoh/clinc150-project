@@ -215,8 +215,192 @@ class ResultsVisualizer(Visualizer):
         ax.set_title("Most Frequent Misclassification Pairs")
         Visualizer._save_figure(fig, output_path)
 
-    # TODO (Step 9): plot_model_comparison — grouped bar chart comparing test
-    #   accuracy, macro F1, and OOS F1 across all three models.
+    @staticmethod
+    def plot_model_comparison_bar(
+        model_stats: list[tuple[str, float, float]],
+        metric_label: str,
+        output_path: Path,
+    ) -> None:
+        """Grouped bar chart comparing one aggregate metric across models.
 
-    # TODO (Step 9): plot_oos_metrics_summary — bar chart focused on OOS
-    #   precision, recall, and F1 for each model.
+        Args:
+            model_stats: ``(display_name, mean, std)`` per model, in
+                canonical order.
+            metric_label: human-readable metric name for axis/title.
+            output_path: where to save the figure.
+        """
+        Visualizer._apply_style()
+        names = [s[0] for s in model_stats]
+        means = [s[1] for s in model_stats]
+        stds = [s[2] for s in model_stats]
+
+        fig, ax = plt.subplots(figsize=(8, 5))
+        x = np.arange(len(names))
+        bars = ax.bar(
+            x,
+            means,
+            yerr=stds,
+            capsize=5,
+            color=Visualizer.COLOR_PALETTE[: len(names)],
+            edgecolor="black",
+            linewidth=0.5,
+        )
+        for bar, val in zip(bars, means):
+            ax.text(
+                bar.get_x() + bar.get_width() / 2,
+                bar.get_height(),
+                f"{val:.4f}",
+                ha="center",
+                va="bottom",
+                fontsize=9,
+            )
+        ax.set_xticks(x)
+        ax.set_xticklabels(names, fontsize=10)
+        ax.set_ylabel(metric_label)
+        ax.set_title(f"Model Comparison: {metric_label}")
+        ax.set_ylim(0, 1)
+        Visualizer._save_figure(fig, output_path)
+
+    @staticmethod
+    def plot_oos_metrics_comparison(
+        rows: list[dict[str, Any]],
+        output_path: Path,
+    ) -> None:
+        """Grouped bar chart of OOS precision, recall, and F1 across models.
+
+        Args:
+            rows: list of dicts from ``oos_summary_table.json``, each with
+                ``display_name`` and ``oos_{precision,recall,f1}_{mean,std}``.
+            output_path: where to save the figure.
+        """
+        Visualizer._apply_style()
+        metric_keys = ("oos_precision", "oos_recall", "oos_f1")
+        metric_labels = ("Precision", "Recall", "F1")
+        n_metrics = len(metric_keys)
+        n_models = len(rows)
+        bar_width = 0.25
+
+        fig, ax = plt.subplots(figsize=(10, 5))
+        x = np.arange(n_models)
+
+        for i, (key, label) in enumerate(zip(metric_keys, metric_labels)):
+            means = [r[f"{key}_mean"] for r in rows]
+            stds = [r[f"{key}_std"] for r in rows]
+            offset = (i - (n_metrics - 1) / 2) * bar_width
+            bars = ax.bar(
+                x + offset,
+                means,
+                bar_width,
+                yerr=stds,
+                capsize=4,
+                label=label,
+                color=Visualizer.COLOR_PALETTE[i],
+                edgecolor="black",
+                linewidth=0.5,
+            )
+            for bar, val in zip(bars, means):
+                ax.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    bar.get_height(),
+                    f"{val:.3f}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=7,
+                )
+
+        names = [r["display_name"] for r in rows]
+        ax.set_xticks(x)
+        ax.set_xticklabels(names, fontsize=10)
+        ax.set_ylabel("Score")
+        ax.set_title("OOS Detection Metrics Comparison")
+        ax.set_ylim(0, 1)
+        ax.legend()
+        Visualizer._save_figure(fig, output_path)
+
+    @staticmethod
+    def plot_efficiency_comparison(
+        rows: list[dict[str, Any]],
+        output_path: Path,
+    ) -> None:
+        """Multi-panel efficiency comparison across models.
+
+        Three subplots: training time, inference throughput, and parameter
+        count.
+
+        Args:
+            rows: list of dicts from ``efficiency_summary_table.json``.
+            output_path: where to save the figure.
+        """
+        Visualizer._apply_style()
+        names = [r["display_name"] for r in rows]
+        x = np.arange(len(names))
+
+        fig, axes = plt.subplots(1, 3, figsize=(16, 5))
+
+        # Training time
+        means = [r["training_time_seconds_mean"] for r in rows]
+        stds = [r["training_time_seconds_std"] for r in rows]
+        axes[0].bar(x, means, yerr=stds, capsize=5, color=Visualizer.COLOR_PALETTE[0], edgecolor="black", linewidth=0.5)
+        for xi, val in zip(x, means):
+            axes[0].text(xi, val, f"{val:.1f}s", ha="center", va="bottom", fontsize=9)
+        axes[0].set_xticks(x)
+        axes[0].set_xticklabels(names, fontsize=9)
+        axes[0].set_ylabel("Seconds")
+        axes[0].set_title("Training Time")
+
+        # Inference throughput
+        means = [r["inference_examples_per_sec_mean"] for r in rows]
+        stds = [r["inference_examples_per_sec_std"] for r in rows]
+        axes[1].bar(x, means, yerr=stds, capsize=5, color=Visualizer.COLOR_PALETTE[1], edgecolor="black", linewidth=0.5)
+        for xi, val in zip(x, means):
+            axes[1].text(xi, val, f"{val:.0f}", ha="center", va="bottom", fontsize=9)
+        axes[1].set_xticks(x)
+        axes[1].set_xticklabels(names, fontsize=9)
+        axes[1].set_ylabel("Examples / sec")
+        axes[1].set_title("Inference Throughput")
+
+        # Parameter count
+        params = [r["trainable_parameter_count"] for r in rows]
+        axes[2].bar(x, params, color=Visualizer.COLOR_PALETTE[2], edgecolor="black", linewidth=0.5)
+        for xi, val in zip(x, params):
+            axes[2].text(xi, val, f"{val / 1e6:.2f}M", ha="center", va="bottom", fontsize=9)
+        axes[2].set_xticks(x)
+        axes[2].set_xticklabels(names, fontsize=9)
+        axes[2].set_ylabel("Parameters")
+        axes[2].set_title("Trainable Parameters")
+
+        fig.suptitle("Model Efficiency Comparison", fontsize=13, y=1.02)
+        Visualizer._save_figure(fig, output_path)
+
+    @staticmethod
+    def plot_bottom_classes_f1_from_metrics(
+        class_metrics: list[dict[str, Any]],
+        output_path: Path,
+        *,
+        bottom_n: int = 15,
+    ) -> None:
+        """Horizontal bar chart of worst classes by F1, from pre-computed metrics.
+
+        Unlike :meth:`plot_bottom_classes_f1` which recomputes F1 from raw
+        predictions, this method accepts the ``per_class_metrics.json``
+        structure directly.
+
+        Args:
+            class_metrics: list of dicts each with ``label_name`` and ``f1``.
+            output_path: where to save the figure.
+            bottom_n: how many worst classes to show.
+        """
+        Visualizer._apply_style()
+        sorted_classes = sorted(class_metrics, key=lambda c: c["f1"])
+        bottom = sorted_classes[:bottom_n]
+        names = [c["label_name"] for c in bottom]
+        f1s = [c["f1"] for c in bottom]
+
+        fig, ax = plt.subplots(figsize=(8, max(4, len(names) * 0.35)))
+        ax.barh(range(len(names)), f1s, color=Visualizer.COLOR_PALETTE[2])
+        ax.set_yticks(range(len(names)))
+        ax.set_yticklabels(names, fontsize=9)
+        ax.set_xlabel("F1 Score")
+        ax.set_title(f"Bottom {bottom_n} Classes by F1")
+        ax.set_xlim(0, 1)
+        Visualizer._save_figure(fig, output_path)

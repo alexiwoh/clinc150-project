@@ -25,6 +25,7 @@ from src.repeated_evaluation import (
     extract_and_freeze_configs,
     run_all_repeated_evaluations,
 )
+from src.report_figure_generation import run_report_figure_generation
 
 logger = logging.getLogger(__name__)
 
@@ -136,18 +137,26 @@ def main(argv: list[str] | None = None) -> None:
     # as the standalone scripts/run_experiment_tracking.py entry point.
     tracking_success = run_experiment_tracking(models)
 
+    if not tracking_success:
+        print("Experiment tracking validation failed. Review errors above.")
+        sys.exit(1)
+
+    # Report-ready figure generation and error-analysis handoff
+    visualization_success = run_report_figure_generation(models)
+
     print("=" * 60)
     print("  Pipeline Summary")
     print("=" * 60)
     print("  Repeated evaluation: complete")
     print(f"  Experiment tracking: {'PASS' if tracking_success else 'FAIL'}")
+    print(f"  Visualization:       {'PASS' if visualization_success else 'FAIL'}")
     print("=" * 60)
 
-    if not tracking_success:
-        print("Experiment tracking validation failed. Review errors above.")
+    if not visualization_success:
+        print("Report figure generation failed. Review errors above.")
         sys.exit(1)
 
-    print("Model pipeline complete. Artifacts ready for visualization.")
+    print("Model pipeline complete.")
 
 
 if __name__ == "__main__":

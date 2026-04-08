@@ -296,7 +296,7 @@ In addition to the core metrics and plots, generate the following:
 - a small set of representative misclassified examples for qualitative discussion
 - efficiency comparison figure
 
-These outputs are intended to strengthen the Numerical Results chapter without increasing modeling complexity.
+These outputs are intended to strengthen the Numerical Results chapter of the final report without increasing modeling complexity.
 
 ---
 

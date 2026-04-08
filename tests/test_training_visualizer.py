@@ -42,6 +42,16 @@ class TestPlotLossCurves:
         TrainingVisualizer.plot_loss_curves(epoch_history, out, best_epoch=7)
         assert out.exists() and out.stat().st_size > 0
 
+    def test_with_stopping_epoch_differs_from_best(self, figures_dir: Path, epoch_history: list[dict]) -> None:
+        out = figures_dir / "loss_curve_early_stop.png"
+        TrainingVisualizer.plot_loss_curves(epoch_history, out, best_epoch=6)
+        assert out.exists() and out.stat().st_size > 0
+
+    def test_best_epoch_equals_stop_epoch(self, figures_dir: Path, epoch_history: list[dict]) -> None:
+        out = figures_dir / "loss_curve_no_early_stop.png"
+        TrainingVisualizer.plot_loss_curves(epoch_history, out, best_epoch=10)
+        assert out.exists() and out.stat().st_size > 0
+
 
 class TestPlotValMetricCurve:
     def test_creates_file(self, figures_dir: Path, epoch_history: list[dict]) -> None:

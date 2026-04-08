@@ -1,0 +1,1179 @@
+text,true_label_name,predicted_label_name,run_id,max_confidence
+what's the word for trees in norway,translate,spelling,run_02_seed_1337,0.3837989568710327
+what's the french word you use for potato,translate,spelling,run_02_seed_1337,0.4373223185539245
+what would the word for grass be in finland,translate,date,run_02_seed_1337,0.9130858182907104
+dog in spanish,translate,change_language,run_02_seed_1337,0.5986615419387817
+how much money can i transfer today,transfer,income,run_02_seed_1337,0.7779512405395508
+repeat what the weather will be like,transfer,weather,run_02_seed_1337,0.9999536275863647
+who set up the numbers for it,timer,smart_home,run_02_seed_1337,0.9936506152153016
+let me know when it's been 5 minutes,timer,oil_change_when,run_02_seed_1337,0.5164584517478943
+what is the definiton of auspicious,definition,oos,run_02_seed_1337,0.317458301782608
+"i heard some woman say she was going to yerd me, what's that mean",definition,goodbye,run_02_seed_1337,0.575652003288269
+please explain the word catastrophic to me,definition,change_user_name,run_02_seed_1337,0.7939711809158325
+is there a reason beyond biology about why humans are alive,meaning_of_life,card_declined,run_02_seed_1337,0.6782748699188232
+what's the answer to it all,meaning_of_life,who_made_you,run_02_seed_1337,0.4079495966434479
+what's life mean to you,meaning_of_life,greeting,run_02_seed_1337,0.6953023076057434
+who do i contact about updating my insurance,insurance_change,insurance,run_02_seed_1337,0.8549860119819641
+how to i change the policy on my insurace,insurance_change,oos,run_02_seed_1337,0.4897075891494751
+what is the procedure for signing up for a new allstate plan,insurance_change,new_card,run_02_seed_1337,0.4983441531658172
+how do i sign up for a new allstatedplan,insurance_change,new_card,run_02_seed_1337,0.4716422259807586
+"help, i've lost my cellphone!",find_phone,report_lost_card,run_02_seed_1337,0.7664039731025696
+do you know my phone's location,find_phone,current_location,run_02_seed_1337,0.994642972946167
+what's my phone's location,find_phone,current_location,run_02_seed_1337,0.996272087097168
+does the state department say anything about traveling to haiti,travel_alert,oos,run_02_seed_1337,0.920959174633026
+is it safe for me to go to turkey,travel_alert,ingredient_substitution,run_02_seed_1337,0.4654796123504638
+safety concerns for malaysia,travel_alert,no,run_02_seed_1337,0.1682084798812866
+how is a vacation request done,pto_request,pto_request_status,run_02_seed_1337,0.5766715407371521
+it it possible to take pto from the 8th to the 11th,pto_request,transfer,run_02_seed_1337,0.3599408268928528
+i need to use pto on october 5th to october 10th,pto_request,restaurant_suggestion,run_02_seed_1337,0.3919819891452789
+vacation request information,pto_request,pto_request_status,run_02_seed_1337,0.9945726990699768
+vacation request please,pto_request,pto_request_status,run_02_seed_1337,0.9960158467292786
+can you explain to me how i might boost my credit score,improve_credit_score,credit_score,run_02_seed_1337,0.6560268998146057
+give me some ideas for boosting my credit score,improve_credit_score,credit_score,run_02_seed_1337,0.6208564639091492
+can you tell me some strategies for raising my credit score,improve_credit_score,credit_score,run_02_seed_1337,0.9827592372894288
+i have a revolving store card and defaulted so will my fico score be affected,improve_credit_score,damaged_card,run_02_seed_1337,0.4540670812129974
+will my fico score decrease if i increase my student loan debt,improve_credit_score,credit_limit_change,run_02_seed_1337,0.5387199521064758
+name unusual facts about the circus,fun_fact,change_user_name,run_02_seed_1337,0.3556348979473114
+i need interesting baseball trivia from the nineteen eighties,fun_fact,shopping_list_update,run_02_seed_1337,0.1333588659763336
+what is some trivia about the weather,fun_fact,weather,run_02_seed_1337,0.4837601482868194
+speak spanish please,change_language,change_speed,run_02_seed_1337,0.7771399617195129
+i am not understanding the language you are responding in; switch it for me,change_language,cancel,run_02_seed_1337,0.9792105555534364
+i can't understand the language you are responding in; i need you to switch it,change_language,change_speed,run_02_seed_1337,0.5914018154144287
+i want to use spanish with you,change_language,goodbye,run_02_seed_1337,0.9870982766151428
+i'd like to use you using russian,change_language,ingredient_substitution,run_02_seed_1337,0.7092402577400208
+i want to talk english,change_language,goodbye,run_02_seed_1337,0.5138068199157715
+when did i last collect my salary,payday,income,run_02_seed_1337,0.5849482417106628
+when's pay day for me,payday,next_holiday,run_02_seed_1337,0.7530425786972046
+when's my next pay day,payday,next_holiday,run_02_seed_1337,0.959130585193634
+what day's my pay coming next,payday,income,run_02_seed_1337,0.9594302773475648
+what day will i earn my payment from work,payday,bill_due,run_02_seed_1337,0.5368393659591675
+what day can i expect to receive payment on,payday,next_holiday,run_02_seed_1337,0.2893113493919372
+when will my payment be deposited,payday,bill_due,run_02_seed_1337,0.9402416944503784
+can credit card companies expedite delivery of reissued credit cards,replacement_card_duration,damaged_card,run_02_seed_1337,0.4094682335853576
+can you call the help desk line for my credit card company,replacement_card_duration,new_card,run_02_seed_1337,0.7161429524421692
+how can i request a new credit card,replacement_card_duration,new_card,run_02_seed_1337,0.9998513460159302
+time to order and receive a new credit card,replacement_card_duration,new_card,run_02_seed_1337,0.7898691892623901
+time to replace my credit card,replacement_card_duration,expiration_date,run_02_seed_1337,0.8309227228164673
+is it six o clock yet,time,weather,run_02_seed_1337,0.520081639289856
+"is my flight, dl123 on time",flight_status,time,run_02_seed_1337,0.7285579442977905
+what time is boarding scheduled,flight_status,time,run_02_seed_1337,0.9607306122779846
+when is boarding scheduled,flight_status,food_last,run_02_seed_1337,0.5275776386260986
+can you call me a different name,change_user_name,make_call,run_02_seed_1337,0.8278834223747253
+"could you call me a different name, please",change_user_name,make_call,run_02_seed_1337,0.8548307418823242
+"can you call me a different name, please",change_user_name,make_call,run_02_seed_1337,0.9571630954742432
+ai answer my questions with my name first which is deb,change_user_name,oos,run_02_seed_1337,0.4897125661373138
+a hidden government facility,where_are_you_from,tell_joke,run_02_seed_1337,0.3068288564682007
+where did you grow up,where_are_you_from,how_old_are_you,run_02_seed_1337,0.9978410005569458
+tack on a gallon of milk to the grocery list,shopping_list_update,shopping_list,run_02_seed_1337,0.3141039907932281
+add laundry detergent to the list,shopping_list_update,todo_list_update,run_02_seed_1337,0.9991371035575868
+include asparagus on the list,shopping_list_update,todo_list_update,run_02_seed_1337,0.9934402108192444
+"i don't need eggs anymore, but i do need milk",shopping_list_update,order,run_02_seed_1337,0.5569524168968201
+i need milk on my shopping list,shopping_list_update,shopping_list,run_02_seed_1337,0.9931051135063172
+i need water on my shopping list and beer off of it,shopping_list_update,shopping_list,run_02_seed_1337,0.9016914963722228
+undecided,maybe,yes,run_02_seed_1337,0.3224068582057953
+not sure to be honest,maybe,no,run_02_seed_1337,0.9833347201347352
+diy oil change,oil_change_how,oil_change_when,run_02_seed_1337,0.8311470150947571
+diy oil change and oil type,oil_change_how,oil_change_when,run_02_seed_1337,0.8753864765167236
+oil type and do it yourself oil change information please,oil_change_how,oil_change_when,run_02_seed_1337,0.8820294141769409
+"i'd like to make a reservation at rooth chris, can you do that",restaurant_reservation,accept_reservations,run_02_seed_1337,0.9654605984687804
+"5 people are going to be at tropicana by 8pm, reserve the table under martins name please",restaurant_reservation,uber,run_02_seed_1337,0.6570189595222473
+are there any open reservations at outback tonight,restaurant_reservation,accept_reservations,run_02_seed_1337,0.9759406447410583
+what are my coffers at,balance,current_location,run_02_seed_1337,0.5891291499137878
+what the numerical number inside my bank accounts,balance,account_blocked,run_02_seed_1337,0.8306743502616882
+what's my checking look like,balance,user_name,run_02_seed_1337,0.5323296785354614
+is there a reservation for mark at mimis,confirm_reservation,restaurant_reservation,run_02_seed_1337,0.7913714647293091
+"i heard i can transfer my 401k, but don't know how, do you",rollover_401k,account_blocked,run_02_seed_1337,0.911835253238678
+"i need some help with transferring my 401k, can you help",rollover_401k,what_can_i_ask_you,run_02_seed_1337,0.7946459650993347
+how do i do a 401(k) rollover,rollover_401k,oos,run_02_seed_1337,0.1712111830711364
+can 401ks be moved,rollover_401k,calculator,run_02_seed_1337,0.7496523261070251
+"my 401k, can i roll it over",rollover_401k,change_user_name,run_02_seed_1337,0.7013499140739441
+who is your maker,who_made_you,who_do_you_work_for,run_02_seed_1337,0.9993461966514589
+i wanna know your maker,who_made_you,where_are_you_from,run_02_seed_1337,0.4675535261631012
+what company did the design for this,who_made_you,oos,run_02_seed_1337,0.5800735354423523
+"for this design, what company did it",who_made_you,definition,run_02_seed_1337,0.1670942902565002
+what's the mileage to get the the taj mahal in atlantic city,distance,directions,run_02_seed_1337,0.2699108719825744
+how much time is left until we get there,distance,pto_balance,run_02_seed_1337,0.2169810235500335
+how many minutes am i from texaco,distance,timer,run_02_seed_1337,0.3484840393066406
+is it going to be much longer until i reach the bank,distance,food_last,run_02_seed_1337,0.4624479115009308
+am i close to arriving at the post office,distance,directions,run_02_seed_1337,0.9767622351646424
+when will i arrive at hy-vee,distance,how_busy,run_02_seed_1337,0.8749769330024719
+what's the average time to boston when riding a bus,distance,replacement_card_duration,run_02_seed_1337,0.5939922332763672
+when will the bus get me to vermont,distance,directions,run_02_seed_1337,0.7247560024261475
+give me an eta on when i will arrive at my destination,distance,flight_status,run_02_seed_1337,0.8837523460388184
+when will i get to orlando,distance,flight_status,run_02_seed_1337,0.8987959027290344
+how much farther is orlando from my location,distance,share_location,run_02_seed_1337,0.930257260799408
+do i have a ways to go or am i close to getting to penn station,distance,directions,run_02_seed_1337,0.8469587564468384
+call my name,user_name,change_user_name,run_02_seed_1337,0.982569456100464
+what's your designation,user_name,what_is_your_name,run_02_seed_1337,0.993724763393402
+you know me by what right now,user_name,what_song,run_02_seed_1337,0.4442041516304016
+does denver reside in the eastern timezones,timezone,oos,run_02_seed_1337,0.848089873790741
+"denver's timezone is a mystery, i wonder where its located",timezone,oos,run_02_seed_1337,0.5768882036209106
+what time is it in phoenix,timezone,time,run_02_seed_1337,0.9999988079071044
+"i don't like this song, can skip it",next_song,maybe,run_02_seed_1337,0.5265494585037231
+when did i last make a purchase,transactions,last_maintenance,run_02_seed_1337,0.6830235123634338
+is my visa bill over my limit this month,transactions,bill_balance,run_02_seed_1337,0.6608274579048157
+what have i spent things on,transactions,spending_history,run_02_seed_1337,0.9970535039901732
+show what i have spent things on,transactions,spending_history,run_02_seed_1337,0.9965459704399108
+how much have i spent on my debit card this month,transactions,spending_history,run_02_seed_1337,0.9635372161865234
+how much have i spent on my bank card sine i last paid my bill,transactions,spending_history,run_02_seed_1337,0.4639235436916351
+how many transactions do i have on flower shops from last wednesday between 2pm and 7pm,transactions,meeting_schedule,run_02_seed_1337,0.6866827011108398
+i need some suggestions for dinner places tonight,restaurant_suggestion,meal_suggestion,run_02_seed_1337,0.907624125480652
+"could you suggest a french restaurant, please",restaurant_suggestion,meal_suggestion,run_02_seed_1337,0.7677387595176697
+"can you suggest a french restaurant, please",restaurant_suggestion,meal_suggestion,run_02_seed_1337,0.9783383011817932
+"can you suggest a thai restaurant, please",restaurant_suggestion,meal_suggestion,run_02_seed_1337,0.2438597679138183
+what's the food can easily get in canada,restaurant_suggestion,weather,run_02_seed_1337,0.5542132258415222
+i know i should pay my electric bill,pay_bill,bill_due,run_02_seed_1337,0.6831001043319702
+"today my electric bill will be paid, or should be",pay_bill,bill_due,run_02_seed_1337,0.9673141241073608
+today is the day i should pay my electric bill,pay_bill,bill_due,run_02_seed_1337,0.999610722064972
+my electric bill should be paid today,pay_bill,bill_due,run_02_seed_1337,0.9387770891189576
+would you say i've spent too much money on chips as of late,spending_history,order,run_02_seed_1337,0.4394795000553131
+"looking at this week only, have i overspent on hoagies",spending_history,calendar,run_02_seed_1337,0.6641372442245483
+do i overspend when it comes to fast food,spending_history,oos,run_02_seed_1337,0.2491406053304672
+did i stick to my dinner budget,spending_history,income,run_02_seed_1337,0.6254657506942749
+do i spend too much on beer,spending_history,shopping_list,run_02_seed_1337,0.3445874154567718
+what are my finances like lately,spending_history,current_location,run_02_seed_1337,0.948480188846588
+any new info on my vacation,pto_request_status,pto_balance,run_02_seed_1337,0.9214056730270386
+when will my vacation time be confirmed,pto_request_status,pto_balance,run_02_seed_1337,0.7230356335639954
+when will i hear back about my days off,pto_request_status,replacement_card_duration,run_02_seed_1337,0.9843794703483582
+am i okay to take those vacation days,pto_request_status,pto_request,run_02_seed_1337,0.5965791344642639
+how do i apply do get myself a visa,new_card,international_visa,run_02_seed_1337,0.9055875539779664
+does bank of america give credit cards to people like me,new_card,restaurant_suggestion,run_02_seed_1337,0.3131181001663208
+is there a list of good credit cards i can choose from to apply for,new_card,redeem_rewards,run_02_seed_1337,0.3626201748847961
+"if i lost my luggage, what should i do next",lost_luggage,travel_suggestion,run_02_seed_1337,0.9458631873130798
+i lost all my stuff that i had packed,lost_luggage,current_location,run_02_seed_1337,0.4678029119968414
+i didn't catch that,repeat,no,run_02_seed_1337,0.7305194735527039
+would you mind repeating that,repeat,cancel,run_02_seed_1337,0.7846866846084595
+sorry i missed that,repeat,maybe,run_02_seed_1337,0.9916093945503236
+i didn't understand you,repeat,who_made_you,run_02_seed_1337,0.6892496347427368
+what'd you say,repeat,time,run_02_seed_1337,0.3373386859893799
+what were you just saying,repeat,how_old_are_you,run_02_seed_1337,0.9076579809188844
+"what is my car's mpg, please",mpg,current_location,run_02_seed_1337,0.89960116147995
+"what's my car's mpg, please",mpg,current_location,run_02_seed_1337,0.9264444708824158
+where can i find information on oil changes for my car,oil_change_when,oil_change_how,run_02_seed_1337,0.9507725238800048
+what are the manufacturers guidance on oil changes,oil_change_when,oos,run_02_seed_1337,0.8730526566505432
+that checks out,yes,order_checks,run_02_seed_1337,0.985441267490387
+sure,yes,maybe,run_02_seed_1337,0.4795025885105133
+okay,yes,greeting,run_02_seed_1337,0.987558126449585
+i agree,yes,maybe,run_02_seed_1337,0.5428720116615295
+absolutely,yes,goodbye,run_02_seed_1337,0.4847723841667175
+please let's do it,yes,reset_settings,run_02_seed_1337,0.3779361248016357
+can we please,yes,cancel,run_02_seed_1337,0.8630562424659729
+ya,yes,goodbye,run_02_seed_1337,0.8083658218383789
+great,yes,goodbye,run_02_seed_1337,0.9177481532096864
+help me pick a new location to travel to,travel_suggestion,w2,run_02_seed_1337,0.5530623197555542
+can you do some research about the best places to travel,travel_suggestion,restaurant_suggestion,run_02_seed_1337,0.902905821800232
+i am itching to travel but don't know where to go,travel_suggestion,restaurant_suggestion,run_02_seed_1337,0.9882070422172546
+i want to explore a new place but don't know where i should go do you have any ideas,travel_suggestion,restaurant_suggestion,run_02_seed_1337,0.4290570616722107
+i don't need grocery shopping on my todo list anymore,todo_list_update,todo_list,run_02_seed_1337,0.904848039150238
+remove grocery shopping from todo list,todo_list_update,shopping_list_update,run_02_seed_1337,0.9689490795135498
+cross off grocery shopping from todo list,todo_list_update,shopping_list_update,run_02_seed_1337,0.8533362150192261
+empty the contents of my to do list,todo_list_update,todo_list,run_02_seed_1337,0.9997543692588806
+please add laundry to the chores,todo_list_update,cancel,run_02_seed_1337,0.5129634141921997
+insert mowing on the chore list,todo_list_update,yes,run_02_seed_1337,0.23759725689888
+you can vacuuming of my todo list,todo_list_update,todo_list,run_02_seed_1337,0.6227535605430603
+what were you supposed to remind me of,reminder,reminder_update,run_02_seed_1337,0.9979740977287292
+did i tell you to remind me about laundry,reminder,reminder_update,run_02_seed_1337,0.5648862719535828
+what kinds of things are you supposed to remind me of,reminder,reminder_update,run_02_seed_1337,0.7638792395591736
+what were the things i want to recall,reminder,what_are_your_hobbies,run_02_seed_1337,0.4301652610301971
+that can't be true,no,yes,run_02_seed_1337,0.9990659356117249
+there is no way in heck that is true,no,yes,run_02_seed_1337,0.9687164425849916
+you got that wrong,no,yes,run_02_seed_1337,0.7338505983352661
+is my apr rate better than most,apr,interest_rate,run_02_seed_1337,0.7121047377586365
+did i set march 10th as my doctor's appointment,calendar,reminder_update,run_02_seed_1337,0.3152938783168793
+did i mark the mechanic's appointment on my calendar,calendar,calendar_update,run_02_seed_1337,0.9573063254356384
+is my meeting with frank on my calendar,calendar,meeting_schedule,run_02_seed_1337,0.9879496097564696
+have i gotten around to adding the bike ride to my calendar yet,calendar,calendar_update,run_02_seed_1337,0.4836465120315552
+i can't remember if i added the fun run to my calendar yet; did i,calendar,calendar_update,run_02_seed_1337,0.9773666262626648
+have i added my doctor's appointment to my calendar,calendar,calendar_update,run_02_seed_1337,0.9998944997787476
+is the marathon on friday added to my calendar,calendar,calendar_update,run_02_seed_1337,0.9904601573944092
+retrieve events on my calendar,calendar,calendar_update,run_02_seed_1337,0.5942162275314331
+on tuesday you are supposed to have a meeting,calendar,schedule_meeting,run_02_seed_1337,0.9983787536621094
+you have yo go to school on calendar,calendar,calendar_update,run_02_seed_1337,0.8490011096000671
+"what is the average of 54, 23, 43, 12, and 442",calculator,oos,run_02_seed_1337,0.7849297523498535
+add 45 to 87 plus 54 plus 43 plus 22,calculator,calendar_update,run_02_seed_1337,0.5999049544334412
+divide 100 by 12,calculator,measurement_conversion,run_02_seed_1337,0.6876740455627441
+i bought 6 shirts at $499 each what was my total expenditure for them,calculator,transactions,run_02_seed_1337,0.2163315713405609
+i spent 34 dollars for 12 gallons of paint what is the average price for each gallon,calculator,mpg,run_02_seed_1337,0.964544415473938
+what is the sum of eleven and ten,calculator,oos,run_02_seed_1337,0.4535579979419708
+what day are we in,date,next_holiday,run_02_seed_1337,0.7570961117744446
+"tell me the date, please",date,weather,run_02_seed_1337,0.854263424873352
+what will tomorrow be on the calendar,date,calendar,run_02_seed_1337,0.8877414464950562
+what restrictions do they have for carry-on,carry_on,calendar,run_02_seed_1337,0.6885886788368225
+what are the size limits regarding-carry on bags,carry_on,oos,run_02_seed_1337,0.9830695390701294
+can i bring perfume on the plane or what is the size limit,carry_on,calculator,run_02_seed_1337,0.4499602019786834
+can i fly with my razors or are there restrictions,carry_on,oos,run_02_seed_1337,0.4256597459316253
+are there restrictions for carrying lighters in my backpack on a plane,carry_on,oos,run_02_seed_1337,0.5037423968315125
+i wanna know the carry-on rules for the flight i have,carry_on,flight_status,run_02_seed_1337,0.5529577732086182
+i need to know how many days i toof off,pto_used,pto_balance,run_02_seed_1337,0.8741093277931213
+how much of my pto is left,pto_used,pto_balance,run_02_seed_1337,0.8808121085166931
+find out the next available date and time i can go to get my oil changed please,schedule_maintenance,oil_change_when,run_02_seed_1337,0.98017019033432
+can you let me know the next open slot for me to get my oil changed,schedule_maintenance,oil_change_when,run_02_seed_1337,0.960046648979187
+what is the next date for which i can get an oil change appointment,schedule_maintenance,oil_change_when,run_02_seed_1337,0.999767005443573
+let my bank know i actually am visiting brazil,travel_notification,share_location,run_02_seed_1337,0.5933378338813782
+i'll be travelling to russia from april 1 through april 20 and need my financial institute apprised of it,travel_notification,distance,run_02_seed_1337,0.8417412638664246
+tell my bank's fraud department i'm going to mexico,travel_notification,report_fraud,run_02_seed_1337,0.2738305330276489
+send a notification to my bank of my travel dates from february 19th to 26th to peru,travel_notification,transfer,run_02_seed_1337,0.893233060836792
+alert my bank of my travel to dubai for the dates april 14th through april 22nd,travel_notification,calendar_update,run_02_seed_1337,0.2437047809362411
+must call my bank about my travel plans,travel_notification,damaged_card,run_02_seed_1337,0.8496065139770508
+contact bank and let them know about my travel plans,travel_notification,damaged_card,run_02_seed_1337,0.2945505082607269
+i would like for my phone to be synced with you,sync_device,goodbye,run_02_seed_1337,0.3437186777591705
+can you sync up with my phone,sync_device,find_phone,run_02_seed_1337,0.8942872285842896
+"alexa, connect to the phone now",sync_device,make_call,run_02_seed_1337,0.9418229460716248
+you’re the best thanks so much!,thank_you,order,run_02_seed_1337,0.6655886173248291
+i appeciate it,thank_you,yes,run_02_seed_1337,0.611091136932373
+"ai is a helpful item to have in my home, thank you",thank_you,book_hotel,run_02_seed_1337,0.5805513858795166
+"ai pick up the dice, then drop it",roll_dice,oos,run_02_seed_1337,0.2870763540267944
+can you roll an eight sided die and tell me what it comes up as,roll_dice,credit_score,run_02_seed_1337,0.3858060836791992
+how many days milk can be preserved,food_last,no,run_02_seed_1337,0.2686474621295929
+what is the expiration date for honey,food_last,date,run_02_seed_1337,0.6266505718231201
+when is the egg expired,food_last,cook_time,run_02_seed_1337,0.3891675174236297
+what is the amount of time to keep milk refrigerated,food_last,cook_time,run_02_seed_1337,0.6016116142272949
+how many minutes are involved in the preparation of curry,cook_time,oos,run_02_seed_1337,0.4054144024848938
+look up recipe time for this,cook_time,time,run_02_seed_1337,0.5622034072875977
+when can i expect meal of salmon to be finished,cook_time,next_holiday,run_02_seed_1337,0.5980870723724365
+i want to be reminded to pay the electric bill,reminder_update,pay_bill,run_02_seed_1337,0.9998613595962524
+don't forget to tell me to call my mother,reminder_update,make_call,run_02_seed_1337,0.9964117407798768
+set a reminder for when the turkey is finished cooking,reminder_update,text,run_02_seed_1337,0.4082646369934082
+i don't want to forget to call mom,reminder_update,make_call,run_02_seed_1337,0.9998243451118468
+tell me later to call bill,reminder_update,make_call,run_02_seed_1337,0.974433422088623
+please set up a reminder for me,reminder_update,alarm,run_02_seed_1337,0.6596271991729736
+"i have lost my card, what am i supposed to do",report_lost_card,todo_list,run_02_seed_1337,0.3337622284889221
+my bank of america visa platinum was swiped from my belongings,report_lost_card,report_fraud,run_02_seed_1337,0.3736343085765838
+my capital one visa was taken without permission,report_lost_card,report_fraud,run_02_seed_1337,0.987014651298523
+can i swap chili for sloppy joe mix in the recipe,ingredient_substitution,recipe,run_02_seed_1337,0.9458852410316468
+will this recipe still be good if i use milk instead of eggs,ingredient_substitution,food_last,run_02_seed_1337,0.9745259284973145
+i need to call my dad,make_call,change_user_name,run_02_seed_1337,0.6070343852043152
+i need to call my coworker,make_call,change_user_name,run_02_seed_1337,0.6241857409477234
+i need you to phone sal,make_call,order,run_02_seed_1337,0.350892037153244
+x needs to be called by me,make_call,change_user_name,run_02_seed_1337,0.9812699556350708
+i need to up by noon,alarm,change_user_name,run_02_seed_1337,0.9694578051567078
+have i told you to add washing dishes to my todo list,todo_list,todo_list_update,run_02_seed_1337,0.9999451637268066
+what must i do today,todo_list,meeting_schedule,run_02_seed_1337,0.4723609387874603
+is make a hair appointment on my todo list right now,todo_list,todo_list_update,run_02_seed_1337,0.9994288086891174
+please switch to the girl voice,change_accent,smart_home,run_02_seed_1337,0.8009119629859924
+turn to the voice of the woman,change_accent,smart_home,run_02_seed_1337,0.722933292388916
+"i need a w2, so where is it",w2,find_phone,run_02_seed_1337,0.3218434453010559
+what's the latest i can pay my cellular bill,bill_due,min_payment,run_02_seed_1337,0.7323640584945679
+what's the ultimate day for me to pay the internet bill,bill_due,min_payment,run_02_seed_1337,0.6877173185348511
+when does the current billing cycle end,bill_due,next_holiday,run_02_seed_1337,0.7725991606712341
+i need to know the next billing date of my american express card,bill_due,expiration_date,run_02_seed_1337,0.8913708329200745
+the intake of calories it it bad,calories,meaning_of_life,run_02_seed_1337,0.2896184027194977
+how much is alorie intake,calories,income,run_02_seed_1337,0.9914692044258118
+what do i do with a damaged credit card,damaged_card,new_card,run_02_seed_1337,0.7168810963630676
+i spilled wine on my credit card and now its all mushy and needs to be replaced,damaged_card,report_fraud,run_02_seed_1337,0.9114974141120912
+my visa has been damaged,damaged_card,report_fraud,run_02_seed_1337,0.3915868103504181
+is the review ned's have good,restaurant_reviews,oos,run_02_seed_1337,0.3118170499801636
+"my favorite, beef tacos at the buffet",restaurant_reviews,alarm,run_02_seed_1337,0.9361543655395508
+they sold out of tacos at the buffet,restaurant_reviews,goodbye,run_02_seed_1337,0.2618928849697113
+"yum, pulled pork tacos at the buffet",restaurant_reviews,cancel,run_02_seed_1337,0.4603807032108307
+what do people think of the new burger at mcdonalds,restaurant_reviews,how_busy,run_02_seed_1337,0.7053661942481995
+what are people saying about chick-fil-a's chicken nuggets,restaurant_reviews,oos,run_02_seed_1337,0.9704003930091858
+give me some feedback about the pasta at piada please,restaurant_reviews,smart_home,run_02_seed_1337,0.6078277826309204
+how is gramercy tavern rated,restaurant_reviews,recipe,run_02_seed_1337,0.8089120388031006
+how many stars does babbo have,restaurant_reviews,oos,run_02_seed_1337,0.939869225025177
+do people say per se is any good or not,restaurant_reviews,do_you_have_pets,run_02_seed_1337,0.4197646975517273
+what do food critics say about gramercy tavern,restaurant_reviews,translate,run_02_seed_1337,0.7582778930664062
+how many stars does brasserie les halles have,restaurant_reviews,oos,run_02_seed_1337,0.7020673155784607
+what rating do the critics give the french laundry,restaurant_reviews,change_language,run_02_seed_1337,0.9519057869911194
+what's the average review for olive garden,restaurant_reviews,nutrition_info,run_02_seed_1337,0.5052652955055237
+can you reserve a room for a friday meeting at 5pm,schedule_meeting,restaurant_reservation,run_02_seed_1337,0.7338900566101074
+i would like you to reserve a conference room for noon tomorrow,schedule_meeting,restaurant_reservation,run_02_seed_1337,0.4726521670818329
+"go ahead and hold a conference room for friday at 11 am, please",schedule_meeting,restaurant_reservation,run_02_seed_1337,0.8187375664710999
+which gas would be best,gas_type,oos,run_02_seed_1337,0.5579636693000793
+what raiting of gas is called for,gas_type,gas,run_02_seed_1337,0.7381405830383301
+is electricity the same in france,plug_type,travel_notification,run_02_seed_1337,0.4049422144889831
+does z used the same plus as we do in the united states,plug_type,carry_on,run_02_seed_1337,0.5764415264129639
+how long does the average set of tire last before needing replacement,tire_change,oos,run_02_seed_1337,0.6166700124740601
+how many miles are my tires rated for,tire_change,tire_pressure,run_02_seed_1337,0.8935471177101135
+what is the timeframe for getting my tires changed,tire_change,tire_pressure,run_02_seed_1337,0.8241305947303772
+what is a british pound worth in mexican pesos,exchange_rate,meal_suggestion,run_02_seed_1337,0.5740078687667847
+"in canadian dollars, what is $30",exchange_rate,ingredients_list,run_02_seed_1337,0.5375068187713623
+how many holidays are there and when is the next one here,next_holiday,oos,run_02_seed_1337,0.976593852043152
+how long do i have to wait to get a day off,next_holiday,how_busy,run_02_seed_1337,0.9950869679450988
+decrease your decibel level,change_volume,change_speed,run_02_seed_1337,0.5226803421974182
+be more quiet,change_volume,cancel,run_02_seed_1337,0.9986708164215088
+speak up,change_volume,change_speed,run_02_seed_1337,0.971785843372345
+not so loud,change_volume,no,run_02_seed_1337,0.9974977374076844
+quieter please,change_volume,cancel,run_02_seed_1337,0.8217513561248779
+can you speak quieter,change_volume,change_speed,run_02_seed_1337,0.9400790929794312
+turn up your speaker volume,change_volume,whisper_mode,run_02_seed_1337,0.5560231804847717
+who is responsible for your employment,who_do_you_work_for,who_made_you,run_02_seed_1337,0.9647443890571594
+do you take your orders from me,who_do_you_work_for,where_are_you_from,run_02_seed_1337,0.9515402913093568
+who controls you,who_do_you_work_for,who_made_you,run_02_seed_1337,0.9837207794189452
+who employs you,who_do_you_work_for,who_made_you,run_02_seed_1337,0.9384521842002868
+who can i talk to above you,who_do_you_work_for,who_made_you,run_02_seed_1337,0.523152768611908
+how much do i have available on my visa card,credit_limit,rewards_balance,run_02_seed_1337,0.774969756603241
+what is my credit max,credit_limit,credit_score,run_02_seed_1337,0.9036200642585754
+do i have a monthly spending limit,credit_limit,account_blocked,run_02_seed_1337,0.4328320920467376
+how much is my maximum to spend on credit cards,credit_limit,bill_balance,run_02_seed_1337,0.9942765831947328
+can i get a table for four at 8:00,how_busy,restaurant_reservation,run_02_seed_1337,0.9911444783210754
+is the friday's full after 4,how_busy,oos,run_02_seed_1337,0.7454262971878052
+is the mexican place crowded at night,how_busy,meal_suggestion,run_02_seed_1337,0.4826858043670654
+are cool people at the bar at 9:00 pm,how_busy,restaurant_reviews,run_02_seed_1337,0.8127236366271973
+what is the best time to go to get a burger without a line,how_busy,distance,run_02_seed_1337,0.7372943162918091
+is the breakfast place full in the mornings,how_busy,where_are_you_from,run_02_seed_1337,0.2536464035511017
+is mr joes pizza available for a seating,how_busy,schedule_meeting,run_02_seed_1337,0.8901876211166382
+can you find out the waiting times for mr joes pizza,how_busy,calculator,run_02_seed_1337,0.7574681043624878
+how busy is cheesecake factory right now,how_busy,weather,run_02_seed_1337,0.7024675011634827
+is cheesecake factory busy right now,how_busy,weather,run_02_seed_1337,0.5797479748725891
+can i reserve tables at the new york restaurant,accept_reservations,ingredient_substitution,run_02_seed_1337,0.8284226059913635
+is it possible to reserve a table at white castle,accept_reservations,restaurant_reservation,run_02_seed_1337,0.998104453086853
+do you think they'll let me reserve a table at the olive garden,accept_reservations,restaurant_reservation,run_02_seed_1337,0.9997580647468568
+tell me all updates about my order's status,order_status,application_status,run_02_seed_1337,0.7129895091056824
+can you monitor my package's progress,order_status,oos,run_02_seed_1337,0.2059508115053177
+can you help with delivery tracking,order_status,goodbye,run_02_seed_1337,0.4215402901172638
+i need a delivery tracked,order_status,oos,run_02_seed_1337,0.9241684079170228
+could you track an order for me,order_status,order,run_02_seed_1337,0.6441214084625244
+i want to track a package i should be getting,order_status,order,run_02_seed_1337,0.5445550680160522
+can you tell me when my item will get here,order_status,replacement_card_duration,run_02_seed_1337,0.7978623509407043
+can you tell me where my item is,order_status,current_location,run_02_seed_1337,0.9074053764343262
+the pin number to my card has been forgotten,pin_change,damaged_card,run_02_seed_1337,0.7736435532569885
+i would like to change the name on my checking account,pin_change,change_ai_name,run_02_seed_1337,0.5320096611976624
+i would like to change the name on my credit card account,pin_change,change_ai_name,run_02_seed_1337,0.7312102317810059
+i would like to change the name on my first hawaiian bank account,pin_change,change_ai_name,run_02_seed_1337,0.6441293358802795
+i would like to change the name on my first bankcard account,pin_change,change_ai_name,run_02_seed_1337,0.680109977722168
+i would like to change the name on my capital one account,pin_change,change_ai_name,run_02_seed_1337,0.57114177942276
+change the code of my savings account to be 1234,pin_change,transfer,run_02_seed_1337,0.6198770999908447
+good speaking to you,goodbye,change_speed,run_02_seed_1337,0.4757495820522308
+regards,goodbye,yes,run_02_seed_1337,0.2309529334306717
+"great talk, thanks",goodbye,thank_you,run_02_seed_1337,0.9986899495124816
+that will be all have a nice day!,goodbye,yes,run_02_seed_1337,0.3444324135780334
+"that's all i need, i'm going now",goodbye,thank_you,run_02_seed_1337,0.6193841099739075
+"thanks for your help, goodbye!",goodbye,thank_you,run_02_seed_1337,0.999937891960144
+signing off,goodbye,calculator,run_02_seed_1337,0.856625497341156
+how can i unfreeze my bank account,account_blocked,freeze_account,run_02_seed_1337,0.993627429008484
+why is there a stop on my deposit account,account_blocked,freeze_account,run_02_seed_1337,0.9406537413597108
+"is there a problem with my account, it appears to be blocked",account_blocked,last_maintenance,run_02_seed_1337,0.4797770380973816
+there seems to be an issue with my account,account_blocked,report_fraud,run_02_seed_1337,0.5218632221221924
+can you identify this song playing through the speaker right now,what_song,change_volume,run_02_seed_1337,0.4704864621162414
+who is the singer on the speaker now,what_song,oos,run_02_seed_1337,0.8293904662132263
+what kind of music on the speaker now,what_song,oos,run_02_seed_1337,0.3490003943443298
+did i take my car to the mechanics recently,last_maintenance,smart_home,run_02_seed_1337,0.6340991854667664
+have i recently had an oil change,last_maintenance,schedule_maintenance,run_02_seed_1337,0.4516018331050873
+is there a meeting with sam today,meeting_schedule,schedule_meeting,run_02_seed_1337,0.9963207244873048
+is it possible i have a meeting with kim today,meeting_schedule,schedule_meeting,run_02_seed_1337,0.9500505328178406
+give me a recipe for tacos,ingredients_list,recipe,run_02_seed_1337,0.9999359846115112
+tell me what's in tacos,ingredients_list,measurement_conversion,run_02_seed_1337,0.7758104801177979
+what's a good recipe foe tacos,ingredients_list,recipe,run_02_seed_1337,0.997864305973053
+let me know the ingredients i will need for pasta making,ingredients_list,cook_time,run_02_seed_1337,0.8554198741912842
+tell me the ingredients to make an apple pie,ingredients_list,recipe,run_02_seed_1337,0.999518632888794
+what am i gonna need for sushi,ingredients_list,meal_suggestion,run_02_seed_1337,0.5213686227798462
+pull up everything i need to make a pasta dish,ingredients_list,meal_suggestion,run_02_seed_1337,0.7153019905090332
+my online bill has some items that i didn't purchase from penneys,report_fraud,order,run_02_seed_1337,0.9414628148078918
+my bill shows a purchase from payless shoes but i didn't buy anything,report_fraud,bill_due,run_02_seed_1337,0.4652943611145019
+this charge is bs,report_fraud,yes,run_02_seed_1337,0.3746320307254791
+i think this transaction is bogus,report_fraud,transactions,run_02_seed_1337,0.9940861463546752
+i don't remember buying this,report_fraud,spending_history,run_02_seed_1337,0.3153252005577087
+i think someone jacked my bank account,report_fraud,freeze_account,run_02_seed_1337,0.7759449481964111
+where can i find measurement conversions,measurement_conversion,current_location,run_02_seed_1337,0.967923641204834
+i would like it if you would turn the bedroom lights on low until i'm finished reading,smart_home,food_last,run_02_seed_1337,0.7121607661247253
+turn on the microwave for 3 minutes,smart_home,timer,run_02_seed_1337,0.8069865107536316
+"at ac, what's the temperature like",smart_home,weather,run_02_seed_1337,0.8059593439102173
+i want the light less bright please,smart_home,cancel,run_02_seed_1337,0.2522585391998291
+i'm travelling to boston on march 2 until march 4 please make a hotel reservation for me,book_hotel,calendar_update,run_02_seed_1337,0.5308610200881958
+i am currently located in what town,current_location,income,run_02_seed_1337,0.4185150265693664
+open map and pin point my location,current_location,w2,run_02_seed_1337,0.746854841709137
+what could help me locate myself,current_location,what_can_i_ask_you,run_02_seed_1337,0.6682776212692261
+let's take a look at the weather,weather,reminder_update,run_02_seed_1337,0.5130699276924133
+"at a minimum, what must i pay on my verizon bill",min_payment,bill_balance,run_02_seed_1337,0.950421154499054
+"what must i pay, at a minimum, on my verizon bill",min_payment,bill_balance,run_02_seed_1337,0.7170185446739197
+"if i wanted to spend the lowest for my electric bill, then how much would it be",min_payment,bill_balance,run_02_seed_1337,0.8297824859619141
+go to whisper mode until my morning alarm goes off,whisper_mode,alarm,run_02_seed_1337,0.988362729549408
+"that was a mistake, undo that",cancel,no,run_02_seed_1337,0.5326474905014038
+forget what i told you to do,cancel,what_can_i_ask_you,run_02_seed_1337,0.7575846314430237
+hush,cancel,yes,run_02_seed_1337,0.4377206563949585
+are visas needed to travel to jamaica,international_visa,vaccines,run_02_seed_1337,0.2527692914009094
+are visas required to go to cuba,international_visa,ingredient_substitution,run_02_seed_1337,0.2200861275196075
+do americans need visas in canada,international_visa,plug_type,run_02_seed_1337,0.8604036569595337
+what are the visa requirements for brazil,international_visa,credit_limit,run_02_seed_1337,0.4389457106590271
+are visas for international travel,international_visa,travel_alert,run_02_seed_1337,0.5298823118209839
+can you travel outside of the united states without a visa,international_visa,new_card,run_02_seed_1337,0.273074746131897
+what are the required shots in mozambique,vaccines,ingredients_list,run_02_seed_1337,0.5006586313247681
+"if you were traveling to indonesia, as i am, would you have your shots updated before your visit",vaccines,who_do_you_work_for,run_02_seed_1337,0.203276515007019
+which vaccines are meant for cuba,vaccines,ingredient_substitution,run_02_seed_1337,0.6019396185874939
+do i need a vaccine for the congo,vaccines,meal_suggestion,run_02_seed_1337,0.2977534234523773
+can you see if i have any vacation days available for a request,pto_balance,pto_request,run_02_seed_1337,0.96551513671875
+how do i get downtown by foot,directions,what_is_your_name,run_02_seed_1337,0.3674087822437286
+i need some directions to phoenix,directions,vaccines,run_02_seed_1337,0.7517505288124084
+where is the closest gas station to glendale,directions,distance,run_02_seed_1337,0.7843506336212158
+where is the closest pharmacy,directions,oos,run_02_seed_1337,0.975864827632904
+correct spelling for aaron,spelling,yes,run_02_seed_1337,0.5257700681686401
+"do you know how to spell, bourgeois",spelling,yes,run_02_seed_1337,0.1751904189586639
+"tell me how to spent ""frightened",spelling,what_can_i_ask_you,run_02_seed_1337,0.4468092620372772
+what are you feeling today,greeting,are_you_a_bot,run_02_seed_1337,0.4632652401924133
+hola!,greeting,yes,run_02_seed_1337,0.5705109238624573
+what did they name you,what_is_your_name,user_name,run_02_seed_1337,0.7622579336166382
+who do i have the pleasure of speaking with,what_is_your_name,calculator,run_02_seed_1337,0.638441801071167
+who am i speaking with,what_is_your_name,current_location,run_02_seed_1337,0.3637176156044006
+"i'd like my checks to be deposited into my account directly, how do i do that",direct_deposit,order_checks,run_02_seed_1337,0.942054033279419
+what's my bank of america account getting in interest,interest_rate,balance,run_02_seed_1337,0.9960750937461852
+what's the apr on my savings account,interest_rate,apr,run_02_seed_1337,0.9989823698997498
+what's my checking account yielding in interest,interest_rate,balance,run_02_seed_1337,0.4266690015792846
+what does my checking account at chase earn in interest,interest_rate,balance,run_02_seed_1337,0.8892996311187744
+what kind of things to you like to outside of work,what_are_your_hobbies,weather,run_02_seed_1337,0.7530093193054199
+what do you do on off days,what_are_your_hobbies,meal_suggestion,run_02_seed_1337,0.2504020035266876
+what do you do after work,what_are_your_hobbies,who_do_you_work_for,run_02_seed_1337,0.9944182634353638
+book me a place to chicago from atlanta united airlines,book_flight,book_hotel,run_02_seed_1337,0.9804543852806092
+"""i'll leave to lax and go to phl for $120 on nov 5th",book_flight,schedule_meeting,run_02_seed_1337,0.45100799202919
+can i fly from atlanta to san francisco for less than 100 dollars,book_flight,directions,run_02_seed_1337,0.3182725310325622
+i'm looking for flights that depart on the 3rd and return on z from monday to friday,book_flight,carry_on,run_02_seed_1337,0.4733728468418121
+did i remember to put oatmeal on my list,shopping_list,reminder,run_02_seed_1337,0.7339421510696411
+iterate over the items on my grocery list,shopping_list,todo_list,run_02_seed_1337,0.9198476672172546
+recite the items i'm planning to purchase,shopping_list,bill_due,run_02_seed_1337,0.2564667463302612
+what's on my to-buy list,shopping_list,todo_list,run_02_seed_1337,0.4504691660404205
+what's on my purchase list,shopping_list,todo_list,run_02_seed_1337,0.9813684821128844
+is milk one of the things i need to buy,shopping_list,ingredients_list,run_02_seed_1337,0.6491002440452576
+did you put carrots on the shopping list,shopping_list,shopping_list_update,run_02_seed_1337,0.9571924805641174
+are carrots added to the grocery list,shopping_list,shopping_list_update,run_02_seed_1337,0.9358775019645692
+tell jim i'm coming home soon,text,travel_notification,run_02_seed_1337,0.5589120388031006
+i want to tell susan that the meeting has been cancelled,text,meeting_schedule,run_02_seed_1337,0.5274055004119873
+tell fred that i don't have his guitar,text,maybe,run_02_seed_1337,0.9565456509590148
+what do i owe to jcp,bill_balance,income,run_02_seed_1337,0.3942925631999969
+what is the amount due on my visa,bill_balance,bill_due,run_02_seed_1337,0.5423068404197693
+i need to know the price of my car payment and insurance please,bill_balance,pay_bill,run_02_seed_1337,0.4508408308029175
+"i think all my bills are paid, but can you double check",bill_balance,find_phone,run_02_seed_1337,0.4493779242038727
+"i think i owe about 100 left on my bills, am i forgetting anything",bill_balance,share_location,run_02_seed_1337,0.3366245329380035
+how expensive is my internet,bill_balance,oos,run_02_seed_1337,0.8481613397598267
+is the phone bill the same as last month,bill_balance,min_payment,run_02_seed_1337,0.974307119846344
+i'd like for this person to know my location,share_location,current_location,run_02_seed_1337,0.9971907734870912
+what is my current location,share_location,current_location,run_02_seed_1337,0.999975562095642
+tell david where i am,share_location,current_location,run_02_seed_1337,0.7017566561698914
+show allison how to get to me,share_location,change_user_name,run_02_seed_1337,0.2663290500640869
+show cody where i am,share_location,current_location,run_02_seed_1337,0.6930403709411621
+how many points do i have to cash,redeem_rewards,rewards_balance,run_02_seed_1337,0.5775930285453796
+what are the steps to get my rewards for my visa card,redeem_rewards,rewards_balance,run_02_seed_1337,0.998123824596405
+how can i claim my rewards for my visa card,redeem_rewards,rewards_balance,run_02_seed_1337,0.9983545541763306
+how can i get my rewards for my master card,redeem_rewards,rewards_balance,run_02_seed_1337,0.9995265007019044
+where would i get my rewards for my master card,redeem_rewards,rewards_balance,run_02_seed_1337,0.9980290532112122
+put in a request for cashing in credit points,redeem_rewards,pto_request,run_02_seed_1337,0.9229242205619812
+get me my slow sounds,play_music,restaurant_suggestion,run_02_seed_1337,0.4784685373306274
+pull up the songs under slow,play_music,smart_home,run_02_seed_1337,0.9850695729255676
+i'm in the mood for slow songs and nothing else,play_music,oos,run_02_seed_1337,0.4342253804206848
+drop some beats,play_music,oos,run_02_seed_1337,0.2882451117038727
+turn on top 20 country hits,play_music,smart_home,run_02_seed_1337,0.9478536248207092
+turn on my tunes,play_music,smart_home,run_02_seed_1337,0.9909307360649108
+bump some jams,play_music,oos,run_02_seed_1337,0.6285498142242432
+turn on metallicas greatest hits,play_music,smart_home,run_02_seed_1337,0.919912040233612
+cancel event scheduled for this afternoon,calendar_update,cancel,run_02_seed_1337,0.9648479223251344
+what can i do to get rid of this event,calendar_update,oos,run_02_seed_1337,0.5560026168823242
+what is the best way to remove this appointment,calendar_update,sync_device,run_02_seed_1337,0.5223174691200256
+can i make it to los angeles with this fuel level,gas,ingredient_substitution,run_02_seed_1337,0.603367030620575
+how's my gasoline how much do i have left,gas,balance,run_02_seed_1337,0.8302344083786011
+"i want to bring my card on the texas trip in june, will it be expired by then",expiration_date,travel_notification,run_02_seed_1337,0.3394911885261535
+when is the expiration date for me discover,expiration_date,food_last,run_02_seed_1337,0.4014813303947449
+when will my new credit card arrive,expiration_date,replacement_card_duration,run_02_seed_1337,0.9962449669837952
+add to my motivational playlist rap god,update_playlist,play_music,run_02_seed_1337,0.5891520380973816
+include rap god on the motivational playlist,update_playlist,play_music,run_02_seed_1337,0.6327366232872009
+move rap god to my motivational playlist,update_playlist,play_music,run_02_seed_1337,0.7401721477508545
+let's hear a joke!,tell_joke,play_music,run_02_seed_1337,0.3647935092449188
+what do you think about changing your name to heath,change_ai_name,what_is_your_name,run_02_seed_1337,0.9997214674949646
+what do you think about me calling you cora,change_ai_name,user_name,run_02_seed_1337,0.3513334691524505
+you are going to be called joe now,change_ai_name,change_user_name,run_02_seed_1337,0.2749884128570556
+start responding to joe,change_ai_name,goodbye,run_02_seed_1337,0.8313480615615845
+what's your bday,how_old_are_you,where_are_you_from,run_02_seed_1337,0.9924330711364746
+how young are you,how_old_are_you,greeting,run_02_seed_1337,0.9117221832275392
+i need to rent an suv in charlestown for the first week in june who do you suggest,car_rental,recipe,run_02_seed_1337,0.2308844327926635
+what is the phone number of the car rental place,car_rental,oos,run_02_seed_1337,0.6355720162391663
+"march 2nd through march 18th, i'm going to need a jeep in frankfort",car_rental,redeem_rewards,run_02_seed_1337,0.3665560185909271
+what are good thai dishes,meal_suggestion,oos,run_02_seed_1337,0.5912567973136902
+i would like thai food,meal_suggestion,play_music,run_02_seed_1337,0.6877021193504333
+can you recommend thai food,meal_suggestion,goodbye,run_02_seed_1337,0.4602887630462646
+i need a thai food suggestion,meal_suggestion,restaurant_suggestion,run_02_seed_1337,0.9559189081192015
+what kind of indian would you recommend,meal_suggestion,what_can_i_ask_you,run_02_seed_1337,0.8410465717315674
+i need to know what's good for chinese around here,meal_suggestion,restaurant_suggestion,run_02_seed_1337,0.8848028779029846
+i want to eat something from turkey,meal_suggestion,restaurant_suggestion,run_02_seed_1337,0.9290714263916016
+do you have any suggested roman recipes,meal_suggestion,what_can_i_ask_you,run_02_seed_1337,0.4201696813106537
+what do i need to do to cook a chicken,recipe,ingredients_list,run_02_seed_1337,0.8828917741775513
+how do i go about cooking a 10lb turkey,recipe,new_card,run_02_seed_1337,0.2202386409044265
+what instructions do i need to bake a cake from scratch,recipe,ingredients_list,run_02_seed_1337,0.991133749485016
+how do you prepare omelet,recipe,who_do_you_work_for,run_02_seed_1337,0.6699737906455994
+how do you cooked eggs,recipe,who_do_you_work_for,run_02_seed_1337,0.4011617004871368
+show me ideas for hamburger,recipe,oos,run_02_seed_1337,0.972700834274292
+can you get me recipes for eggs please,recipe,who_do_you_work_for,run_02_seed_1337,0.435355544090271
+recipes for garlic bread please,recipe,shopping_list_update,run_02_seed_1337,0.253185898065567
+what is my payment going to be,income,bill_balance,run_02_seed_1337,0.9916451573371888
+place my order alexa,order,order_status,run_02_seed_1337,0.9960224628448486
+"siri, place my amazon order",order,order_status,run_02_seed_1337,0.999744713306427
+"alexa, buy my grocery list",order,shopping_list,run_02_seed_1337,0.6007643938064575
+find inner tube and buy it for me,order,current_location,run_02_seed_1337,0.7980785965919495
+get me an order of creatine powder,order,order_status,run_02_seed_1337,0.9523706436157228
+can you place an order for the olive oil i just finished,order,order_checks,run_02_seed_1337,0.9910179376602172
+please go on amazon so i can buy bluetooth speakers,order,cancel,run_02_seed_1337,0.8302416205406189
+where can i find bluetooth speakers,order,current_location,run_02_seed_1337,0.6981463432312012
+what is the price of bluetooth speakers on amazon,order,oos,run_02_seed_1337,0.9994544386863708
+how is traffic nearest the ben franklin bridge philadelphia heading to the new jersey turnpike,traffic,directions,run_02_seed_1337,0.7699875831604004
+whats the traffic for the drive to the nearest restaurant,traffic,directions,run_02_seed_1337,0.8039090037345886
+why won't you let me pay with my credit card,card_declined,pay_bill,run_02_seed_1337,0.6840708255767822
+how come my credit card isn't working,card_declined,damaged_card,run_02_seed_1337,0.9455246925354004
+how much has the dow changed today,oos,income,run_02_seed_1337,0.816330075263977
+can you dim the brightness of my screen,oos,share_location,run_02_seed_1337,0.8430423140525818
+can you see a hdmi cord,oos,goodbye,run_02_seed_1337,0.7911989092826843
+what veggies can i pair with mushrooms,oos,ingredient_substitution,run_02_seed_1337,0.6525275707244873
+can you put the car in fuel efficient mode,oos,gas_type,run_02_seed_1337,0.9168214201927184
+at what age can someone get a card,oos,replacement_card_duration,run_02_seed_1337,0.8358287215232849
+please find today's most read stories from the new york times todayi,oos,w2,run_02_seed_1337,0.2486563771963119
+who invented the internet,oos,who_made_you,run_02_seed_1337,0.6030912399291992
+what is happening in politicsu,oos,calculator,run_02_seed_1337,0.2005766928195953
+how is my driving,oos,calculator,run_02_seed_1337,0.9474079608917236
+what is the best way to clean ceiling fans,oos,restaurant_suggestion,run_02_seed_1337,0.3551509380340576
+what oil is best for chicken,oos,oil_change_how,run_02_seed_1337,0.8641292452812195
+what is today's big article in the washington post,oos,directions,run_02_seed_1337,0.3290256559848785
+what's at movies,oos,greeting,run_02_seed_1337,0.5617198944091797
+can you add a bag to my reservation,oos,cancel_reservation,run_02_seed_1337,0.9927548766136168
+can you auto-pilot the car,oos,smart_home,run_02_seed_1337,0.9791045188903807
+wash windshield,oos,greeting,run_02_seed_1337,0.3123635947704315
+watch the fbi,oos,cancel,run_02_seed_1337,0.4927942454814911
+can you find the answer to number 26 in this algebra two textbook,oos,recipe,run_02_seed_1337,0.3207433819770813
+which stocks have lost the least today,oos,reset_settings,run_02_seed_1337,0.3191888630390167
+how many steps have i taken today,oos,pto_used,run_02_seed_1337,0.9964014291763306
+do laundry,oos,yes,run_02_seed_1337,0.4067666232585907
+how many miles does my car currently have,oos,mpg,run_02_seed_1337,0.9809613823890686
+close all internet tabs,oos,order,run_02_seed_1337,0.6691194772720337
+can you sell stocks for me,oos,recipe,run_02_seed_1337,0.3019392490386963
+how much has microsoft's stock changed over the last year,oos,income,run_02_seed_1337,0.8866850733757019
+read text,oos,text,run_02_seed_1337,0.9685622453689576
+park the car,oos,smart_home,run_02_seed_1337,0.7549266219139099
+show me a list of top rated airlines,oos,tell_joke,run_02_seed_1337,0.3830362260341644
+may i finish washing then i give you please,oos,change_ai_name,run_02_seed_1337,0.4789433181285858
+do i have overdraft protection,oos,date,run_02_seed_1337,0.5613853335380554
+can you delete my saved credit card,oos,damaged_card,run_02_seed_1337,0.99750417470932
+did the supreme court nominee get approvedu,oos,income,run_02_seed_1337,0.2661051154136657
+can you tell me how to clean a fish tank,oos,car_rental,run_02_seed_1337,0.4041098654270172
+how do i make my android phone more secure,oos,sync_device,run_02_seed_1337,0.9880623817443848
+i need to update my address,oos,play_music,run_02_seed_1337,0.8337522149085999
+what is that crunchy stuff on creme bruleo,oos,income,run_02_seed_1337,0.3232707977294922
+can you list all channels of a certain category,oos,ingredients_list,run_02_seed_1337,0.5433077812194824
+where does jelly come from,oos,where_are_you_from,run_02_seed_1337,0.9858747124671936
+how would you rate the airport i am traveling to,oos,distance,run_02_seed_1337,0.6362786889076233
+am i too old to be a sugar babyo,oos,how_busy,run_02_seed_1337,0.3115690946578979
+what does the plus sign mean on my dashboard,oos,current_location,run_02_seed_1337,0.8382946252822876
+what is my checking account number,oos,balance,run_02_seed_1337,0.9286332726478576
+when should i remove my snow tires,oos,tire_change,run_02_seed_1337,0.9998812675476074
+tell me about the earthquake in california that happened this morning,oos,definition,run_02_seed_1337,0.474275529384613
+change color contrast,oos,make_call,run_02_seed_1337,0.6569675803184509
+can i deposit a check,oos,income,run_02_seed_1337,0.4802723526954651
+"from the second of the left ,the pink one",oos,directions,run_02_seed_1337,0.311077356338501
+go and check the fridge,oos,food_last,run_02_seed_1337,0.9981284737586976
+can you mark this note as important,oos,gas_type,run_02_seed_1337,0.2592263519763946
+i want to find a new car under $25000,oos,car_rental,run_02_seed_1337,0.995050609111786
+should i do a complete stop at red lights,oos,alarm,run_02_seed_1337,0.2311109900474548
+are all televisions high definition,oos,definition,run_02_seed_1337,0.5366862416267395
+who invented custardo,oos,who_made_you,run_02_seed_1337,0.6484279632568359
+how to be millionare,oos,spelling,run_02_seed_1337,0.2815191745758056
+can you tell me how to get gum out of my rug,oos,what_can_i_ask_you,run_02_seed_1337,0.7992355823516846
+how can i get a better rate on my card,oos,new_card,run_02_seed_1337,0.615108847618103
+it is white colour,oos,yes,run_02_seed_1337,0.5726149082183838
+what makes pi so mathematically important,oos,what_can_i_ask_you,run_02_seed_1337,0.3642982244491577
+why can you have the square root of a negative number,oos,calculator,run_02_seed_1337,0.9886670112609864
+how much time do i have left on my 0% apr,oos,pto_balance,run_02_seed_1337,0.9804083108901978
+what time do i need to arrive to make it on time,oos,cook_time,run_02_seed_1337,0.9783469438552856
+how does my current htc phone compare to other android phones,oos,sync_device,run_02_seed_1337,0.6852951049804688
+how many items are in a bakers dozen,oos,measurement_conversion,run_02_seed_1337,0.8347529172897339
+when does napa close,oos,cook_time,run_02_seed_1337,0.7728462815284729
+what is the current price of tsla,oos,calculator,run_02_seed_1337,0.4110216796398163
+when will world war 3 begin,oos,replacement_card_duration,run_02_seed_1337,0.9597422480583192
+what's going on in the world today,oos,greeting,run_02_seed_1337,0.4534879326820373
+what battery percentage is my phone at,oos,find_phone,run_02_seed_1337,0.7773441076278687
+can you sign out of my bank login,oos,travel_notification,run_02_seed_1337,0.4900746643543243
+what is one standard deviation,oos,calculator,run_02_seed_1337,0.4735654294490814
+what is the cashback rate for my credit card,oos,expiration_date,run_02_seed_1337,0.8717840909957886
+how long is the bank open until,oos,cook_time,run_02_seed_1337,0.7502678632736206
+can my grace period be extended any possible way,oos,find_phone,run_02_seed_1337,0.8070999383926392
+how much over will overdraft protection cover,oos,weather,run_02_seed_1337,0.6355485320091248
+how fast am i going,oos,greeting,run_02_seed_1337,0.3542937636375427
+how much memory do i have left on this phone,oos,pto_balance,run_02_seed_1337,0.4906803369522095
+can i set up mobile deposits,oos,alarm,run_02_seed_1337,0.7485712766647339
+how much data does my phone have left this month,oos,bill_balance,run_02_seed_1337,0.5762827396392822
+how do i add someone to my account,oos,freeze_account,run_02_seed_1337,0.9906526803970336
+how much money would my house sell for,oos,income,run_02_seed_1337,0.3482295274734497
+delete the contact uncle john from my phone,oos,sync_device,run_02_seed_1337,0.9982838034629822
+search my contacts for the auto repair place,oos,user_name,run_02_seed_1337,0.9301102161407472
+does my carrier have coverage in europe,oos,current_location,run_02_seed_1337,0.7695972919464111
+is there a cheaper rate with another carrier for my mobile,oos,calculator,run_02_seed_1337,0.9306690692901612
+what are the limits in my phone plan,oos,insurance,run_02_seed_1337,0.5283316969871521
+is there a way to change your houses address,oos,change_ai_name,run_02_seed_1337,0.982585310935974
+does dhl deliver to my address,oos,smart_home,run_02_seed_1337,0.5496146082878113
+is there a better bus route i should be taking,oos,restaurant_suggestion,run_02_seed_1337,0.6975392699241638
+what stores are at my local mall,oos,current_location,run_02_seed_1337,0.8240520358085632
+i need to get kalee added to my phone plan,oos,sync_device,run_02_seed_1337,0.999049961566925
+what is the price of other company's similar phone plans,oos,find_phone,run_02_seed_1337,0.539338231086731
+how long do i have to wait to get my refund,oos,how_busy,run_02_seed_1337,0.9584646224975586
+how long does it take the irs to issue a tax refund,oos,distance,run_02_seed_1337,0.847993016242981
+do you know if it is possible to close my savings account,oos,balance,run_02_seed_1337,0.9518058896064758
+how hard is it to close a bank account at wells fargo,oos,directions,run_02_seed_1337,0.8403926491737366
+add my wife as an authorized user to checking account 20905432,oos,schedule_maintenance,run_02_seed_1337,0.4785712361335754
+i would like to upgrade to full coverage for my car,oos,pin_change,run_02_seed_1337,0.3787450790405273
+tell me the value on my current car,oos,smart_home,run_02_seed_1337,0.7747389078140259
+where can i list my vehicle for sell,oos,schedule_maintenance,run_02_seed_1337,0.4705228209495544
+what is the price to buy more data on my phone,oos,order,run_02_seed_1337,0.6550570726394653
+i need to add a person to my bank account,oos,freeze_account,run_02_seed_1337,0.9772207736968994
+i want to install new tiles in my kitchen,oos,lost_luggage,run_02_seed_1337,0.1891700625419616
+what's the way for delta to cancel a flight,oos,restaurant_suggestion,run_02_seed_1337,0.6062414646148682
+create a contact labeled mom,oos,make_call,run_02_seed_1337,0.8982900381088257
+do other providers have better coverage than my cell carrier,oos,payday,run_02_seed_1337,0.5989864468574524
+does centurytel offer any better plans than the one i'm on,oos,food_last,run_02_seed_1337,0.258720189332962
+"what's going on in the world today, anything major",oos,recipe,run_02_seed_1337,0.1933183670043945
+is there an alternate bus stop close to my home i can use,oos,sync_device,run_02_seed_1337,0.5656886100769043
+"add mary to my phone plan, please",oos,sync_device,run_02_seed_1337,0.9996065497398376
+how much is it to get more data on my phone plan,oos,sync_device,run_02_seed_1337,0.9421990513801576
+can i use direct deposit for my tax refund,oos,direct_deposit,run_02_seed_1337,0.9852821826934814
+how much of a refund will i get this year,oos,income,run_02_seed_1337,0.46961709856987
+please take all my money out of my checking account and close the account,oos,transfer,run_02_seed_1337,0.9946448802947998
+what's the blue book value of my car,oos,mpg,run_02_seed_1337,0.8577479720115662
+switch over to low power mode to preserve battery life,oos,meaning_of_life,run_02_seed_1337,0.8730875849723816
+can you recommend some fiction books,oos,meal_suggestion,run_02_seed_1337,0.6584615707397461
+what's out at the theaters right now,oos,smart_home,run_02_seed_1337,0.6166154742240906
+show me new cars with the highest safety rating,oos,directions,run_02_seed_1337,0.9849991202354432
+i am looking for a suit for work,oos,meal_suggestion,run_02_seed_1337,0.6107079982757568
+i need to find a black suit under $100,oos,schedule_maintenance,run_02_seed_1337,0.8493114113807678
+what is a good laptop for gaming,oos,restaurant_suggestion,run_02_seed_1337,0.9143564701080322
+"show me laptops for sale that are under $2,000",oos,current_location,run_02_seed_1337,0.6788771748542786
+what kind of bonds do molecules have,oos,what_can_i_ask_you,run_02_seed_1337,0.5744160413742065
+how much is my car worth used,oos,mpg,run_02_seed_1337,0.7093889117240906
+look up prices for parking at the airport over the weekend,oos,distance,run_02_seed_1337,0.4834962785243988
+what is the best way for dealing with the airport,oos,recipe,run_02_seed_1337,0.5477355718612671
+what are my hours this week at work,oos,income,run_02_seed_1337,0.9521155953407288
+can you check my voicemail,oos,income,run_02_seed_1337,0.9801872372627258
+i would like to know how long a charge is suppose to last on my phone,oos,food_last,run_02_seed_1337,0.5156784653663635
+check battery health on this device,oos,insurance,run_02_seed_1337,0.9062472581863404
+what is a well reviewed book for a teenage girl to read,oos,car_rental,run_02_seed_1337,0.7980811595916748
+i want to find new cyberpunk fiction books,oos,order,run_02_seed_1337,0.6774072647094727
+what channel is cw on,oos,current_location,run_02_seed_1337,0.9408474564552308
+what is a good movie to go see in theaters for a family with young kids,oos,travel_suggestion,run_02_seed_1337,0.9320704340934752
+i would like to find a stylish suit for a party,oos,text,run_02_seed_1337,0.3676360845565796
+can you give me suggestions for a professional suit under $200,oos,meal_suggestion,run_02_seed_1337,0.7332111597061157
+when is it cheapest to travel to hawaii,oos,travel_alert,run_02_seed_1337,0.862933874130249
+i need a laptop with 16gb of ram,oos,schedule_meeting,run_02_seed_1337,0.766029953956604
+how much is this years model of my car cost,oos,mpg,run_02_seed_1337,0.5776553153991699
+how do i best deal with the airport,oos,oil_change_how,run_02_seed_1337,0.6391500234603882
+remind me of the address for my workplace please,oos,smart_home,run_02_seed_1337,0.6774965524673462
+what time do i have to go to work today,oos,meeting_schedule,run_02_seed_1337,0.8754593133926392
+how many voicemail messages do i have,oos,pto_balance,run_02_seed_1337,0.3849427700042724
+erase all voicemails in my inbox please,oos,play_music,run_02_seed_1337,0.3856611251831054
+can you look up grocery coupons for me,oos,user_name,run_02_seed_1337,0.5889855623245239
+what is money used for,oos,calories,run_02_seed_1337,0.3580530285835266
+what are some natural remedies to help ease stress,oos,travel_suggestion,run_02_seed_1337,0.7944305539131165
+how do you make sure a bridge doesn't fall down,oos,recipe,run_02_seed_1337,0.5578844547271729
+what is the median salary for someone with an engineering degree,oos,ingredients_list,run_02_seed_1337,0.4316531419754028
+what does water taste like,oos,timezone,run_02_seed_1337,0.501518189907074
+when was my lawn last mowed,oos,last_maintenance,run_02_seed_1337,0.9912097454071044
+tell me about personal finance,oos,fun_fact,run_02_seed_1337,0.7311912775039673
+check the status of my amazon orders for me,oos,order_status,run_02_seed_1337,0.9999063014984132
+what is the official language of romania,oos,change_language,run_02_seed_1337,0.9690169095993042
+show me the best times to book flights for traveling to another country,oos,car_rental,run_02_seed_1337,0.4998484253883362
+disconnect from wifi immediately please,oos,sync_device,run_02_seed_1337,0.474141389131546
+am i connected to wifi,oos,current_location,run_02_seed_1337,0.4406746327877044
+list the contents of my safety deposit box at the bank,oos,schedule_maintenance,run_02_seed_1337,0.4378353357315063
+what's the more secure bank vault,oos,directions,run_02_seed_1337,0.1805972307920456
+what coupons do i have for restaurants,oos,restaurant_suggestion,run_02_seed_1337,0.8428051471710205
+how do i make money,oos,recipe,run_02_seed_1337,0.9899214506149292
+can you give me some stress management tips,oos,change_user_name,run_02_seed_1337,0.333945482969284
+how unhealthy is stress,oos,current_location,run_02_seed_1337,0.4646036326885223
+what's the best way to build a skyscraper,oos,directions,run_02_seed_1337,0.3289657533168793
+find engineering programs to apply to,oos,directions,run_02_seed_1337,0.3175995349884033
+check to see how many miles are on my car,oos,mpg,run_02_seed_1337,0.865424394607544
+is anything on my grocery list on sale today,oos,shopping_list,run_02_seed_1337,0.5754932165145874
+how long does it take for grass seed to grow on my lawn,oos,distance,run_02_seed_1337,0.6649225950241089
+please activate a wireless hotspot so i can use the internet,oos,cancel,run_02_seed_1337,0.3400284051895141
+look up a good broker for mutual funds,oos,goodbye,run_02_seed_1337,0.4956138730049133
+will amazon ship an order even if there was a pricing mistake,oos,order_status,run_02_seed_1337,0.9845356345176696
+where did mandarin originate from,oos,where_are_you_from,run_02_seed_1337,0.799303412437439
+what are some of the most visited countries for people looking to travel abroad,oos,book_hotel,run_02_seed_1337,0.7693712115287781
+tell me which wifi network you are connected to right now,oos,what_are_your_hobbies,run_02_seed_1337,0.7357273101806641
+what is my current signal strength,oos,current_location,run_02_seed_1337,0.9522202610969543
+if i'm locked in a bank vault what's the best way to get out,oos,directions,run_02_seed_1337,0.613086998462677
+how much ram does my computer have,oos,current_location,run_02_seed_1337,0.604140043258667
+how do you fix a leaking sink,oos,ingredients_list,run_02_seed_1337,0.6393608450889587
+what's the power consumption of my fridge,oos,food_last,run_02_seed_1337,0.487051397562027
+what is the warranty on my microwave,oos,income,run_02_seed_1337,0.6329148411750793
+how do you get red wine out of the carpet,oos,calculator,run_02_seed_1337,0.1544336229562759
+what is the highest quality carpet available,oos,calculator,run_02_seed_1337,0.3914454579353332
+has everyone come home from school,oos,where_are_you_from,run_02_seed_1337,0.6493305563926697
+what time did my daughter get home from her date,oos,income,run_02_seed_1337,0.7687193155288696
+is my computer free from viruses,oos,meeting_schedule,run_02_seed_1337,0.7594484090805054
+are you allowed to call someone a dirty name as part of free speech,oos,make_call,run_02_seed_1337,0.8714907169342041
+can you really get arrested for yelling fire in a crowded theater,oos,ingredient_substitution,run_02_seed_1337,0.2726997435092926
+do employers have to honor freedom of speech,oos,pto_balance,run_02_seed_1337,0.2741901278495788
+where is the closest driving range,oos,directions,run_02_seed_1337,0.7436487078666687
+when does tiger woods play next,oos,next_holiday,run_02_seed_1337,0.8392054438591003
+how can i improve my golf swing,oos,improve_credit_score,run_02_seed_1337,0.7461810111999512
+are your step-parent's parents considered your grandparents,oos,where_are_you_from,run_02_seed_1337,0.9049667119979858
+what's a good gift to get for your grandparents,oos,goodbye,run_02_seed_1337,0.3242229223251343
+what year did my grandparents get married,oos,income,run_02_seed_1337,0.989229381084442
+fun gift ideas to give to grandparents,oos,directions,run_02_seed_1337,0.7757079601287842
+which came first; greek mythology or roman mythology,oos,weather,run_02_seed_1337,0.7828761339187622
+what is harry's real name,oos,user_name,run_02_seed_1337,0.5007173418998718
+who played ronald weasly,oos,smart_home,run_02_seed_1337,0.4269810914993286
+where's the best place to hike in the rockies,oos,restaurant_suggestion,run_02_seed_1337,0.8119458556175232
+what should i wear to hike,oos,travel_suggestion,run_02_seed_1337,0.9777132868766784
+what were indians like 100 years ago,oos,where_are_you_from,run_02_seed_1337,0.9835429191589355
+how old is jennifer aniston,oos,how_old_are_you,run_02_seed_1337,0.6033875346183777
+i need tips on how to overcome insomnia,oos,next_song,run_02_seed_1337,0.3444250822067261
+what causes dyslexia,oos,current_location,run_02_seed_1337,0.6980690360069275
+is insomnia curable,oos,yes,run_02_seed_1337,0.4112115204334259
+where is te lawrence,oos,current_location,run_02_seed_1337,0.7588647603988647
+who is jane goodall,oos,who_do_you_work_for,run_02_seed_1337,0.8974087238311768
+how long does it take to get your yellow belt in karate,oos,distance,run_02_seed_1337,0.9992536902427672
+what is the highest belt in karate,oos,ingredients_list,run_02_seed_1337,0.415358304977417
+what's the proper subject verb order in japanese,oos,change_language,run_02_seed_1337,0.3725941181182861
+how do i learn more about linguistics,oos,fun_fact,run_02_seed_1337,0.9432744979858398
+what kind of paint do makeup artists use,oos,ingredients_list,run_02_seed_1337,0.5028508305549622
+the bus moves with tyre,oos,directions,run_02_seed_1337,0.9763299226760864
+how the bus moves,oos,directions,run_02_seed_1337,0.9905114769935608
+how can i get help for my mental health,oos,what_can_i_ask_you,run_02_seed_1337,0.804183304309845
+what's trending now,oos,greeting,run_02_seed_1337,0.6935039758682251
+send information on flood clean up to my phone,oos,sync_device,run_02_seed_1337,0.913224458694458
+recommend a flood clean up service,oos,restaurant_suggestion,run_02_seed_1337,0.4102698862552643
+what's the best type of plan to upgrade to,oos,travel_suggestion,run_02_seed_1337,0.8812099099159241
+give me a suggestion for roofers,oos,meal_suggestion,run_02_seed_1337,0.9704299569129944
+what's the safest pet to be around toddlers,oos,replacement_card_duration,run_02_seed_1337,0.4357078373432159
+why is my dog vomiting after eating,oos,account_blocked,run_02_seed_1337,0.2803214788436889
+are there any apartments for rent nearby,oos,min_payment,run_02_seed_1337,0.4919408559799194
+where is the closest architecture college,oos,directions,run_02_seed_1337,0.9965205192565918
+where can i submit my architecture plans,oos,find_phone,run_02_seed_1337,0.814293622970581
+what are the lowest prices of bottled water at costco,oos,nutrition_info,run_02_seed_1337,0.8704736828804016
+what's the cost of bottled water,oos,spelling,run_02_seed_1337,0.5777450799942017
+what's the cost to have a business card printed,oos,replacement_card_duration,run_02_seed_1337,0.8863614201545715
+when can i get a business card printed locally,oos,replacement_card_duration,run_02_seed_1337,0.9978321194648744
+what to use to design my business cards,oos,change_accent,run_02_seed_1337,0.2501316368579864
+download all the photos off my phone into the cloud,oos,sync_device,run_02_seed_1337,0.9984847903251648
+tell me about that kind of cameras,oos,repeat,run_02_seed_1337,0.6305636167526245
+how much is the new nikon camera,oos,income,run_02_seed_1337,0.5263314843177795
+what kind of camera should i buy,oos,ingredients_list,run_02_seed_1337,0.8832178711891174
+how much candy have i consumed this week,oos,spending_history,run_02_seed_1337,0.9982104301452636
+who makes milky way bars,oos,who_made_you,run_02_seed_1337,0.9789789319038392
+how safe is it to consume the substance h2o,oos,shopping_list_update,run_02_seed_1337,0.2783331871032715
+what is phosphorus on the periodic table,oos,calculator,run_02_seed_1337,0.8011941909790039
+look up some christmas songs for me,oos,tell_joke,run_02_seed_1337,0.4737847447395324
+how many calories does doing 20 situps burn,oos,calories,run_02_seed_1337,0.9897165894508362
+should i run every day,oos,date,run_02_seed_1337,0.8684538006782532
+how many months do i left in my hbo subscription,oos,pto_balance,run_02_seed_1337,0.3755056262016296
+cancel my subscription to scientific american,oos,cancel,run_02_seed_1337,0.9769505262374878
+i'd like to renew my subscription to playboy,oos,w2,run_02_seed_1337,0.1984779685735702
+how can i use make up to cover a cut on my cheek,oos,gas_type,run_02_seed_1337,0.2180689871311187
+what's the best make-up to cover a black eye,oos,restaurant_suggestion,run_02_seed_1337,0.3174513578414917
+when will the government file another antitrust suit against microsoft,oos,what_are_your_hobbies,run_02_seed_1337,0.3480329811573028
+when will microsoft drop support for windows 7,oos,next_holiday,run_02_seed_1337,0.1812701821327209
+how do i make a sentence have stylized strike out in microsoft word,oos,recipe,run_02_seed_1337,0.6452276110649109
+what are the current prices for mushrooms,oos,current_location,run_02_seed_1337,0.7975965142250061
+what bands are touring in my city this week,oos,current_location,run_02_seed_1337,0.8240052461624146
+what was the original name of jesus in egyptian myth,oos,what_is_your_name,run_02_seed_1337,0.364487737417221
+what activities can i to do outside today,oos,travel_suggestion,run_02_seed_1337,0.9384741187095642
+when will the daffodils bloom this year,oos,date,run_02_seed_1337,0.8726315498352051
+how much does a nintendo switch cost,oos,exchange_rate,run_02_seed_1337,0.7419136166572571
+can you check how many miles i walked today when i was out get the info from my phone,oos,last_maintenance,run_02_seed_1337,0.3461587727069855
+can you check how many steps i have walked in the last week from my phone app,oos,find_phone,run_02_seed_1337,0.9417980909347534
+what should i do if it hurts when i pee,oos,tire_change,run_02_seed_1337,0.4500541687011719
+how many pokemon have i caught in my pokemon go app,oos,application_status,run_02_seed_1337,0.9611231684684752
+has the school my kids go to been in the news for any reason,oos,pto_request_status,run_02_seed_1337,0.3672099709510803
+are there any school closures today,oos,travel_alert,run_02_seed_1337,0.4642968475818634
+why did a bunch of christians go off murdering muslims in the middle ages,oos,card_declined,run_02_seed_1337,0.4045025706291199
+what other countries speak the english language,oos,change_language,run_02_seed_1337,0.999996304512024
+why doesn't english have consistent forms,oos,account_blocked,run_02_seed_1337,0.5720653533935547
+do they speak english in australia,oos,change_language,run_02_seed_1337,0.9993020296096802
+who teaches english near me,oos,smart_home,run_02_seed_1337,0.6939873695373535
+can you look at what the oldest age is someone can enlist in the army,oos,translate,run_02_seed_1337,0.6714891195297241
+how many years do you need to be in the army to get a college tuition,oos,oil_change_when,run_02_seed_1337,0.5899885296821594
+what movies are playing at my local cinemax,oos,income,run_02_seed_1337,0.7612694501876831
+what movies are playing,oos,what_song,run_02_seed_1337,0.958472490310669
+can you get me the scores from the games that were played last night,oos,smart_home,run_02_seed_1337,0.6008421778678894
+what are the new player rankings for the nhl,oos,weather,run_02_seed_1337,0.6684192419052124
+what's the newspaper today,oos,replacement_card_duration,run_02_seed_1337,0.7135122418403625
+would you let me know who won the gold metal in gymnastics at the olympics,oos,nutrition_info,run_02_seed_1337,0.7041404247283936
+"at the olympics, what country won the gold medal in basketball",oos,smart_home,run_02_seed_1337,0.6525309085845947
+what films are in the running for best song at this year's oscars,oos,recipe,run_02_seed_1337,0.1997703164815902
+why did we elect this woman who made amazon leave and take its jobs with it,oos,share_location,run_02_seed_1337,0.7749668955802917
+what's a good way to organize my tools in my garage,oos,lost_luggage,run_02_seed_1337,0.4933244884014129
+is the stop sign around the corner still knocked over,oos,reminder_update,run_02_seed_1337,0.3727300763130188
+is there a fork in the road sign at main & 1st avenue,oos,smart_home,run_02_seed_1337,0.9192131757736206
+are there cameras hidden in stop lights,oos,smart_home,run_02_seed_1337,0.4379092454910278
+what does a flashing yellow light mean,oos,definition,run_02_seed_1337,0.9953519105911256
+what is the deadline to register at university of georgia,oos,how_busy,run_02_seed_1337,0.8451119065284729
+will the anti-vaxxers die off if no one gives them vaccines,oos,replacement_card_duration,run_02_seed_1337,0.2261109352111816
+how safe is the herpes vaccine they give women,oos,no,run_02_seed_1337,0.2708885967731476
+when do i have to get the mmr,oos,flight_status,run_02_seed_1337,0.1895588636398315
+how much are the clorox detergents,oos,income,run_02_seed_1337,0.4713175594806671
+when will nightwish be touring through my city,oos,replacement_card_duration,run_02_seed_1337,0.319049596786499
+tell me something about linkin park,oos,fun_fact,run_02_seed_1337,0.6891830563545227
+i need you to check the resistance of a coil wrapped 6 times with an id of 25mm,oos,alarm,run_02_seed_1337,0.8652859330177307
+can you tell me whether the knicks will play the lakers this week,oos,weather,run_02_seed_1337,0.8676518201828003
+what do you do if your 4 year old just ate playdoh,oos,what_are_your_hobbies,run_02_seed_1337,0.9679896235466005
+please check up on my son's homework,oos,income,run_02_seed_1337,0.4030897915363312
+when should you mow your grass after it's rained,oos,who_do_you_work_for,run_02_seed_1337,0.7295461893081665
+how much sugar was in my urine this morning,oos,income,run_02_seed_1337,0.9839903116226196
+what's a good blouse to wear with pink shoes,oos,book_hotel,run_02_seed_1337,0.3296816647052765
+how much does it cost to spay a puppy,oos,exchange_rate,run_02_seed_1337,0.570435106754303
+what's the best style shoe to wear to the prom,oos,directions,run_02_seed_1337,0.8254371881484985
+can you tell me about that tornado that just tore up alabama,oos,repeat,run_02_seed_1337,0.9304106831550598
+tell me what the hot topics are that are trending on google,oos,recipe,run_02_seed_1337,0.5887947082519531
+what happened with the summit between trump and jong,oos,schedule_meeting,run_02_seed_1337,0.9465252161026
+please uninstall this intrusive social media app,oos,sync_device,run_02_seed_1337,0.7927687764167786
+upload the pictures to the correct album,oos,sync_device,run_02_seed_1337,0.4950425028800964
+i have a super runny nose and want to find a doctor,oos,car_rental,run_02_seed_1337,0.2015655040740966
+which medicine to relieve my cough,oos,weather,run_02_seed_1337,0.3982924222946167
+how do i get rid of blocked nose at home,oos,distance,run_02_seed_1337,0.5568534731864929
+how can i make my living room appear to be bigger than it is,oos,reminder_update,run_02_seed_1337,0.3279720544815063
+i'd like to find some curtains that look good in this room,oos,thank_you,run_02_seed_1337,0.3825494647026062
+how to paint walls,oos,recipe,run_02_seed_1337,0.6751763224601746
+how to fix walls,oos,recipe,run_02_seed_1337,0.4775445759296417
+can you store a gun in a safe deposit box,oos,travel_alert,run_02_seed_1337,0.5521698594093323
+how do you get a safe deposit box,oos,travel_alert,run_02_seed_1337,0.7495661377906799
+look up how to apply cream to smooth itchiness,oos,directions,run_02_seed_1337,0.6583437919616699
+"how do i deal with angry, painful red bumps",oos,recipe,run_02_seed_1337,0.3298430442810058
+where should i go if i hammered a nail through my foot,oos,tire_change,run_02_seed_1337,0.3220734894275665
+how long does it take to call an ambulance,oos,cook_time,run_02_seed_1337,0.9925469756126404
+how to get the right medicine,oos,weather,run_02_seed_1337,0.5849114656448364
+how to take care of the sick,oos,reminder_update,run_02_seed_1337,0.2479792088270187
+do vegans really want to blame cows for climate change,oos,ingredient_substitution,run_02_seed_1337,0.4893379509449005
+give me a recommendation for a local landscaper,oos,restaurant_suggestion,run_02_seed_1337,0.6907164454460144
+i need to hire a grass treatment specialist,oos,order,run_02_seed_1337,0.3915590047836303
+create a speech on historical events surrounding albert einstein,oos,reminder_update,run_02_seed_1337,0.5067625641822815
+what is albert einstein famous for,oos,current_location,run_02_seed_1337,0.9329184889793396
+when will cameron release the sequel to avatar,oos,date,run_02_seed_1337,0.2804301381111145
+can you please start the avatar movie for me,oos,smart_home,run_02_seed_1337,0.8500860333442688
+could you create a new avatar for me,oos,order,run_02_seed_1337,0.9666502475738524
+does bill gates still have any material participation in the running of microsoft,oos,food_last,run_02_seed_1337,0.7605838775634766
+tell me more about bill gates,oos,fun_fact,run_02_seed_1337,0.4735732078552246
+give me the weather forecast for today,oos,weather,run_02_seed_1337,0.9999613761901855
+what is bitcoin trading for currently,oos,income,run_02_seed_1337,0.796146810054779
+where can i have a black and white photo blown up to poster size,oos,ingredient_substitution,run_02_seed_1337,0.6014015674591064
+adjust the contrast of the black and white photos,oos,change_volume,run_02_seed_1337,0.3676687180995941
+can you colorize a black and white photo,oos,cancel,run_02_seed_1337,0.5984691381454468
+add color to the black and white photos,oos,change_volume,run_02_seed_1337,0.4274682700634002
+compile a list of historical events from the boston marathon,oos,book_hotel,run_02_seed_1337,0.2612503170967102
+time my next run at the boston marathon,oos,income,run_02_seed_1337,0.4230190813541412
+when will the next boston marathon be,oos,next_holiday,run_02_seed_1337,0.98722106218338
+what is the animal for this chinese new year,oos,income,run_02_seed_1337,0.9704595804214478
+would it be legal to have battles to the death in a homemade colosseum,oos,reminder_update,run_02_seed_1337,0.7176389694213867
+do the romans still use the colosseum for anything today,oos,weather,run_02_seed_1337,0.930893898010254
+"can you really time your compressions to queen's ""another one bites the dust""",oos,measurement_conversion,run_02_seed_1337,0.1183430254459381
+do i have to put my mouth on theirs when doing cpr,oos,shopping_list_update,run_02_seed_1337,0.811164379119873
+what is the breath to compression ratio for cpr,oos,meeting_schedule,run_02_seed_1337,0.8333495259284973
+tell me how to perform cpr,oos,spelling,run_02_seed_1337,0.5478118062019348
+create a for-while loop that continues 10 times,oos,cancel,run_02_seed_1337,0.8347641825675964
+do you own the mineral rights to gold nuggets you find in your back yard,oos,what_are_your_hobbies,run_02_seed_1337,0.2779081165790558
+where is the best place to mine for gold,oos,restaurant_suggestion,run_02_seed_1337,0.996427357196808
+make a list of facts about green book,oos,fun_fact,run_02_seed_1337,0.5456470251083374
+who wrote green book,oos,thank_you,run_02_seed_1337,0.3470643758773803
+what's the main export by the peoples of greenland,oos,change_user_name,run_02_seed_1337,0.3683492243289947
+create several photos of me with different hair styles,oos,cancel,run_02_seed_1337,0.7250193953514099
+latest hair styles for long natural hair,oos,shopping_list_update,run_02_seed_1337,0.2604230940341949
+did a man really die trying to be loved by a horse,oos,play_music,run_02_seed_1337,0.6445165872573853
+how many acres do you need to buy a horse,oos,ingredients_list,run_02_seed_1337,0.735028088092804
+does eating poop really help your gut fauna,oos,yes,run_02_seed_1337,0.2299542129039764
+is there a vaccine for ebola,oos,weather,run_02_seed_1337,0.31891730427742
+find out how many latin scholars there are at the university of chicago,oos,nutrition_info,run_02_seed_1337,0.7395514845848083
+make a list of stocks that would be good to invest in to start making money,oos,change_language,run_02_seed_1337,0.9118452668190002
+how can i add my signature to the proposed bill legalizing prostitution,oos,directions,run_02_seed_1337,0.3592224419116974
+what's the roi doing arbitrage with ebay,oos,greeting,run_02_seed_1337,0.3378748595714569
+do women still bare their chests for beads at mardi gras,oos,weather,run_02_seed_1337,0.2334702163934707
+when's the next mardi gras going to be,oos,next_holiday,run_02_seed_1337,0.9115796089172364
+start a speech on microbes for me,oos,change_speed,run_02_seed_1337,0.3955337405204773
+what is the time signature for the castlevania song bloody tears,oos,cook_time,run_02_seed_1337,0.4269850552082062
+can you tell me what key frank zappa's keep it greasy is in,oos,definition,run_02_seed_1337,0.4122147560119629
+please go to wikipedia and search for articles related to nsa,oos,shopping_list_update,run_02_seed_1337,0.7707592844963074
+can the nsa crack the encryption on my iphone,oos,sync_device,run_02_seed_1337,0.7354458570480347
+does the nsa listen to me,oos,date,run_02_seed_1337,0.7222543358802795
+could you pull up the nsa website,oos,smart_home,run_02_seed_1337,0.7478516697883606
+can you see if the octopus eggs have hatched yet,oos,smart_home,run_02_seed_1337,0.4658058881759643
+what do you do if your cat eats an octopus,oos,what_are_your_hobbies,run_02_seed_1337,0.9930925369262696
+find out which museum houses the most post modern art in new york state,oos,directions,run_02_seed_1337,0.4860528409481048
+look up the top 3 selling post modern artists in the united states,oos,smart_home,run_02_seed_1337,0.4951582849025726
+create a portrait for me using post modern art,oos,restaurant_suggestion,run_02_seed_1337,0.5212430953979492
+find the names of all the rain forests located in south america,oos,weather,run_02_seed_1337,0.9906876683235168
+does cutting down the rain forest really add to global warming,oos,smart_home,run_02_seed_1337,0.2957649827003479
+what's the current demand for wood from rain forests,oos,weather,run_02_seed_1337,0.993543028831482
+what's the current prevailing interest rate for mortgages in my area,oos,interest_rate,run_02_seed_1337,0.999441921710968
+how's the real estate market doing this week,oos,restaurant_reviews,run_02_seed_1337,0.8923895359039307
+please list my real estate for sale,oos,shopping_list_update,run_02_seed_1337,0.5962429046630859
+make an ad to sell my real estate,oos,shopping_list_update,run_02_seed_1337,0.4384281933307647
+what's the status of robotic servants from japan,oos,weather,run_02_seed_1337,0.3295764625072479
+finish the final touches on my newest robotic creation,oos,sync_device,run_02_seed_1337,0.2393827885389328
+can a robot really travel back in time,oos,travel_alert,run_02_seed_1337,0.9352858662605286
+program my new robot to bring me snacks,oos,change_user_name,run_02_seed_1337,0.4539933204650879
+how long would it take you to die of thirst in the sahara desert,oos,distance,run_02_seed_1337,0.4694540500640869
+how much for a samurai sword,oos,income,run_02_seed_1337,0.9958518743515016
+make a list of what materials have been used for spacesuits,oos,pto_used,run_02_seed_1337,0.371472030878067
+what size space suit should you get based on your girth,oos,ingredients_list,run_02_seed_1337,0.9323986768722534
+see if you can purchase a spacesuit online,oos,order,run_02_seed_1337,0.996397852897644
+display history of sparta,oos,goodbye,run_02_seed_1337,0.6571670770645142
+compile a list of articles pertaining to venture capital funding for me,oos,schedule_meeting,run_02_seed_1337,0.2326578646898269
+start a portfolio on venture capital funding for me to look over,oos,shopping_list_update,run_02_seed_1337,0.4829801619052887
+how do i get venture capital for my app,oos,find_phone,run_02_seed_1337,0.8941032290458679
+what's the latest vc funded company,oos,weather,run_02_seed_1337,0.8935315012931824
+i'd like to hire a wedding planner and need help finding one,oos,order,run_02_seed_1337,0.8266654014587402
+how to plan for weddings,oos,recipe,run_02_seed_1337,0.8867874145507812
+make a chart of the different types of whales,oos,goodbye,run_02_seed_1337,0.3032089471817016
+what did my best friend do in the kitchen while we were gone,oos,lost_luggage,run_02_seed_1337,0.2587200999259949
+what's my boss' home address,oos,income,run_02_seed_1337,0.6993758678436279
+what's it like to have parents who actually love you,oos,who_made_you,run_02_seed_1337,0.9832810759544371
+find an article on celebrities who made it out of poverty,oos,current_location,run_02_seed_1337,0.2798409759998321
+tell me where i can get more information on getting a job at the post office,oos,travel_suggestion,run_02_seed_1337,0.5310885310173035
+pull up the classifieds and read the career section to me,oos,smart_home,run_02_seed_1337,0.3061158955097198
+help me find a new position as a programmer,oos,insurance_change,run_02_seed_1337,0.2835915386676788
+what's the best career search website,oos,income,run_02_seed_1337,0.5029274225234985
+write the next chapter of my biography and let me know when you have finished it,oos,last_maintenance,run_02_seed_1337,0.6377609372138977
+i would like for you to start a biography on me,oos,flip_coin,run_02_seed_1337,0.3034013509750366
+find out what supplies i am missing and will need on my upcoming camping trip,oos,travel_notification,run_02_seed_1337,0.5943074226379395
+find articles that can help me advance my position in my work field,oos,plug_type,run_02_seed_1337,0.3123876452445984
+show me what one should do to get ahead in a tech corporation,oos,ingredients_list,run_02_seed_1337,0.4507501423358917
+get me a copy of a book on negotiation in the workplace,oos,car_rental,run_02_seed_1337,0.4364623427391052
+look up ways for me to advance my job placement,oos,income,run_02_seed_1337,0.6049342751502991
+see if there is a recipe to make a casserole without any dairy,oos,recipe,run_02_seed_1337,0.7493613362312317
+tell me in how many different colors i can get dinner plates from pier one imports,oos,exchange_rate,run_02_seed_1337,0.3109240233898163
+tell me amazon's choice for a set of 4 dinner plates,oos,meal_suggestion,run_02_seed_1337,0.992219865322113
+how many dvds do i currently have on file,oos,pto_balance,run_02_seed_1337,0.7576340436935425
+give me a listing of all my dvd's,oos,current_location,run_02_seed_1337,0.4033791720867157
+look up the conversion rate for the euro to dollar exchange,oos,exchange_rate,run_02_seed_1337,0.9999663829803468
+how do i put a lens that's fallen out back in my glasses,oos,shopping_list_update,run_02_seed_1337,0.5385670065879822
+i need you to order a new pair of eyeglasses for me,oos,order,run_02_seed_1337,0.9961318969726562
+tell me what my current eyeglasses prescription is,oos,current_location,run_02_seed_1337,0.7000316381454468
+make a list of all sites in the us where spirits have been seen at night,oos,w2,run_02_seed_1337,0.7388055324554443
+tell me a scary story,oos,tell_joke,run_02_seed_1337,0.5095279216766357
+make a list of goals i need to meet in order to write a book,oos,book_hotel,run_02_seed_1337,0.6127112507820129
+remind me what my weight loss goals are,oos,reminder_update,run_02_seed_1337,0.3233838081359863
+give me a list of tax attorneys that practice in my city,oos,schedule_meeting,run_02_seed_1337,0.466102659702301
+give me the number of a traffic attorney near here,oos,traffic,run_02_seed_1337,0.999457061290741
+tell me what the longest tributary is in venezuela,oos,date,run_02_seed_1337,0.3478705286979675
+please book another boat for this weekends trip,oos,change_volume,run_02_seed_1337,0.5248887538909912
+get me a list of universities that provide full scholarships in arizona,oos,ingredients_list,run_02_seed_1337,0.5305730104446411
+tell me where to go to get my son enrolled in public kindergarten,oos,travel_suggestion,run_02_seed_1337,0.8946889638900757
+"do a job search on monstercom for jobs in the tech field in arlington, va",oos,plug_type,run_02_seed_1337,0.5205671787261963
+"i need to find work, help me connect to a local business through linkedin",oos,reminder_update,run_02_seed_1337,0.7682337760925293
+detail a list of possible job openings in the miami public school system,oos,reminder_update,run_02_seed_1337,0.6321917772293091
+look for a position similar to mine that is open around my area,oos,restaurant_suggestion,run_02_seed_1337,0.355090469121933
+give me a list of the top 5 issues people have in this country,oos,book_hotel,run_02_seed_1337,0.4651937484741211
+what is the government department that regulates emissions,oos,time,run_02_seed_1337,0.3965998888015747
+what's the highest rated social services non-profit,oos,smart_home,run_02_seed_1337,0.3600843846797943
+explain to me the process of evaporation,oos,reminder_update,run_02_seed_1337,0.7717594504356384
+tell me how to make a lesson plan,oos,recipe,run_02_seed_1337,0.9726731181144714
+tell me where i can get the cheapest tennis balls on the internet,oos,directions,run_02_seed_1337,0.8458805084228516
+play the current tennis match on the tv in the living room,oos,smart_home,run_02_seed_1337,0.6914627552032471
+make a chart of all the tennis scores from this year,oos,play_music,run_02_seed_1337,0.4004592895507812
+find the best prices for toothpaste at any store within a 5 mile radius of my location,oos,share_location,run_02_seed_1337,0.2608776092529297
+tell me what the best shampoo is for someone with dry scalp,oos,recipe,run_02_seed_1337,0.7586530447006226
+how do i set the time on my tag heuer,oos,time,run_02_seed_1337,0.8336201906204224
+tell me the steps as to how to begin a career as a journalist,oos,directions,run_02_seed_1337,0.8750432133674622
+put words on the paper about what you want,oos,cancel,run_02_seed_1337,0.2797834873199463
+put into words what you want,oos,what_can_i_ask_you,run_02_seed_1337,0.5071585774421692
+what kind of foods are border collies allergic to,oos,ingredients_list,run_02_seed_1337,0.6309804320335388
+what is the lifespan of a border collie,oos,calculator,run_02_seed_1337,0.7638534903526306
+look up daily dog kennels in my area,oos,find_phone,run_02_seed_1337,0.468799740076065
+tell me the price of bananas at whole foods this week,oos,restaurant_reviews,run_02_seed_1337,0.4887989461421966
+call the grocery store and get their operational hours,oos,make_call,run_02_seed_1337,0.9290999174118042
+call an uber to take me to the closest grocery store,oos,uber,run_02_seed_1337,0.9541600942611694
+show me how many community centers are located within 5 miles of my location,oos,current_location,run_02_seed_1337,0.6026824116706848
+which houses do not have automatic spot lights in front of their garage,oos,alarm,run_02_seed_1337,0.2462745308876037
+are all the street lamps working on my street,oos,smart_home,run_02_seed_1337,0.6088869571685791
+make a list of all community gardens near me,oos,order,run_02_seed_1337,0.7730069756507874
+tell me where to send my resume in order to get a job at delta airlines,oos,w2,run_02_seed_1337,0.3439616858959198
+review my resume for spelling errors,oos,bill_balance,run_02_seed_1337,0.4883926212787628
+please print out copies of my resume,oos,smart_home,run_02_seed_1337,0.2592746019363403
+please spell check my resume,oos,income,run_02_seed_1337,0.4068299829959869
+show me all listings on amazon for leather belts for men,oos,meeting_schedule,run_02_seed_1337,0.4478622078895569
+tell me how many blue ties i own,oos,income,run_02_seed_1337,0.2054256200790405
+search up someone who plays in a movie,oos,timer,run_02_seed_1337,0.8201189637184143
+search up the cast in the walking dead,oos,smart_home,run_02_seed_1337,0.7661160230636597
+what's the amusement park like,oos,weather,run_02_seed_1337,0.6787689328193665
+take a ride on the ferris wheel,oos,goodbye,run_02_seed_1337,0.2777858972549438
+go on the ferris wheel,oos,no,run_02_seed_1337,0.3685227930545807
+compare prices of malt-o-meal to kelloggs,oos,todo_list_update,run_02_seed_1337,0.3511519134044647
+what kinds of cereal are gluten free,oos,what_can_i_ask_you,run_02_seed_1337,0.6016627550125122
+what kinds of cereal are low sugar,oos,nutrition_info,run_02_seed_1337,0.643817126750946
+does disney world close when it storms,oos,payday,run_02_seed_1337,0.5451240539550781
+mickey mouse is a huge part of disney,oos,yes,run_02_seed_1337,0.423230916261673
+what time did i get the last text message i received,oos,last_maintenance,run_02_seed_1337,0.4604999125003814
+please read me the last text message i received,oos,text,run_02_seed_1337,0.8740993142127991
+watch the stories on instagram,oos,cancel,run_02_seed_1337,0.3185844123363495
+update my status on instagram,oos,order_status,run_02_seed_1337,0.9780594110488892
+can you check on what it would cost me to upgrade my iphone with t-mobile,oos,find_phone,run_02_seed_1337,0.9414603114128112
+please alert me when my iphone battery falls below 30%,oos,replacement_card_duration,run_02_seed_1337,0.5063355565071106
+can you look at when the next iphone is due out,oos,next_holiday,run_02_seed_1337,0.6768248677253723
+what type of industries do innovation managers work in,oos,ingredients_list,run_02_seed_1337,0.6801840662956238
+generate a list of 20 songs that include the word love in the title,oos,smart_home,run_02_seed_1337,0.6589409708976746
+create a 500 word letter expressing love,oos,measurement_conversion,run_02_seed_1337,0.6387796998023987
+what is popular in fashion right now,oos,current_location,run_02_seed_1337,0.2979822158813476
+does denim go with anything,oos,yes,run_02_seed_1337,0.7312614917755127
+accept incoming phone call,oos,make_call,run_02_seed_1337,0.9992585778236388
+deny incoming phone call,oos,make_call,run_02_seed_1337,0.9942335486412048
+what do i wear on my feet when it rains,oos,time,run_02_seed_1337,0.8938956260681152
+what do i put on my feet,oos,current_location,run_02_seed_1337,0.7007266879081726
+what are the words to the chorus for this song,oos,what_song,run_02_seed_1337,0.599911093711853
+display the song lyrics for me,oos,what_song,run_02_seed_1337,0.9181777834892272
+"google ""odell beckham free agency""",oos,whisper_mode,run_02_seed_1337,0.3389460146427154
+clear my search history,oos,play_music,run_02_seed_1337,0.370863527059555
+compare the new life growth in trees when the seasons change,oos,replacement_card_duration,run_02_seed_1337,0.3405104875564575
+plant all your flowers just after easter in early april,oos,change_language,run_02_seed_1337,0.7007474303245544
+find a good toy to give a 5 year old boy that costs less than $40,oos,tell_joke,run_02_seed_1337,0.4715125560760498
+find out where i can buy a barbie doll for my niece,oos,order,run_02_seed_1337,0.2519572973251343
+make a list of decor i would need to have a titanic themed birthday party,oos,schedule_meeting,run_02_seed_1337,0.8205673694610596
+aquire the soundtracks from the movie if i stay and add them to my ipod,oos,shopping_list_update,run_02_seed_1337,0.8810887336730957
+"i watched ""were the millers"" on netflix last night",oos,sync_device,run_02_seed_1337,0.3349632322788238
+generate a list of the past 10 judge executives,oos,ingredients_list,run_02_seed_1337,0.5142488479614258
+how many hits have i done today,oos,pto_used,run_02_seed_1337,0.4843777120113373
+change out the older photos with the newer ones,oos,make_call,run_02_seed_1337,0.4010387361049652
+organize photos by year they were taken,oos,how_old_are_you,run_02_seed_1337,0.7348418831825256
+can you group my photos by location,oos,share_location,run_02_seed_1337,0.994306743144989
+organize my photos by date please,oos,play_music,run_02_seed_1337,0.6128434538841248
+how many parks are within 20 miles of me,oos,calculator,run_02_seed_1337,0.5873555541038513
+check to see if i still have allergy medication,oos,spending_history,run_02_seed_1337,0.2598661780357361
+sign me up for the writing class you told me about 2 days ago,oos,timer,run_02_seed_1337,0.6204970479011536
+find articles on essay writing for beginners,oos,find_phone,run_02_seed_1337,0.5853564143180847
+how long should an essay be,oos,cook_time,run_02_seed_1337,0.9585471153259276
+what should you do if your laundry machine is making a high pitched whine,oos,who_do_you_work_for,run_02_seed_1337,0.5350615382194519
+find directions to the sunshine car wash from my house,oos,smart_home,run_02_seed_1337,0.5928220152854919
+can you book me an appointment at a car wash,oos,schedule_maintenance,run_02_seed_1337,0.9948040843009948
+what brush can i use to wash my car that won't scratch it,oos,gas_type,run_02_seed_1337,0.8240140676498413
+please clean the car windows,oos,smart_home,run_02_seed_1337,0.910530686378479
+vacuum out the car,oos,smart_home,run_02_seed_1337,0.9773831367492676
+schedule an appointment with the credit counselor for tuesday,oos,calendar_update,run_02_seed_1337,0.9309167265892028
+how much does it cost to get two jackets dry cleaned,oos,exchange_rate,run_02_seed_1337,0.8760309815406799
+look up articles on the green dry cleaning industry,oos,smart_home,run_02_seed_1337,0.5437166690826416
+find a cleaner that specializes in suede,oos,no,run_02_seed_1337,0.8734624981880188
+when should you use a dry cleaner,oos,next_holiday,run_02_seed_1337,0.5191115736961365
+create emergency phone numbers list,oos,sync_device,run_02_seed_1337,0.4060000479221344
+do sets of 25 set-ups each morning til you have completed your goal,oos,time,run_02_seed_1337,0.5868102312088013
+keep a note of how many miles you walk a day,oos,measurement_conversion,run_02_seed_1337,0.3440130949020386
+how much weight should i lift to get buff,oos,exchange_rate,run_02_seed_1337,0.9125152826309204
+what's a good stretch to do to limber up,oos,travel_suggestion,run_02_seed_1337,0.985093355178833
+make a list of the top 100 famous quotes,oos,smart_home,run_02_seed_1337,0.7021539807319641
+what do you do if you can't stop vomiting,oos,what_are_your_hobbies,run_02_seed_1337,0.925983428955078
+what should i take for a cold,oos,exchange_rate,run_02_seed_1337,0.3364259600639343
+"i have too many credit cards, is there any way you can help me organize them",oos,find_phone,run_02_seed_1337,0.6692458987236023
+look up the current auto loan rate at chase bank,oos,interest_rate,run_02_seed_1337,0.999616265296936
+look up student loan offers on google,oos,reminder_update,run_02_seed_1337,0.7027750611305237
+check current prime mortgage rate,oos,interest_rate,run_02_seed_1337,0.3544463515281677
+what should you do if you can't be bothered to get out of bed,oos,who_do_you_work_for,run_02_seed_1337,0.5639752745628357
+send me a quote from a motivational speaker twice a day,oos,where_are_you_from,run_02_seed_1337,0.1049667000770568
+find me a book on motivational speaking from amazon,oos,book_hotel,run_02_seed_1337,0.7767683267593384
+check to see if i need a pass to use the parking garages downtown,oos,ingredients_list,run_02_seed_1337,0.7083476781845093
+how much does it cost to use the parking garage downtown,oos,taxes,run_02_seed_1337,0.3435553610324859
+what's a good way of backing out of a parking spot,oos,restaurant_suggestion,run_02_seed_1337,0.8633301854133606
+search the web for monthly parking near my house,oos,calendar_update,run_02_seed_1337,0.3213130235671997
+find out where parking is close to the stadium,oos,directions,run_02_seed_1337,0.9791389107704164
+how do i get perfect alignment with the curb,oos,uber,run_02_seed_1337,0.3191535174846649
+describe to me how i can learn to make small talk,oos,recipe,run_02_seed_1337,0.9985503554344176
+explain how small talk helps bind groups together,oos,uber,run_02_seed_1337,0.2173771560192108
+what do you do all day while i'm at work,oos,meeting_schedule,run_02_seed_1337,0.4160256087779999
+"so, hang out around this house often",oos,shopping_list_update,run_02_seed_1337,0.3110552132129669
+tell me the best way to freshen the smell in my car,oos,oil_change_how,run_02_seed_1337,0.6167178750038147
+where's the closest car wash my car smells,oos,directions,run_02_seed_1337,0.2079418152570724
+how much is auto febreeze on amazon,oos,income,run_02_seed_1337,0.9670413732528688
+find out how to deodorize a car,oos,car_rental,run_02_seed_1337,0.8057510256767273
+look up website on container gardening,oos,smart_home,run_02_seed_1337,0.7066698670387268
+are we allowed to wash our cars during the drought,oos,calendar_update,run_02_seed_1337,0.1993009895086288
+request a refund on the car wax i bought yesterday,oos,schedule_maintenance,run_02_seed_1337,0.9850974082946776
+i'd like to hire someone to wash my car,oos,schedule_maintenance,run_02_seed_1337,0.5148904323577881
+find out what gentlemen are wearing to weddings these days,oos,current_location,run_02_seed_1337,0.9375337958335876
+find me articles on appropriate wedding attire,oos,smart_home,run_02_seed_1337,0.6925093531608582
+zip the back of the brides maid dress,oos,smart_home,run_02_seed_1337,0.5068896412849426
+rent the tuxedo the day before,oos,weather,run_02_seed_1337,0.4973627626895904
+order me a book of stamps and envelopes,oos,order,run_02_seed_1337,0.9907674193382264
+start listening to me dictate a letter,oos,change_user_name,run_02_seed_1337,0.6177250146865845
+tell me how long until the nascar race begins,oos,cook_time,run_02_seed_1337,0.6975942850112915
+are there any new job postings in my area in the last hour for jobs on craigslist,oos,transactions,run_02_seed_1337,0.5924522876739502
+can you tell me what the best places are to look for a job online,oos,restaurant_suggestion,run_02_seed_1337,0.9812512397766112
+please replay the last five minutes,oos,cancel,run_02_seed_1337,0.7148769497871399
+can you enable subtitles,oos,cancel,run_02_seed_1337,0.5781611800193787
+consult the gq website to find what men wear to weddings,oos,current_location,run_02_seed_1337,0.3060929477214813
+order me a blue pin stripe suit from saville row,oos,order,run_02_seed_1337,0.8231022357940674
+what's in fashion this month,oos,date,run_02_seed_1337,0.5692905783653259
+is it too late to wear white,oos,reset_settings,run_02_seed_1337,0.6360687017440796
+how many calories does jumping up and down burn,oos,calories,run_02_seed_1337,0.9590835571289062
+how many push-ups do i need to do to get ripped,oos,todo_list,run_02_seed_1337,0.9537320137023926
+fill up my water bottle for the gym,oos,income,run_02_seed_1337,0.9191137552261353
+pick out an excerise outfit for me,oos,cancel,run_02_seed_1337,0.2927997410297394
+find out how long a cold should last before i call a doctor,oos,replacement_card_duration,run_02_seed_1337,0.8773120641708374
+what should i take for nausea,oos,travel_suggestion,run_02_seed_1337,0.8033522963523865
+what is a good home remedy for a rash,oos,meal_suggestion,run_02_seed_1337,0.9181084036827089
+"i have a rash, what can i use for it",oos,what_can_i_ask_you,run_02_seed_1337,0.6554816961288452
+can you order some ointment for me,oos,order,run_02_seed_1337,0.9975797533988952
+forward the text i just got from henry to giselle,oos,text,run_02_seed_1337,0.9948721528053284
+please read the text message i just received,oos,text,run_02_seed_1337,0.999792754650116
+save my text on my laptop hard drive,oos,text,run_02_seed_1337,0.821698784828186
+are there any messages,oos,weather,run_02_seed_1337,0.7239804863929749
+what's that smell,oos,yes,run_02_seed_1337,0.8900123238563538
+get me a list of the best savings account rates right now,oos,directions,run_02_seed_1337,0.897764265537262
+what should i do if i saw a cockroach in my house,oos,travel_suggestion,run_02_seed_1337,0.9305724501609802
+please answer the phone and put it on speaker on the tv,oos,smart_home,run_02_seed_1337,0.9228469729423524
+can you tell me who's calling me,oos,user_name,run_02_seed_1337,0.648952841758728
+answer the phone,oos,make_call,run_02_seed_1337,0.9419578909873962
+ignore call,oos,make_call,run_02_seed_1337,0.9998807907104492
+what's the first thing you should do to wash your car,oos,jump_start,run_02_seed_1337,0.9739136099815368
+what supplies do i need to clean my car,oos,gas_type,run_02_seed_1337,0.4681563377380371
+look up articles on car washing at home,oos,smart_home,run_02_seed_1337,0.6553260684013367
+how old is the oldest person that is in the guiness book of world records,oos,smart_home,run_02_seed_1337,0.2558573186397552
+how could i get into the guiness book of world records,oos,schedule_meeting,run_02_seed_1337,0.3836579024791717
+can you look at what average reviews say about the new windows phone on amazon for me,oos,how_busy,run_02_seed_1337,0.5287439823150635
+tell me a summary of reviews that oakley frogskins get on amazon,oos,restaurant_suggestion,run_02_seed_1337,0.7096036672592163
+make me a list of the top ten reviewed hiking boots on jetcom,oos,reminder_update,run_02_seed_1337,0.5180643200874329
+show me a tabulation of reviews for lcd tv's on amazon,oos,restaurant_reviews,run_02_seed_1337,0.9816415309906006
+can you tell me what happened to han solo in episode 4,oos,taxes,run_02_seed_1337,0.3031462430953979
+who plays han solo,oos,who_do_you_work_for,run_02_seed_1337,0.842938244342804
+which movie is it that someone says perfectly balanced as all things should be,oos,what_are_your_hobbies,run_02_seed_1337,0.2518980801105499
+what movie is the line today is our independence day from,oos,next_holiday,run_02_seed_1337,0.5183123350143433
+what movie is it that says today is a good day to die,oos,replacement_card_duration,run_02_seed_1337,0.8238838911056519
+is michonne wrong for not working with the kingdom to put on the fair,oos,shopping_list_update,run_02_seed_1337,0.9614264369010924
+which actors have played more than 1 comic book character,oos,shopping_list,run_02_seed_1337,0.223786249756813
+why did negan return to his jail cell,oos,play_music,run_02_seed_1337,0.3781951367855072
+is there more than one occult that a person can join,oos,travel_alert,run_02_seed_1337,0.2072879374027252
+what does it mean to join the occult,oos,weather,run_02_seed_1337,0.6496439576148987
+did madison really bathe in the potomac naked,oos,ingredients_list,run_02_seed_1337,0.371772438287735
+can you explain a good risk strategy to me,oos,tell_joke,run_02_seed_1337,0.8908377289772034
+fill out the paperwork for tonys new daycare center,oos,change_volume,run_02_seed_1337,0.6456588506698608
+i need to find a new babysitter,oos,insurance_change,run_02_seed_1337,0.3873907029628753
+how long does it take to get a divorce finalized,oos,cook_time,run_02_seed_1337,0.4912545084953308
+how much damage did the last earthquake here do,oos,income,run_02_seed_1337,0.634670615196228
+get me articles on earthquake preparedness,oos,current_location,run_02_seed_1337,0.2734588980674743
+what is appropriate to spend on a bouquet of flowers for mother's day,oos,calendar,run_02_seed_1337,0.8473551869392395
+get me a list of personal conservation tips that i can use around the house,oos,directions,run_02_seed_1337,0.4220383763313293
+is the polar vortex of 2019 apart of global warming,oos,smart_home,run_02_seed_1337,0.3903248608112335
+what is global warming,oos,current_location,run_02_seed_1337,0.8643919229507446
+can you book me a tee time at cantigny at 2 pm on saturday,oos,alarm,run_02_seed_1337,0.3723518252372741
+how do i stop my child from setting small animals on fire for amusement,oos,calendar_update,run_02_seed_1337,0.6133177876472473
+review chapter 6 with my son and verify his math homework answers,oos,ingredient_substitution,run_02_seed_1337,0.1821602880954742
+can you look up how i shoot a time lapse video on my iphone camera or is it even possible,oos,time,run_02_seed_1337,0.593378484249115
+how do i turn up the resolution that i am taking pictures in on my camera phone,oos,smart_home,run_02_seed_1337,0.8746500611305237
+print out the photos i took today,oos,cancel,run_02_seed_1337,0.4437680542469024
+can you find me sheet music for the beatles white album online,oos,play_music,run_02_seed_1337,0.9965389966964722
+find me a good band instructor or two to compare in my area,oos,direct_deposit,run_02_seed_1337,0.3721847534179687
+can i get a starter course for the trumpet,oos,change_volume,run_02_seed_1337,0.139571264386177
+how many polar bears are still alive in the arctic,oos,spelling,run_02_seed_1337,0.7935421466827393
+are polar bears on the endangered species list,oos,shopping_list_update,run_02_seed_1337,0.5773839354515076
+how many books are in piers anthony virtual mode series,oos,spelling,run_02_seed_1337,0.7307755351066589
+"order the new book titled ""ghost work""",oos,order,run_02_seed_1337,0.5919051766395569
+put on an educational program about buddhism,oos,cancel,run_02_seed_1337,0.7365148663520813
+what happens if you're skydiving and your parachute doesn't open,oos,where_are_you_from,run_02_seed_1337,0.959696352481842
+name the leader from tibet that stands firm for world peace,oos,make_call,run_02_seed_1337,0.307006686925888
+what will it take to achieve world peace,oos,weather,run_02_seed_1337,0.5627692341804504
+was einstein right to be scared of spooky action at a distance,oos,yes,run_02_seed_1337,0.6798326969146729
+do we actually have a soul,oos,goodbye,run_02_seed_1337,0.5813434720039368
+where can i find cheap rental skis nearby,oos,directions,run_02_seed_1337,0.9018566608428956
+check the nanny cam and send the feed to my phone,oos,sync_device,run_02_seed_1337,0.8628024458885193
+how much should i tip on this bill,oos,bill_balance,run_02_seed_1337,0.9760916829109192
+what teams are playing right now,oos,what_song,run_02_seed_1337,0.9825453758239746
+is it too late to upgrade to first class,oos,weather,run_02_seed_1337,0.2321509718894958
+"according to my fitness tracker, how many push ups have i done today",oos,play_music,run_02_seed_1337,0.7461289763450623
+renew gym membership,oos,goodbye,run_02_seed_1337,0.9815378189086914
+what's my budget for today's shopping trip,oos,shopping_list,run_02_seed_1337,0.9313424825668336
+can you find my car in the parking lot,oos,smart_home,run_02_seed_1337,0.4332674443721771
+what's the best hand to have in texas hold em,oos,restaurant_suggestion,run_02_seed_1337,0.9961960315704346
+fold my hand,oos,find_phone,run_02_seed_1337,0.5670671463012695
+how much time is left on my laundry,oos,pto_balance,run_02_seed_1337,0.670104444026947
+report outage to my electric provider,oos,cancel,run_02_seed_1337,0.5443560481071472
+power up my generator,oos,income,run_02_seed_1337,0.1930809020996093
+call up instructables website and find article on bike assembly,oos,find_phone,run_02_seed_1337,0.6419102549552917
+find schematics for ikea desk assembly,oos,current_location,run_02_seed_1337,0.762829601764679
+search information on how to apply foundation,oos,calculator,run_02_seed_1337,0.751238226890564
+find instructions on how to play taboo,oos,next_song,run_02_seed_1337,0.4880785644054413
+tell me how much energy i have consumed so far this year,oos,spending_history,run_02_seed_1337,0.9795219302177428
+how many kilowatts have i used this month,oos,pto_used,run_02_seed_1337,0.9910603165626526
+what's my current electric bill,oos,bill_balance,run_02_seed_1337,0.9978195428848268
+where did i last place my remote,oos,current_location,run_02_seed_1337,0.9232919812202454
+have you seen the remote,oos,goodbye,run_02_seed_1337,0.4658007621765136
+please ping the rfid in my wallet and tell me where it's at right now,oos,smart_home,run_02_seed_1337,0.7583981156349182
+can you detect where i placed my wallet,oos,share_location,run_02_seed_1337,0.7308095693588257
+give me my wallet location,oos,current_location,run_02_seed_1337,0.9987826943397522
+find my wallet,oos,find_phone,run_02_seed_1337,0.787689208984375
+can you give me the gps location of harvey,oos,current_location,run_02_seed_1337,0.9595484733581544
+locate jenny at her present position,oos,no,run_02_seed_1337,0.3986571729183197

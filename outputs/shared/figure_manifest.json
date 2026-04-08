@@ -1,0 +1,344 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "figures": [
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/figures/representative_train_val_loss_curve.png",
+      "figure_type": "train_val_loss_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/epoch_history.json"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/figures/representative_val_macro_f1_curve.png",
+      "figure_type": "val_macro_f1_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/epoch_history.json"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/figures/representative_val_accuracy_curve.png",
+      "figure_type": "val_accuracy_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/epoch_history.json"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/figures/representative_confusion_matrix.png",
+      "figure_type": "confusion_matrix",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/confusion_matrix.csv"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/figures/representative_top_confused_pairs.png",
+      "figure_type": "top_confused_pairs",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/top_confusions.json"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/figures/representative_bottom_classes_f1.png",
+      "figure_type": "bottom_classes_f1",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/per_class_metrics.json"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/figures/representative_oos_metrics.png",
+      "figure_type": "oos_metrics",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/test_metrics.json"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/mlp/figures/representative_error_summary.png",
+      "figure_type": "error_summary",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/mlp/final_runs/run_01_seed_42/top_errors.json"
+      ],
+      "model_name": "mlp",
+      "representative_run_id": "run_01_seed_42"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/figures/representative_train_val_loss_curve.png",
+      "figure_type": "train_val_loss_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/epoch_history.json"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/figures/representative_val_macro_f1_curve.png",
+      "figure_type": "val_macro_f1_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/epoch_history.json"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/figures/representative_val_accuracy_curve.png",
+      "figure_type": "val_accuracy_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/epoch_history.json"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/figures/representative_confusion_matrix.png",
+      "figure_type": "confusion_matrix",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/confusion_matrix.csv"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/figures/representative_top_confused_pairs.png",
+      "figure_type": "top_confused_pairs",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/top_confusions.json"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/figures/representative_bottom_classes_f1.png",
+      "figure_type": "bottom_classes_f1",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/per_class_metrics.json"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/figures/representative_oos_metrics.png",
+      "figure_type": "oos_metrics",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/test_metrics.json"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/text_cnn/figures/representative_error_summary.png",
+      "figure_type": "error_summary",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/text_cnn/final_runs/run_03_seed_2024/top_errors.json"
+      ],
+      "model_name": "text_cnn",
+      "representative_run_id": "run_03_seed_2024"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/figures/representative_train_val_loss_curve.png",
+      "figure_type": "train_val_loss_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/epoch_history.json"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/figures/representative_val_macro_f1_curve.png",
+      "figure_type": "val_macro_f1_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/epoch_history.json"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/figures/representative_val_accuracy_curve.png",
+      "figure_type": "val_accuracy_curve",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/epoch_history.json"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/figures/representative_confusion_matrix.png",
+      "figure_type": "confusion_matrix",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/confusion_matrix.csv"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/figures/representative_top_confused_pairs.png",
+      "figure_type": "top_confused_pairs",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/top_confusions.json"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/figures/representative_bottom_classes_f1.png",
+      "figure_type": "bottom_classes_f1",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/per_class_metrics.json"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/figures/representative_oos_metrics.png",
+      "figure_type": "oos_metrics",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/test_metrics.json"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/bilstm/figures/representative_error_summary.png",
+      "figure_type": "error_summary",
+      "scope": "representative",
+      "source_artifact_paths": [
+        "outputs/bilstm/final_runs/run_02_seed_1337/top_errors.json"
+      ],
+      "model_name": "bilstm",
+      "representative_run_id": "run_02_seed_1337"
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/figures/model_comparison_test_accuracy.png",
+      "figure_type": "model_comparison_test_accuracy",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/shared/model_comparison_aggregate.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/figures/model_comparison_test_macro_f1.png",
+      "figure_type": "model_comparison_test_macro_f1",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/shared/model_comparison_aggregate.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/figures/model_comparison_oos_f1.png",
+      "figure_type": "model_comparison_oos_f1",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/shared/model_comparison_aggregate.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/figures/oos_metrics_comparison.png",
+      "figure_type": "oos_metrics_comparison",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/shared/oos_summary_table.json"
+      ]
+    },
+    {
+      "schema_version": "1.0",
+      "protocol_version": "1.0",
+      "figure_path": "outputs/shared/figures/model_efficiency_comparison.png",
+      "figure_type": "model_efficiency_comparison",
+      "scope": "aggregate",
+      "source_artifact_paths": [
+        "outputs/shared/efficiency_summary_table.json"
+      ]
+    }
+  ]
+}

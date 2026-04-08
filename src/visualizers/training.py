@@ -52,6 +52,16 @@ class TrainingVisualizer(Visualizer):
                 label=f"Best Epoch ({best_epoch})",
             )
 
+        stop_epoch = epoch_history[-1]["epoch"]
+        if best_epoch is not None and stop_epoch != best_epoch:
+            ax.axvline(
+                stop_epoch,
+                color=Visualizer.COLOR_PALETTE[4],
+                linestyle=":",
+                alpha=0.7,
+                label=f"Early Stop ({stop_epoch})",
+            )
+
         ax.set_xlabel("Epoch")
         ax.set_ylabel("Loss")
         ax.set_title("Training & Validation Loss")
@@ -111,6 +121,3 @@ class TrainingVisualizer(Visualizer):
         ax.set_title(f"Validation {metric_key.replace('_', ' ').title()}")
         ax.legend()
         Visualizer._save_figure(fig, output_path)
-
-    # TODO (Step 9): plot_all_loss_curves — overlay loss curves from all three
-    #   models on one chart for comparison.
