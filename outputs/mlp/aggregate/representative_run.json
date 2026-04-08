@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "mlp",
+  "run_id": "run_01_seed_42",
+  "run_index": 1,
+  "seed": 42,
+  "selection_rule": "highest_validation_macro_f1",
+  "selection_metric_value": 0.9158723328538046,
+  "artifact_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/mlp/final_runs/run_01_seed_42",
+  "note": "This run is representative only. Aggregate metrics come from all completed runs."
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "accuracy": 0.8436363636363636,
+  "macro_f1": 0.8754555769325106,
+  "precision": 0.8525610520025193,
+  "recall": 0.9105805739514351,
+  "oos_precision": 0.8762376237623762,
+  "oos_recall": 0.531,
+  "oos_f1": 0.6612702366127023,
+  "training_time_seconds": 45.354275941848755,
+  "inference_total_seconds": 0.3190326690673828,
+  "inference_avg_ms_per_example": 0.058005939830433235,
+  "inference_examples_per_sec": 17239.61378650644,
+  "parameter_count": 5197975,
+  "trainable_parameter_count": 5197975
+}

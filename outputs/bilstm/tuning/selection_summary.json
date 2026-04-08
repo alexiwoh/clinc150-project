@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "bilstm",
+  "model_name": "BiLSTM",
+  "source_tuning_artifact": "bilstm/tuning/tuning_results.csv",
+  "total_configurations_evaluated": 13,
+  "selection_metric": "best_val_metric",
+  "selection_rule": "max best_val_metric",
+  "tie_break_fields": [
+    "best_val_loss",
+    "run_name"
+  ],
+  "winning_row_id": "emb256_h256_L2_d0.3_lr0001_wd00_s42",
+  "winning_best_val_metric": 0.8791605680729114,
+  "winning_best_val_loss": 0.6923272725270719,
+  "winning_best_epoch": 18,
+  "timestamp": "2026-04-08T03:53:44.059041+00:00"
+}

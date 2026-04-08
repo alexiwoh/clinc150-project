@@ -202,6 +202,10 @@ data/raw/clinc___clinc_oos/
 outputs/checkpoints/*.pt
 outputs_small_archive/checkpoints/*.pt
 
+# Step 7+ run-first layout: per-run checkpoints and probability arrays
+**/checkpoint/*.pt
+**/confidences.npz
+
 # PyPI configuration file
 .pypirc
 

@@ -8,102 +8,24 @@ Usage (Step 7+):
     python scripts/run_model_pipeline.py --model all --run-count 3
     python scripts/run_model_pipeline.py --model mlp --run-count 5
     python scripts/run_model_pipeline.py --model text_cnn --retune
-
-Canonical model IDs:
-    mlp, text_cnn, bilstm
-
-Canonical model display names:
-    TF-IDF + MLP, Text CNN, BiLSTM
-
-Canonical model order for shared tables and plots:
-    mlp, text_cnn, bilstm
-
-Step 7 directory structure (target):
-    outputs/
-      reports/
-        shared/
-          evaluation_protocol.json
-          model_comparison_aggregate.csv
-          model_comparison_aggregate.json
-          oos_summary_table.csv
-          oos_summary_table.json
-          efficiency_summary_table.csv
-          efficiency_summary_table.json
-          most_confused_pairs_table.csv
-          most_confused_pairs_table.json
-          representative_examples_index.json
-          figure_manifest.json
-        <model_name>/
-          tuning/
-            tuning_results.csv        (normalized from legacy <model>_tuning_results.csv)
-            selection_summary.json
-          frozen_final_config.json
-          final_runs/
-            run_01_seed_42/
-              run_metadata.json
-              validation_metrics.json
-              test_metrics.json
-              epoch_history.json
-              final_predictions.csv
-              confusion_matrix.csv
-              top_confusions.json
-              top_errors.json
-              per_class_metrics.json
-              label_order.json
-              confidences.npz         (optional for non-representative runs)
-            run_02_seed_1337/...
-            run_03_seed_2024/...
-          aggregate/
-            per_run_metrics.csv
-            aggregate_metrics.json
-            aggregate_metrics.csv
-            aggregate_comparison_row.json
-            representative_run.json
-      checkpoints/
-        <model_name>/
-          final_runs/
-            run_01_seed_42/best_run_01_seed_42.pt
-            ...
-      logs/
-        <model_name>/
-          final_runs/
-            run_01_seed_42/training_log.json
-            ...
-      figures/
-        shared/
-          model_comparison_test_accuracy.png
-          model_comparison_test_macro_f1.png
-          model_comparison_oos_f1.png
-          oos_metrics_comparison.png
-          model_efficiency_comparison.png
-        <model_name>/
-          train_val_loss_curve.png
-          val_macro_f1_curve.png
-          confusion_matrix.png
-          tuning_summary.png
-          ...
-
-Default seed list:
-    [42, 1337, 2024]
-
-Protocol:
-    For each selected model:
-      1. Validate preprocessing artifacts (Step 3)
-      2. Load or rerun tuning (Steps 4-6 via --retune)
-      3. Extract frozen config from winning tuning row  [Step 7]
-      4. Run repeated final training+evaluation         [Step 7]
-      5. Compute per-model aggregate metrics             [Step 7]
-      6. Select representative run                       [Step 7]
-      7. Validate and organize artifacts                 [Step 8]
-      8. Generate figures and handoff bundles             [Step 9]
 """
 
 from __future__ import annotations
 
 import argparse
+import logging
+import sys
 
-CANONICAL_MODEL_IDS = ("mlp", "text_cnn", "bilstm")
-DEFAULT_SEED_LIST = [42, 1337, 2024]
+from src.config import RepeatedRunProtocol
+from src.constants import DEFAULT_SEED_LIST
+from src.enums import ModelID
+from src.repeated_evaluation import (
+    ModelEvaluationResult,
+    extract_and_freeze_configs,
+    run_all_repeated_evaluations,
+)
+
+logger = logging.getLogger(__name__)
 
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -112,7 +34,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--model",
-        choices=[*CANONICAL_MODEL_IDS, "all"],
+        choices=[*ModelID, "all"],
         default="all",
         help="Model(s) to run. 'all' runs mlp, text_cnn, bilstm in order.",
     )
@@ -130,38 +52,86 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def _resolve_models(model_arg: str) -> list[str]:
+def _resolve_models(model_arg: str) -> list[ModelID]:
     if model_arg == "all":
-        return list(CANONICAL_MODEL_IDS)
-    return [model_arg]
+        return list(ModelID)
+    return [ModelID(model_arg)]
+
+
+def _print_final_summary(results: dict[ModelID, ModelEvaluationResult]) -> None:
+    """Print a cross-model summary after all evaluations complete."""
+    print("\n" + "=" * 60)
+    print("  Final Cross-Model Summary")
+    print("=" * 60)
+
+    header = f"  {'Model':<15} {'Test Acc':>10} {'Test F1':>10} {'OOS F1':>10} {'Time (s)':>10}"
+    print(header)
+    print("  " + "-" * 55)
+
+    for model_id, result in results.items():
+        agg = result.aggregate.metrics
+        print(
+            f"  {result.frozen_config.model_name:<15}"
+            f" {agg['test_accuracy']['mean']:>9.4f}"
+            f" {agg['test_macro_f1']['mean']:>9.4f}"
+            f" {agg['oos_f1']['mean']:>9.4f}"
+            f" {agg['training_time_seconds']['mean']:>9.1f}"
+        )
+
+    print()
+    seed_lists = [r.aggregate.seed_list_completed for r in results.values()]
+    if seed_lists:
+        print(f"  Shared seed list: {seed_lists[0]}")
+        all_same = all(sl == seed_lists[0] for sl in seed_lists)
+        print(f"  Same seeds across all models: {all_same}")
+
+    for model_id, result in results.items():
+        rep = result.representative
+        print(f"  {result.frozen_config.model_name} representative: {rep.run_id} (seed={rep.seed})")
+
+    print("=" * 60)
+    print()
 
 
 def main(argv: list[str] | None = None) -> None:
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
     args = _parse_args(argv)
     models = _resolve_models(args.model)
-    run_count = args.run_count
-    seed_list = DEFAULT_SEED_LIST[:run_count]
+    run_count: int = args.run_count
+
+    assert run_count <= len(DEFAULT_SEED_LIST), (
+        f"run_count={run_count} exceeds available seeds ({len(DEFAULT_SEED_LIST)}). "
+        f"Add more seeds to DEFAULT_SEED_LIST in src/constants.py."
+    )
+
+    protocol = RepeatedRunProtocol(run_count=run_count)
 
     print("=" * 60)
     print("  CLINC150 Model Pipeline")
     print("=" * 60)
-    print(f"  Models:    {models}")
+    print(f"  Models:    {[str(m) for m in models]}")
     print(f"  Run count: {run_count}")
-    print(f"  Seeds:     {seed_list}")
+    print(f"  Seeds:     {protocol.effective_seed_list()}")
     print(f"  Retune:    {args.retune}")
     print()
 
-    for model_id in models:
-        print(f"--- {model_id} ---")
+    if args.retune:
+        print("  [--retune] Retuning is not yet supported in Step 7 pipeline.")
+        print("  Use the per-model scripts (run_mlp_baseline.py, etc.) to retune,")
+        print("  then rerun this pipeline without --retune.")
+        sys.exit(1)
 
-        # Step 7: Frozen-config extraction and repeated final runs
-        raise NotImplementedError(
-            f"Step 7 repeated-run evaluation for '{model_id}' is not yet implemented. "
-            f"This will be added in Step 7. For now, use the per-model scripts:\n"
-            f"  python scripts/run_mlp_baseline.py\n"
-            f"  python scripts/run_text_cnn.py\n"
-            f"  python scripts/run_bilstm.py"
-        )
+    # Frozen-config extraction (tuning normalization, protocol, winning-row selection)
+    frozen_configs = extract_and_freeze_configs(models, protocol)
+
+    # Repeated-run evaluation across shared seed list
+    results = run_all_repeated_evaluations(models, frozen_configs, protocol)
+
+    # Print final cross-model summary
+    _print_final_summary(results)
+
+    print("Step 7 pipeline complete. Artifacts ready for Step 8 tracking and Step 9 visualization.")
 
 
 if __name__ == "__main__":

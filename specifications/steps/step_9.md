@@ -81,23 +81,23 @@ Shared protocol metadata and canonical naming:
   - `protocol_version`
 - Every machine-readable path reference must be repo-relative and must resolve under the repository root
 - Shared report filenames are locked to:
-  - `outputs/reports/shared/evaluation_protocol.json`
-  - `outputs/reports/shared/model_comparison_aggregate.csv`
-  - `outputs/reports/shared/model_comparison_aggregate.json`
-  - `outputs/reports/shared/oos_summary_table.csv`
-  - `outputs/reports/shared/oos_summary_table.json`
-  - `outputs/reports/shared/efficiency_summary_table.csv`
-  - `outputs/reports/shared/efficiency_summary_table.json`
-  - `outputs/reports/shared/most_confused_pairs_table.csv`
-  - `outputs/reports/shared/most_confused_pairs_table.json`
-  - `outputs/reports/shared/representative_examples_index.json`
-  - `outputs/reports/shared/figure_manifest.json`
+  - `outputs/shared/evaluation_protocol.json`
+  - `outputs/shared/model_comparison_aggregate.csv`
+  - `outputs/shared/model_comparison_aggregate.json`
+  - `outputs/shared/oos_summary_table.csv`
+  - `outputs/shared/oos_summary_table.json`
+  - `outputs/shared/efficiency_summary_table.csv`
+  - `outputs/shared/efficiency_summary_table.json`
+  - `outputs/shared/most_confused_pairs_table.csv`
+  - `outputs/shared/most_confused_pairs_table.json`
+  - `outputs/shared/representative_examples_index.json`
+  - `outputs/shared/figure_manifest.json`
 - Shared figure filenames are locked to:
-  - `outputs/figures/shared/model_comparison_test_accuracy.png`
-  - `outputs/figures/shared/model_comparison_test_macro_f1.png`
-  - `outputs/figures/shared/model_comparison_oos_f1.png`
-  - `outputs/figures/shared/oos_metrics_comparison.png`
-  - `outputs/figures/shared/model_efficiency_comparison.png`
+  - `outputs/shared/figures/model_comparison_test_accuracy.png`
+  - `outputs/shared/figures/model_comparison_test_macro_f1.png`
+  - `outputs/shared/figures/model_comparison_oos_f1.png`
+  - `outputs/shared/figures/oos_metrics_comparison.png`
+  - `outputs/shared/figures/model_efficiency_comparison.png`
 - Do not keep alternate filenames active once these canonical names exist
 
 Shared metric and efficiency conventions:
@@ -125,7 +125,7 @@ Step 9 should establish two complementary figure families:
 
 The figure-generation path must be metadata-driven:
 - read protocol and aggregate artifacts from Step 8
-- resolve the representative run only from `outputs/reports/<model_name>/aggregate/representative_run.json`
+- resolve the representative run only from `outputs/<model_name>/aggregate/representative_run.json`
 - read representative-run artifacts through the metadata references recorded there
 - generate figures without re-running training or evaluation
 - save figure paths in machine-readable summary metadata
@@ -156,11 +156,11 @@ A. Keep visualization generation fully metadata-driven
 - Figure generation must read saved artifacts only
 - Do not require model objects, live checkpoints, or re-executing evaluation code to draw standard figures
 - Representative-run resolution must come only from:
-  - `outputs/reports/<model_name>/aggregate/representative_run.json`
+  - `outputs/<model_name>/aggregate/representative_run.json`
 - Shared comparison plots must read the canonical shared Step 8 tables:
-  - `outputs/reports/shared/model_comparison_aggregate.csv` or `.json`
-  - `outputs/reports/shared/oos_summary_table.csv` or `.json`
-  - `outputs/reports/shared/efficiency_summary_table.csv` or `.json`
+  - `outputs/shared/model_comparison_aggregate.csv` or `.json`
+  - `outputs/shared/oos_summary_table.csv` or `.json`
+  - `outputs/shared/efficiency_summary_table.csv` or `.json`
 - Do not rediscover runs from filenames, tuning CSVs, or ad hoc directory scans
 
 A2. Run explicit preflight validation before plotting
@@ -189,9 +189,9 @@ B. Generate representative-run training diagnostics per model
 
 B2. Representative-run training figure expectations
 Recommended outputs:
-- `outputs/figures/<model_name>/representative_train_val_loss_curve.png`
-- `outputs/figures/<model_name>/representative_val_macro_f1_curve.png`
-- `outputs/figures/<model_name>/representative_val_accuracy_curve.png`
+- `outputs/<model_name>/figures/representative_train_val_loss_curve.png`
+- `outputs/<model_name>/figures/representative_val_macro_f1_curve.png`
+- `outputs/<model_name>/figures/representative_val_accuracy_curve.png`
 
 - Do not save these under ambiguous names once repeated runs exist
 - The figure metadata should record:
@@ -223,7 +223,7 @@ C2. Canonical class-level diagnostic policy
 
 C3. Representative-run qualitative-analysis support
 - Save a compact representative misclassification artifact under:
-  - `outputs/reports/<model_name>/aggregate/representative_misclassifications.csv`
+  - `outputs/<model_name>/aggregate/representative_misclassifications.csv`
 - This artifact must include at minimum:
   - `text` if available
   - `true_label_name`
@@ -232,7 +232,7 @@ C3. Representative-run qualitative-analysis support
   - `run_id`
 - This artifact must be referenced in both:
   - the model-level `step10_handoff.json`
-  - `outputs/reports/shared/representative_examples_index.json`
+  - `outputs/shared/representative_examples_index.json`
 
 D. Generate aggregate cross-model comparison figures
 - Use aggregate repeated-run metrics for all headline model-comparison figures
@@ -246,9 +246,9 @@ D. Generate aggregate cross-model comparison figures
 
 D2. Recommended shared aggregate outputs
 Recommended outputs:
-- `outputs/figures/shared/model_comparison_test_accuracy.png`
-- `outputs/figures/shared/model_comparison_test_macro_f1.png`
-- `outputs/figures/shared/model_comparison_oos_f1.png`
+- `outputs/shared/figures/model_comparison_test_accuracy.png`
+- `outputs/shared/figures/model_comparison_test_macro_f1.png`
+- `outputs/shared/figures/model_comparison_oos_f1.png`
 
 - Prefer a few strong summary figures over a crowded wall of small plots
 - Do not keep alternate names such as `model_comparison_efficiency.png`
@@ -263,21 +263,21 @@ E. Add OOS-focused comparison outputs and fix the extra-plot policy
 
 E2. Recommended OOS outputs
 Recommended outputs:
-- `outputs/figures/shared/oos_metrics_comparison.png`
-- `outputs/reports/shared/oos_summary_table.csv`
-- `outputs/reports/shared/oos_summary_table.json`
+- `outputs/shared/figures/oos_metrics_comparison.png`
+- `outputs/shared/oos_summary_table.csv`
+- `outputs/shared/oos_summary_table.json`
 
 - The OOS summary table must align with the aggregate comparison-table schema from Step 8
 
 F. Add efficiency comparison outputs
 - Since the project now tracks training time, parameter count, and inference latency, Step 9 should expose one compact efficiency figure
-- Build this figure from `outputs/reports/shared/efficiency_summary_table.csv` or `.json`
+- Build this figure from `outputs/shared/efficiency_summary_table.csv` or `.json`
 - Keep the timing protocol consistent with Step 7 and Step 8 definitions
 - Additional size-only or latency-only figures are optional later, but are not part of the required Step 9 deliverable set
 
 F2. Recommended efficiency outputs
 Recommended outputs:
-- `outputs/figures/shared/model_efficiency_comparison.png`
+- `outputs/shared/figures/model_efficiency_comparison.png`
 
 G. Build shared tables and metadata needed for Step 10 and Step 11
 - Save a shared table of the most confused representative-run label pairs across models
@@ -287,8 +287,8 @@ G. Build shared tables and metadata needed for Step 10 and Step 11
 
 G2. `most_confused_pairs_table` contract
 - Save:
-  - `outputs/reports/shared/most_confused_pairs_table.csv`
-  - `outputs/reports/shared/most_confused_pairs_table.json`
+  - `outputs/shared/most_confused_pairs_table.csv`
+  - `outputs/shared/most_confused_pairs_table.json`
 - Each row must include at minimum:
   - `model_name`
   - `representative_run_id`
@@ -299,7 +299,7 @@ G2. `most_confused_pairs_table` contract
 
 G3. `representative_examples_index.json` contract
 - Save:
-  - `outputs/reports/shared/representative_examples_index.json`
+  - `outputs/shared/representative_examples_index.json`
 - This index should map each model to:
   - representative run ID
   - representative predictions artifact path
@@ -309,7 +309,7 @@ G3. `representative_examples_index.json` contract
 
 G4. `figure_manifest.json` contract
 - Save:
-  - `outputs/reports/shared/figure_manifest.json`
+  - `outputs/shared/figure_manifest.json`
 - Each figure-manifest entry must include:
   - `schema_version`
   - `protocol_version`
@@ -321,7 +321,7 @@ G4. `figure_manifest.json` contract
   - `source_artifact_paths`
 
 H. Make Step 10 handoff explicit
-- At the end of Step 9, there must be one `outputs/reports/<model_name>/aggregate/step10_handoff.json` per model
+- At the end of Step 9, there must be one `outputs/<model_name>/aggregate/step10_handoff.json` per model
 - The Step 10 handoff bundle must include or reference:
   - aggregate metrics artifact
   - representative-run metadata artifact
@@ -365,28 +365,28 @@ J. Clarify legacy and tuning figure policy
 
 K. Figure and table expectations
 Recommended representative-run figure outputs per model:
-- `outputs/figures/<model_name>/representative_train_val_loss_curve.png`
-- `outputs/figures/<model_name>/representative_val_macro_f1_curve.png`
-- `outputs/figures/<model_name>/representative_val_accuracy_curve.png`
-- `outputs/figures/<model_name>/representative_confusion_matrix.png`
-- `outputs/figures/<model_name>/representative_top_confused_pairs.png`
-- `outputs/figures/<model_name>/representative_bottom_classes_f1.png`
-- `outputs/figures/<model_name>/representative_oos_metrics.png`
+- `outputs/<model_name>/figures/representative_train_val_loss_curve.png`
+- `outputs/<model_name>/figures/representative_val_macro_f1_curve.png`
+- `outputs/<model_name>/figures/representative_val_accuracy_curve.png`
+- `outputs/<model_name>/figures/representative_confusion_matrix.png`
+- `outputs/<model_name>/figures/representative_top_confused_pairs.png`
+- `outputs/<model_name>/figures/representative_bottom_classes_f1.png`
+- `outputs/<model_name>/figures/representative_oos_metrics.png`
 - optionally:
-  - `outputs/figures/<model_name>/representative_error_summary.png`
+  - `outputs/<model_name>/figures/representative_error_summary.png`
 
 Recommended shared aggregate outputs:
-- `outputs/figures/shared/model_comparison_test_accuracy.png`
-- `outputs/figures/shared/model_comparison_test_macro_f1.png`
-- `outputs/figures/shared/model_comparison_oos_f1.png`
-- `outputs/figures/shared/oos_metrics_comparison.png`
-- `outputs/figures/shared/model_efficiency_comparison.png`
-- `outputs/reports/shared/most_confused_pairs_table.csv`
-- `outputs/reports/shared/most_confused_pairs_table.json`
-- `outputs/reports/shared/oos_summary_table.csv`
-- `outputs/reports/shared/oos_summary_table.json`
-- `outputs/reports/shared/representative_examples_index.json`
-- `outputs/reports/shared/figure_manifest.json`
+- `outputs/shared/figures/model_comparison_test_accuracy.png`
+- `outputs/shared/figures/model_comparison_test_macro_f1.png`
+- `outputs/shared/figures/model_comparison_oos_f1.png`
+- `outputs/shared/figures/oos_metrics_comparison.png`
+- `outputs/shared/figures/model_efficiency_comparison.png`
+- `outputs/shared/most_confused_pairs_table.csv`
+- `outputs/shared/most_confused_pairs_table.json`
+- `outputs/shared/oos_summary_table.csv`
+- `outputs/shared/oos_summary_table.json`
+- `outputs/shared/representative_examples_index.json`
+- `outputs/shared/figure_manifest.json`
 
 L. Validation checks and assertions
 - Assert that representative-run figure scripts resolve the same representative run recorded in `representative_run.json`

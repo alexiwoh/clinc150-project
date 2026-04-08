@@ -17,6 +17,7 @@ from torch.utils.data import DataLoader
 
 from src.config import DATASET_CONFIG, BiLSTMConfig, MLPBaselineConfig, TextCNNConfig, get_device
 from src.constants import ARTIFACTS_DIR, NUM_CLASSES, OOS_LABEL_ID, REPORTS_DIR
+from src.enums import ModelID
 from src.dataset import CLINCDataset, TFIDFDataset
 from src.metrics import (
     build_confusion_matrix,
@@ -241,7 +242,7 @@ def save_test_artifacts(results: dict[str, Any], reports_dir: Path | str) -> Non
     # 8. Comparison row (canonical model_name = "mlp", matches Text CNN / BiLSTM schema)
     run_name = _run_name_from_config(config)
     comparison_row = {
-        "model_name": "mlp",
+        "model_name": ModelID.MLP,
         "input_type": "tfidf",
         "primary_val_metric": config.get("monitor_metric", "val_macro_f1"),
         "best_val_macro_f1": results.get("checkpoint_best_metric"),
@@ -549,7 +550,7 @@ def _save_text_cnn_artifacts(results: dict[str, Any], reports_dir: Path | str) -
 
     # Comparison row
     comparison_row = {
-        "model_name": "text_cnn",
+        "model_name": ModelID.TEXT_CNN,
         "input_type": "token_sequences",
         "primary_val_metric": config.get("monitor_metric", "val_macro_f1"),
         "best_val_macro_f1": results["checkpoint_best_metric"],
@@ -903,7 +904,7 @@ def _save_bilstm_artifacts(results: dict[str, Any], reports_dir: Path | str) -> 
 
     # 8. Comparison row (validates against both MLP and Text CNN schemas)
     comparison_row = {
-        "model_name": "bilstm",
+        "model_name": ModelID.BILSTM,
         "input_type": "token_sequences",
         "primary_val_metric": config.get("monitor_metric", "val_macro_f1"),
         "best_val_macro_f1": results["checkpoint_best_metric"],

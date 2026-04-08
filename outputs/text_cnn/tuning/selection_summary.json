@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "text_cnn",
+  "model_name": "Text CNN",
+  "source_tuning_artifact": "text_cnn/tuning/tuning_results.csv",
+  "total_configurations_evaluated": 23,
+  "selection_metric": "best_val_metric",
+  "selection_rule": "max best_val_metric",
+  "tie_break_fields": [
+    "best_val_loss",
+    "run_name"
+  ],
+  "winning_row_id": "emb256_nf100_ks3x4x5_d0.5_lr0001_wd00001_s42",
+  "winning_best_val_metric": 0.9115000106847132,
+  "winning_best_val_loss": 0.4685946246799157,
+  "winning_best_epoch": 57,
+  "timestamp": "2026-04-08T03:53:44.052240+00:00"
+}

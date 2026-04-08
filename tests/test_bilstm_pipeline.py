@@ -16,6 +16,7 @@ from torch.utils.data import DataLoader, TensorDataset
 
 from src.config import BiLSTMConfig
 from src.constants import NUM_CLASSES
+from src.enums import ModelID
 from src.train import (
     _one_batch_bilstm_smoke_test,
     _select_best_from_rows,
@@ -170,7 +171,7 @@ class TestBiLSTMTraining:
             config=config.to_dict(),
             artifact_refs={"test": "path"},
             log_dir=tmp_path / "logs",
-            model_prefix="bilstm",
+            model_prefix=ModelID.BILSTM,
         )
 
         assert result["best_epoch"] >= 1
@@ -213,7 +214,7 @@ class TestBiLSTMTraining:
             config=config.to_dict(),
             artifact_refs={"test": "path"},
             log_dir=tmp_path / "logs",
-            model_prefix="bilstm",
+            model_prefix=ModelID.BILSTM,
         )
 
         for record in result["epoch_history"]:
@@ -265,7 +266,7 @@ class TestBiLSTMCheckpointReload:
             config=config.to_dict(),
             artifact_refs={"vocab": "path/to/vocab.json"},
             log_dir=tmp_path / "logs",
-            model_prefix="bilstm",
+            model_prefix=ModelID.BILSTM,
         )
 
         from src.utils import load_checkpoint

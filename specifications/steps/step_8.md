@@ -79,23 +79,23 @@ Shared protocol metadata and canonical naming:
   - `protocol_version`
 - Every machine-readable path reference must be repo-relative and must resolve under the repository root
 - Shared report filenames are locked to:
-  - `outputs/reports/shared/evaluation_protocol.json`
-  - `outputs/reports/shared/model_comparison_aggregate.csv`
-  - `outputs/reports/shared/model_comparison_aggregate.json`
-  - `outputs/reports/shared/oos_summary_table.csv`
-  - `outputs/reports/shared/oos_summary_table.json`
-  - `outputs/reports/shared/efficiency_summary_table.csv`
-  - `outputs/reports/shared/efficiency_summary_table.json`
-  - `outputs/reports/shared/most_confused_pairs_table.csv`
-  - `outputs/reports/shared/most_confused_pairs_table.json`
-  - `outputs/reports/shared/representative_examples_index.json`
-  - `outputs/reports/shared/figure_manifest.json`
+  - `outputs/shared/evaluation_protocol.json`
+  - `outputs/shared/model_comparison_aggregate.csv`
+  - `outputs/shared/model_comparison_aggregate.json`
+  - `outputs/shared/oos_summary_table.csv`
+  - `outputs/shared/oos_summary_table.json`
+  - `outputs/shared/efficiency_summary_table.csv`
+  - `outputs/shared/efficiency_summary_table.json`
+  - `outputs/shared/most_confused_pairs_table.csv`
+  - `outputs/shared/most_confused_pairs_table.json`
+  - `outputs/shared/representative_examples_index.json`
+  - `outputs/shared/figure_manifest.json`
 - Shared figure filenames are locked to:
-  - `outputs/figures/shared/model_comparison_test_accuracy.png`
-  - `outputs/figures/shared/model_comparison_test_macro_f1.png`
-  - `outputs/figures/shared/model_comparison_oos_f1.png`
-  - `outputs/figures/shared/oos_metrics_comparison.png`
-  - `outputs/figures/shared/model_efficiency_comparison.png`
+  - `outputs/shared/figures/model_comparison_test_accuracy.png`
+  - `outputs/shared/figures/model_comparison_test_macro_f1.png`
+  - `outputs/shared/figures/model_comparison_oos_f1.png`
+  - `outputs/shared/figures/oos_metrics_comparison.png`
+  - `outputs/shared/figures/model_efficiency_comparison.png`
 - Do not keep alternate filenames active once these canonical names exist
 
 Shared metric and efficiency conventions:
@@ -124,16 +124,15 @@ This step should create a layered artifact model with four distinct levels while
 - aggregate summaries and cross-model comparison artifacts
 - Step 8 validates, enriches, and organizes these artifacts; it does not retrain, retune, or reevaluate models
 
-Recommended default storage design:
-- shared protocol and comparison files under `outputs/reports/shared/`
+Recommended default storage design (run-first layout):
+- shared protocol and comparison files under `outputs/shared/`
+- shared figures under `outputs/shared/figures/`
 - model-specific artifacts under:
-  - `outputs/reports/mlp/`
-  - `outputs/reports/text_cnn/`
-  - `outputs/reports/bilstm/`
-- matching structure under:
-  - `outputs/logs/`
-  - `outputs/checkpoints/`
-  - `outputs/figures/`
+  - `outputs/mlp/`
+  - `outputs/text_cnn/`
+  - `outputs/bilstm/`
+- each run directory contains `checkpoint/` and `logs/` subdirectories
+- per-model figures under `outputs/<model_name>/figures/`
 - one representative-run reference artifact per model
 - one shared cross-model comparison bundle for the final report
 - no new Step 8 artifact should require relocating Step 7 outputs into a different directory tree
@@ -150,17 +149,13 @@ Implementation requirements:
 
 A. Keep one canonical artifact directory structure
 - Use the same model-specific layout introduced in Step 7
-- Recommended structure:
-  - `outputs/reports/shared/`
-  - `outputs/reports/<model_name>/tuning/`
-  - `outputs/reports/<model_name>/final_runs/`
-  - `outputs/reports/<model_name>/aggregate/`
-  - `outputs/logs/<model_name>/tuning/`
-  - `outputs/logs/<model_name>/final_runs/`
-  - `outputs/checkpoints/<model_name>/tuning/`
-  - `outputs/checkpoints/<model_name>/final_runs/`
-  - `outputs/figures/<model_name>/`
-  - `outputs/figures/shared/`
+- Recommended run-first structure:
+  - `outputs/shared/`
+  - `outputs/shared/figures/`
+  - `outputs/<model_name>/tuning/`
+  - `outputs/<model_name>/final_runs/` (each run directory contains `checkpoint/` and `logs/` subdirectories)
+  - `outputs/<model_name>/aggregate/`
+  - `outputs/<model_name>/figures/`
 - The structure should make it obvious which files belong to:
   - tuning
   - repeated final runs
@@ -175,7 +170,7 @@ A2. Map legacy artifacts to the canonical schema
 - Legacy files may remain for historical reference, but new automation must resolve only through the canonical filenames and metadata references
 
 B. Validate the shared protocol manifest produced by Step 7
-- `outputs/reports/shared/evaluation_protocol.json` is the canonical protocol manifest
+- `outputs/shared/evaluation_protocol.json` is the canonical protocol manifest
 - Step 8 must validate and, if needed, enrich this manifest rather than inventing a second protocol artifact
 - The protocol manifest should contain at minimum:
   - `schema_version`
@@ -193,7 +188,7 @@ B. Validate the shared protocol manifest produced by Step 7
 - This manifest should be referenced by model-level summaries and representative-run metadata
 
 B2. Clarify the frozen-config relationship to Step 7
-- For each model, Step 7 creates one `outputs/reports/<model_name>/frozen_final_config.json`
+- For each model, Step 7 creates one `outputs/<model_name>/frozen_final_config.json`
 - Step 8 validates and may enrich the provenance fields in that artifact, but it must not create a second independent frozen-config decision
 - The frozen-config artifact should contain at minimum:
   - `schema_version`
@@ -217,7 +212,7 @@ B3. Require a minimum tuning artifact bundle
 - If the current codebase still emits legacy `*_tuning_results.csv` files at the root, Step 8 should record the mapping into the canonical tuning directory rather than leaving the relationship implicit
 
 C. Define the canonical per-run artifact schema
-- Every repeated final run must save a per-run artifact bundle under `outputs/reports/<model_name>/final_runs/run_<index>_seed_<seed>/`
+- Every repeated final run must save a per-run artifact bundle under `outputs/<model_name>/final_runs/run_<index>_seed_<seed>/`
 - The canonical per-run bundle contents are:
   - `run_metadata.json`
   - `test_metrics.json`
@@ -269,7 +264,7 @@ C3. Run identifier policy
 - Do not allow run indices and seeds to drift apart in naming
 
 D. Define the aggregate artifact schema per model
-- Every model must save an aggregate bundle under `outputs/reports/<model_name>/aggregate/`
+- Every model must save an aggregate bundle under `outputs/<model_name>/aggregate/`
 - Recommended aggregate bundle contents:
   - `per_run_metrics.csv`
   - `aggregate_metrics.json`
@@ -323,12 +318,12 @@ E. Define cross-model comparison-table contracts
 - Each model produces one `aggregate_comparison_row.json` using aggregate repeated-run results, not representative-run results
 - Step 8 builds the shared comparison outputs by merging those per-model rows in canonical model order
 - The shared comparison outputs owned by Step 8 are:
-  - `outputs/reports/shared/model_comparison_aggregate.csv`
-  - `outputs/reports/shared/model_comparison_aggregate.json`
-  - `outputs/reports/shared/oos_summary_table.csv`
-  - `outputs/reports/shared/oos_summary_table.json`
-  - `outputs/reports/shared/efficiency_summary_table.csv`
-  - `outputs/reports/shared/efficiency_summary_table.json`
+  - `outputs/shared/model_comparison_aggregate.csv`
+  - `outputs/shared/model_comparison_aggregate.json`
+  - `outputs/shared/oos_summary_table.csv`
+  - `outputs/shared/oos_summary_table.json`
+  - `outputs/shared/efficiency_summary_table.csv`
+  - `outputs/shared/efficiency_summary_table.json`
 - Do not use alternate shared filenames such as `oos_comparison_summary.*` or `efficiency_comparison_summary.*`
 
 E2. Shared comparison row requirements
@@ -403,7 +398,7 @@ F2. Close current parity gaps without special cases
 - Cross-model tracking should not require special-case logic because one model saved less metadata than the others
 
 G. Track logs, checkpoints, and provenance with the same clarity as reports
-- Logs and checkpoints must mirror the repeated-run structure
+- Logs and checkpoints live inside each run directory under `checkpoint/` and `logs/` subdirectories
 - For each repeated run, save:
   - training log path
   - checkpoint path
@@ -430,30 +425,30 @@ H. Save downstream metadata bundles without stealing Step 9 ownership
 
 I. Report-ready artifact expectations
 Recommended shared artifacts owned by Step 8:
-- `outputs/reports/shared/evaluation_protocol.json`
-- `outputs/reports/shared/model_comparison_aggregate.csv`
-- `outputs/reports/shared/model_comparison_aggregate.json`
-- `outputs/reports/shared/oos_summary_table.csv`
-- `outputs/reports/shared/oos_summary_table.json`
-- `outputs/reports/shared/efficiency_summary_table.csv`
-- `outputs/reports/shared/efficiency_summary_table.json`
+- `outputs/shared/evaluation_protocol.json`
+- `outputs/shared/model_comparison_aggregate.csv`
+- `outputs/shared/model_comparison_aggregate.json`
+- `outputs/shared/oos_summary_table.csv`
+- `outputs/shared/oos_summary_table.json`
+- `outputs/shared/efficiency_summary_table.csv`
+- `outputs/shared/efficiency_summary_table.json`
 
 Recommended per-model artifacts:
-- `outputs/reports/<model_name>/frozen_final_config.json`
-- `outputs/reports/<model_name>/tuning/tuning_results.csv`
-- `outputs/reports/<model_name>/tuning/selection_summary.json`
-- `outputs/reports/<model_name>/aggregate/per_run_metrics.csv`
-- `outputs/reports/<model_name>/aggregate/aggregate_metrics.json`
-- `outputs/reports/<model_name>/aggregate/aggregate_metrics.csv`
-- `outputs/reports/<model_name>/aggregate/run_ledger.json`
-- `outputs/reports/<model_name>/aggregate/representative_run.json`
-- `outputs/reports/<model_name>/aggregate/aggregate_comparison_row.json`
-- `outputs/reports/<model_name>/final_runs/run_<index>_seed_<seed>/run_metadata.json`
-- `outputs/reports/<model_name>/final_runs/run_<index>_seed_<seed>/test_metrics.json`
-- `outputs/reports/<model_name>/final_runs/run_<index>_seed_<seed>/validation_metrics.json`
-- `outputs/reports/<model_name>/final_runs/run_<index>_seed_<seed>/final_predictions.csv`
-- `outputs/reports/<model_name>/final_runs/run_<index>_seed_<seed>/per_class_metrics.json`
-- `outputs/reports/<model_name>/final_runs/run_<index>_seed_<seed>/label_order.json`
+- `outputs/<model_name>/frozen_final_config.json`
+- `outputs/<model_name>/tuning/tuning_results.csv`
+- `outputs/<model_name>/tuning/selection_summary.json`
+- `outputs/<model_name>/aggregate/per_run_metrics.csv`
+- `outputs/<model_name>/aggregate/aggregate_metrics.json`
+- `outputs/<model_name>/aggregate/aggregate_metrics.csv`
+- `outputs/<model_name>/aggregate/run_ledger.json`
+- `outputs/<model_name>/aggregate/representative_run.json`
+- `outputs/<model_name>/aggregate/aggregate_comparison_row.json`
+- `outputs/<model_name>/final_runs/run_<index>_seed_<seed>/run_metadata.json`
+- `outputs/<model_name>/final_runs/run_<index>_seed_<seed>/test_metrics.json`
+- `outputs/<model_name>/final_runs/run_<index>_seed_<seed>/validation_metrics.json`
+- `outputs/<model_name>/final_runs/run_<index>_seed_<seed>/final_predictions.csv`
+- `outputs/<model_name>/final_runs/run_<index>_seed_<seed>/per_class_metrics.json`
+- `outputs/<model_name>/final_runs/run_<index>_seed_<seed>/label_order.json`
 
 J. Validation checks and assertions
 - Assert that every path saved in metadata is repo-relative and resolves to a real file
@@ -487,7 +482,7 @@ Step 8 is only complete if all of the following are true:
 - each model saves representative-run metadata
 - each model saves a `run_ledger.json`
 - cross-model comparison tables are aggregate-based and report-ready
-- logs and checkpoints follow the same repeated-run naming scheme as reports
+- logs and checkpoints are co-located inside each run directory under `checkpoint/` and `logs/` subdirectories
 - the three models share the same core tracking schema
 - provenance links between protocol, config, per-run, aggregate, and representative-run artifacts are explicit
 - Step 9 can generate figures directly from the saved artifacts
@@ -519,7 +514,7 @@ After coding, self-check against this exact checklist and confirm:
 9. where cross-model aggregate comparison tables are saved
 10. where OOS-specific aggregate summary tables are saved
 11. where efficiency summary tables are saved
-12. how logs and checkpoints mirror the report artifact structure
+12. how logs and checkpoints are co-located with run artifacts inside each run directory
 13. how provenance links are stored between protocol, config, runs, and aggregates
 14. that Step 8 does not retrain or reevaluate models
 15. how Step 9 discovers the canonical artifacts it will plot

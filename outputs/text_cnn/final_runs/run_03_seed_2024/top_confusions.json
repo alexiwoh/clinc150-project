@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "confusions": [
+    {
+      "true_label": "oos",
+      "predicted_label": "travel_suggestion",
+      "count": 27
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "directions",
+      "count": 23
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "todo_list",
+      "count": 21
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "recipe",
+      "count": 19
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "restaurant_suggestion",
+      "count": 15
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "weather",
+      "count": 15
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "income",
+      "count": 13
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "restaurant_reviews",
+      "count": 13
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "bill_balance",
+      "count": 12
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "car_rental",
+      "count": 12
+    }
+  ]
+}

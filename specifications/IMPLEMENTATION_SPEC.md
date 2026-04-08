@@ -71,10 +71,14 @@ clinc150-project/
 │   └── trainers/
 │       └── trainer.py
 ├── outputs/
-│   ├── checkpoints/
-│   ├── figures/
-│   ├── logs/
-│   └── reports/
+│   ├── shared/              # cross-model protocol, comparison tables, shared figures
+│   ├── mlp/                 # MLP tuning, final runs, aggregate, figures
+│   ├── text_cnn/            # Text CNN tuning, final runs, aggregate, figures
+│   ├── bilstm/              # BiLSTM tuning, final runs, aggregate, figures
+│   ├── checkpoints/         # legacy single-run checkpoints (Steps 4-6)
+│   ├── figures/             # legacy single-run figures (Steps 4-6)
+│   ├── logs/                # legacy single-run logs (Steps 4-6)
+│   └── reports/             # legacy single-run reports (Steps 4-6)
 ├── tests/
 ├── requirements.txt
 ├── README.md
@@ -102,10 +106,12 @@ clinc150-project/
 - `main.py`: top-level project entry point for training, evaluation, or experiment execution
 - `scripts/run_model_pipeline.py`: canonical user-facing pipeline runner for tuning reuse, repeated evaluation, tracking, and visualization
 - `notebooks/exploration.ipynb`: optional notebook for exploratory analysis, data inspection, and quick visualizations
-- `outputs/checkpoints/`: saved trained model checkpoints
-- `outputs/figures/`: saved plots, charts, and confusion matrices
-- `outputs/logs/`: experiment logs and run summaries
-- `outputs/reports/`: report-ready tables, exported metrics, and related artifacts
+- `outputs/shared/`: cross-model protocol manifest, comparison tables, and shared figures
+- `outputs/<model_name>/`: per-model tuning, final runs (with co-located checkpoints and logs), aggregate summaries, and figures
+- `outputs/checkpoints/`: legacy single-run checkpoints from Steps 4-6
+- `outputs/figures/`: legacy single-run figures from Steps 4-6
+- `outputs/logs/`: legacy single-run logs from Steps 4-6
+- `outputs/reports/`: legacy single-run reports from Steps 4-6
 
 ---
 
@@ -248,7 +254,7 @@ clinc150-project/
   - training logs
   - per-run metadata and metrics
   - aggregate summaries and ledgers
-- Validate and organize artifacts under the canonical repeated-run directory layout
+- Validate and organize artifacts under the canonical run-first directory layout
 - Create shared comparison tables comparing all models
 - Track:
   - parameter count

@@ -17,6 +17,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from src.config import DATASET_CONFIG, BiLSTMConfig, MLPBaselineConfig, TextCNNConfig, get_device
+from src.enums import ModelID
 from src.constants import (
     ARTIFACTS_DIR,
     CHECKPOINTS_DIR,
@@ -853,7 +854,7 @@ def train_text_cnn(
             artifact_refs=metadata["artifact_refs"],
             log_dir=effective_log_dir,
             monitor_metric=config.monitor_metric,
-            model_prefix="text_cnn",
+            model_prefix=ModelID.TEXT_CNN,
         )
     except Exception as e:
         logger.error("Text CNN run %s FAILED: %s", run_name, e)
@@ -1533,7 +1534,7 @@ def train_bilstm(
             artifact_refs=metadata["artifact_refs"],
             log_dir=effective_log_dir,
             monitor_metric=config.monitor_metric,
-            model_prefix="bilstm",
+            model_prefix=ModelID.BILSTM,
         )
     except Exception as e:
         logger.error("BiLSTM run %s FAILED: %s", run_name, e)

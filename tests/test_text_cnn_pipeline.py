@@ -15,6 +15,7 @@ from torch.utils.data import DataLoader, TensorDataset
 
 from src.config import TextCNNConfig
 from src.constants import NUM_CLASSES
+from src.enums import ModelID
 from src.train import (
     _one_batch_smoke_test,
     _select_best_from_rows,
@@ -159,7 +160,7 @@ class TestSingleTrainingRun:
             config=config.to_dict(),
             artifact_refs={"test": "path"},
             log_dir=tmp_path / "logs",
-            model_prefix="text_cnn",
+            model_prefix=ModelID.TEXT_CNN,
         )
 
         assert result["best_epoch"] >= 1
@@ -204,7 +205,7 @@ class TestSingleTrainingRun:
             config=config.to_dict(),
             artifact_refs={"test": "path"},
             log_dir=tmp_path / "logs",
-            model_prefix="text_cnn",
+            model_prefix=ModelID.TEXT_CNN,
         )
 
         from src.utils import load_checkpoint

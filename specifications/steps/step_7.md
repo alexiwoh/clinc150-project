@@ -84,23 +84,23 @@ Shared protocol metadata and canonical naming:
   - `protocol_version`
 - Every machine-readable path reference must be repo-relative and must resolve under the repository root
 - Shared report filenames are locked to:
-  - `outputs/reports/shared/evaluation_protocol.json`
-  - `outputs/reports/shared/model_comparison_aggregate.csv`
-  - `outputs/reports/shared/model_comparison_aggregate.json`
-  - `outputs/reports/shared/oos_summary_table.csv`
-  - `outputs/reports/shared/oos_summary_table.json`
-  - `outputs/reports/shared/efficiency_summary_table.csv`
-  - `outputs/reports/shared/efficiency_summary_table.json`
-  - `outputs/reports/shared/most_confused_pairs_table.csv`
-  - `outputs/reports/shared/most_confused_pairs_table.json`
-  - `outputs/reports/shared/representative_examples_index.json`
-  - `outputs/reports/shared/figure_manifest.json`
+  - `outputs/shared/evaluation_protocol.json`
+  - `outputs/shared/model_comparison_aggregate.csv`
+  - `outputs/shared/model_comparison_aggregate.json`
+  - `outputs/shared/oos_summary_table.csv`
+  - `outputs/shared/oos_summary_table.json`
+  - `outputs/shared/efficiency_summary_table.csv`
+  - `outputs/shared/efficiency_summary_table.json`
+  - `outputs/shared/most_confused_pairs_table.csv`
+  - `outputs/shared/most_confused_pairs_table.json`
+  - `outputs/shared/representative_examples_index.json`
+  - `outputs/shared/figure_manifest.json`
 - Shared figure filenames are locked to:
-  - `outputs/figures/shared/model_comparison_test_accuracy.png`
-  - `outputs/figures/shared/model_comparison_test_macro_f1.png`
-  - `outputs/figures/shared/model_comparison_oos_f1.png`
-  - `outputs/figures/shared/oos_metrics_comparison.png`
-  - `outputs/figures/shared/model_efficiency_comparison.png`
+  - `outputs/shared/figures/model_comparison_test_accuracy.png`
+  - `outputs/shared/figures/model_comparison_test_macro_f1.png`
+  - `outputs/shared/figures/model_comparison_oos_f1.png`
+  - `outputs/shared/figures/oos_metrics_comparison.png`
+  - `outputs/shared/figures/model_efficiency_comparison.png`
 - Do not keep alternate filenames active once these canonical names exist
 
 Shared metric and efficiency conventions:
@@ -125,15 +125,13 @@ High-level design requirement:
 This step should refactor the workflow into two distinct phases while adopting the final artifact layout immediately:
 - phase 1: validation-only tuning and frozen-config extraction
 - phase 2: repeated final runs using the frozen configuration and a shared seed list
-- Step 7 should write artifacts directly into the canonical structure that Step 8 validates later:
-  - `outputs/reports/shared/`
-  - `outputs/reports/<model_name>/tuning/`
-  - `outputs/reports/<model_name>/final_runs/`
-  - `outputs/reports/<model_name>/aggregate/`
-  - mirrored `outputs/logs/<model_name>/...`
-  - mirrored `outputs/checkpoints/<model_name>/...`
-  - `outputs/figures/<model_name>/`
-  - `outputs/figures/shared/`
+- Step 7 should write artifacts directly into the canonical run-first structure that Step 8 validates later:
+  - `outputs/shared/`
+  - `outputs/<model_name>/tuning/`
+  - `outputs/<model_name>/final_runs/` (each run directory contains `checkpoint/` and `logs/` subdirectories)
+  - `outputs/<model_name>/aggregate/`
+  - `outputs/<model_name>/figures/`
+  - `outputs/shared/figures/`
 - Do not create root-level aggregate artifacts that Step 8 would later need to relocate
 
 The recommended evaluation contract is:
@@ -156,8 +154,8 @@ Recommended default implementation path:
   - `--run-count 3`
 - reuse the tuning outputs from Steps 4-6
 - read each model’s winning row from the existing `*_tuning_results.csv` artifact
-- normalize that tuning artifact under `outputs/reports/<model_name>/tuning/tuning_results.csv` if the current file still lives in a legacy location
-- serialize the resolved frozen config to `outputs/reports/<model_name>/frozen_final_config.json`
+- normalize that tuning artifact under `outputs/<model_name>/tuning/tuning_results.csv` if the current file still lives in a legacy location
+- serialize the resolved frozen config to `outputs/<model_name>/frozen_final_config.json`
 - define one shared seed list such as `[42, 1337, 2024]`
 - rerun the final training and test evaluation once per seed
 - treat these repeated runs as the official reporting protocol
@@ -520,18 +518,16 @@ I. Console and orchestration output expectations
 
 J. Recommended outputs
 - Step 7 owns:
-  - `outputs/reports/shared/evaluation_protocol.json`
-  - `outputs/reports/<model_name>/tuning/tuning_results.csv`
-  - `outputs/reports/<model_name>/tuning/selection_summary.json`
-  - `outputs/reports/<model_name>/frozen_final_config.json`
-  - `outputs/reports/<model_name>/final_runs/run_<index>_seed_<seed>/...`
-  - `outputs/reports/<model_name>/aggregate/per_run_metrics.csv`
-  - `outputs/reports/<model_name>/aggregate/aggregate_metrics.json`
-  - `outputs/reports/<model_name>/aggregate/aggregate_metrics.csv`
-  - `outputs/reports/<model_name>/aggregate/aggregate_comparison_row.json`
-  - `outputs/reports/<model_name>/aggregate/representative_run.json`
-  - `outputs/logs/<model_name>/final_runs/run_<index>_seed_<seed>/...`
-  - `outputs/checkpoints/<model_name>/final_runs/run_<index>_seed_<seed>/...`
+  - `outputs/shared/evaluation_protocol.json`
+  - `outputs/<model_name>/tuning/tuning_results.csv`
+  - `outputs/<model_name>/tuning/selection_summary.json`
+  - `outputs/<model_name>/frozen_final_config.json`
+  - `outputs/<model_name>/final_runs/run_<index>_seed_<seed>/...` (includes `checkpoint/` and `logs/` subdirectories)
+  - `outputs/<model_name>/aggregate/per_run_metrics.csv`
+  - `outputs/<model_name>/aggregate/aggregate_metrics.json`
+  - `outputs/<model_name>/aggregate/aggregate_metrics.csv`
+  - `outputs/<model_name>/aggregate/aggregate_comparison_row.json`
+  - `outputs/<model_name>/aggregate/representative_run.json`
 - Step 7 should not create shared cross-model comparison tables or figure manifests; those belong to Steps 8 and 9 under the same canonical directory structure
 
 K. Validation checks and assertions

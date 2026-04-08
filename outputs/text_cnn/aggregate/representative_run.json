@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "text_cnn",
+  "run_id": "run_03_seed_2024",
+  "run_index": 3,
+  "seed": 2024,
+  "selection_rule": "highest_validation_macro_f1",
+  "selection_metric_value": 0.9118449427091906,
+  "artifact_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/text_cnn/final_runs/run_03_seed_2024",
+  "note": "This run is representative only. Aggregate metrics come from all completed runs."
+}
