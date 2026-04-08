@@ -38,5 +38,6 @@
   "preprocessing_manifest_ref": "data/artifacts/preprocessing_summary.json",
   "label_order_ref": "data/artifacts/id_to_label.json",
   "oos_strategy": "explicit_class",
-  "oos_class_id": 42
+  "oos_class_id": 42,
+  "protocol_manifest_ref": "outputs/shared/evaluation_protocol.json"
 }

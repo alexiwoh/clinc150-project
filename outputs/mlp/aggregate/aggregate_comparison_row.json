@@ -29,8 +29,12 @@
   "inference_avg_ms_per_example_std": 0.0012530803655018332,
   "inference_examples_per_sec_mean": 17782.88541445872,
   "inference_examples_per_sec_std": 390.79606124083256,
-  "parameter_count_mean": 5197975.0,
-  "parameter_count_std": 0.0,
-  "trainable_parameter_count_mean": 5197975.0,
-  "trainable_parameter_count_std": 0.0
+  "model_name": "TF-IDF + MLP",
+  "display_name": "TF-IDF + MLP",
+  "input_type": "tfidf",
+  "primary_val_metric": "val_macro_f1",
+  "frozen_config_ref": "outputs/mlp/frozen_final_config.json",
+  "representative_run_id": "run_01_seed_42",
+  "parameter_count": 5197975,
+  "trainable_parameter_count": 5197975
 }

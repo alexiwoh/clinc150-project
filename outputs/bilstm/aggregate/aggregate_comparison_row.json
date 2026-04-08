@@ -29,8 +29,12 @@
   "inference_avg_ms_per_example_std": 0.01504006699395208,
   "inference_examples_per_sec_mean": 8431.56451389331,
   "inference_examples_per_sec_std": 1079.830134317708,
-  "parameter_count_mean": 4284311.0,
-  "parameter_count_std": 0.0,
-  "trainable_parameter_count_mean": 4284311.0,
-  "trainable_parameter_count_std": 0.0
+  "model_name": "BiLSTM",
+  "display_name": "BiLSTM",
+  "input_type": "token_ids",
+  "primary_val_metric": "val_macro_f1",
+  "frozen_config_ref": "outputs/bilstm/frozen_final_config.json",
+  "representative_run_id": "run_02_seed_1337",
+  "parameter_count": 4284311,
+  "trainable_parameter_count": 4284311
 }

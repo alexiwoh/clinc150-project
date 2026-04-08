@@ -1,4 +1,4 @@
-"""Repeated-run evaluation protocol for CLINC150 models (Step 7).
+"""Repeated-run evaluation protocol for CLINC150 models.
 
 Frozen-config extraction, tuning normalization, protocol saving,
 core repeated-run execution, per-run artifact bundle saving,
@@ -45,12 +45,14 @@ from src.constants import (
     OUTPUTS_DIR,
     PREPROCESSING_MANIFEST_REF,
     PROJECT_ROOT,
+    PROTOCOL_MANIFEST_REF,
     PROTOCOL_VERSION,
     REPORTS_DIR,
     RUN_CHECKPOINT_SUBDIR,
     RUN_LOGS_SUBDIR,
     SCHEMA_VERSION,
     SHARED_DIR,
+    SUMMARY_GROUPS,
     TUNING_SUBDIR,
     model_output_dir,
     run_dir_name,
@@ -66,6 +68,17 @@ from src.metrics import (
 from src.utils import count_parameters, set_seed
 
 logger = logging.getLogger(__name__)
+
+
+def _to_repo_relative(path: str | Path) -> str:
+    """Convert an absolute path to repo-relative. Pass-through if already relative."""
+    p = Path(path)
+    if p.is_absolute():
+        try:
+            return str(p.relative_to(PROJECT_ROOT))
+        except ValueError:
+            return str(p)
+    return str(p)
 
 
 # ---------------------------------------------------------------------------
@@ -377,7 +390,9 @@ def save_frozen_config(frozen: FrozenModelConfig) -> Path:
     out_dir = model_output_dir(frozen.model_id)
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "frozen_final_config.json"
-    out_path.write_text(json.dumps(frozen.to_dict(), indent=2) + "\n")
+    data = frozen.to_dict()
+    data["protocol_manifest_ref"] = PROTOCOL_MANIFEST_REF
+    out_path.write_text(json.dumps(data, indent=2) + "\n")
     logger.info("Saved frozen config: %s", out_path)
     return out_path
 
@@ -511,6 +526,7 @@ def save_evaluation_protocol(
             "derivation_rule": "training_seed = seed, dataloader_seed = seed + 1",
             "note": "Same seed list reused across all models",
         },
+        "final_model_rule": "best checkpoint from early stopping on monitor metric (same as representative_run_rule)",
         "timestamp": datetime.now(tz=timezone.utc).isoformat(),
     }
 
@@ -758,8 +774,8 @@ def _save_run_metadata(
         "best_val_metric": run_result.best_val_metric,
         "best_val_loss": run_result.best_val_loss,
         "monitor_metric": run_result.monitor_metric,
-        "checkpoint_path": run_result.checkpoint_path,
-        "log_path": run_result.log_path,
+        "checkpoint_path": _to_repo_relative(run_result.checkpoint_path),
+        "log_path": _to_repo_relative(run_result.log_path),
         "frozen_config_ref": str(
             Path(model_output_dir(frozen.model_id) / "frozen_final_config.json").relative_to(PROJECT_ROOT)
         ),
@@ -1292,35 +1308,49 @@ def save_aggregate_artifacts(
     aggregate: AggregateMetrics,
     run_results: list[RunResult],
     model_id: str,
+    representative_run_id: str = "",
+    frozen_config_ref: str = "",
 ) -> Path:
     """Save aggregate artifacts to ``outputs/{model}/aggregate/``."""
     agg_dir = model_output_dir(model_id) / AGGREGATE_SUBDIR
     agg_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. aggregate_metrics.json
+    mid = ModelID(model_id)
+    completed = [r for r in run_results if r.status == "completed"]
+    failed = [r for r in run_results if r.status == "failed"]
+
+    if not frozen_config_ref:
+        frozen_config_ref = _to_repo_relative(model_output_dir(model_id) / "frozen_final_config.json")
+
+    # 1. aggregate_metrics.json (named summary groups)
     agg_json: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "protocol_version": PROTOCOL_VERSION,
+        "model_name": mid.display_name,
         "model_id": aggregate.model_id,
         "run_count_requested": aggregate.run_count_requested,
         "run_count_completed": aggregate.run_count_completed,
         "seed_list_requested": aggregate.seed_list_requested,
         "seed_list_completed": aggregate.seed_list_completed,
         "all_runs_succeeded": aggregate.run_count_completed == aggregate.run_count_requested,
-        "metrics": aggregate.metrics,
+        "successful_run_ids": [r.run_id for r in completed],
+        "failed_run_ids": [r.run_id for r in failed],
+        "representative_run_id": representative_run_id,
+        "frozen_config_ref": frozen_config_ref,
+        "protocol_manifest_ref": PROTOCOL_MANIFEST_REF,
     }
+    for group_name, metric_keys in SUMMARY_GROUPS.items():
+        group: dict[str, dict[str, float]] = {}
+        for mk in metric_keys:
+            group[mk] = aggregate.metrics.get(mk, {"mean": 0.0, "std": 0.0})
+        agg_json[group_name] = group
+
     (agg_dir / "aggregate_metrics.json").write_text(json.dumps(agg_json, indent=2) + "\n")
 
     # 2. aggregate_metrics.csv
     rows: list[dict[str, Any]] = []
     for metric_name, values in aggregate.metrics.items():
-        rows.append(
-            {
-                "metric": metric_name,
-                "mean": values["mean"],
-                "std": values["std"],
-            }
-        )
+        rows.append({"metric": metric_name, "mean": values["mean"], "std": values["std"]})
     pd.DataFrame(rows).to_csv(agg_dir / "aggregate_metrics.csv", index=False)
 
     # 3. per_run_metrics.csv
@@ -1353,16 +1383,30 @@ def save_aggregate_artifacts(
         )
     pd.DataFrame(per_run_rows).to_csv(agg_dir / "per_run_metrics.csv", index=False)
 
-    # 4. aggregate_comparison_row.json (for downstream Step 8 cross-model tables)
+    # 4. aggregate_comparison_row.json
+    # parameter_count and trainable_parameter_count are scalar (constant across runs)
+    param_count = completed[0].parameter_count if completed else 0
+    trainable_param_count = completed[0].trainable_parameter_count if completed else 0
+
     comparison_row: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "protocol_version": PROTOCOL_VERSION,
+        "model_name": mid.display_name,
         "model_id": model_id,
+        "display_name": mid.display_name,
+        "input_type": mid.input_type,
         "run_count": aggregate.run_count_completed,
+        "primary_val_metric": "val_macro_f1",
     }
     for metric_name, values in aggregate.metrics.items():
+        if metric_name in ("parameter_count", "trainable_parameter_count"):
+            continue
         comparison_row[f"{metric_name}_mean"] = values["mean"]
         comparison_row[f"{metric_name}_std"] = values["std"]
+    comparison_row["parameter_count"] = param_count
+    comparison_row["trainable_parameter_count"] = trainable_param_count
+    comparison_row["representative_run_id"] = representative_run_id
+    comparison_row["frozen_config_ref"] = frozen_config_ref
     (agg_dir / "aggregate_comparison_row.json").write_text(json.dumps(comparison_row, indent=2) + "\n")
 
     return agg_dir
@@ -1409,16 +1453,22 @@ def save_representative_run(
     agg_dir = model_output_dir(model_id) / AGGREGATE_SUBDIR
     agg_dir.mkdir(parents=True, exist_ok=True)
 
+    mid = ModelID(model_id)
+    frozen_config_ref = _to_repo_relative(model_output_dir(model_id) / "frozen_final_config.json")
+
     rep_json: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
         "protocol_version": PROTOCOL_VERSION,
+        "model_name": mid.display_name,
         "model_id": model_id,
         "run_id": representative.run_id,
         "run_index": representative.run_index,
         "seed": representative.seed,
         "selection_rule": representative.selection_rule,
         "selection_metric_value": representative.selection_metric_value,
-        "artifact_path": representative.artifact_path,
+        "artifact_path": _to_repo_relative(representative.artifact_path),
+        "frozen_config_ref": frozen_config_ref,
+        "protocol_manifest_ref": PROTOCOL_MANIFEST_REF,
         "note": "This run is representative only. Aggregate metrics come from all completed runs.",
     }
     out_path = agg_dir / "representative_run.json"
@@ -1446,7 +1496,6 @@ def run_repeated_evaluation(
     """
     effective_seeds = protocol.effective_seed_list()
 
-    # Validation assertions (spec K)
     assert frozen.model_id == model_id, (
         f"Frozen config model_id '{frozen.model_id}' doesn't match requested model_id '{model_id}'"
     )
@@ -1501,18 +1550,24 @@ def run_repeated_evaluation(
         else:
             print(f"    FAILED at stage '{result.stage_reached}': {result.failure_reason}")
 
-    # Compute aggregates
-    aggregate = compute_aggregate_metrics(run_results, protocol, model_id)
-    save_aggregate_artifacts(aggregate, run_results, model_id)
-
-    # Select representative run
+    # Compute aggregates and select representative run
     completed = [r for r in run_results if r.status == "completed"]
     assert completed, f"All runs failed for model '{model_id}'"
 
+    aggregate = compute_aggregate_metrics(run_results, protocol, model_id)
     representative = select_representative_run(run_results, protocol)
+
+    frozen_config_ref = _to_repo_relative(model_output_dir(model_id) / "frozen_final_config.json")
+    save_aggregate_artifacts(
+        aggregate,
+        run_results,
+        model_id,
+        representative_run_id=representative.run_id,
+        frozen_config_ref=frozen_config_ref,
+    )
     save_representative_run(representative, model_id)
 
-    # --- Validation assertions (spec K) ---
+    # --- Validation assertions ---
 
     # Assert label ordering consistency across runs
     label_orders: list[list[str]] = []
@@ -1606,7 +1661,7 @@ def run_all_repeated_evaluations(
         result = run_repeated_evaluation(model_id, frozen, protocol)
         results[model_id] = result
 
-    # Cross-model validation: same seeds used (spec K)
+    # Cross-model validation: same seeds used
     all_seed_lists = [r.aggregate.seed_list_completed for r in results.values()]
     if len(all_seed_lists) > 1:
         for sl in all_seed_lists[1:]:

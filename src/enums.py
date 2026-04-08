@@ -33,3 +33,8 @@ class ModelID(StrEnum):
     def legacy_tuning_filename(self) -> str:
         """Tuning CSV filename from the Steps 4-6 flat ``outputs/reports/`` layout."""
         return self._legacy_tuning_filename
+
+    @property
+    def input_type(self) -> str:
+        """Input representation type used by this model (``tfidf`` or ``token_ids``)."""
+        return "tfidf" if self is ModelID.MLP else "token_ids"

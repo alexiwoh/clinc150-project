@@ -140,13 +140,13 @@ MODEL_CONFIG_CLASSES: dict[ModelID, type[BaseModelConfig]] = {
 
 
 # ---------------------------------------------------------------------------
-# Step 7: Repeated-run evaluation protocol
+# Repeated-run evaluation protocol
 # ---------------------------------------------------------------------------
 
 
 @dataclass(frozen=True)
 class RepeatedRunProtocol:
-    """Shared, immutable configuration for the repeated-run evaluation protocol (spec B)."""
+    """Shared, immutable configuration for the repeated-run evaluation protocol."""
 
     schema_version: str = constants.SCHEMA_VERSION
     protocol_version: str = constants.PROTOCOL_VERSION
@@ -182,7 +182,7 @@ class RepeatedRunProtocol:
 
 @dataclass(frozen=True)
 class FrozenModelConfig:
-    """Fully-resolved, immutable configuration for one model's repeated-run evaluation (spec A2).
+    """Fully-resolved, immutable configuration for one model's repeated-run evaluation.
 
     Contains all training-relevant hyperparameters plus provenance fields that
     trace back to the tuning artifact and winning row.

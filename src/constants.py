@@ -21,7 +21,7 @@ LOGS_DIR: Path = OUTPUTS_DIR / "logs"
 REPORTS_DIR: Path = OUTPUTS_DIR / "reports"
 
 # ---------------------------------------------------------------------------
-# Step 7+ run-first directory layout
+# Run-first directory layout
 # ---------------------------------------------------------------------------
 SHARED_DIR: Path = OUTPUTS_DIR / "shared"
 SHARED_FIGURES_DIR: Path = SHARED_DIR / "figures"
@@ -82,3 +82,36 @@ DEFAULT_AGGREGATE_METRICS: tuple[str, ...] = (
 # Repo-relative paths to shared preprocessing artifacts
 PREPROCESSING_MANIFEST_REF: str = "data/artifacts/preprocessing_summary.json"
 LABEL_ORDER_REF: str = "data/artifacts/id_to_label.json"
+
+# Repo-relative path to the canonical protocol manifest
+PROTOCOL_MANIFEST_REF: str = "outputs/shared/evaluation_protocol.json"
+
+# ---------------------------------------------------------------------------
+# Named summary groups for aggregate_metrics.json
+# ---------------------------------------------------------------------------
+SUMMARY_GROUPS: dict[str, tuple[str, ...]] = {
+    "validation_summary": ("val_accuracy", "val_macro_f1"),
+    "test_summary": ("test_accuracy", "test_macro_f1", "test_precision", "test_recall"),
+    "oos_summary": ("oos_precision", "oos_recall", "oos_f1"),
+    "efficiency_summary": (
+        "training_time_seconds",
+        "inference_total_seconds",
+        "inference_avg_ms_per_example",
+        "inference_examples_per_sec",
+    ),
+    "parameter_count_summary": ("parameter_count", "trainable_parameter_count"),
+}
+
+# Per-run required artifact filenames
+PER_RUN_REQUIRED_FILES: tuple[str, ...] = (
+    "run_metadata.json",
+    "validation_metrics.json",
+    "test_metrics.json",
+    "epoch_history.json",
+    "final_predictions.csv",
+    "confusion_matrix.csv",
+    "top_confusions.json",
+    "top_errors.json",
+    "per_class_metrics.json",
+    "label_order.json",
+)

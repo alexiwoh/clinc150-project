@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "canonical_model_order": [
+    "mlp",
+    "text_cnn",
+    "bilstm"
+  ],
+  "rows": [
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "display_name": "TF-IDF + MLP",
+      "run_count": 3,
+      "oos_precision_mean": 0.8840146285108736,
+      "oos_precision_std": 0.013157222563238853,
+      "oos_recall_mean": 0.48666666666666664,
+      "oos_recall_std": 0.044394694377694395,
+      "oos_f1_mean": 0.6261331525117453,
+      "oos_f1_std": 0.03475278637704877
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "display_name": "Text CNN",
+      "run_count": 3,
+      "oos_precision_mean": 0.9414484195962342,
+      "oos_precision_std": 0.010232255545086942,
+      "oos_recall_mean": 0.35633333333333334,
+      "oos_recall_std": 0.04014418457953227,
+      "oos_f1_mean": 0.5153964713570659,
+      "oos_f1_std": 0.041636260475168545
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "display_name": "BiLSTM",
+      "run_count": 3,
+      "oos_precision_mean": 0.8816609734753472,
+      "oos_precision_std": 0.010404861083706966,
+      "oos_recall_mean": 0.2946666666666667,
+      "oos_recall_std": 0.0235843639350783,
+      "oos_f1_mean": 0.44130342547790774,
+      "oos_f1_std": 0.027328606352725233
+    }
+  ]
+}

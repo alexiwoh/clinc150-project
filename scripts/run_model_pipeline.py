@@ -4,7 +4,7 @@ This is the primary user-facing entry point for Steps 7-9 of the CLINC150 projec
 It orchestrates frozen-config extraction, repeated final runs, artifact tracking, and
 figure generation across all three models.
 
-Usage (Step 7+):
+Usage:
     python scripts/run_model_pipeline.py --model all --run-count 3
     python scripts/run_model_pipeline.py --model mlp --run-count 5
     python scripts/run_model_pipeline.py --model text_cnn --retune
@@ -19,6 +19,7 @@ import sys
 from src.config import RepeatedRunProtocol
 from src.constants import DEFAULT_SEED_LIST
 from src.enums import ModelID
+from src.experiment_tracking import run_experiment_tracking
 from src.repeated_evaluation import (
     ModelEvaluationResult,
     extract_and_freeze_configs,
@@ -117,7 +118,7 @@ def main(argv: list[str] | None = None) -> None:
     print()
 
     if args.retune:
-        print("  [--retune] Retuning is not yet supported in Step 7 pipeline.")
+        print("  [--retune] Retuning is not yet supported in this pipeline.")
         print("  Use the per-model scripts (run_mlp_baseline.py, etc.) to retune,")
         print("  then rerun this pipeline without --retune.")
         sys.exit(1)
@@ -131,7 +132,22 @@ def main(argv: list[str] | None = None) -> None:
     # Print final cross-model summary
     _print_final_summary(results)
 
-    print("Step 7 pipeline complete. Artifacts ready for Step 8 tracking and Step 9 visualization.")
+    # Experiment tracking — same validation/materialization logic
+    # as the standalone scripts/run_experiment_tracking.py entry point.
+    tracking_success = run_experiment_tracking(models)
+
+    print("=" * 60)
+    print("  Pipeline Summary")
+    print("=" * 60)
+    print("  Repeated evaluation: complete")
+    print(f"  Experiment tracking: {'PASS' if tracking_success else 'FAIL'}")
+    print("=" * 60)
+
+    if not tracking_success:
+        print("Experiment tracking validation failed. Review errors above.")
+        sys.exit(1)
+
+    print("Model pipeline complete. Artifacts ready for visualization.")
 
 
 if __name__ == "__main__":

@@ -29,8 +29,12 @@
   "inference_avg_ms_per_example_std": 0.002135999187784442,
   "inference_examples_per_sec_mean": 32082.231368090364,
   "inference_examples_per_sec_std": 2138.804265580692,
-  "parameter_count_mean": 1930167.0,
-  "parameter_count_std": 0.0,
-  "trainable_parameter_count_mean": 1930167.0,
-  "trainable_parameter_count_std": 0.0
+  "model_name": "Text CNN",
+  "display_name": "Text CNN",
+  "input_type": "token_ids",
+  "primary_val_metric": "val_macro_f1",
+  "frozen_config_ref": "outputs/text_cnn/frozen_final_config.json",
+  "representative_run_id": "run_03_seed_2024",
+  "parameter_count": 1930167,
+  "trainable_parameter_count": 1930167
 }
