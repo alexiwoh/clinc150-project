@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "dataset_source": "clinc/clinc_oos",
+  "subset": "plus",
+  "split_sizes": {
+    "train": 15250,
+    "validation": 3100,
+    "test": 5500
+  },
+  "num_classes": 151,
+  "oos_label_name": "oos",
+  "oos_label_id": 42,
+  "oos_counts": {
+    "train": 250,
+    "validation": 100,
+    "test": 1000
+  },
+  "in_scope_counts": {
+    "train": 15000,
+    "validation": 3000,
+    "test": 4500
+  },
+  "class_balance_note": "In-scope classes are balanced in the 'plus' subset. OOS has different support across splits.",
+  "distribution_quirks": [
+    "Test split has ~18% OOS examples vs ~1% in train \u2014 heavy distribution shift.",
+    "In-scope classes are perfectly balanced in the 'plus' subset.",
+    "OOS has 100 train examples (2x any single in-scope class in 'small'; ~0.67x in 'plus')."
+  ],
+  "source_artifact": "data/artifacts/dataset_summary.json"
+}

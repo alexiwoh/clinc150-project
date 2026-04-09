@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "cleaning_policy": {
+    "lowercase": true,
+    "strategy": "strip + normalize whitespace + optional lowercase",
+    "preserves": "punctuation, contractions, digits"
+  },
+  "tokenizer": "whitespace split",
+  "vocab_size": 6161,
+  "special_tokens": {
+    "<PAD>": 0,
+    "<UNK>": 1
+  },
+  "max_seq_length": 20,
+  "sequence_length_stats": {
+    "mean": 8.32,
+    "median": 8.0,
+    "p90": 13,
+    "p95": 14,
+    "max": 28,
+    "min": 1,
+    "count": 15250
+  },
+  "oov_rates": {
+    "train": 0.0,
+    "validation": 0.033809,
+    "test": 0.051791
+  },
+  "truncation_rates": {
+    "train": 0.002098,
+    "validation": 0.006452,
+    "test": 0.001818
+  },
+  "tfidf_config": {
+    "max_features": 10000,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "lowercase": false,
+    "stop_words": null,
+    "note": "Lowercase handled by shared cleaning, not duplicated by vectorizer"
+  },
+  "source_artifact": "data/artifacts/preprocessing_summary.json"
+}

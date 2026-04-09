@@ -1,0 +1,472 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "total_figure_count": 62,
+  "sections": [
+    {
+      "section_name": "Training Diagnostics",
+      "figures": [
+        {
+          "figure_path": "outputs/mlp/figures/representative_train_val_loss_curve.png",
+          "caption": "Training and validation loss curves for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "train_val_loss_curve"
+        },
+        {
+          "figure_path": "outputs/mlp/figures/representative_val_macro_f1_curve.png",
+          "caption": "Validation macro F1 progression during training for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "val_macro_f1_curve"
+        },
+        {
+          "figure_path": "outputs/mlp/figures/representative_val_accuracy_curve.png",
+          "caption": "Validation accuracy progression during training for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "val_accuracy_curve"
+        },
+        {
+          "figure_path": "outputs/text_cnn/figures/representative_train_val_loss_curve.png",
+          "caption": "Training and validation loss curves for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "train_val_loss_curve"
+        },
+        {
+          "figure_path": "outputs/text_cnn/figures/representative_val_macro_f1_curve.png",
+          "caption": "Validation macro F1 progression during training for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "val_macro_f1_curve"
+        },
+        {
+          "figure_path": "outputs/text_cnn/figures/representative_val_accuracy_curve.png",
+          "caption": "Validation accuracy progression during training for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "val_accuracy_curve"
+        },
+        {
+          "figure_path": "outputs/bilstm/figures/representative_train_val_loss_curve.png",
+          "caption": "Training and validation loss curves for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "train_val_loss_curve"
+        },
+        {
+          "figure_path": "outputs/bilstm/figures/representative_val_macro_f1_curve.png",
+          "caption": "Validation macro F1 progression during training for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "val_macro_f1_curve"
+        },
+        {
+          "figure_path": "outputs/bilstm/figures/representative_val_accuracy_curve.png",
+          "caption": "Validation accuracy progression during training for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "val_accuracy_curve"
+        }
+      ]
+    },
+    {
+      "section_name": "Model Comparison",
+      "figures": [
+        {
+          "figure_path": "outputs/shared/figures/model_comparison_test_accuracy.png",
+          "caption": "Aggregate test accuracy comparison with error bars for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "model_comparison_test_accuracy"
+        },
+        {
+          "figure_path": "outputs/shared/figures/model_comparison_test_macro_f1.png",
+          "caption": "Aggregate test macro F1 comparison with error bars for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "model_comparison_test_macro_f1"
+        },
+        {
+          "figure_path": "outputs/shared/figures/model_comparison_oos_f1.png",
+          "caption": "Aggregate OOS F1 comparison with error bars for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "model_comparison_oos_f1"
+        },
+        {
+          "figure_path": "outputs/shared/figures/oos_metrics_comparison.png",
+          "caption": "Aggregate OOS precision, recall, and F1 comparison for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "oos_metrics_comparison"
+        }
+      ]
+    },
+    {
+      "section_name": "OOS Detection",
+      "figures": [
+        {
+          "figure_path": "outputs/mlp/figures/representative_oos_metrics.png",
+          "caption": "OOS detection metrics summary (precision, recall, F1) for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "oos_metrics"
+        },
+        {
+          "figure_path": "outputs/text_cnn/figures/representative_oos_metrics.png",
+          "caption": "OOS detection metrics summary (precision, recall, F1) for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "oos_metrics"
+        },
+        {
+          "figure_path": "outputs/bilstm/figures/representative_oos_metrics.png",
+          "caption": "OOS detection metrics summary (precision, recall, F1) for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "oos_metrics"
+        },
+        {
+          "figure_path": "outputs/mlp/analysis/oos_roc_curve.png",
+          "caption": "OOS detection ROC curve (explicit OOS class probability method) for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "oos_roc_curve"
+        },
+        {
+          "figure_path": "outputs/mlp/analysis/oos_pr_curve.png",
+          "caption": "OOS detection precision-recall curve for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "oos_pr_curve"
+        },
+        {
+          "figure_path": "outputs/mlp/analysis/oos_error_breakdown.png",
+          "caption": "OOS error breakdown: false accepts (OOS as in-scope) vs false rejects for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "oos_error_breakdown"
+        },
+        {
+          "figure_path": "outputs/text_cnn/analysis/oos_roc_curve.png",
+          "caption": "OOS detection ROC curve (explicit OOS class probability method) for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "oos_roc_curve"
+        },
+        {
+          "figure_path": "outputs/text_cnn/analysis/oos_pr_curve.png",
+          "caption": "OOS detection precision-recall curve for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "oos_pr_curve"
+        },
+        {
+          "figure_path": "outputs/text_cnn/analysis/oos_error_breakdown.png",
+          "caption": "OOS error breakdown: false accepts (OOS as in-scope) vs false rejects for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "oos_error_breakdown"
+        },
+        {
+          "figure_path": "outputs/bilstm/analysis/oos_roc_curve.png",
+          "caption": "OOS detection ROC curve (explicit OOS class probability method) for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "oos_roc_curve"
+        },
+        {
+          "figure_path": "outputs/bilstm/analysis/oos_pr_curve.png",
+          "caption": "OOS detection precision-recall curve for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "oos_pr_curve"
+        },
+        {
+          "figure_path": "outputs/bilstm/analysis/oos_error_breakdown.png",
+          "caption": "OOS error breakdown: false accepts (OOS as in-scope) vs false rejects for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "oos_error_breakdown"
+        },
+        {
+          "figure_path": "outputs/shared/analysis/oos_roc_comparison.png",
+          "caption": "OOS ROC curve comparison overlay across models for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "oos_roc_comparison"
+        },
+        {
+          "figure_path": "outputs/shared/analysis/oos_pr_comparison.png",
+          "caption": "OOS precision-recall curve comparison overlay across models for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "oos_pr_comparison"
+        },
+        {
+          "figure_path": "outputs/shared/analysis/oos_error_comparison.png",
+          "caption": "OOS false-accept and false-reject pattern comparison across models for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "oos_error_comparison"
+        }
+      ]
+    },
+    {
+      "section_name": "Confusion Analysis",
+      "figures": [
+        {
+          "figure_path": "outputs/mlp/figures/representative_confusion_matrix.png",
+          "caption": "Test-set confusion matrix across 151 intent classes including OOS for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "confusion_matrix"
+        },
+        {
+          "figure_path": "outputs/mlp/figures/representative_top_confused_pairs.png",
+          "caption": "Top confused intent pairs on the test set for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "top_confused_pairs"
+        },
+        {
+          "figure_path": "outputs/mlp/figures/representative_bottom_classes_f1.png",
+          "caption": "Bottom classes by test F1 score for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "bottom_classes_f1"
+        },
+        {
+          "figure_path": "outputs/text_cnn/figures/representative_confusion_matrix.png",
+          "caption": "Test-set confusion matrix across 151 intent classes including OOS for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "confusion_matrix"
+        },
+        {
+          "figure_path": "outputs/text_cnn/figures/representative_top_confused_pairs.png",
+          "caption": "Top confused intent pairs on the test set for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "top_confused_pairs"
+        },
+        {
+          "figure_path": "outputs/text_cnn/figures/representative_bottom_classes_f1.png",
+          "caption": "Bottom classes by test F1 score for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "bottom_classes_f1"
+        },
+        {
+          "figure_path": "outputs/bilstm/figures/representative_confusion_matrix.png",
+          "caption": "Test-set confusion matrix across 151 intent classes including OOS for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "confusion_matrix"
+        },
+        {
+          "figure_path": "outputs/bilstm/figures/representative_top_confused_pairs.png",
+          "caption": "Top confused intent pairs on the test set for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "top_confused_pairs"
+        },
+        {
+          "figure_path": "outputs/bilstm/figures/representative_bottom_classes_f1.png",
+          "caption": "Bottom classes by test F1 score for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "bottom_classes_f1"
+        }
+      ]
+    },
+    {
+      "section_name": "Error Analysis",
+      "figures": [
+        {
+          "figure_path": "outputs/mlp/figures/representative_error_summary.png",
+          "caption": "Most frequent misclassification categories on the test set for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "error_summary"
+        },
+        {
+          "figure_path": "outputs/text_cnn/figures/representative_error_summary.png",
+          "caption": "Most frequent misclassification categories on the test set for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "error_summary"
+        },
+        {
+          "figure_path": "outputs/bilstm/figures/representative_error_summary.png",
+          "caption": "Most frequent misclassification categories on the test set for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "error_summary"
+        },
+        {
+          "figure_path": "outputs/mlp/analysis/reliability_diagram.png",
+          "caption": "Reliability diagram showing calibration quality (predicted confidence vs actual accuracy) for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "reliability_diagram"
+        },
+        {
+          "figure_path": "outputs/mlp/analysis/confidence_histogram.png",
+          "caption": "Prediction confidence distribution for correct and incorrect predictions for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "confidence_histogram"
+        },
+        {
+          "figure_path": "outputs/mlp/analysis/confidence_vs_accuracy.png",
+          "caption": "Confidence vs accuracy analysis across confidence bins for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "confidence_vs_accuracy"
+        },
+        {
+          "figure_path": "outputs/mlp/analysis/worst_classes_confusion_heatmap.png",
+          "caption": "Confusion heatmap for worst-performing intent classes for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "worst_classes_heatmap"
+        },
+        {
+          "figure_path": "outputs/mlp/analysis/confusion_stability.png",
+          "caption": "Confusion stability across repeated runs (3 seeds) for TF-IDF + MLP. Data: representative run (run_01_seed_42), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "mlp",
+          "figure_type": "confusion_stability"
+        },
+        {
+          "figure_path": "outputs/text_cnn/analysis/reliability_diagram.png",
+          "caption": "Reliability diagram showing calibration quality (predicted confidence vs actual accuracy) for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "reliability_diagram"
+        },
+        {
+          "figure_path": "outputs/text_cnn/analysis/confidence_histogram.png",
+          "caption": "Prediction confidence distribution for correct and incorrect predictions for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "confidence_histogram"
+        },
+        {
+          "figure_path": "outputs/text_cnn/analysis/confidence_vs_accuracy.png",
+          "caption": "Confidence vs accuracy analysis across confidence bins for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "confidence_vs_accuracy"
+        },
+        {
+          "figure_path": "outputs/text_cnn/analysis/worst_classes_confusion_heatmap.png",
+          "caption": "Confusion heatmap for worst-performing intent classes for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "worst_classes_heatmap"
+        },
+        {
+          "figure_path": "outputs/text_cnn/analysis/confusion_stability.png",
+          "caption": "Confusion stability across repeated runs (3 seeds) for Text CNN. Data: representative run (run_03_seed_2024), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "text_cnn",
+          "figure_type": "confusion_stability"
+        },
+        {
+          "figure_path": "outputs/bilstm/analysis/reliability_diagram.png",
+          "caption": "Reliability diagram showing calibration quality (predicted confidence vs actual accuracy) for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "reliability_diagram"
+        },
+        {
+          "figure_path": "outputs/bilstm/analysis/confidence_histogram.png",
+          "caption": "Prediction confidence distribution for correct and incorrect predictions for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "confidence_histogram"
+        },
+        {
+          "figure_path": "outputs/bilstm/analysis/confidence_vs_accuracy.png",
+          "caption": "Confidence vs accuracy analysis across confidence bins for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "confidence_vs_accuracy"
+        },
+        {
+          "figure_path": "outputs/bilstm/analysis/worst_classes_confusion_heatmap.png",
+          "caption": "Confusion heatmap for worst-performing intent classes for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "worst_classes_heatmap"
+        },
+        {
+          "figure_path": "outputs/bilstm/analysis/confusion_stability.png",
+          "caption": "Confusion stability across repeated runs (3 seeds) for BiLSTM. Data: representative run (run_02_seed_1337), CLINC150 test set.",
+          "scope": "representative",
+          "model_name": "bilstm",
+          "figure_type": "confusion_stability"
+        },
+        {
+          "figure_path": "outputs/shared/analysis/calibration_comparison.png",
+          "caption": "Calibration comparison (ECE, MCE, Brier, NLL) across models for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "calibration_comparison"
+        },
+        {
+          "figure_path": "outputs/shared/analysis/error_taxonomy_comparison.png",
+          "caption": "Error taxonomy comparison (OOS-as-inscope, inscope-as-OOS, semantic, cross-domain) per model for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "error_taxonomy"
+        },
+        {
+          "figure_path": "outputs/shared/analysis/confidence_accuracy_comparison.png",
+          "caption": "Confidence vs accuracy analysis across confidence bins for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "confidence_vs_accuracy"
+        },
+        {
+          "figure_path": "outputs/shared/analysis/length_slice_comparison.png",
+          "caption": "Accuracy by query length (short/medium/long) across models for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "length_slice"
+        },
+        {
+          "figure_path": "outputs/shared/analysis/frequency_slice_comparison.png",
+          "caption": "Accuracy by class frequency across models for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "frequency_slice"
+        },
+        {
+          "figure_path": "outputs/shared/analysis/cross_model_error_overlap.png",
+          "caption": "Cross-model error overlap: examples wrong by all/some/one model for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "cross_model_error_overlap"
+        }
+      ]
+    },
+    {
+      "section_name": "Efficiency",
+      "figures": [
+        {
+          "figure_path": "outputs/shared/figures/model_efficiency_comparison.png",
+          "caption": "Model efficiency comparison (parameters, training time, throughput) for all models. Data: aggregate over 3 repeated runs, CLINC150 test set.",
+          "scope": "aggregate",
+          "model_name": null,
+          "figure_type": "model_efficiency_comparison"
+        }
+      ]
+    }
+  ],
+  "source_artifact": "outputs/shared/figure_manifest.json"
+}

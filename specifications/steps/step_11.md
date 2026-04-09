@@ -551,8 +551,9 @@ O. Reproducibility
 - Generate a reproducibility section documenting how to reproduce the full pipeline from scratch
 - Content must include:
   - environment setup:
-    - Python version requirement (>=3.11)
+    - Python version requirement (>=3.11); include exact version used if available from `pyproject.toml` or runtime metadata
     - dependency installation: `uv sync` or `pip install -r requirements.txt`
+    - note that pinned dependency versions are available in `uv.lock` or `requirements.txt` for exact reproduction
     - PyTorch with MPS support for Apple Silicon (optional, CPU fallback available)
   - dataset acquisition:
     - CLINC150 loaded via HuggingFace `datasets` library (`clinc/clinc_oos`, `plus` subset)
@@ -563,7 +564,9 @@ O. Reproducibility
   - seed list: [42, 1337, 2024]
   - expected output structure: brief description of `outputs/` directory layout
   - artifact verification: how to verify outputs match expected artifact schemas
-  - estimated runtime: approximate wall-clock time per model on Apple Silicon (from efficiency table)
+  - estimated runtime: approximate wall-clock time per model on Apple Silicon (from efficiency table); include hardware context for quoted runtimes
+  - nondeterminism note: MPS backend nondeterminism, DataLoader worker ordering; exact numeric reproduction across hardware is not guaranteed
+  - numbered step-by-step reproduction checklist: (1) clone repo, (2) install dependencies, (3) run pipeline command, (4) verify outputs
 - Save to `outputs/shared/report/reproducibility.md` and `outputs/shared/report/reproducibility.json`
 
 O2. Reproducibility artifact contract
@@ -571,11 +574,15 @@ O2. Reproducibility artifact contract
   - `schema_version`, `protocol_version`
   - `python_version`: string
   - `install_command`: string
+  - `pinned_versions_available`: boolean
   - `dataset_source`: string
   - `pipeline_command`: string
   - `seed_list`: list of integers
   - `run_count`: integer
   - `approximate_runtime_minutes`: object with per-model estimates
+  - `hardware_context`: string (hardware used for quoted runtimes)
+  - `nondeterminism_notes`: list of strings
+  - `reproduction_steps`: list of strings (ordered checklist)
   - `source_artifacts`: list of repo-relative paths
 
 P. Report structure manifest
@@ -628,6 +635,7 @@ Q2. Assembled report requirements
 - Every metric cited in narrative text must match the corresponding table value exactly
 - Every figure reference must point to an existing file
 - The report must clearly distinguish aggregate claims from representative-run observations
+- Core figures must be embedded or referenced in the main narrative per the figure quality standards (confusion matrix in Error Analysis, training curve in Results, aggregate comparison in Results, OOS curve in OOS Detection)
 - Include a "Data Sources" footnote or note at the end listing all upstream artifacts consumed
 
 R. Output validation
@@ -650,6 +658,13 @@ Aggregate vs representative labeling convention:
 - Qualitative examples (Section K) must always be labeled as representative-run data
 - Do not present representative-run metrics as aggregate results or vice versa
 
+Statistical reporting policy:
+- When aggregate artifacts provide mean and standard deviation, both must appear in every table cell and narrative claim that references the metric
+- Do not claim statistical significance or rank models as "significantly better" without a formal test; with only 3 runs, differences may not be statistically meaningful -- state this explicitly if model performances are close
+- When reporting representative-run metrics (calibration, extended metrics, threshold analysis), note that these reflect a single seed and may vary across runs
+- Avoid language implying causal relationships (e.g. "BiLSTM causes better OOS detection"); prefer descriptive comparisons ("BiLSTM achieved higher OOS AUROC")
+- If two models have overlapping mean +/- std ranges on a metric, note the overlap rather than declaring one superior
+
 Table formatting conventions:
 - Use 4 decimal places for all ratio-valued metrics (e.g. 0.8727, not 87.27%)
 - Use mean +/- std format for aggregate metrics: `0.8727 +/- 0.0031`
@@ -658,6 +673,23 @@ Table formatting conventions:
 - Use 4 decimal places for ms/example timing (e.g. 0.0563)
 - Maintain canonical model order in all tables: TF-IDF + MLP, Text CNN, BiLSTM
 - All metrics are raw ratios in [0.0, 1.0] unless explicitly labeled otherwise
+
+Figure quality standards:
+- Every figure caption must be self-contained: a reader should understand what the figure shows without reading surrounding text
+- Captions must state the data scope (aggregate, representative, or analysis), the dataset split (train/val/test), and which model(s) the figure covers
+- Core figures must be referenced in the main narrative of their assigned section, not merely listed in the appendix catalogue; at minimum, the assembled report must embed or reference:
+  - at least one confusion matrix (from Confusion Analysis figures) in the Error Analysis section
+  - at least one training curve (from Training Diagnostics figures) in the Results or Experimental Setup section
+  - at least one aggregate comparison bar chart (from Model Comparison figures) in the Results section
+  - at least one OOS ROC or PR curve (from OOS Detection figures) in the OOS Detection section
+- Figures in the catalogue appendix that are not referenced in the main narrative should still have complete captions but are considered supplementary
+
+Reproducibility depth standards:
+- The reproducibility section must include the exact Python version used (from `pyproject.toml` or runtime metadata if available), not just the minimum requirement
+- Include a note about known sources of nondeterminism: MPS backend nondeterminism, DataLoader worker ordering, and any CUDA nondeterminism if applicable
+- Include the hardware context for quoted runtimes (e.g. "Apple M-series, X GB RAM") so readers can calibrate expectations
+- Present a numbered step-by-step reproduction checklist: (1) clone repo, (2) install dependencies, (3) run pipeline command, (4) verify outputs
+- If `uv.lock` or `requirements.txt` pins exact dependency versions, note that pinned versions are available for exact reproduction
 
 Recommended report output structure:
 - `outputs/shared/report/report_structure.json`
@@ -745,11 +777,13 @@ Final Step 11 exit gate:
 - Before Step 11 is considered closed, confirm all of the following are true:
   - the assembled report is readable as a self-contained document
   - every metric in the report matches its source artifact value exactly
-  - every figure in the catalogue has a descriptive caption
-  - aggregate and representative data are never mixed without labeling
+  - every figure in the catalogue has a self-contained descriptive caption stating scope, split, and model(s)
+  - core figures (confusion matrix, training curve, aggregate comparison, OOS curve) are referenced in the main narrative, not only in the appendix
+  - aggregate and representative data are never mixed without labeling; overlapping mean +/- std ranges are noted rather than declaring one model superior
   - the report structure manifest accounts for every section file
   - a reader could write the final paper directly from these outputs
   - the report covers all items listed in IMPLEMENTATION_SPEC.md Step 11: dataset description, preprocessing summary, model architecture summary, training setup, metrics table, plots and confusion matrix, key findings, limitations, future improvements
+  - the reproducibility section includes a numbered reproduction checklist, hardware context, and nondeterminism notes
 
 Deliverable quality bar:
 Step 11 should make the project paper-ready. A reader should be able to take the assembled report draft and, with editorial polish and literature-review additions, produce a complete course project paper. The section drafts should be factually precise, properly cited to artifacts, and structured for easy consumption. Tables should be formatted consistently and figures should have informative captions. The report must not require the reader to open JSON files, re-run scripts, or hunt through directories to understand the results.
@@ -764,15 +798,17 @@ After coding, self-check against this exact checklist and confirm:
 6. where the experimental setup is saved and that it documents seeds, optimizer, early stopping, and metric definitions
 7. where the main results tables are saved and that aggregate tables use mean +/- std
 8. where the OOS detection section is saved and that it includes threshold analysis and false-accept patterns
-9. where the figure catalogue is saved and that every figure has a caption and section assignment
+9. where the figure catalogue is saved and that every figure has a self-contained caption stating scope, split, and model(s)
 10. where the error analysis discussion is saved and that every claim cites its source artifact
 11. where the representative examples are saved and that they are labeled as representative-run data
 12. where the key findings are saved and that each finding has an artifact citation
 13. where the limitations are saved and that they cover both analysis-level and project-level issues
 14. where the future improvements are saved and that they are prioritized
-15. where the reproducibility section is saved and that it includes the canonical pipeline command
+15. where the reproducibility section is saved and that it includes the canonical pipeline command, numbered reproduction checklist, hardware context, and nondeterminism notes
 16. where the report structure manifest is saved and that it maps every section to its sources
 17. where the assembled report is saved and that it has a table of contents and all sections
-18. that no model was retrained and no new analysis was computed
-19. that aggregate and representative metrics are never conflated
-20. that all JSON outputs include schema_version and protocol_version
+18. that core figures (confusion matrix, training curve, aggregate comparison, OOS curve) are referenced in the main narrative sections, not only in the appendix
+19. that no model was retrained and no new analysis was computed
+20. that aggregate and representative metrics are never conflated; overlapping mean +/- std ranges are acknowledged
+21. that all JSON outputs include schema_version and protocol_version
+22. that no unsupported significance claims are made; close model performances note the limited statistical power of 3 runs

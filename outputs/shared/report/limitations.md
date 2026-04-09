@@ -1,0 +1,20 @@
+## Limitations
+
+### Analysis-Level Limitations
+
+- Qualitative analysis uses a single representative run per model, not all seeds.
+- CLINC150 is balanced; real-world class distributions may differ significantly.
+- No interpretability analysis (attention, saliency) was performed.
+- Post-hoc calibration (temperature scaling) was not applied.
+- Length and frequency slicing uses simple whitespace tokenization.
+
+### Project-Level Limitations
+
+- Single dataset only (CLINC150); results may not generalize to other intent-classification benchmarks.
+- No pretrained word embeddings (GloVe, word2vec) used; embeddings trained from scratch.
+- Whitespace tokenizer rather than subword tokenization (BPE, WordPiece).
+- No transformer-based models compared (BERT, DistilBERT, etc.).
+- 3 repeated runs provide limited statistical power; 5+ runs would strengthen variance estimates.
+- OOS training data is sparse relative to test distribution (250 train vs 1,000 test OOS examples).
+- No cross-dataset validation or domain-transfer evaluation.
+- Model checkpoints not committed to repository; reproduction requires retraining.

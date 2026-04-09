@@ -1,0 +1,99 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "taxonomy_summary": {
+    "mlp": {
+      "dominant_category": "oos_as_inscope",
+      "oos_as_inscope_count": 497
+    },
+    "text_cnn": {
+      "dominant_category": "oos_as_inscope",
+      "oos_as_inscope_count": 627
+    },
+    "bilstm": {
+      "dominant_category": "oos_as_inscope",
+      "oos_as_inscope_count": 672
+    }
+  },
+  "calibration_finding": {
+    "best_model": "text_cnn",
+    "best_ece": 0.03743301824548027,
+    "worst_model": "bilstm",
+    "worst_ece": 0.11253382217884061
+  },
+  "oos_finding": {
+    "best_model": "text_cnn",
+    "best_auroc": 0.9523406666666667,
+    "main_failure_mode": "oos_as_inscope"
+  },
+  "cross_model_overlap": {
+    "all_correct": {
+      "count": 4051,
+      "fraction": 0.7365454545454545
+    },
+    "all_wrong": {
+      "count": 608,
+      "fraction": 0.11054545454545454
+    },
+    "model_specific": {
+      "count": 464,
+      "fraction": 0.08436363636363636
+    }
+  },
+  "worst_classes_finding": {
+    "shared": [
+      "income",
+      "oos",
+      "order",
+      "recipe",
+      "smart_home",
+      "yes"
+    ],
+    "model_specific": {
+      "mlp": [
+        "calculator",
+        "calendar",
+        "how_busy",
+        "shopping_list",
+        "w2"
+      ],
+      "text_cnn": [
+        "bill_balance",
+        "order_status",
+        "translate",
+        "travel_suggestion",
+        "who_do_you_work_for"
+      ],
+      "bilstm": [
+        "current_location",
+        "goodbye",
+        "weather"
+      ]
+    }
+  },
+  "confused_pairs_finding": {
+    "persistent_intents": [
+      "recipe",
+      "directions",
+      "income",
+      "smart_home",
+      "travel_suggestion",
+      "restaurant_suggestion"
+    ]
+  },
+  "length_finding": {
+    "mlp": 0.829126213592233,
+    "text_cnn": 0.858252427184466,
+    "bilstm": 0.8097087378640777
+  },
+  "source_artifacts": [
+    "outputs/shared/analysis/error_taxonomy_summary.json",
+    "outputs/shared/analysis/calibration_summary.json",
+    "outputs/shared/analysis/cross_model_error_comparison.json",
+    "outputs/shared/analysis/worst_classes_comparison.json",
+    "outputs/shared/most_confused_pairs_table.json",
+    "outputs/shared/analysis/error_analysis_summary.json",
+    "outputs/shared/analysis/oos_threshold_comparison.json",
+    "outputs/shared/figure_manifest.json"
+  ]
+}
