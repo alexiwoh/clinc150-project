@@ -1,0 +1,145 @@
+{
+  "selection_rule": "All misclassified examples sorted by (true_label, predicted_label, text); first top_k returned.",
+  "errors": [
+    {
+      "text": "can i do a reservation at sammy's crab shack",
+      "true_label": "accept_reservations",
+      "predicted_label": "confirm_reservation",
+      "true_id": 9,
+      "predicted_id": 85
+    },
+    {
+      "text": "can i reserve tables at the new york restaurant",
+      "true_label": "accept_reservations",
+      "predicted_label": "restaurant_reservation",
+      "true_id": 9,
+      "predicted_id": 23
+    },
+    {
+      "text": "do you think they'll let me reserve a table at the olive garden",
+      "true_label": "accept_reservations",
+      "predicted_label": "restaurant_reservation",
+      "true_id": 9,
+      "predicted_id": 23
+    },
+    {
+      "text": "is it possible to reserve a table at white castle",
+      "true_label": "accept_reservations",
+      "predicted_label": "restaurant_reservation",
+      "true_id": 9,
+      "predicted_id": 23
+    },
+    {
+      "text": "can you unlock my bank account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
+      "text": "how can i unfreeze my bank account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
+      "text": "how do i unlock my bank account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
+      "text": "i need to up by noon",
+      "true_label": "alarm",
+      "predicted_label": "change_user_name",
+      "true_id": 83,
+      "predicted_id": 144
+    },
+    {
+      "text": "what's my credit card's annual percentage rate",
+      "true_label": "apr",
+      "predicted_label": "interest_rate",
+      "true_id": 132,
+      "predicted_id": 7
+    },
+    {
+      "text": "what's the annual percentage rate for my credit card",
+      "true_label": "apr",
+      "predicted_label": "interest_rate",
+      "true_id": 132,
+      "predicted_id": 7
+    },
+    {
+      "text": "is this a bot",
+      "true_label": "are_you_a_bot",
+      "predicted_label": "what_song",
+      "true_id": 117,
+      "predicted_id": 21
+    },
+    {
+      "text": "what are my coffers at",
+      "true_label": "balance",
+      "predicted_label": "current_location",
+      "true_id": 35,
+      "predicted_id": 136
+    },
+    {
+      "text": "i need to know the price of my car payment and insurance please",
+      "true_label": "bill_balance",
+      "predicted_label": "bill_due",
+      "true_id": 27,
+      "predicted_id": 56
+    },
+    {
+      "text": "is the phone bill the same as last month",
+      "true_label": "bill_balance",
+      "predicted_label": "bill_due",
+      "true_id": 27,
+      "predicted_id": 56
+    },
+    {
+      "text": "what would you say my gas and phone bills are at",
+      "true_label": "bill_balance",
+      "predicted_label": "gas",
+      "true_id": 27,
+      "predicted_id": 110
+    },
+    {
+      "text": "how expensive is my internet",
+      "true_label": "bill_balance",
+      "predicted_label": "oos",
+      "true_id": 27,
+      "predicted_id": 42
+    },
+    {
+      "text": "i need to know the next billing date of my american express card",
+      "true_label": "bill_due",
+      "predicted_label": "expiration_date",
+      "true_id": 56,
+      "predicted_id": 44
+    },
+    {
+      "text": "when does the current billing cycle end",
+      "true_label": "bill_due",
+      "predicted_label": "oos",
+      "true_id": 56,
+      "predicted_id": 42
+    },
+    {
+      "text": "what's the latest i can pay my cellular bill",
+      "true_label": "bill_due",
+      "predicted_label": "pay_bill",
+      "true_id": 56,
+      "predicted_id": 111
+    },
+    {
+      "text": "what's the ultimate day for me to pay the internet bill",
+      "true_label": "bill_due",
+      "predicted_label": "pay_bill",
+      "true_id": 56,
+      "predicted_id": 111
+    }
+  ]
+}

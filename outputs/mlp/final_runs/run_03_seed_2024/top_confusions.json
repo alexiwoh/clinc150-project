@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "confusions": [
+    {
+      "true_label": "oos",
+      "predicted_label": "recipe",
+      "count": 26
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "w2",
+      "count": 23
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "travel_suggestion",
+      "count": 22
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "calculator",
+      "count": 14
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "directions",
+      "count": 14
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "definition",
+      "count": 12
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "ingredient_substitution",
+      "count": 12
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "who_made_you",
+      "count": 12
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "bill_balance",
+      "count": 11
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "spelling",
+      "count": 11
+    }
+  ]
+}

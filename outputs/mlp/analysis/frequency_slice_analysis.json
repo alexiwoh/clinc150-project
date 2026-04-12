@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "mlp",
+  "model_name": "TF-IDF + MLP",
+  "representative_run_id": "run_01_seed_42",
+  "note": "Frequency tiers use test-set support quartiles as proxy for training-set frequency (CLINC150 is balanced, so this is a reasonable approximation).",
+  "quartile_thresholds": {
+    "q25": 30.0,
+    "q75": 30.0
+  },
+  "slices": [
+    {
+      "slice": "low",
+      "count": 4500,
+      "accuracy": 0.9148888888888889,
+      "error_count": 383,
+      "error_rate": 0.08511111111111111,
+      "mean_confidence_correct": 0.8547515869140625,
+      "mean_confidence_incorrect": 0.4126192033290863
+    },
+    {
+      "slice": "high",
+      "count": 1000,
+      "accuracy": 0.503,
+      "error_count": 497,
+      "error_rate": 0.497,
+      "mean_confidence_correct": 0.4306012690067291,
+      "mean_confidence_incorrect": 0.3249993622303009
+    }
+  ],
+  "source_artifact": "outputs/mlp/final_runs/run_01_seed_42/per_class_metrics.json"
+}

@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "protocol_config": {
+    "schema_version": "1.0",
+    "protocol_version": "1.0",
+    "run_count": 3,
+    "seed_list": [
+      42,
+      1337,
+      2024
+    ],
+    "effective_seed_list": [
+      42,
+      1337,
+      2024
+    ],
+    "representative_run_rule": "highest_validation_macro_f1",
+    "probability_saving_policy": "representative_only",
+    "confusion_artifact_policy": "all_runs",
+    "aggregate_metric_list": [
+      "val_accuracy",
+      "val_macro_f1",
+      "test_accuracy",
+      "test_macro_f1",
+      "test_precision",
+      "test_recall",
+      "oos_precision",
+      "oos_recall",
+      "oos_f1",
+      "training_time_seconds",
+      "inference_total_seconds",
+      "inference_avg_ms_per_example",
+      "inference_examples_per_sec",
+      "parameter_count",
+      "trainable_parameter_count"
+    ],
+    "test_evaluation_enabled": true,
+    "timing_includes_dataloader_overhead": true
+  },
+  "models": [
+    "mlp",
+    "text_cnn",
+    "bilstm"
+  ],
+  "canonical_model_order": [
+    "mlp",
+    "text_cnn",
+    "bilstm"
+  ],
+  "canonical_model_display_names": {
+    "mlp": "TF-IDF + MLP",
+    "text_cnn": "Text CNN",
+    "bilstm": "BiLSTM"
+  },
+  "oos_evaluation_policy": {
+    "oos_class_name": "oos",
+    "oos_class_id": 42,
+    "evaluation_method": "explicit_class",
+    "one_vs_rest_rule": "oos is the positive class; all in-scope labels are negative",
+    "note": "OOS is included in multiclass macro F1 by default"
+  },
+  "metric_definitions": {
+    "accuracy": "overall accuracy (correct / total)",
+    "macro_f1": "macro-averaged F1 across all classes including OOS",
+    "precision": "macro-averaged precision across all classes including OOS",
+    "recall": "macro-averaged recall across all classes including OOS",
+    "oos_precision": "one-vs-rest precision for OOS class",
+    "oos_recall": "one-vs-rest recall for OOS class",
+    "oos_f1": "one-vs-rest F1 for OOS class",
+    "zero_division_policy": "zero_division=0 (sklearn convention)",
+    "value_range": "[0.0, 1.0] (raw ratios, not percentages)"
+  },
+  "efficiency_timing_policy": {
+    "timing_includes_dataloader_overhead": true,
+    "fields": [
+      "training_time_seconds",
+      "inference_total_seconds",
+      "inference_avg_ms_per_example",
+      "inference_examples_per_sec",
+      "parameter_count",
+      "trainable_parameter_count"
+    ]
+  },
+  "seed_policy": {
+    "seed_list": [
+      42,
+      1337,
+      2024
+    ],
+    "effective_seed_list": [
+      42,
+      1337,
+      2024
+    ],
+    "derivation_rule": "training_seed = seed, dataloader_seed = seed + 1",
+    "note": "Same seed list reused across all models"
+  },
+  "timestamp": "2026-04-08T03:53:44.024407+00:00",
+  "final_model_rule": "best checkpoint from early stopping on monitor metric (same as representative_run_rule)"
+}

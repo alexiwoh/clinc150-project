@@ -1,0 +1,88 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "k": 15,
+  "shared_worst_classes": [
+    "income",
+    "oos",
+    "order",
+    "recipe",
+    "smart_home",
+    "yes"
+  ],
+  "shared_count": 6,
+  "unique_per_model": {
+    "mlp": [
+      "calculator",
+      "calendar",
+      "how_busy",
+      "shopping_list",
+      "w2"
+    ],
+    "text_cnn": [
+      "bill_balance",
+      "order_status",
+      "translate",
+      "travel_suggestion",
+      "who_do_you_work_for"
+    ],
+    "bilstm": [
+      "current_location",
+      "goodbye",
+      "weather"
+    ]
+  },
+  "per_model_worst_classes": {
+    "mlp": [
+      "calculator",
+      "calendar",
+      "distance",
+      "how_busy",
+      "income",
+      "meal_suggestion",
+      "oos",
+      "order",
+      "recipe",
+      "restaurant_reviews",
+      "shopping_list",
+      "smart_home",
+      "todo_list",
+      "w2",
+      "yes"
+    ],
+    "text_cnn": [
+      "bill_balance",
+      "directions",
+      "income",
+      "ingredients_list",
+      "oos",
+      "order",
+      "order_status",
+      "recipe",
+      "restaurant_suggestion",
+      "smart_home",
+      "todo_list",
+      "translate",
+      "travel_suggestion",
+      "who_do_you_work_for",
+      "yes"
+    ],
+    "bilstm": [
+      "current_location",
+      "directions",
+      "distance",
+      "goodbye",
+      "income",
+      "ingredients_list",
+      "meal_suggestion",
+      "oos",
+      "order",
+      "recipe",
+      "restaurant_reviews",
+      "restaurant_suggestion",
+      "smart_home",
+      "weather",
+      "yes"
+    ]
+  }
+}

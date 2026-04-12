@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "project_goal": "Evaluate lightweight deep learning models for intent classification and out-of-scope (OOS) detection on the CLINC150 dataset.",
+  "project_framing": "Comparison of a sparse-feature baseline (TF-IDF + MLP), a convolutional sequence model (Text CNN), and a recurrent sequence model (BiLSTM).",
+  "models": [
+    "TF-IDF + MLP",
+    "Text CNN",
+    "BiLSTM"
+  ],
+  "headline_result": {
+    "best_model": "mlp",
+    "metric": "test_macro_f1",
+    "mean": 0.8726528643001762,
+    "std": 0.003145021893969668
+  },
+  "oos_headline": {
+    "best_model": "mlp",
+    "metric": "oos_f1",
+    "mean": 0.6261331525117453,
+    "std": 0.03475278637704877
+  },
+  "key_finding": "Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors.",
+  "source_artifacts": [
+    "outputs/shared/model_comparison_aggregate.json",
+    "outputs/shared/oos_summary_table.json",
+    "outputs/shared/analysis/error_analysis_summary.json"
+  ]
+}

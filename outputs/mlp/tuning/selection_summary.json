@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "mlp",
+  "model_name": "TF-IDF + MLP",
+  "source_tuning_artifact": "mlp/tuning/tuning_results.csv",
+  "total_configurations_evaluated": 40,
+  "selection_metric": "best_val_metric",
+  "selection_rule": "max best_val_metric",
+  "tie_break_fields": [
+    "run_name"
+  ],
+  "winning_row_id": "h512_d0.2_lr00005_wd00001_1layer_s42",
+  "winning_best_val_metric": 0.9150108071290272,
+  "winning_best_val_loss": null,
+  "winning_best_epoch": 28,
+  "timestamp": "2026-04-08T03:53:44.048060+00:00"
+}

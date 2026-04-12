@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "text_cnn",
+  "model_name": "Text CNN",
+  "representative_run_id": "run_03_seed_2024",
+  "note": "Frequency tiers use test-set support quartiles as proxy for training-set frequency (CLINC150 is balanced, so this is a reasonable approximation).",
+  "quartile_thresholds": {
+    "q25": 30.0,
+    "q75": 30.0
+  },
+  "slices": [
+    {
+      "slice": "low",
+      "count": 4500,
+      "accuracy": 0.9206666666666666,
+      "error_count": 357,
+      "error_rate": 0.07933333333333334,
+      "mean_confidence_correct": 0.9506455063819885,
+      "mean_confidence_incorrect": 0.5637656450271606
+    },
+    {
+      "slice": "high",
+      "count": 1000,
+      "accuracy": 0.373,
+      "error_count": 627,
+      "error_rate": 0.627,
+      "mean_confidence_correct": 0.5658252835273743,
+      "mean_confidence_incorrect": 0.42258235812187195
+    }
+  ],
+  "source_artifact": "outputs/text_cnn/final_runs/run_03_seed_2024/per_class_metrics.json"
+}

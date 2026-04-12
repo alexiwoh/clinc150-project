@@ -1,0 +1,221 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "claims": [
+    {
+      "claim_id": "error_taxonomy",
+      "claim_text": "All models share `oos_as_inscope` as the dominant error category.",
+      "source_artifacts": [
+        "outputs/shared/analysis/error_taxonomy_summary.json"
+      ],
+      "related_figure_types": [
+        "error_taxonomy"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/analysis/error_taxonomy_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    },
+    {
+      "claim_id": "calibration_confidence",
+      "claim_text": "Best-calibrated model: Text CNN (ECE = 0.0374); worst-calibrated: BiLSTM (ECE = 0.1125).",
+      "source_artifacts": [
+        "outputs/shared/analysis/calibration_summary.json"
+      ],
+      "related_figure_types": [
+        "calibration_comparison",
+        "reliability_diagram",
+        "confidence_histogram"
+      ],
+      "related_figure_paths": [
+        "outputs/mlp/analysis/reliability_diagram.png",
+        "outputs/mlp/analysis/confidence_histogram.png",
+        "outputs/text_cnn/analysis/reliability_diagram.png",
+        "outputs/text_cnn/analysis/confidence_histogram.png",
+        "outputs/bilstm/analysis/reliability_diagram.png",
+        "outputs/bilstm/analysis/confidence_histogram.png",
+        "outputs/shared/analysis/calibration_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    },
+    {
+      "claim_id": "oos_deep_dive",
+      "claim_text": "Best OOS detector by AUROC: Text CNN (0.9523); the main failure mode remains `oos_as_inscope`.",
+      "source_artifacts": [
+        "outputs/shared/analysis/oos_threshold_comparison.json",
+        "outputs/shared/analysis/oos_false_accept_comparison.json"
+      ],
+      "related_figure_types": [
+        "oos_error_comparison",
+        "oos_error_breakdown",
+        "oos_roc_comparison"
+      ],
+      "related_figure_paths": [
+        "outputs/mlp/analysis/oos_error_breakdown.png",
+        "outputs/text_cnn/analysis/oos_error_breakdown.png",
+        "outputs/bilstm/analysis/oos_error_breakdown.png",
+        "outputs/shared/analysis/oos_roc_comparison.png",
+        "outputs/shared/analysis/oos_error_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    },
+    {
+      "claim_id": "cross_model_overlap",
+      "claim_text": "608 examples (0.1105) are wrong for all models, while 464 (0.0844) are model-specific.",
+      "source_artifacts": [
+        "outputs/shared/analysis/cross_model_error_comparison.json"
+      ],
+      "related_figure_types": [
+        "cross_model_error_overlap"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/analysis/cross_model_error_overlap.png"
+      ],
+      "scope_hint": "analysis"
+    },
+    {
+      "claim_id": "worst_classes",
+      "claim_text": "Shared worst classes across models: `income`, `oos`, `order`, `recipe`, `smart_home`, `yes`.",
+      "source_artifacts": [
+        "outputs/shared/analysis/worst_classes_comparison.json"
+      ],
+      "related_figure_types": [
+        "worst_classes_heatmap"
+      ],
+      "related_figure_paths": [
+        "outputs/mlp/analysis/worst_classes_confusion_heatmap.png",
+        "outputs/text_cnn/analysis/worst_classes_confusion_heatmap.png",
+        "outputs/bilstm/analysis/worst_classes_confusion_heatmap.png"
+      ],
+      "scope_hint": "analysis"
+    },
+    {
+      "claim_id": "persistent_confused_pairs",
+      "claim_text": "Persistent OOS-capturing intents across multiple models: `recipe`, `directions`, `income`, `smart_home`, `travel_suggestion`, `restaurant_suggestion`.",
+      "source_artifacts": [
+        "outputs/shared/most_confused_pairs_table.json"
+      ],
+      "related_figure_types": [
+        "top_confused_pairs"
+      ],
+      "related_figure_paths": [
+        "outputs/mlp/figures/representative_top_confused_pairs.png",
+        "outputs/text_cnn/figures/representative_top_confused_pairs.png",
+        "outputs/bilstm/figures/representative_top_confused_pairs.png"
+      ],
+      "scope_hint": "representative"
+    },
+    {
+      "claim_id": "length_frequency_slices",
+      "claim_text": "Short-query accuracy remains lower than desired across models, reinforcing the short-query ambiguity pattern.",
+      "source_artifacts": [
+        "outputs/mlp/analysis/length_slice_analysis.json",
+        "outputs/text_cnn/analysis/length_slice_analysis.json",
+        "outputs/bilstm/analysis/length_slice_analysis.json"
+      ],
+      "related_figure_types": [
+        "length_slice",
+        "frequency_slice"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/analysis/length_slice_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    }
+  ],
+  "taxonomy_summary": {
+    "mlp": {
+      "dominant_category": "oos_as_inscope",
+      "oos_as_inscope_count": 497
+    },
+    "text_cnn": {
+      "dominant_category": "oos_as_inscope",
+      "oos_as_inscope_count": 627
+    },
+    "bilstm": {
+      "dominant_category": "oos_as_inscope",
+      "oos_as_inscope_count": 672
+    }
+  },
+  "calibration_finding": {
+    "best_model": "text_cnn",
+    "best_ece": 0.03743301824548027,
+    "worst_model": "bilstm",
+    "worst_ece": 0.11253382217884061
+  },
+  "oos_finding": {
+    "best_model": "text_cnn",
+    "best_auroc": 0.9523406666666667,
+    "main_failure_mode": "oos_as_inscope"
+  },
+  "cross_model_overlap": {
+    "all_correct": {
+      "count": 4051,
+      "fraction": 0.7365454545454545
+    },
+    "all_wrong": {
+      "count": 608,
+      "fraction": 0.11054545454545454
+    },
+    "model_specific": {
+      "count": 464,
+      "fraction": 0.08436363636363636
+    }
+  },
+  "worst_classes_finding": {
+    "shared": [
+      "income",
+      "oos",
+      "order",
+      "recipe",
+      "smart_home",
+      "yes"
+    ],
+    "model_specific": {
+      "mlp": [
+        "calculator",
+        "calendar",
+        "how_busy",
+        "shopping_list",
+        "w2"
+      ],
+      "text_cnn": [
+        "bill_balance",
+        "order_status",
+        "translate",
+        "travel_suggestion",
+        "who_do_you_work_for"
+      ],
+      "bilstm": [
+        "current_location",
+        "goodbye",
+        "weather"
+      ]
+    }
+  },
+  "confused_pairs_finding": {
+    "persistent_intents": [
+      "recipe",
+      "directions",
+      "income",
+      "smart_home",
+      "travel_suggestion",
+      "restaurant_suggestion"
+    ]
+  },
+  "length_finding": {
+    "mlp": 0.829126213592233,
+    "text_cnn": 0.858252427184466,
+    "bilstm": 0.8097087378640777
+  },
+  "source_artifacts": [
+    "outputs/shared/analysis/error_taxonomy_summary.json",
+    "outputs/shared/analysis/calibration_summary.json",
+    "outputs/shared/analysis/cross_model_error_comparison.json",
+    "outputs/shared/analysis/worst_classes_comparison.json",
+    "outputs/shared/most_confused_pairs_table.json",
+    "outputs/shared/analysis/error_analysis_summary.json",
+    "outputs/shared/analysis/oos_threshold_comparison.json",
+    "outputs/shared/figure_manifest.json"
+  ]
+}

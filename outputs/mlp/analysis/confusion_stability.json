@@ -1,0 +1,263 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "mlp",
+  "model_name": "TF-IDF + MLP",
+  "n_runs": 3,
+  "top_confusion_pairs": [
+    {
+      "true_class": "oos",
+      "predicted_class": "recipe",
+      "mean_count": 20.0,
+      "std_count": 4.320493798938574,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "w2",
+      "mean_count": 19.0,
+      "std_count": 3.265986323710904,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "calculator",
+      "mean_count": 17.666666666666668,
+      "std_count": 2.6246692913372702,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "directions",
+      "mean_count": 14.333333333333334,
+      "std_count": 1.247219128924647,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "travel_suggestion",
+      "mean_count": 14.0,
+      "std_count": 5.656854249492381,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "smart_home",
+      "mean_count": 12.333333333333334,
+      "std_count": 2.8674417556808756,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "who_made_you",
+      "mean_count": 10.666666666666666,
+      "std_count": 1.8856180831641267,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "ingredient_substitution",
+      "mean_count": 9.666666666666666,
+      "std_count": 1.699673171197595,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "definition",
+      "mean_count": 9.666666666666666,
+      "std_count": 1.699673171197595,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "spelling",
+      "mean_count": 9.333333333333334,
+      "std_count": 1.699673171197595,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "income",
+      "mean_count": 9.333333333333334,
+      "std_count": 0.4714045207910317,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "sync_device",
+      "mean_count": 9.0,
+      "std_count": 1.4142135623730951,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "order",
+      "mean_count": 8.666666666666666,
+      "std_count": 1.247219128924647,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "bill_balance",
+      "mean_count": 8.666666666666666,
+      "std_count": 1.699673171197595,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "next_holiday",
+      "mean_count": 8.333333333333334,
+      "std_count": 0.9428090415820634,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "restaurant_suggestion",
+      "mean_count": 8.333333333333334,
+      "std_count": 0.4714045207910317,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "text",
+      "mean_count": 8.0,
+      "std_count": 0.0,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "meal_suggestion",
+      "mean_count": 7.333333333333333,
+      "std_count": 0.9428090415820634,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "current_location",
+      "mean_count": 7.333333333333333,
+      "std_count": 0.9428090415820634,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "calendar",
+      "predicted_class": "calendar_update",
+      "mean_count": 7.333333333333333,
+      "std_count": 1.247219128924647,
+      "runs_present": 3,
+      "total_runs": 3
+    }
+  ],
+  "stable_pairs": [
+    {
+      "true_class": "oos",
+      "predicted_class": "text"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "travel_suggestion"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "w2"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "ingredient_substitution"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "who_made_you"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "order"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "definition"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "recipe"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "bill_balance"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "income"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "calculator"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "directions"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "smart_home"
+    }
+  ],
+  "unstable_pairs": [
+    {
+      "true_class": "calendar",
+      "predicted_class": "calendar_update"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "insurance_change"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "how_old_are_you"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "todo_list"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "current_location"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "weather"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "what_can_i_ask_you"
+    },
+    {
+      "true_class": "redeem_rewards",
+      "predicted_class": "rewards_balance"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "jump_start"
+    }
+  ],
+  "stable_count": 13,
+  "unstable_count": 9
+}

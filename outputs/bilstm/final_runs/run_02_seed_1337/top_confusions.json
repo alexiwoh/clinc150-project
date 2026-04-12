@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "confusions": [
+    {
+      "true_label": "oos",
+      "predicted_label": "smart_home",
+      "count": 39
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "income",
+      "count": 30
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "current_location",
+      "count": 28
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "directions",
+      "count": 24
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "weather",
+      "count": 20
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "recipe",
+      "count": 17
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "sync_device",
+      "count": 17
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "restaurant_suggestion",
+      "count": 16
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "ingredients_list",
+      "count": 15
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "cancel",
+      "count": 14
+    }
+  ]
+}

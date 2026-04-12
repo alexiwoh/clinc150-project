@@ -1,0 +1,269 @@
+[
+  {
+    "split": "train",
+    "index": 0,
+    "raw_text": "what expression would i use to say i love you if i were an italian",
+    "cleaned_text": "what expression would i use to say i love you if i were an italian",
+    "tokens": [
+      "what",
+      "expression",
+      "would",
+      "i",
+      "use",
+      "to",
+      "say",
+      "i",
+      "love",
+      "you",
+      "if",
+      "i",
+      "were",
+      "an",
+      "italian"
+    ],
+    "token_ids": [
+      7,
+      2639,
+      45,
+      3,
+      74,
+      4,
+      116,
+      3,
+      524,
+      6,
+      43,
+      3,
+      191,
+      48,
+      508
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "train",
+    "index": 1,
+    "raw_text": "can you tell me how to say 'i do not speak much spanish', in spanish",
+    "cleaned_text": "can you tell me how to say 'i do not speak much spanish', in spanish",
+    "tokens": [
+      "can",
+      "you",
+      "tell",
+      "me",
+      "how",
+      "to",
+      "say",
+      "'i",
+      "do",
+      "not",
+      "speak",
+      "much",
+      "spanish',",
+      "in",
+      "spanish"
+    ],
+    "token_ids": [
+      14,
+      6,
+      21,
+      10,
+      12,
+      4,
+      116,
+      1961,
+      13,
+      118,
+      265,
+      54,
+      5664,
+      16,
+      413
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "train",
+    "index": 2,
+    "raw_text": "what is the equivalent of, 'life is good' in french",
+    "cleaned_text": "what is the equivalent of, 'life is good' in french",
+    "tokens": [
+      "what",
+      "is",
+      "the",
+      "equivalent",
+      "of,",
+      "'life",
+      "is",
+      "good'",
+      "in",
+      "french"
+    ],
+    "token_ids": [
+      7,
+      11,
+      5,
+      4185,
+      5080,
+      3175,
+      11,
+      4383,
+      16,
+      302
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "validation",
+    "index": 0,
+    "raw_text": "in spanish, meet me tomorrow is said how",
+    "cleaned_text": "in spanish, meet me tomorrow is said how",
+    "tokens": [
+      "in",
+      "spanish,",
+      "meet",
+      "me",
+      "tomorrow",
+      "is",
+      "said",
+      "how"
+    ],
+    "token_ids": [
+      16,
+      5665,
+      995,
+      10,
+      211,
+      11,
+      606,
+      12
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "validation",
+    "index": 1,
+    "raw_text": "in french, how do i say, see you later",
+    "cleaned_text": "in french, how do i say, see you later",
+    "tokens": [
+      "in",
+      "french,",
+      "how",
+      "do",
+      "i",
+      "say,",
+      "see",
+      "you",
+      "later"
+    ],
+    "token_ids": [
+      16,
+      4324,
+      12,
+      13,
+      3,
+      2276,
+      133,
+      6,
+      456
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "validation",
+    "index": 2,
+    "raw_text": "how do you say hello in japanese",
+    "cleaned_text": "how do you say hello in japanese",
+    "tokens": [
+      "how",
+      "do",
+      "you",
+      "say",
+      "hello",
+      "in",
+      "japanese"
+    ],
+    "token_ids": [
+      12,
+      13,
+      6,
+      116,
+      468,
+      16,
+      1059
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "test",
+    "index": 0,
+    "raw_text": "how would you say fly in italian",
+    "cleaned_text": "how would you say fly in italian",
+    "tokens": [
+      "how",
+      "would",
+      "you",
+      "say",
+      "fly",
+      "in",
+      "italian"
+    ],
+    "token_ids": [
+      12,
+      45,
+      6,
+      116,
+      1353,
+      16,
+      508
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "test",
+    "index": 1,
+    "raw_text": "what's the spanish word for pasta",
+    "cleaned_text": "what's the spanish word for pasta",
+    "tokens": [
+      "what's",
+      "the",
+      "spanish",
+      "word",
+      "for",
+      "pasta"
+    ],
+    "token_ids": [
+      33,
+      5,
+      413,
+      483,
+      9,
+      1003
+    ],
+    "contains_unk": false
+  },
+  {
+    "split": "test",
+    "index": 2,
+    "raw_text": "how would they say butter in zambia",
+    "cleaned_text": "how would they say butter in zambia",
+    "tokens": [
+      "how",
+      "would",
+      "they",
+      "say",
+      "butter",
+      "in",
+      "zambia"
+    ],
+    "token_ids": [
+      12,
+      45,
+      203,
+      116,
+      973,
+      16,
+      1
+    ],
+    "contains_unk": true
+  }
+]

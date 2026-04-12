@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "run_count": 3,
+  "seed_list": [
+    42,
+    1337,
+    2024
+  ],
+  "representative_run_rule": "highest_validation_macro_f1",
+  "optimizer": "adam",
+  "per_model_lr": {
+    "mlp": 0.0005,
+    "text_cnn": 0.001,
+    "bilstm": 0.001
+  },
+  "per_model_weight_decay": {
+    "mlp": 0.0001,
+    "text_cnn": 0.0001,
+    "bilstm": 0.0
+  },
+  "batch_size": 64,
+  "max_epochs": 100,
+  "early_stopping_patience": 10,
+  "monitor_metric": "val_macro_f1",
+  "metric_definitions": {
+    "accuracy": "overall accuracy (correct / total)",
+    "macro_f1": "macro-averaged F1 across all classes including OOS",
+    "precision": "macro-averaged precision across all classes including OOS",
+    "recall": "macro-averaged recall across all classes including OOS",
+    "oos_precision": "one-vs-rest precision for OOS class",
+    "oos_recall": "one-vs-rest recall for OOS class",
+    "oos_f1": "one-vs-rest F1 for OOS class",
+    "zero_division_policy": "zero_division=0 (sklearn convention)",
+    "value_range": "[0.0, 1.0] (raw ratios, not percentages)"
+  },
+  "oos_evaluation_policy": {
+    "oos_class_name": "oos",
+    "oos_class_id": 42,
+    "evaluation_method": "explicit_class",
+    "one_vs_rest_rule": "oos is the positive class; all in-scope labels are negative",
+    "note": "OOS is included in multiclass macro F1 by default"
+  },
+  "timing_policy": "includes DataLoader overhead",
+  "source_artifacts": [
+    "outputs/shared/evaluation_protocol.json",
+    "outputs/mlp/frozen_final_config.json",
+    "outputs/text_cnn/frozen_final_config.json",
+    "outputs/bilstm/frozen_final_config.json"
+  ]
+}

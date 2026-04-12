@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "text_cnn",
+  "model_name": "Text CNN",
+  "representative_run_id": "run_03_seed_2024",
+  "representative_seed": 2024,
+  "total_runs_aggregated": 3,
+  "selection_rule": "highest_validation_macro_f1",
+  "note": "Aggregate metrics come from all completed runs. Representative-run artifacts are for qualitative analysis only.",
+  "artifacts": {
+    "aggregate_metrics": "outputs/text_cnn/aggregate/aggregate_metrics.json",
+    "representative_run_metadata": "outputs/text_cnn/aggregate/representative_run.json",
+    "final_predictions": "outputs/text_cnn/final_runs/run_03_seed_2024/final_predictions.csv",
+    "representative_misclassifications": "outputs/text_cnn/aggregate/representative_misclassifications.csv",
+    "top_errors": "outputs/text_cnn/final_runs/run_03_seed_2024/top_errors.json",
+    "confusion_matrix": "outputs/text_cnn/final_runs/run_03_seed_2024/confusion_matrix.csv",
+    "top_confusions": "outputs/text_cnn/final_runs/run_03_seed_2024/top_confusions.json",
+    "per_class_metrics": "outputs/text_cnn/final_runs/run_03_seed_2024/per_class_metrics.json",
+    "label_order": "outputs/text_cnn/final_runs/run_03_seed_2024/label_order.json"
+  },
+  "figures": {
+    "train_val_loss_curve": "outputs/text_cnn/figures/representative_train_val_loss_curve.png",
+    "val_macro_f1_curve": "outputs/text_cnn/figures/representative_val_macro_f1_curve.png",
+    "val_accuracy_curve": "outputs/text_cnn/figures/representative_val_accuracy_curve.png",
+    "confusion_matrix": "outputs/text_cnn/figures/representative_confusion_matrix.png",
+    "top_confused_pairs": "outputs/text_cnn/figures/representative_top_confused_pairs.png",
+    "bottom_classes_f1": "outputs/text_cnn/figures/representative_bottom_classes_f1.png",
+    "oos_metrics": "outputs/text_cnn/figures/representative_oos_metrics.png",
+    "error_summary": "outputs/text_cnn/figures/representative_error_summary.png"
+  }
+}

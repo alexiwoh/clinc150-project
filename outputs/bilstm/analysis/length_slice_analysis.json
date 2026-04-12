@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "bilstm",
+  "model_name": "BiLSTM",
+  "representative_run_id": "run_02_seed_1337",
+  "slices": [
+    {
+      "slice": "short",
+      "count": 515,
+      "accuracy": 0.8097087378640777,
+      "error_count": 98,
+      "error_rate": 0.19029126213592232,
+      "mean_confidence_correct": 0.9572311639785767,
+      "mean_confidence_incorrect": 0.7107425332069397
+    },
+    {
+      "slice": "medium",
+      "count": 2645,
+      "accuracy": 0.7988657844990548,
+      "error_count": 532,
+      "error_rate": 0.20113421550094518,
+      "mean_confidence_correct": 0.9598748087882996,
+      "mean_confidence_incorrect": 0.6713069081306458
+    },
+    {
+      "slice": "long",
+      "count": 2340,
+      "accuracy": 0.7658119658119659,
+      "error_count": 548,
+      "error_rate": 0.2341880341880342,
+      "mean_confidence_correct": 0.9635890126228333,
+      "mean_confidence_incorrect": 0.6569625735282898
+    }
+  ],
+  "source_artifact": "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv"
+}

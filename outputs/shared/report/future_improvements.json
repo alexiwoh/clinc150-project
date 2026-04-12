@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "high_priority": [
+    {
+      "improvement": "Collect more OOS training examples to reduce false accepts",
+      "rationale": "OOS false accepts are the dominant error across all models; more OOS training data directly addresses the distribution mismatch."
+    },
+    {
+      "improvement": "Merge or relabel persistently confused intent pairs within the same domain",
+      "rationale": "Several intent pairs share near-identical semantics and consistently confuse all models."
+    },
+    {
+      "improvement": "Apply confidence thresholding in deployment to flag uncertain predictions",
+      "rationale": "Many errors occur at high confidence; a deployment threshold could redirect uncertain queries to human review."
+    },
+    {
+      "improvement": "Evaluate temperature scaling for post-hoc calibration improvement",
+      "rationale": "Calibration varies significantly across models; temperature scaling could improve reliability without retraining."
+    }
+  ],
+  "medium_priority": [
+    {
+      "improvement": "Add pretrained word embeddings (GloVe, word2vec) to Text CNN and BiLSTM",
+      "rationale": "Pretrained embeddings could improve generalization especially for rare words and OOS queries."
+    },
+    {
+      "improvement": "Systematic hyperparameter tuning (dropout, hidden size, learning rate)",
+      "rationale": "Current configs use limited grid search; broader exploration may improve all models."
+    },
+    {
+      "improvement": "Add parameter-count vs accuracy Pareto analysis",
+      "rationale": "Quantify the efficiency-accuracy trade-off to guide model selection for deployment."
+    },
+    {
+      "improvement": "Add threshold analysis for OOS detection with operating-point selection",
+      "rationale": "Enable tunable precision-recall trade-off for OOS detection in production."
+    }
+  ],
+  "lower_priority": [
+    {
+      "improvement": "Compare against transformer-based models (DistilBERT, BERT-base)",
+      "rationale": "Establish an upper-bound reference for the lightweight models evaluated."
+    },
+    {
+      "improvement": "Evaluate on additional intent-classification datasets",
+      "rationale": "Validate whether findings generalize beyond CLINC150."
+    },
+    {
+      "improvement": "Subword tokenization (BPE, WordPiece) for better OOV handling",
+      "rationale": "Reduce OOV rates and improve generalization to unseen vocabulary."
+    },
+    {
+      "improvement": "Multi-task learning combining intent classification and OOS detection",
+      "rationale": "Joint training may improve OOS discrimination by explicitly modeling the boundary."
+    },
+    {
+      "improvement": "Bootstrap confidence intervals for more rigorous statistical comparison",
+      "rationale": "3 repeated runs provide limited statistical power; bootstrapping would strengthen claims."
+    }
+  ],
+  "source_artifacts": [
+    "outputs/shared/analysis/error_analysis_summary.json"
+  ]
+}

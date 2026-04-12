@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "note": "Single representative-run values, not aggregate means.",
+  "rows": [
+    {
+      "model_id": "mlp",
+      "model_name": "TF-IDF + MLP",
+      "accuracy": 0.84,
+      "macro_f1": 0.8742423850285791,
+      "micro_f1": 0.84,
+      "weighted_f1": 0.8326351147423667,
+      "macro_precision": 0.8492162391284832,
+      "macro_recall": 0.9121611479028697,
+      "micro_precision": 0.84,
+      "micro_recall": 0.84,
+      "weighted_precision": 0.8534573700862275,
+      "weighted_recall": 0.84
+    },
+    {
+      "model_id": "text_cnn",
+      "model_name": "Text CNN",
+      "accuracy": 0.8210909090909091,
+      "macro_f1": 0.8657989196294426,
+      "micro_f1": 0.8210909090909091,
+      "weighted_f1": 0.8072145415630231,
+      "macro_precision": 0.8315475478073038,
+      "macro_recall": 0.9170397350993378,
+      "micro_precision": 0.8210909090909091,
+      "micro_recall": 0.8210909090909091,
+      "weighted_precision": 0.8501783169683417,
+      "weighted_recall": 0.8210909090909091
+    },
+    {
+      "model_id": "bilstm",
+      "model_name": "BiLSTM",
+      "accuracy": 0.7858181818181819,
+      "macro_f1": 0.8354130867632543,
+      "micro_f1": 0.7858181818181819,
+      "weighted_f1": 0.7727104999550869,
+      "macro_precision": 0.8062034256315256,
+      "macro_recall": 0.8838498896247242,
+      "micro_precision": 0.7858181818181819,
+      "micro_recall": 0.7858181818181819,
+      "weighted_precision": 0.8216404543704074,
+      "weighted_recall": 0.7858181818181819
+    }
+  ]
+}

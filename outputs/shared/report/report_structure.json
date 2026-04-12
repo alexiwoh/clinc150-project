@@ -1,0 +1,267 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "report_title": "Lightweight Deep Learning Models for Intent Classification and Out-of-Scope Detection on CLINC150",
+  "sections": [
+    {
+      "section_id": "B",
+      "section_title": "Abstract",
+      "output_md": "outputs/shared/report/abstract.md",
+      "output_json": "outputs/shared/report/abstract.json",
+      "source_artifacts": [
+        "outputs/shared/model_comparison_aggregate.json",
+        "outputs/shared/oos_summary_table.json",
+        "outputs/shared/analysis/error_analysis_summary.json"
+      ],
+      "figures": [],
+      "tables": []
+    },
+    {
+      "section_id": "C",
+      "section_title": "Dataset Description",
+      "output_md": "outputs/shared/report/dataset_description.md",
+      "output_json": "outputs/shared/report/dataset_description.json",
+      "source_artifacts": [
+        "data/artifacts/dataset_summary.json"
+      ],
+      "figures": [],
+      "tables": []
+    },
+    {
+      "section_id": "D",
+      "section_title": "Preprocessing Summary",
+      "output_md": "outputs/shared/report/preprocessing_summary_report.md",
+      "output_json": "outputs/shared/report/preprocessing_summary_report.json",
+      "source_artifacts": [
+        "data/artifacts/preprocessing_summary.json"
+      ],
+      "figures": [],
+      "tables": []
+    },
+    {
+      "section_id": "E",
+      "section_title": "Model Architectures",
+      "output_md": "outputs/shared/report/model_architectures.md",
+      "output_json": "outputs/shared/report/model_architectures.json",
+      "source_artifacts": [
+        "outputs/mlp/frozen_final_config.json",
+        "outputs/text_cnn/frozen_final_config.json",
+        "outputs/bilstm/frozen_final_config.json",
+        "outputs/shared/efficiency_summary_table.json",
+        "data/artifacts/preprocessing_summary.json"
+      ],
+      "figures": [
+        "outputs/shared/figures/model_efficiency_comparison.png"
+      ],
+      "tables": []
+    },
+    {
+      "section_id": "F",
+      "section_title": "Experimental Setup",
+      "output_md": "outputs/shared/report/experimental_setup.md",
+      "output_json": "outputs/shared/report/experimental_setup.json",
+      "source_artifacts": [
+        "outputs/shared/evaluation_protocol.json",
+        "outputs/mlp/frozen_final_config.json",
+        "outputs/text_cnn/frozen_final_config.json",
+        "outputs/bilstm/frozen_final_config.json"
+      ],
+      "figures": [],
+      "tables": []
+    },
+    {
+      "section_id": "G",
+      "section_title": "Main Results",
+      "output_md": "outputs/shared/report/main_results.md",
+      "output_json": "outputs/shared/report/main_results.json",
+      "source_artifacts": [
+        "outputs/shared/model_comparison_aggregate.json",
+        "outputs/shared/oos_summary_table.json",
+        "outputs/shared/analysis/extended_metrics_comparison.json",
+        "outputs/shared/analysis/calibration_summary.json",
+        "outputs/shared/efficiency_summary_table.json",
+        "outputs/shared/figure_manifest.json"
+      ],
+      "figures": [
+        "outputs/mlp/figures/representative_train_val_loss_curve.png",
+        "outputs/mlp/figures/representative_val_macro_f1_curve.png",
+        "outputs/mlp/figures/representative_val_accuracy_curve.png",
+        "outputs/text_cnn/figures/representative_train_val_loss_curve.png",
+        "outputs/text_cnn/figures/representative_val_macro_f1_curve.png",
+        "outputs/text_cnn/figures/representative_val_accuracy_curve.png",
+        "outputs/bilstm/figures/representative_train_val_loss_curve.png",
+        "outputs/bilstm/figures/representative_val_macro_f1_curve.png",
+        "outputs/bilstm/figures/representative_val_accuracy_curve.png",
+        "outputs/shared/figures/model_comparison_test_accuracy.png",
+        "outputs/shared/figures/model_comparison_test_macro_f1.png",
+        "outputs/shared/figures/model_comparison_oos_f1.png",
+        "outputs/shared/figures/oos_metrics_comparison.png"
+      ],
+      "tables": [
+        "main_comparison",
+        "oos_metrics",
+        "extended_metrics",
+        "calibration",
+        "efficiency"
+      ]
+    },
+    {
+      "section_id": "H",
+      "section_title": "OOS Detection Results",
+      "output_md": "outputs/shared/report/oos_detection_results.md",
+      "output_json": "outputs/shared/report/oos_detection_results.json",
+      "source_artifacts": [
+        "outputs/shared/oos_summary_table.json",
+        "outputs/shared/analysis/oos_threshold_comparison.json",
+        "outputs/shared/analysis/oos_false_accept_comparison.json",
+        "outputs/shared/figure_manifest.json"
+      ],
+      "figures": [
+        "outputs/mlp/figures/representative_oos_metrics.png",
+        "outputs/text_cnn/figures/representative_oos_metrics.png",
+        "outputs/bilstm/figures/representative_oos_metrics.png",
+        "outputs/mlp/analysis/oos_roc_curve.png",
+        "outputs/mlp/analysis/oos_pr_curve.png",
+        "outputs/mlp/analysis/oos_error_breakdown.png",
+        "outputs/text_cnn/analysis/oos_roc_curve.png",
+        "outputs/text_cnn/analysis/oos_pr_curve.png",
+        "outputs/text_cnn/analysis/oos_error_breakdown.png",
+        "outputs/bilstm/analysis/oos_roc_curve.png",
+        "outputs/bilstm/analysis/oos_pr_curve.png",
+        "outputs/bilstm/analysis/oos_error_breakdown.png",
+        "outputs/shared/analysis/oos_roc_comparison.png",
+        "outputs/shared/analysis/oos_pr_comparison.png",
+        "outputs/shared/analysis/oos_error_comparison.png"
+      ],
+      "tables": []
+    },
+    {
+      "section_id": "J",
+      "section_title": "Error Analysis Discussion",
+      "output_md": "outputs/shared/report/error_analysis_discussion.md",
+      "output_json": "outputs/shared/report/error_analysis_discussion.json",
+      "source_artifacts": [
+        "outputs/shared/analysis/error_taxonomy_summary.json",
+        "outputs/shared/analysis/calibration_summary.json",
+        "outputs/shared/analysis/cross_model_error_comparison.json",
+        "outputs/shared/analysis/worst_classes_comparison.json",
+        "outputs/shared/most_confused_pairs_table.json",
+        "outputs/shared/analysis/error_analysis_summary.json",
+        "outputs/shared/analysis/oos_threshold_comparison.json",
+        "outputs/shared/figure_manifest.json"
+      ],
+      "figures": [
+        "outputs/mlp/figures/representative_confusion_matrix.png",
+        "outputs/mlp/figures/representative_top_confused_pairs.png",
+        "outputs/mlp/figures/representative_bottom_classes_f1.png",
+        "outputs/text_cnn/figures/representative_confusion_matrix.png",
+        "outputs/text_cnn/figures/representative_top_confused_pairs.png",
+        "outputs/text_cnn/figures/representative_bottom_classes_f1.png",
+        "outputs/bilstm/figures/representative_confusion_matrix.png",
+        "outputs/bilstm/figures/representative_top_confused_pairs.png",
+        "outputs/bilstm/figures/representative_bottom_classes_f1.png",
+        "outputs/mlp/figures/representative_error_summary.png",
+        "outputs/text_cnn/figures/representative_error_summary.png",
+        "outputs/bilstm/figures/representative_error_summary.png",
+        "outputs/mlp/analysis/reliability_diagram.png",
+        "outputs/mlp/analysis/confidence_histogram.png",
+        "outputs/mlp/analysis/confidence_vs_accuracy.png",
+        "outputs/mlp/analysis/worst_classes_confusion_heatmap.png",
+        "outputs/mlp/analysis/confusion_stability.png",
+        "outputs/text_cnn/analysis/reliability_diagram.png",
+        "outputs/text_cnn/analysis/confidence_histogram.png",
+        "outputs/text_cnn/analysis/confidence_vs_accuracy.png",
+        "outputs/text_cnn/analysis/worst_classes_confusion_heatmap.png",
+        "outputs/text_cnn/analysis/confusion_stability.png",
+        "outputs/bilstm/analysis/reliability_diagram.png",
+        "outputs/bilstm/analysis/confidence_histogram.png",
+        "outputs/bilstm/analysis/confidence_vs_accuracy.png",
+        "outputs/bilstm/analysis/worst_classes_confusion_heatmap.png",
+        "outputs/bilstm/analysis/confusion_stability.png",
+        "outputs/shared/analysis/calibration_comparison.png",
+        "outputs/shared/analysis/error_taxonomy_comparison.png",
+        "outputs/shared/analysis/confidence_accuracy_comparison.png",
+        "outputs/shared/analysis/length_slice_comparison.png",
+        "outputs/shared/analysis/frequency_slice_comparison.png",
+        "outputs/shared/analysis/cross_model_error_overlap.png"
+      ],
+      "tables": []
+    },
+    {
+      "section_id": "K",
+      "section_title": "Representative Examples",
+      "output_md": "outputs/shared/report/representative_examples.md",
+      "output_json": "outputs/shared/report/representative_examples.json",
+      "source_artifacts": [
+        "outputs/shared/analysis/curated_report_examples.json"
+      ],
+      "figures": [],
+      "tables": []
+    },
+    {
+      "section_id": "L",
+      "section_title": "Key Findings",
+      "output_md": "outputs/shared/report/key_findings.md",
+      "output_json": "outputs/shared/report/key_findings.json",
+      "source_artifacts": [
+        "outputs/shared/analysis/error_analysis_summary.json",
+        "outputs/shared/model_comparison_aggregate.json",
+        "outputs/shared/analysis/calibration_summary.json",
+        "outputs/shared/analysis/oos_threshold_comparison.json",
+        "outputs/shared/efficiency_summary_table.json",
+        "outputs/shared/analysis/cross_model_error_comparison.json"
+      ],
+      "figures": [],
+      "tables": []
+    },
+    {
+      "section_id": "M",
+      "section_title": "Limitations",
+      "output_md": "outputs/shared/report/limitations.md",
+      "output_json": "outputs/shared/report/limitations.json",
+      "source_artifacts": [
+        "outputs/shared/analysis/error_analysis_notes.md"
+      ],
+      "figures": [],
+      "tables": []
+    },
+    {
+      "section_id": "N",
+      "section_title": "Future Improvements",
+      "output_md": "outputs/shared/report/future_improvements.md",
+      "output_json": "outputs/shared/report/future_improvements.json",
+      "source_artifacts": [
+        "outputs/shared/analysis/error_analysis_summary.json"
+      ],
+      "figures": [],
+      "tables": []
+    },
+    {
+      "section_id": "O",
+      "section_title": "Reproducibility",
+      "output_md": "outputs/shared/report/reproducibility.md",
+      "output_json": "outputs/shared/report/reproducibility.json",
+      "source_artifacts": [
+        "outputs/shared/evaluation_protocol.json",
+        "outputs/shared/efficiency_summary_table.json"
+      ],
+      "figures": [],
+      "tables": []
+    },
+    {
+      "section_id": "I",
+      "section_title": "Figure Catalogue",
+      "output_md": "outputs/shared/report/figure_catalogue.md",
+      "output_json": "outputs/shared/report/figure_catalogue.json",
+      "source_artifacts": [
+        "outputs/shared/figure_manifest.json"
+      ],
+      "figures": [],
+      "tables": []
+    }
+  ],
+  "assembled_report": "outputs/shared/report/full_report_draft.md",
+  "total_sections": 14,
+  "total_figures": 62,
+  "total_tables": 5
+}

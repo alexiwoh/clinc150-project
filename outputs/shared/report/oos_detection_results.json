@@ -1,0 +1,218 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "aggregate_oos_metrics": {
+    "mlp": {
+      "oos_precision_mean": 0.8840146285108736,
+      "oos_precision_std": 0.013157222563238853,
+      "oos_recall_mean": 0.48666666666666664,
+      "oos_recall_std": 0.044394694377694395,
+      "oos_f1_mean": 0.6261331525117453,
+      "oos_f1_std": 0.03475278637704877
+    },
+    "text_cnn": {
+      "oos_precision_mean": 0.9414484195962342,
+      "oos_precision_std": 0.010232255545086942,
+      "oos_recall_mean": 0.35633333333333334,
+      "oos_recall_std": 0.04014418457953227,
+      "oos_f1_mean": 0.5153964713570659,
+      "oos_f1_std": 0.041636260475168545
+    },
+    "bilstm": {
+      "oos_precision_mean": 0.8816609734753472,
+      "oos_precision_std": 0.010404861083706966,
+      "oos_recall_mean": 0.2946666666666667,
+      "oos_recall_std": 0.0235843639350783,
+      "oos_f1_mean": 0.44130342547790774,
+      "oos_f1_std": 0.027328606352725233
+    }
+  },
+  "threshold_metrics": {
+    "mlp": {
+      "auroc": 0.9415123333333333,
+      "aupr": 0.7984072874439447,
+      "fpr_at_95tpr": 0.2388888888888889,
+      "fpr_at_90tpr": 0.15311111111111111
+    },
+    "text_cnn": {
+      "auroc": 0.9523406666666667,
+      "aupr": 0.8402629177274288,
+      "fpr_at_95tpr": 0.20822222222222223,
+      "fpr_at_90tpr": 0.13866666666666666
+    },
+    "bilstm": {
+      "auroc": 0.9435813333333335,
+      "aupr": 0.8054806063559163,
+      "fpr_at_95tpr": 0.2308888888888889,
+      "fpr_at_90tpr": 0.14355555555555555
+    }
+  },
+  "msp_baseline": {
+    "mlp": {
+      "msp_auroc": 0.8901287777777778,
+      "msp_aupr": 0.6180150617979561
+    },
+    "text_cnn": {
+      "msp_auroc": 0.9059482222222222,
+      "msp_aupr": 0.6559906666517132
+    },
+    "bilstm": {
+      "msp_auroc": 0.8746905555555556,
+      "msp_aupr": 0.5452972402779862
+    }
+  },
+  "best_oos_model": {
+    "model_id": "text_cnn",
+    "rationale": "Highest AUROC (0.9523)"
+  },
+  "claims": [
+    {
+      "claim_id": "aggregate_oos_metrics",
+      "claim_text": "TF-IDF + MLP achieved the highest aggregate OOS F1 (0.6261 +/- 0.0348).",
+      "source_artifacts": [
+        "outputs/shared/oos_summary_table.json"
+      ],
+      "related_figure_types": [
+        "oos_metrics_comparison",
+        "model_comparison_oos_f1"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/figures/oos_metrics_comparison.png"
+      ],
+      "scope_hint": "aggregate"
+    },
+    {
+      "claim_id": "threshold_analysis",
+      "claim_text": "Text CNN achieved the highest AUROC (0.9523), indicating the strongest threshold-independent OOS discrimination.",
+      "source_artifacts": [
+        "outputs/shared/analysis/oos_threshold_comparison.json"
+      ],
+      "related_figure_types": [
+        "oos_roc_comparison",
+        "oos_pr_comparison"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/analysis/oos_roc_comparison.png",
+        "outputs/shared/analysis/oos_pr_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    },
+    {
+      "claim_id": "false_accept_patterns",
+      "claim_text": "False accepts remain the dominant OOS failure pattern, with a small set of intents repeatedly capturing OOS examples.",
+      "source_artifacts": [
+        "outputs/shared/analysis/oos_false_accept_comparison.json"
+      ],
+      "related_figure_types": [
+        "oos_error_comparison"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/analysis/oos_error_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    }
+  ],
+  "false_accept_summary": {
+    "mlp": [
+      {
+        "intent": "w2",
+        "count": 19,
+        "mean_confidence": 0.34885698556900024
+      },
+      {
+        "intent": "calculator",
+        "count": 19,
+        "mean_confidence": 0.28365883231163025
+      },
+      {
+        "intent": "recipe",
+        "count": 16,
+        "mean_confidence": 0.3261868357658386
+      },
+      {
+        "intent": "smart_home",
+        "count": 16,
+        "mean_confidence": 0.2324816882610321
+      },
+      {
+        "intent": "directions",
+        "count": 13,
+        "mean_confidence": 0.4001738727092743
+      }
+    ],
+    "text_cnn": [
+      {
+        "intent": "travel_suggestion",
+        "count": 27,
+        "mean_confidence": 0.38848358392715454
+      },
+      {
+        "intent": "directions",
+        "count": 23,
+        "mean_confidence": 0.4587792456150055
+      },
+      {
+        "intent": "todo_list",
+        "count": 21,
+        "mean_confidence": 0.37126392126083374
+      },
+      {
+        "intent": "recipe",
+        "count": 19,
+        "mean_confidence": 0.3686259984970093
+      },
+      {
+        "intent": "restaurant_suggestion",
+        "count": 15,
+        "mean_confidence": 0.39416104555130005
+      }
+    ],
+    "bilstm": [
+      {
+        "intent": "smart_home",
+        "count": 39,
+        "mean_confidence": 0.628534734249115
+      },
+      {
+        "intent": "income",
+        "count": 30,
+        "mean_confidence": 0.6459516882896423
+      },
+      {
+        "intent": "current_location",
+        "count": 28,
+        "mean_confidence": 0.6976905465126038
+      },
+      {
+        "intent": "directions",
+        "count": 24,
+        "mean_confidence": 0.6602993011474609
+      },
+      {
+        "intent": "weather",
+        "count": 20,
+        "mean_confidence": 0.6486479043960571
+      }
+    ]
+  },
+  "figure_references": [
+    "outputs/mlp/analysis/oos_roc_curve.png",
+    "outputs/mlp/analysis/oos_pr_curve.png",
+    "outputs/mlp/analysis/oos_error_breakdown.png",
+    "outputs/text_cnn/analysis/oos_roc_curve.png",
+    "outputs/text_cnn/analysis/oos_pr_curve.png",
+    "outputs/text_cnn/analysis/oos_error_breakdown.png",
+    "outputs/bilstm/analysis/oos_roc_curve.png",
+    "outputs/bilstm/analysis/oos_pr_curve.png",
+    "outputs/bilstm/analysis/oos_error_breakdown.png",
+    "outputs/shared/analysis/oos_roc_comparison.png",
+    "outputs/shared/analysis/oos_pr_comparison.png",
+    "outputs/shared/analysis/oos_error_comparison.png"
+  ],
+  "source_artifacts": [
+    "outputs/shared/oos_summary_table.json",
+    "outputs/shared/analysis/oos_threshold_comparison.json",
+    "outputs/shared/analysis/oos_false_accept_comparison.json",
+    "outputs/shared/figure_manifest.json"
+  ]
+}

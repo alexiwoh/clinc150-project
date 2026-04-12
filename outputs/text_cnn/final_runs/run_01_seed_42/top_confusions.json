@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "confusions": [
+    {
+      "true_label": "oos",
+      "predicted_label": "recipe",
+      "count": 23
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "todo_list",
+      "count": 23
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "directions",
+      "count": 22
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "find_phone",
+      "count": 18
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "smart_home",
+      "count": 18
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "what_can_i_ask_you",
+      "count": 17
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "income",
+      "count": 16
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "restaurant_suggestion",
+      "count": 16
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "travel_suggestion",
+      "count": 16
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "order",
+      "count": 15
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "confusions": [
+    {
+      "true_label": "oos",
+      "predicted_label": "calculator",
+      "count": 19
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "w2",
+      "count": 19
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "recipe",
+      "count": 16
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "smart_home",
+      "count": 16
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "directions",
+      "count": 13
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "income",
+      "count": 10
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "order",
+      "count": 10
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "spelling",
+      "count": 10
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "travel_suggestion",
+      "count": 10
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "definition",
+      "count": 9
+    }
+  ]
+}

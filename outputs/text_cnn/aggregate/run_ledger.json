@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_name": "Text CNN",
+  "model_id": "text_cnn",
+  "run_count_requested": 3,
+  "run_count_completed": 3,
+  "run_count_failed": 0,
+  "run_count_skipped": 0,
+  "requested_run_ids": [
+    "run_01_seed_42",
+    "run_02_seed_1337",
+    "run_03_seed_2024"
+  ],
+  "completed_run_ids": [
+    "run_01_seed_42",
+    "run_02_seed_1337",
+    "run_03_seed_2024"
+  ],
+  "failed_run_ids": [],
+  "skipped_run_ids": [],
+  "seed_list_requested": [
+    42,
+    1337,
+    2024
+  ],
+  "seed_list_completed": [
+    42,
+    1337,
+    2024
+  ],
+  "failure_reasons": {},
+  "per_run_metadata_refs": {
+    "run_01_seed_42": "outputs/text_cnn/final_runs/run_01_seed_42/run_metadata.json",
+    "run_02_seed_1337": "outputs/text_cnn/final_runs/run_02_seed_1337/run_metadata.json",
+    "run_03_seed_2024": "outputs/text_cnn/final_runs/run_03_seed_2024/run_metadata.json"
+  }
+}

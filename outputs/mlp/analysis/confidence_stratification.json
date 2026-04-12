@@ -1,0 +1,218 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "mlp",
+  "model_name": "TF-IDF + MLP",
+  "representative_run_id": "run_01_seed_42",
+  "strata": [
+    {
+      "bin_label": "[0.0, 0.2)",
+      "bin_lower": 0.0,
+      "bin_upper": 0.2,
+      "count": 433,
+      "accuracy": 0.3579676674364896,
+      "error_count": 278,
+      "error_fraction_of_total": 0.3159090909090909
+    },
+    {
+      "bin_label": "[0.2, 0.4)",
+      "bin_lower": 0.2,
+      "bin_upper": 0.4,
+      "count": 572,
+      "accuracy": 0.527972027972028,
+      "error_count": 270,
+      "error_fraction_of_total": 0.3068181818181818
+    },
+    {
+      "bin_label": "[0.4, 0.6)",
+      "bin_lower": 0.4,
+      "bin_upper": 0.6,
+      "count": 550,
+      "accuracy": 0.6763636363636364,
+      "error_count": 178,
+      "error_fraction_of_total": 0.20227272727272727
+    },
+    {
+      "bin_label": "[0.6, 0.8)",
+      "bin_lower": 0.6,
+      "bin_upper": 0.8,
+      "count": 705,
+      "accuracy": 0.8709219858156029,
+      "error_count": 91,
+      "error_fraction_of_total": 0.10340909090909091
+    },
+    {
+      "bin_label": "[0.8, 1.0]",
+      "bin_lower": 0.8,
+      "bin_upper": 1.0,
+      "count": 3240,
+      "accuracy": 0.9805555555555555,
+      "error_count": 63,
+      "error_fraction_of_total": 0.0715909090909091
+    }
+  ],
+  "high_confidence_errors": [
+    {
+      "text": "ignore call",
+      "true_label_name": "oos",
+      "predicted_label_name": "make_call",
+      "max_confidence": 0.998011589050293,
+      "prediction_entropy": 0.015995347872376442,
+      "confidence_margin": 0.9963502883911133
+    },
+    {
+      "text": "deny incoming phone call",
+      "true_label_name": "oos",
+      "predicted_label_name": "make_call",
+      "max_confidence": 0.9972057938575745,
+      "prediction_entropy": 0.025932393968105316,
+      "confidence_margin": 0.9962965846061707
+    },
+    {
+      "text": "what time is it in phoenix",
+      "true_label_name": "timezone",
+      "predicted_label_name": "time",
+      "max_confidence": 0.9946780204772949,
+      "prediction_entropy": 0.049030862748622894,
+      "confidence_margin": 0.9937943816184998
+    },
+    {
+      "text": "give me the weather forecast for today",
+      "true_label_name": "oos",
+      "predicted_label_name": "weather",
+      "max_confidence": 0.9908979535102844,
+      "prediction_entropy": 0.08550354838371277,
+      "confidence_margin": 0.9892680644989014
+    },
+    {
+      "text": "accept incoming phone call",
+      "true_label_name": "oos",
+      "predicted_label_name": "make_call",
+      "max_confidence": 0.9898051023483276,
+      "prediction_entropy": 0.08830767869949341,
+      "confidence_margin": 0.9873763918876648
+    },
+    {
+      "text": "read text",
+      "true_label_name": "oos",
+      "predicted_label_name": "text",
+      "max_confidence": 0.9893794655799866,
+      "prediction_entropy": 0.10488065332174301,
+      "confidence_margin": 0.9875015020370483
+    },
+    {
+      "text": "who employs you",
+      "true_label_name": "who_do_you_work_for",
+      "predicted_label_name": "who_made_you",
+      "max_confidence": 0.969076931476593,
+      "prediction_entropy": 0.15881870687007904,
+      "confidence_margin": 0.9419337511062622
+    },
+    {
+      "text": "who controls you",
+      "true_label_name": "who_do_you_work_for",
+      "predicted_label_name": "who_made_you",
+      "max_confidence": 0.969076931476593,
+      "prediction_entropy": 0.15881870687007904,
+      "confidence_margin": 0.9419337511062622
+    },
+    {
+      "text": "can you order some ointment for me",
+      "true_label_name": "oos",
+      "predicted_label_name": "order",
+      "max_confidence": 0.9612579941749573,
+      "prediction_entropy": 0.2667064666748047,
+      "confidence_margin": 0.9452552795410156
+    },
+    {
+      "text": "give me a recipe for tacos",
+      "true_label_name": "ingredients_list",
+      "predicted_label_name": "recipe",
+      "max_confidence": 0.9607388973236084,
+      "prediction_entropy": 0.3086870312690735,
+      "confidence_margin": 0.9512531161308289
+    },
+    {
+      "text": "repeat what the weather will be like",
+      "true_label_name": "transfer",
+      "predicted_label_name": "weather",
+      "max_confidence": 0.9552571773529053,
+      "prediction_entropy": 0.3575255870819092,
+      "confidence_margin": 0.950682520866394
+    },
+    {
+      "text": "how old is jennifer aniston",
+      "true_label_name": "oos",
+      "predicted_label_name": "how_old_are_you",
+      "max_confidence": 0.9541647434234619,
+      "prediction_entropy": 0.22155268490314484,
+      "confidence_margin": 0.9130901098251343
+    },
+    {
+      "text": "thanks for your help, goodbye!",
+      "true_label_name": "goodbye",
+      "predicted_label_name": "thank_you",
+      "max_confidence": 0.9539374113082886,
+      "prediction_entropy": 0.23464465141296387,
+      "confidence_margin": 0.9147109985351562
+    },
+    {
+      "text": "what is my current location",
+      "true_label_name": "share_location",
+      "predicted_label_name": "current_location",
+      "max_confidence": 0.9497719407081604,
+      "prediction_entropy": 0.30336880683898926,
+      "confidence_margin": 0.9230470061302185
+    },
+    {
+      "text": "have i told you to add washing dishes to my todo list",
+      "true_label_name": "todo_list",
+      "predicted_label_name": "todo_list_update",
+      "max_confidence": 0.9494496583938599,
+      "prediction_entropy": 0.3036908507347107,
+      "confidence_margin": 0.9214653372764587
+    },
+    {
+      "text": "have i added my doctor's appointment to my calendar",
+      "true_label_name": "calendar",
+      "predicted_label_name": "calendar_update",
+      "max_confidence": 0.9489712715148926,
+      "prediction_entropy": 0.3410329222679138,
+      "confidence_margin": 0.9234755635261536
+    },
+    {
+      "text": "call an uber to take me to the closest grocery store",
+      "true_label_name": "oos",
+      "predicted_label_name": "uber",
+      "max_confidence": 0.9464704394340515,
+      "prediction_entropy": 0.28540992736816406,
+      "confidence_margin": 0.9071704745292664
+    },
+    {
+      "text": "is the marathon on friday added to my calendar",
+      "true_label_name": "calendar",
+      "predicted_label_name": "calendar_update",
+      "max_confidence": 0.946357250213623,
+      "prediction_entropy": 0.30231600999832153,
+      "confidence_margin": 0.908162534236908
+    },
+    {
+      "text": "how many kilowatts have i used this month",
+      "true_label_name": "oos",
+      "predicted_label_name": "pto_used",
+      "max_confidence": 0.9381687045097351,
+      "prediction_entropy": 0.41830846667289734,
+      "confidence_margin": 0.9241583347320557
+    },
+    {
+      "text": "what's the current prevailing interest rate for mortgages in my area",
+      "true_label_name": "oos",
+      "predicted_label_name": "interest_rate",
+      "max_confidence": 0.9376860857009888,
+      "prediction_entropy": 0.433452844619751,
+      "confidence_margin": 0.9216550588607788
+    }
+  ],
+  "high_confidence_threshold": 0.8,
+  "source_artifact": "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
+}

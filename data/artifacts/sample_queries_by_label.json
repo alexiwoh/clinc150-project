@@ -1,0 +1,79 @@
+{
+  "greeting": [
+    "how's everything",
+    "how are things going",
+    "hello, anyone there",
+    "are you okay right now",
+    "are you doing okay"
+  ],
+  "book_flight": [
+    "what's the cheapest fares from lax to sfo for round trip flights leaving april 1st and returning april 7th",
+    "for the dates april 1st to the 7th, find me round trip air tickets from la to sfo",
+    "what southwest flights are there for lax to sfo arriving april 1st and returning april 7th",
+    "what airlines have flights round trip on april 1st to april 7th from lax to sfo",
+    "find me round trip flights out of lax to sfox"
+  ],
+  "flight_status": [
+    "what is the projected time frame for the flight to land",
+    "is there any news on flight dl123",
+    "what is the word on flight dl123",
+    "when will we begin to board my scheduled flight",
+    "whats the status of my frontier flight"
+  ],
+  "weather": [
+    "what are the conditions like in orlando",
+    "what's the temperature like in tampa",
+    "what's the forecast like for pittsburgh",
+    "what are the conditions like in sarasota",
+    "what's the climate like in chicago"
+  ],
+  "translate": [
+    "what expression would i use to say i love you if i were an italian",
+    "can you tell me how to say 'i do not speak much spanish', in spanish",
+    "what is the equivalent of, 'life is good' in french",
+    "tell me how to say, 'it is a beautiful morning' in italian",
+    "if i were mongolian, how would i say that i am a tourist"
+  ],
+  "balance": [
+    "savings account balance at chase bank please",
+    "check chase bank for my checking balance",
+    "what is my checking account balance at chase",
+    "i want my checking balance at chase",
+    "what's my savings balance at chase"
+  ],
+  "shopping_list": [
+    "would you let me know what is on my shopping list",
+    "list out what is on my shopping list",
+    "i need for you to tell me what is on my shopping list",
+    "do you want me to shop for peanut butter",
+    "do you want peanut butter for your lunches this week"
+  ],
+  "shopping_list_update": [
+    "delete fries from shopping list",
+    "take off fries from the shopping list",
+    "please take away the fries from the shopping list",
+    "remove fries from my shopping list",
+    "we no longer need fries on the shopping lisr"
+  ],
+  "pto_request": [
+    "how do i put in a pto request for the first to the ninth",
+    "am i allowed to put in a pto request for now to april",
+    "is there a time i can put in a pto request for dec 2 to new years",
+    "when can i put a pto request in for feb 22 to march 1",
+    "i need a pto request on march 1 to 2"
+  ],
+  "pto_request_status": [
+    "have they approved my vacation request yet",
+    "give me the status of my vacation request",
+    "am i going to be able to get my vacation request",
+    "i want to check on my vacation request",
+    "is my vacation approved yet"
+  ],
+  "oos": [
+    "how much is an overdraft fee for bank",
+    "why are exponents preformed before multiplication in the order of operations",
+    "what size wipers does this car take",
+    "where is the dipstick",
+    "how much is 1 share of aapl"
+  ]
+}

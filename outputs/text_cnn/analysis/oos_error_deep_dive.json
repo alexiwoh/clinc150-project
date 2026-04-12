@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "text_cnn",
+  "model_name": "Text CNN",
+  "representative_run_id": "run_03_seed_2024",
+  "false_accepts": {
+    "count": 627,
+    "mean_confidence": 0.42258235812187195,
+    "std_confidence": 0.28071317076683044,
+    "top_capturing_intents": [
+      {
+        "intent": "travel_suggestion",
+        "count": 27,
+        "mean_confidence": 0.38848358392715454
+      },
+      {
+        "intent": "directions",
+        "count": 23,
+        "mean_confidence": 0.4587792456150055
+      },
+      {
+        "intent": "todo_list",
+        "count": 21,
+        "mean_confidence": 0.37126392126083374
+      },
+      {
+        "intent": "recipe",
+        "count": 19,
+        "mean_confidence": 0.3686259984970093
+      },
+      {
+        "intent": "restaurant_suggestion",
+        "count": 15,
+        "mean_confidence": 0.39416104555130005
+      },
+      {
+        "intent": "weather",
+        "count": 15,
+        "mean_confidence": 0.4170951843261719
+      },
+      {
+        "intent": "income",
+        "count": 13,
+        "mean_confidence": 0.25172337889671326
+      },
+      {
+        "intent": "restaurant_reviews",
+        "count": 13,
+        "mean_confidence": 0.4550331234931946
+      },
+      {
+        "intent": "car_rental",
+        "count": 12,
+        "mean_confidence": 0.3598450720310211
+      },
+      {
+        "intent": "translate",
+        "count": 12,
+        "mean_confidence": 0.24561910331249237
+      }
+    ],
+    "top_examples": [
+      {
+        "text": "how many calories does doing 20 situps burn",
+        "true_label_name": "oos",
+        "predicted_label_name": "calories",
+        "max_confidence": 0.9999847412109375
+      },
+      {
+        "text": "give me the weather forecast for today",
+        "true_label_name": "oos",
+        "predicted_label_name": "weather",
+        "max_confidence": 0.9999822378158569
+      },
+      {
+        "text": "how many calories does jumping up and down burn",
+        "true_label_name": "oos",
+        "predicted_label_name": "calories",
+        "max_confidence": 0.9999232292175293
+      },
+      {
+        "text": "call an uber to take me to the closest grocery store",
+        "true_label_name": "oos",
+        "predicted_label_name": "uber",
+        "max_confidence": 0.9998862743377686
+      },
+      {
+        "text": "what's the current prevailing interest rate for mortgages in my area",
+        "true_label_name": "oos",
+        "predicted_label_name": "interest_rate",
+        "max_confidence": 0.9995094537734985
+      }
+    ]
+  },
+  "false_rejects": {
+    "count": 25,
+    "mean_confidence": 0.40575122833251953,
+    "std_confidence": 0.26900550723075867,
+    "top_rejected_intents": [
+      {
+        "intent": "restaurant_reviews",
+        "count": 2,
+        "mean_confidence": 0.14728423953056335
+      },
+      {
+        "intent": "replacement_card_duration",
+        "count": 2,
+        "mean_confidence": 0.781816840171814
+      },
+      {
+        "intent": "order",
+        "count": 2,
+        "mean_confidence": 0.6170634031295776
+      },
+      {
+        "intent": "bill_balance",
+        "count": 1,
+        "mean_confidence": 0.9773907661437988
+      },
+      {
+        "intent": "bill_due",
+        "count": 1,
+        "mean_confidence": 0.8038612604141235
+      },
+      {
+        "intent": "what_is_your_name",
+        "count": 1,
+        "mean_confidence": 0.13092491030693054
+      },
+      {
+        "intent": "transfer",
+        "count": 1,
+        "mean_confidence": 0.5264276266098022
+      },
+      {
+        "intent": "timezone",
+        "count": 1,
+        "mean_confidence": 0.32562339305877686
+      },
+      {
+        "intent": "time",
+        "count": 1,
+        "mean_confidence": 0.776395857334137
+      },
+      {
+        "intent": "rollover_401k",
+        "count": 1,
+        "mean_confidence": 0.09378711134195328
+      }
+    ],
+    "top_examples": [
+      {
+        "text": "a hidden government facility",
+        "true_label_name": "where_are_you_from",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.028554579243063927
+      },
+      {
+        "text": "can 401ks be moved",
+        "true_label_name": "rollover_401k",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.09378711134195328
+      },
+      {
+        "text": "is the friday's full after 4",
+        "true_label_name": "how_busy",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.10005555301904678
+      },
+      {
+        "text": "what's the answer to it all",
+        "true_label_name": "meaning_of_life",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.11766836792230606
+      },
+      {
+        "text": "who do i have the pleasure of speaking with",
+        "true_label_name": "what_is_your_name",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.13092491030693054
+      }
+    ]
+  },
+  "source_artifact": "outputs/text_cnn/final_runs/run_03_seed_2024/final_predictions.csv"
+}

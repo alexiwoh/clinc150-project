@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "mlp",
+  "model_name": "TF-IDF + MLP",
+  "representative_run_id": "run_01_seed_42",
+  "ece": 0.10269777552241628,
+  "mce": 0.257983095766533,
+  "brier_score": 0.25321492552757263,
+  "nll": 0.7303420901298523,
+  "n_bins": 15,
+  "bin_data": [
+    {
+      "bin_lower": 0.0,
+      "bin_upper": 0.06666666666666667,
+      "count": 42,
+      "accuracy": 0.30952380952380953,
+      "confidence": 0.051540713757276535
+    },
+    {
+      "bin_lower": 0.06666666666666667,
+      "bin_upper": 0.13333333333333333,
+      "count": 178,
+      "accuracy": 0.3258426966292135,
+      "confidence": 0.10228562355041504
+    },
+    {
+      "bin_lower": 0.13333333333333333,
+      "bin_upper": 0.2,
+      "count": 213,
+      "accuracy": 0.39436619718309857,
+      "confidence": 0.16723890602588654
+    },
+    {
+      "bin_lower": 0.2,
+      "bin_upper": 0.26666666666666666,
+      "count": 197,
+      "accuracy": 0.47715736040609136,
+      "confidence": 0.2321757823228836
+    },
+    {
+      "bin_lower": 0.26666666666666666,
+      "bin_upper": 0.3333333333333333,
+      "count": 213,
+      "accuracy": 0.5164319248826291,
+      "confidence": 0.3006419837474823
+    },
+    {
+      "bin_lower": 0.3333333333333333,
+      "bin_upper": 0.4,
+      "count": 162,
+      "accuracy": 0.6049382716049383,
+      "confidence": 0.3668801486492157
+    },
+    {
+      "bin_lower": 0.4,
+      "bin_upper": 0.4666666666666667,
+      "count": 189,
+      "accuracy": 0.6402116402116402,
+      "confidence": 0.43210962414741516
+    },
+    {
+      "bin_lower": 0.4666666666666667,
+      "bin_upper": 0.5333333333333333,
+      "count": 174,
+      "accuracy": 0.6609195402298851,
+      "confidence": 0.4990560710430145
+    },
+    {
+      "bin_lower": 0.5333333333333333,
+      "bin_upper": 0.6,
+      "count": 187,
+      "accuracy": 0.7272727272727273,
+      "confidence": 0.5668894648551941
+    },
+    {
+      "bin_lower": 0.6,
+      "bin_upper": 0.6666666666666666,
+      "count": 190,
+      "accuracy": 0.8105263157894737,
+      "confidence": 0.6319377422332764
+    },
+    {
+      "bin_lower": 0.6666666666666666,
+      "bin_upper": 0.7333333333333333,
+      "count": 222,
+      "accuracy": 0.8603603603603603,
+      "confidence": 0.7024146914482117
+    },
+    {
+      "bin_lower": 0.7333333333333333,
+      "bin_upper": 0.8,
+      "count": 293,
+      "accuracy": 0.9180887372013652,
+      "confidence": 0.7655056118965149
+    },
+    {
+      "bin_lower": 0.8,
+      "bin_upper": 0.8666666666666667,
+      "count": 366,
+      "accuracy": 0.9426229508196722,
+      "confidence": 0.8353273272514343
+    },
+    {
+      "bin_lower": 0.8666666666666667,
+      "bin_upper": 0.9333333333333333,
+      "count": 708,
+      "accuracy": 0.9689265536723164,
+      "confidence": 0.9036967158317566
+    },
+    {
+      "bin_lower": 0.9333333333333333,
+      "bin_upper": 1.0,
+      "count": 2166,
+      "accuracy": 0.9907663896583564,
+      "confidence": 0.9739619493484497
+    }
+  ],
+  "confidence_statistics": {
+    "correct_max_confidence_mean": 0.8085724115371704,
+    "correct_max_confidence_std": 0.23678384721279144,
+    "incorrect_max_confidence_mean": 0.3631339371204376,
+    "incorrect_max_confidence_std": 0.23854365944862366,
+    "prediction_entropy_mean": 1.2781659364700317,
+    "prediction_entropy_std": 1.3071578741073608,
+    "correct_margin_mean": 0.7601287961006165,
+    "correct_margin_std": 0.2837473154067993,
+    "incorrect_margin_mean": 0.23091576993465424,
+    "incorrect_margin_std": 0.2497432678937912
+  },
+  "source_artifact": "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
+}

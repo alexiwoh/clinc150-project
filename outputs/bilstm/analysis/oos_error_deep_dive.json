@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "bilstm",
+  "model_name": "BiLSTM",
+  "representative_run_id": "run_02_seed_1337",
+  "false_accepts": {
+    "count": 672,
+    "mean_confidence": 0.6449694037437439,
+    "std_confidence": 0.24916256964206696,
+    "top_capturing_intents": [
+      {
+        "intent": "smart_home",
+        "count": 39,
+        "mean_confidence": 0.628534734249115
+      },
+      {
+        "intent": "income",
+        "count": 30,
+        "mean_confidence": 0.6459516882896423
+      },
+      {
+        "intent": "current_location",
+        "count": 28,
+        "mean_confidence": 0.6976905465126038
+      },
+      {
+        "intent": "directions",
+        "count": 24,
+        "mean_confidence": 0.6602993011474609
+      },
+      {
+        "intent": "weather",
+        "count": 20,
+        "mean_confidence": 0.6486479043960571
+      },
+      {
+        "intent": "sync_device",
+        "count": 17,
+        "mean_confidence": 0.7312024831771851
+      },
+      {
+        "intent": "recipe",
+        "count": 17,
+        "mean_confidence": 0.5996425747871399
+      },
+      {
+        "intent": "restaurant_suggestion",
+        "count": 16,
+        "mean_confidence": 0.6918511986732483
+      },
+      {
+        "intent": "ingredients_list",
+        "count": 15,
+        "mean_confidence": 0.5980021357536316
+      },
+      {
+        "intent": "cancel",
+        "count": 14,
+        "mean_confidence": 0.5626336336135864
+      }
+    ],
+    "top_examples": [
+      {
+        "text": "what other countries speak the english language",
+        "true_label_name": "oos",
+        "predicted_label_name": "change_language",
+        "max_confidence": 0.9999963045120239
+      },
+      {
+        "text": "look up the conversion rate for the euro to dollar exchange",
+        "true_label_name": "oos",
+        "predicted_label_name": "exchange_rate",
+        "max_confidence": 0.9999663829803467
+      },
+      {
+        "text": "give me the weather forecast for today",
+        "true_label_name": "oos",
+        "predicted_label_name": "weather",
+        "max_confidence": 0.9999613761901855
+      },
+      {
+        "text": "check the status of my amazon orders for me",
+        "true_label_name": "oos",
+        "predicted_label_name": "order_status",
+        "max_confidence": 0.9999063014984131
+      },
+      {
+        "text": "when should i remove my snow tires",
+        "true_label_name": "oos",
+        "predicted_label_name": "tire_change",
+        "max_confidence": 0.9998812675476074
+      }
+    ]
+  },
+  "false_rejects": {
+    "count": 39,
+    "mean_confidence": 0.6261306405067444,
+    "std_confidence": 0.25417736172676086,
+    "top_rejected_intents": [
+      {
+        "intent": "restaurant_reviews",
+        "count": 4,
+        "mean_confidence": 0.731038510799408
+      },
+      {
+        "intent": "carry_on",
+        "count": 3,
+        "mean_confidence": 0.6374905705451965
+      },
+      {
+        "intent": "play_music",
+        "count": 3,
+        "mean_confidence": 0.4503401219844818
+      },
+      {
+        "intent": "what_song",
+        "count": 2,
+        "mean_confidence": 0.5891954302787781
+      },
+      {
+        "intent": "timezone",
+        "count": 2,
+        "mean_confidence": 0.7124890089035034
+      },
+      {
+        "intent": "order_status",
+        "count": 2,
+        "mean_confidence": 0.5650596022605896
+      },
+      {
+        "intent": "calculator",
+        "count": 2,
+        "mean_confidence": 0.619243860244751
+      },
+      {
+        "intent": "bill_balance",
+        "count": 1,
+        "mean_confidence": 0.8481613397598267
+      },
+      {
+        "intent": "order",
+        "count": 1,
+        "mean_confidence": 0.9994544386863708
+      },
+      {
+        "intent": "travel_alert",
+        "count": 1,
+        "mean_confidence": 0.9209591746330261
+      }
+    ],
+    "top_examples": [
+      {
+        "text": "how do i do a 401(k) rollover",
+        "true_label_name": "rollover_401k",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.17121118307113647
+      },
+      {
+        "text": "can you monitor my package's progress",
+        "true_label_name": "order_status",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.2059508115053177
+      },
+      {
+        "text": "do i overspend when it comes to fast food",
+        "true_label_name": "spending_history",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.24914060533046722
+      },
+      {
+        "text": "ai pick up the dice, then drop it",
+        "true_label_name": "roll_dice",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.28707635402679443
+      },
+      {
+        "text": "drop some beats",
+        "true_label_name": "play_music",
+        "predicted_label_name": "oos",
+        "max_confidence": 0.2882451117038727
+      }
+    ]
+  },
+  "source_artifact": "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv"
+}

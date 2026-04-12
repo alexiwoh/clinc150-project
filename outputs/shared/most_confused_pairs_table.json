@@ -1,0 +1,276 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "rows": [
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "representative_run_id": "run_01_seed_42",
+      "rank": 1,
+      "true_label_name": "oos",
+      "predicted_label_name": "calculator",
+      "count": 19
+    },
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "representative_run_id": "run_01_seed_42",
+      "rank": 2,
+      "true_label_name": "oos",
+      "predicted_label_name": "w2",
+      "count": 19
+    },
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "representative_run_id": "run_01_seed_42",
+      "rank": 3,
+      "true_label_name": "oos",
+      "predicted_label_name": "recipe",
+      "count": 16
+    },
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "representative_run_id": "run_01_seed_42",
+      "rank": 4,
+      "true_label_name": "oos",
+      "predicted_label_name": "smart_home",
+      "count": 16
+    },
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "representative_run_id": "run_01_seed_42",
+      "rank": 5,
+      "true_label_name": "oos",
+      "predicted_label_name": "directions",
+      "count": 13
+    },
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "representative_run_id": "run_01_seed_42",
+      "rank": 6,
+      "true_label_name": "oos",
+      "predicted_label_name": "income",
+      "count": 10
+    },
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "representative_run_id": "run_01_seed_42",
+      "rank": 7,
+      "true_label_name": "oos",
+      "predicted_label_name": "order",
+      "count": 10
+    },
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "representative_run_id": "run_01_seed_42",
+      "rank": 8,
+      "true_label_name": "oos",
+      "predicted_label_name": "spelling",
+      "count": 10
+    },
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "representative_run_id": "run_01_seed_42",
+      "rank": 9,
+      "true_label_name": "oos",
+      "predicted_label_name": "travel_suggestion",
+      "count": 10
+    },
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "representative_run_id": "run_01_seed_42",
+      "rank": 10,
+      "true_label_name": "oos",
+      "predicted_label_name": "definition",
+      "count": 9
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "representative_run_id": "run_03_seed_2024",
+      "rank": 1,
+      "true_label_name": "oos",
+      "predicted_label_name": "travel_suggestion",
+      "count": 27
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "representative_run_id": "run_03_seed_2024",
+      "rank": 2,
+      "true_label_name": "oos",
+      "predicted_label_name": "directions",
+      "count": 23
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "representative_run_id": "run_03_seed_2024",
+      "rank": 3,
+      "true_label_name": "oos",
+      "predicted_label_name": "todo_list",
+      "count": 21
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "representative_run_id": "run_03_seed_2024",
+      "rank": 4,
+      "true_label_name": "oos",
+      "predicted_label_name": "recipe",
+      "count": 19
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "representative_run_id": "run_03_seed_2024",
+      "rank": 5,
+      "true_label_name": "oos",
+      "predicted_label_name": "restaurant_suggestion",
+      "count": 15
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "representative_run_id": "run_03_seed_2024",
+      "rank": 6,
+      "true_label_name": "oos",
+      "predicted_label_name": "weather",
+      "count": 15
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "representative_run_id": "run_03_seed_2024",
+      "rank": 7,
+      "true_label_name": "oos",
+      "predicted_label_name": "income",
+      "count": 13
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "representative_run_id": "run_03_seed_2024",
+      "rank": 8,
+      "true_label_name": "oos",
+      "predicted_label_name": "restaurant_reviews",
+      "count": 13
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "representative_run_id": "run_03_seed_2024",
+      "rank": 9,
+      "true_label_name": "oos",
+      "predicted_label_name": "bill_balance",
+      "count": 12
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "representative_run_id": "run_03_seed_2024",
+      "rank": 10,
+      "true_label_name": "oos",
+      "predicted_label_name": "car_rental",
+      "count": 12
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "representative_run_id": "run_02_seed_1337",
+      "rank": 1,
+      "true_label_name": "oos",
+      "predicted_label_name": "smart_home",
+      "count": 39
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "representative_run_id": "run_02_seed_1337",
+      "rank": 2,
+      "true_label_name": "oos",
+      "predicted_label_name": "income",
+      "count": 30
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "representative_run_id": "run_02_seed_1337",
+      "rank": 3,
+      "true_label_name": "oos",
+      "predicted_label_name": "current_location",
+      "count": 28
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "representative_run_id": "run_02_seed_1337",
+      "rank": 4,
+      "true_label_name": "oos",
+      "predicted_label_name": "directions",
+      "count": 24
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "representative_run_id": "run_02_seed_1337",
+      "rank": 5,
+      "true_label_name": "oos",
+      "predicted_label_name": "weather",
+      "count": 20
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "representative_run_id": "run_02_seed_1337",
+      "rank": 6,
+      "true_label_name": "oos",
+      "predicted_label_name": "recipe",
+      "count": 17
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "representative_run_id": "run_02_seed_1337",
+      "rank": 7,
+      "true_label_name": "oos",
+      "predicted_label_name": "sync_device",
+      "count": 17
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "representative_run_id": "run_02_seed_1337",
+      "rank": 8,
+      "true_label_name": "oos",
+      "predicted_label_name": "restaurant_suggestion",
+      "count": 16
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "representative_run_id": "run_02_seed_1337",
+      "rank": 9,
+      "true_label_name": "oos",
+      "predicted_label_name": "ingredients_list",
+      "count": 15
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "representative_run_id": "run_02_seed_1337",
+      "rank": 10,
+      "true_label_name": "oos",
+      "predicted_label_name": "cancel",
+      "count": 14
+    }
+  ]
+}

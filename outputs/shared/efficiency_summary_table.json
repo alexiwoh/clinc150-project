@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "canonical_model_order": [
+    "mlp",
+    "text_cnn",
+    "bilstm"
+  ],
+  "rows": [
+    {
+      "model_name": "TF-IDF + MLP",
+      "model_id": "mlp",
+      "display_name": "TF-IDF + MLP",
+      "run_count": 3,
+      "training_time_seconds_mean": 60.61937928199768,
+      "training_time_seconds_std": 10.796039362474017,
+      "inference_total_seconds_mean": 0.3094375928243001,
+      "inference_total_seconds_std": 0.006891942010260086,
+      "inference_avg_ms_per_example_mean": 0.05626138051350912,
+      "inference_avg_ms_per_example_std": 0.0012530803655018332,
+      "inference_examples_per_sec_mean": 17782.88541445872,
+      "inference_examples_per_sec_std": 390.79606124083256,
+      "parameter_count": 5197975,
+      "trainable_parameter_count": 5197975
+    },
+    {
+      "model_name": "Text CNN",
+      "model_id": "text_cnn",
+      "display_name": "Text CNN",
+      "run_count": 3,
+      "training_time_seconds_mean": 136.48480931917825,
+      "training_time_seconds_std": 7.7044934372758425,
+      "inference_total_seconds_mean": 0.17221697171529135,
+      "inference_total_seconds_std": 0.011747995532814427,
+      "inference_avg_ms_per_example_mean": 0.031312176675507515,
+      "inference_avg_ms_per_example_std": 0.002135999187784442,
+      "inference_examples_per_sec_mean": 32082.231368090364,
+      "inference_examples_per_sec_std": 2138.804265580692,
+      "parameter_count": 1930167,
+      "trainable_parameter_count": 1930167
+    },
+    {
+      "model_name": "BiLSTM",
+      "model_id": "bilstm",
+      "display_name": "BiLSTM",
+      "run_count": 3,
+      "training_time_seconds_mean": 91.74191459019978,
+      "training_time_seconds_std": 23.2005021494886,
+      "inference_total_seconds_mean": 0.662865956624349,
+      "inference_total_seconds_std": 0.0827203684667365,
+      "inference_avg_ms_per_example_mean": 0.12052108302260889,
+      "inference_avg_ms_per_example_std": 0.01504006699395208,
+      "inference_examples_per_sec_mean": 8431.56451389331,
+      "inference_examples_per_sec_std": 1079.830134317708,
+      "parameter_count": 4284311,
+      "trainable_parameter_count": 4284311
+    }
+  ]
+}

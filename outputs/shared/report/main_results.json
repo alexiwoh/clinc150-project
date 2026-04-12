@@ -1,0 +1,428 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "tables": [
+    {
+      "table_id": "main_comparison",
+      "title": "Main Model Comparison",
+      "data_scope": "aggregate",
+      "columns": [
+        "Model",
+        "Test Accuracy",
+        "Test Macro F1",
+        "Test Precision",
+        "Test Recall"
+      ],
+      "rows": [
+        {
+          "schema_version": "1.0",
+          "protocol_version": "1.0",
+          "model_id": "mlp",
+          "run_count": 3,
+          "val_accuracy_mean": 0.9072043010752688,
+          "val_accuracy_std": 0.0009971632790855786,
+          "val_macro_f1_mean": 0.9145400082677589,
+          "val_macro_f1_std": 0.000946091669158802,
+          "test_accuracy_mean": 0.8372727272727273,
+          "test_accuracy_std": 0.006597436683962818,
+          "test_macro_f1_mean": 0.8726528643001762,
+          "test_macro_f1_std": 0.003145021893969668,
+          "test_precision_mean": 0.8464029085237907,
+          "test_precision_std": 0.006489091036126183,
+          "test_recall_mean": 0.912347314201619,
+          "test_recall_std": 0.0015242345610476035,
+          "oos_precision_mean": 0.8840146285108736,
+          "oos_precision_std": 0.013157222563238853,
+          "oos_recall_mean": 0.48666666666666664,
+          "oos_recall_std": 0.044394694377694395,
+          "oos_f1_mean": 0.6261331525117453,
+          "oos_f1_std": 0.03475278637704877,
+          "training_time_seconds_mean": 60.61937928199768,
+          "training_time_seconds_std": 10.796039362474017,
+          "inference_total_seconds_mean": 0.3094375928243001,
+          "inference_total_seconds_std": 0.006891942010260086,
+          "inference_avg_ms_per_example_mean": 0.05626138051350912,
+          "inference_avg_ms_per_example_std": 0.0012530803655018332,
+          "inference_examples_per_sec_mean": 17782.88541445872,
+          "inference_examples_per_sec_std": 390.79606124083256,
+          "model_name": "TF-IDF + MLP",
+          "display_name": "TF-IDF + MLP",
+          "input_type": "tfidf",
+          "primary_val_metric": "val_macro_f1",
+          "frozen_config_ref": "outputs/mlp/frozen_final_config.json",
+          "representative_run_id": "run_01_seed_42",
+          "parameter_count": 5197975,
+          "trainable_parameter_count": 5197975
+        },
+        {
+          "schema_version": "1.0",
+          "protocol_version": "1.0",
+          "model_id": "text_cnn",
+          "run_count": 3,
+          "val_accuracy_mean": 0.9031182795698923,
+          "val_accuracy_std": 0.0019768576678333744,
+          "val_macro_f1_mean": 0.9098249697980574,
+          "val_macro_f1_std": 0.0016809545351468658,
+          "test_accuracy_mean": 0.8175757575757575,
+          "test_accuracy_std": 0.008393009466046899,
+          "test_macro_f1_mean": 0.8634849725331826,
+          "test_macro_f1_std": 0.005665101741182052,
+          "test_precision_mean": 0.8278067292969696,
+          "test_precision_std": 0.009356518866706645,
+          "test_recall_mean": 0.9163406916850626,
+          "test_recall_std": 0.0015943930092677612,
+          "oos_precision_mean": 0.9414484195962342,
+          "oos_precision_std": 0.010232255545086942,
+          "oos_recall_mean": 0.35633333333333334,
+          "oos_recall_std": 0.04014418457953227,
+          "oos_f1_mean": 0.5153964713570659,
+          "oos_f1_std": 0.041636260475168545,
+          "training_time_seconds_mean": 136.48480931917825,
+          "training_time_seconds_std": 7.7044934372758425,
+          "inference_total_seconds_mean": 0.17221697171529135,
+          "inference_total_seconds_std": 0.011747995532814427,
+          "inference_avg_ms_per_example_mean": 0.031312176675507515,
+          "inference_avg_ms_per_example_std": 0.002135999187784442,
+          "inference_examples_per_sec_mean": 32082.231368090364,
+          "inference_examples_per_sec_std": 2138.804265580692,
+          "model_name": "Text CNN",
+          "display_name": "Text CNN",
+          "input_type": "token_ids",
+          "primary_val_metric": "val_macro_f1",
+          "frozen_config_ref": "outputs/text_cnn/frozen_final_config.json",
+          "representative_run_id": "run_03_seed_2024",
+          "parameter_count": 1930167,
+          "trainable_parameter_count": 1930167
+        },
+        {
+          "schema_version": "1.0",
+          "protocol_version": "1.0",
+          "model_id": "bilstm",
+          "run_count": 3,
+          "val_accuracy_mean": 0.8713978494623656,
+          "val_accuracy_std": 0.0044801433668816525,
+          "val_macro_f1_mean": 0.8797613165847921,
+          "val_macro_f1_std": 0.004358946037364641,
+          "test_accuracy_mean": 0.7750909090909092,
+          "test_accuracy_std": 0.008833944050825385,
+          "test_macro_f1_mean": 0.8284429441737112,
+          "test_macro_f1_std": 0.0070639768185083995,
+          "test_precision_mean": 0.8004634619922374,
+          "test_precision_std": 0.006166522491437665,
+          "test_recall_mean": 0.8779632082413541,
+          "test_recall_std": 0.006756924582573863,
+          "oos_precision_mean": 0.8816609734753472,
+          "oos_precision_std": 0.010404861083706966,
+          "oos_recall_mean": 0.2946666666666667,
+          "oos_recall_std": 0.0235843639350783,
+          "oos_f1_mean": 0.44130342547790774,
+          "oos_f1_std": 0.027328606352725233,
+          "training_time_seconds_mean": 91.74191459019978,
+          "training_time_seconds_std": 23.2005021494886,
+          "inference_total_seconds_mean": 0.662865956624349,
+          "inference_total_seconds_std": 0.0827203684667365,
+          "inference_avg_ms_per_example_mean": 0.12052108302260889,
+          "inference_avg_ms_per_example_std": 0.01504006699395208,
+          "inference_examples_per_sec_mean": 8431.56451389331,
+          "inference_examples_per_sec_std": 1079.830134317708,
+          "model_name": "BiLSTM",
+          "display_name": "BiLSTM",
+          "input_type": "token_ids",
+          "primary_val_metric": "val_macro_f1",
+          "frozen_config_ref": "outputs/bilstm/frozen_final_config.json",
+          "representative_run_id": "run_02_seed_1337",
+          "parameter_count": 4284311,
+          "trainable_parameter_count": 4284311
+        }
+      ],
+      "source_artifact": "outputs/shared/model_comparison_aggregate.json"
+    },
+    {
+      "table_id": "oos_metrics",
+      "title": "OOS Detection Metrics",
+      "data_scope": "aggregate",
+      "columns": [
+        "Model",
+        "OOS Precision",
+        "OOS Recall",
+        "OOS F1"
+      ],
+      "rows": [
+        {
+          "model_name": "TF-IDF + MLP",
+          "model_id": "mlp",
+          "display_name": "TF-IDF + MLP",
+          "run_count": 3,
+          "oos_precision_mean": 0.8840146285108736,
+          "oos_precision_std": 0.013157222563238853,
+          "oos_recall_mean": 0.48666666666666664,
+          "oos_recall_std": 0.044394694377694395,
+          "oos_f1_mean": 0.6261331525117453,
+          "oos_f1_std": 0.03475278637704877
+        },
+        {
+          "model_name": "Text CNN",
+          "model_id": "text_cnn",
+          "display_name": "Text CNN",
+          "run_count": 3,
+          "oos_precision_mean": 0.9414484195962342,
+          "oos_precision_std": 0.010232255545086942,
+          "oos_recall_mean": 0.35633333333333334,
+          "oos_recall_std": 0.04014418457953227,
+          "oos_f1_mean": 0.5153964713570659,
+          "oos_f1_std": 0.041636260475168545
+        },
+        {
+          "model_name": "BiLSTM",
+          "model_id": "bilstm",
+          "display_name": "BiLSTM",
+          "run_count": 3,
+          "oos_precision_mean": 0.8816609734753472,
+          "oos_precision_std": 0.010404861083706966,
+          "oos_recall_mean": 0.2946666666666667,
+          "oos_recall_std": 0.0235843639350783,
+          "oos_f1_mean": 0.44130342547790774,
+          "oos_f1_std": 0.027328606352725233
+        }
+      ],
+      "source_artifact": "outputs/shared/oos_summary_table.json"
+    },
+    {
+      "table_id": "extended_metrics",
+      "title": "Extended Metrics",
+      "data_scope": "representative",
+      "columns": [
+        "Model",
+        "Macro F1",
+        "Micro F1",
+        "Weighted F1",
+        "Macro Precision",
+        "Macro Recall"
+      ],
+      "rows": [
+        {
+          "model_id": "mlp",
+          "model_name": "TF-IDF + MLP",
+          "accuracy": 0.84,
+          "macro_f1": 0.8742423850285791,
+          "micro_f1": 0.84,
+          "weighted_f1": 0.8326351147423667,
+          "macro_precision": 0.8492162391284832,
+          "macro_recall": 0.9121611479028697,
+          "micro_precision": 0.84,
+          "micro_recall": 0.84,
+          "weighted_precision": 0.8534573700862275,
+          "weighted_recall": 0.84
+        },
+        {
+          "model_id": "text_cnn",
+          "model_name": "Text CNN",
+          "accuracy": 0.8210909090909091,
+          "macro_f1": 0.8657989196294426,
+          "micro_f1": 0.8210909090909091,
+          "weighted_f1": 0.8072145415630231,
+          "macro_precision": 0.8315475478073038,
+          "macro_recall": 0.9170397350993378,
+          "micro_precision": 0.8210909090909091,
+          "micro_recall": 0.8210909090909091,
+          "weighted_precision": 0.8501783169683417,
+          "weighted_recall": 0.8210909090909091
+        },
+        {
+          "model_id": "bilstm",
+          "model_name": "BiLSTM",
+          "accuracy": 0.7858181818181819,
+          "macro_f1": 0.8354130867632543,
+          "micro_f1": 0.7858181818181819,
+          "weighted_f1": 0.7727104999550869,
+          "macro_precision": 0.8062034256315256,
+          "macro_recall": 0.8838498896247242,
+          "micro_precision": 0.7858181818181819,
+          "micro_recall": 0.7858181818181819,
+          "weighted_precision": 0.8216404543704074,
+          "weighted_recall": 0.7858181818181819
+        }
+      ],
+      "source_artifact": "outputs/shared/analysis/extended_metrics_comparison.json"
+    },
+    {
+      "table_id": "calibration",
+      "title": "Calibration Metrics",
+      "data_scope": "representative",
+      "columns": [
+        "Model",
+        "ECE",
+        "MCE",
+        "Brier Score",
+        "NLL"
+      ],
+      "rows": [
+        {
+          "model_id": "mlp",
+          "model_name": "TF-IDF + MLP",
+          "ece": 0.10269777552241628,
+          "mce": 0.257983095766533,
+          "brier_score": 0.25321492552757263,
+          "nll": 0.7303420901298523
+        },
+        {
+          "model_id": "text_cnn",
+          "model_name": "Text CNN",
+          "ece": 0.03743301824548027,
+          "mce": 0.18345639755328497,
+          "brier_score": 0.2566530406475067,
+          "nll": 0.8647394180297852
+        },
+        {
+          "model_id": "bilstm",
+          "model_name": "BiLSTM",
+          "ece": 0.11253382217884061,
+          "mce": 0.4093617286000933,
+          "brier_score": 0.32349875569343567,
+          "nll": 1.2144763469696045
+        }
+      ],
+      "source_artifact": "outputs/shared/analysis/calibration_summary.json"
+    },
+    {
+      "table_id": "efficiency",
+      "title": "Efficiency Comparison",
+      "data_scope": "aggregate",
+      "columns": [
+        "Model",
+        "Parameters",
+        "Training Time (s)",
+        "Inference (ms/example)",
+        "Throughput (ex/s)"
+      ],
+      "rows": [
+        {
+          "model_name": "TF-IDF + MLP",
+          "model_id": "mlp",
+          "display_name": "TF-IDF + MLP",
+          "run_count": 3,
+          "training_time_seconds_mean": 60.61937928199768,
+          "training_time_seconds_std": 10.796039362474017,
+          "inference_total_seconds_mean": 0.3094375928243001,
+          "inference_total_seconds_std": 0.006891942010260086,
+          "inference_avg_ms_per_example_mean": 0.05626138051350912,
+          "inference_avg_ms_per_example_std": 0.0012530803655018332,
+          "inference_examples_per_sec_mean": 17782.88541445872,
+          "inference_examples_per_sec_std": 390.79606124083256,
+          "parameter_count": 5197975,
+          "trainable_parameter_count": 5197975
+        },
+        {
+          "model_name": "Text CNN",
+          "model_id": "text_cnn",
+          "display_name": "Text CNN",
+          "run_count": 3,
+          "training_time_seconds_mean": 136.48480931917825,
+          "training_time_seconds_std": 7.7044934372758425,
+          "inference_total_seconds_mean": 0.17221697171529135,
+          "inference_total_seconds_std": 0.011747995532814427,
+          "inference_avg_ms_per_example_mean": 0.031312176675507515,
+          "inference_avg_ms_per_example_std": 0.002135999187784442,
+          "inference_examples_per_sec_mean": 32082.231368090364,
+          "inference_examples_per_sec_std": 2138.804265580692,
+          "parameter_count": 1930167,
+          "trainable_parameter_count": 1930167
+        },
+        {
+          "model_name": "BiLSTM",
+          "model_id": "bilstm",
+          "display_name": "BiLSTM",
+          "run_count": 3,
+          "training_time_seconds_mean": 91.74191459019978,
+          "training_time_seconds_std": 23.2005021494886,
+          "inference_total_seconds_mean": 0.662865956624349,
+          "inference_total_seconds_std": 0.0827203684667365,
+          "inference_avg_ms_per_example_mean": 0.12052108302260889,
+          "inference_avg_ms_per_example_std": 0.01504006699395208,
+          "inference_examples_per_sec_mean": 8431.56451389331,
+          "inference_examples_per_sec_std": 1079.830134317708,
+          "parameter_count": 4284311,
+          "trainable_parameter_count": 4284311
+        }
+      ],
+      "source_artifact": "outputs/shared/efficiency_summary_table.json"
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "main_comparison",
+      "claim_text": "TF-IDF + MLP achieved the highest aggregate test macro F1 (0.8727 +/- 0.0031).",
+      "source_artifacts": [
+        "outputs/shared/model_comparison_aggregate.json"
+      ],
+      "related_figure_types": [
+        "model_comparison_test_macro_f1"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/figures/model_comparison_test_macro_f1.png"
+      ],
+      "scope_hint": "aggregate"
+    },
+    {
+      "claim_id": "oos_metrics",
+      "claim_text": "TF-IDF + MLP achieved the highest aggregate OOS F1 (0.6261 +/- 0.0348).",
+      "source_artifacts": [
+        "outputs/shared/oos_summary_table.json"
+      ],
+      "related_figure_types": [
+        "oos_metrics_comparison",
+        "model_comparison_oos_f1"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/figures/oos_metrics_comparison.png"
+      ],
+      "scope_hint": "aggregate"
+    },
+    {
+      "claim_id": "extended_metrics",
+      "claim_text": "TF-IDF + MLP has the highest representative-run macro F1 (0.8742) in the extended-metrics table.",
+      "source_artifacts": [
+        "outputs/shared/analysis/extended_metrics_comparison.json"
+      ],
+      "related_figure_types": [],
+      "related_figure_paths": [],
+      "scope_hint": "representative"
+    },
+    {
+      "claim_id": "calibration",
+      "claim_text": "Text CNN is the best calibrated representative run (ECE = 0.0374).",
+      "source_artifacts": [
+        "outputs/shared/analysis/calibration_summary.json"
+      ],
+      "related_figure_types": [
+        "calibration_comparison"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/analysis/calibration_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    },
+    {
+      "claim_id": "efficiency",
+      "claim_text": "Text CNN has the highest mean inference throughput (32082 ex/s).",
+      "source_artifacts": [
+        "outputs/shared/efficiency_summary_table.json"
+      ],
+      "related_figure_types": [
+        "model_efficiency_comparison"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/figures/model_efficiency_comparison.png"
+      ],
+      "scope_hint": "aggregate"
+    }
+  ],
+  "source_artifacts": [
+    "outputs/shared/model_comparison_aggregate.json",
+    "outputs/shared/oos_summary_table.json",
+    "outputs/shared/analysis/extended_metrics_comparison.json",
+    "outputs/shared/analysis/calibration_summary.json",
+    "outputs/shared/efficiency_summary_table.json",
+    "outputs/shared/figure_manifest.json"
+  ]
+}

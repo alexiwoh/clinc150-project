@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "bilstm",
+  "run_id": "run_02_seed_1337",
+  "run_index": 2,
+  "seed": 1337,
+  "selection_rule": "highest_validation_macro_f1",
+  "selection_metric_value": 0.884887579066431,
+  "artifact_path": "outputs/bilstm/final_runs/run_02_seed_1337",
+  "note": "This run is representative only. Aggregate metrics come from all completed runs.",
+  "model_name": "BiLSTM",
+  "frozen_config_ref": "outputs/bilstm/frozen_final_config.json",
+  "protocol_manifest_ref": "outputs/shared/evaluation_protocol.json"
+}

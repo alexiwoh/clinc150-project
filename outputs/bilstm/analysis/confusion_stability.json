@@ -1,0 +1,263 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "bilstm",
+  "model_name": "BiLSTM",
+  "n_runs": 3,
+  "top_confusion_pairs": [
+    {
+      "true_class": "oos",
+      "predicted_class": "restaurant_suggestion",
+      "mean_count": 40.666666666666664,
+      "std_count": 19.258475767539053,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "smart_home",
+      "mean_count": 33.0,
+      "std_count": 4.242640687119285,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "ingredients_list",
+      "mean_count": 26.333333333333332,
+      "std_count": 12.657891697365017,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "weather",
+      "mean_count": 24.333333333333332,
+      "std_count": 3.2998316455372216,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "directions",
+      "mean_count": 22.333333333333332,
+      "std_count": 2.3570226039551585,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "current_location",
+      "mean_count": 18.333333333333332,
+      "std_count": 9.177266598624136,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "cancel",
+      "mean_count": 15.666666666666666,
+      "std_count": 7.039570693980959,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "meal_suggestion",
+      "mean_count": 15.333333333333334,
+      "std_count": 8.219218670625303,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "recipe",
+      "mean_count": 15.0,
+      "std_count": 1.632993161855452,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "income",
+      "mean_count": 14.666666666666666,
+      "std_count": 11.115554667022044,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "travel_suggestion",
+      "mean_count": 12.666666666666666,
+      "std_count": 4.4969125210773475,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "order",
+      "mean_count": 11.0,
+      "std_count": 3.559026084010437,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "restaurant_reviews",
+      "mean_count": 10.333333333333334,
+      "std_count": 5.185449728701348,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "change_language",
+      "mean_count": 10.333333333333334,
+      "std_count": 6.847546194724712,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "sync_device",
+      "mean_count": 10.333333333333334,
+      "std_count": 5.312459150169743,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "cook_time",
+      "mean_count": 10.0,
+      "std_count": 1.4142135623730951,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "transactions",
+      "mean_count": 9.666666666666666,
+      "std_count": 10.873004286866728,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "date",
+      "mean_count": 9.333333333333334,
+      "std_count": 4.784233364802441,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "next_holiday",
+      "mean_count": 9.333333333333334,
+      "std_count": 4.027681991198191,
+      "runs_present": 3,
+      "total_runs": 3
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "make_call",
+      "mean_count": 9.0,
+      "std_count": 1.4142135623730951,
+      "runs_present": 3,
+      "total_runs": 3
+    }
+  ],
+  "stable_pairs": [
+    {
+      "true_class": "oos",
+      "predicted_class": "weather"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "recipe"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "directions"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "smart_home"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "ingredients_list"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "restaurant_suggestion"
+    }
+  ],
+  "unstable_pairs": [
+    {
+      "true_class": "oos",
+      "predicted_class": "date"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "exchange_rate"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "find_phone"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "transactions"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "nutrition_info"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "change_language"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "definition"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "play_music"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "next_holiday"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "next_song"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "tell_joke"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "reminder_update"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "calculator"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "maybe"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "what_song"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "replacement_card_duration"
+    }
+  ],
+  "stable_count": 6,
+  "unstable_count": 16
+}

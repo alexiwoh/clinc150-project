@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "bilstm",
+  "model_name": "BiLSTM",
+  "representative_run_id": "run_02_seed_1337",
+  "representative_seed": 1337,
+  "total_runs_aggregated": 3,
+  "selection_rule": "highest_validation_macro_f1",
+  "note": "Aggregate metrics come from all completed runs. Representative-run artifacts are for qualitative analysis only.",
+  "artifacts": {
+    "aggregate_metrics": "outputs/bilstm/aggregate/aggregate_metrics.json",
+    "representative_run_metadata": "outputs/bilstm/aggregate/representative_run.json",
+    "final_predictions": "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv",
+    "representative_misclassifications": "outputs/bilstm/aggregate/representative_misclassifications.csv",
+    "top_errors": "outputs/bilstm/final_runs/run_02_seed_1337/top_errors.json",
+    "confusion_matrix": "outputs/bilstm/final_runs/run_02_seed_1337/confusion_matrix.csv",
+    "top_confusions": "outputs/bilstm/final_runs/run_02_seed_1337/top_confusions.json",
+    "per_class_metrics": "outputs/bilstm/final_runs/run_02_seed_1337/per_class_metrics.json",
+    "label_order": "outputs/bilstm/final_runs/run_02_seed_1337/label_order.json"
+  },
+  "figures": {
+    "train_val_loss_curve": "outputs/bilstm/figures/representative_train_val_loss_curve.png",
+    "val_macro_f1_curve": "outputs/bilstm/figures/representative_val_macro_f1_curve.png",
+    "val_accuracy_curve": "outputs/bilstm/figures/representative_val_accuracy_curve.png",
+    "confusion_matrix": "outputs/bilstm/figures/representative_confusion_matrix.png",
+    "top_confused_pairs": "outputs/bilstm/figures/representative_top_confused_pairs.png",
+    "bottom_classes_f1": "outputs/bilstm/figures/representative_bottom_classes_f1.png",
+    "oos_metrics": "outputs/bilstm/figures/representative_oos_metrics.png",
+    "error_summary": "outputs/bilstm/figures/representative_error_summary.png"
+  }
+}

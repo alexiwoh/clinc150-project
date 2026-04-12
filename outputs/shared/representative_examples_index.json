@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "models": {
+    "mlp": {
+      "representative_run_id": "run_01_seed_42",
+      "representative_predictions_path": "outputs/mlp/final_runs/run_01_seed_42/final_predictions.csv",
+      "representative_misclassifications_path": "outputs/mlp/aggregate/representative_misclassifications.csv",
+      "representative_confusion_path": "outputs/mlp/final_runs/run_01_seed_42/confusion_matrix.csv",
+      "step10_handoff_ref": "outputs/mlp/aggregate/step10_handoff.json"
+    },
+    "text_cnn": {
+      "representative_run_id": "run_03_seed_2024",
+      "representative_predictions_path": "outputs/text_cnn/final_runs/run_03_seed_2024/final_predictions.csv",
+      "representative_misclassifications_path": "outputs/text_cnn/aggregate/representative_misclassifications.csv",
+      "representative_confusion_path": "outputs/text_cnn/final_runs/run_03_seed_2024/confusion_matrix.csv",
+      "step10_handoff_ref": "outputs/text_cnn/aggregate/step10_handoff.json"
+    },
+    "bilstm": {
+      "representative_run_id": "run_02_seed_1337",
+      "representative_predictions_path": "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv",
+      "representative_misclassifications_path": "outputs/bilstm/aggregate/representative_misclassifications.csv",
+      "representative_confusion_path": "outputs/bilstm/final_runs/run_02_seed_1337/confusion_matrix.csv",
+      "step10_handoff_ref": "outputs/bilstm/aggregate/step10_handoff.json"
+    }
+  }
+}

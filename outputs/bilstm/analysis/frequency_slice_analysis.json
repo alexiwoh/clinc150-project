@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "bilstm",
+  "model_name": "BiLSTM",
+  "representative_run_id": "run_02_seed_1337",
+  "note": "Frequency tiers use test-set support quartiles as proxy for training-set frequency (CLINC150 is balanced, so this is a reasonable approximation).",
+  "quartile_thresholds": {
+    "q25": 30.0,
+    "q75": 30.0
+  },
+  "slices": [
+    {
+      "slice": "low",
+      "count": 4500,
+      "accuracy": 0.8875555555555555,
+      "error_count": 506,
+      "error_rate": 0.11244444444444444,
+      "mean_confidence_correct": 0.9743672013282776,
+      "mean_confidence_incorrect": 0.698387622833252
+    },
+    {
+      "slice": "high",
+      "count": 1000,
+      "accuracy": 0.328,
+      "error_count": 672,
+      "error_rate": 0.672,
+      "mean_confidence_correct": 0.800334632396698,
+      "mean_confidence_incorrect": 0.6449694037437439
+    }
+  ],
+  "source_artifact": "outputs/bilstm/final_runs/run_02_seed_1337/per_class_metrics.json"
+}

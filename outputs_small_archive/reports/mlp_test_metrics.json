@@ -1,0 +1,16 @@
+{
+  "test_accuracy": 0.8030909090909091,
+  "test_macro_f1": 0.849238642689227,
+  "test_precision": 0.8168033297771132,
+  "test_recall": 0.8990397350993378,
+  "oos_precision": 0.874384236453202,
+  "oos_recall": 0.355,
+  "oos_f1": 0.5049786628733998,
+  "inference_latency": {
+    "total_seconds": 0.3866448402404785,
+    "avg_ms_per_example": 0.07029906186190518,
+    "examples_per_sec": 14224.9408955754
+  },
+  "parameter_count": 5197975,
+  "checkpoint_path": "outputs/checkpoints/mlp_best_h512_d0.5_lr0001_wd00001_1layer_s42.pt"
+}

@@ -1,0 +1,31 @@
+model_name,model_id,representative_run_id,rank,true_label_name,predicted_label_name,count
+TF-IDF + MLP,mlp,run_01_seed_42,1,oos,calculator,19
+TF-IDF + MLP,mlp,run_01_seed_42,2,oos,w2,19
+TF-IDF + MLP,mlp,run_01_seed_42,3,oos,recipe,16
+TF-IDF + MLP,mlp,run_01_seed_42,4,oos,smart_home,16
+TF-IDF + MLP,mlp,run_01_seed_42,5,oos,directions,13
+TF-IDF + MLP,mlp,run_01_seed_42,6,oos,income,10
+TF-IDF + MLP,mlp,run_01_seed_42,7,oos,order,10
+TF-IDF + MLP,mlp,run_01_seed_42,8,oos,spelling,10
+TF-IDF + MLP,mlp,run_01_seed_42,9,oos,travel_suggestion,10
+TF-IDF + MLP,mlp,run_01_seed_42,10,oos,definition,9
+Text CNN,text_cnn,run_03_seed_2024,1,oos,travel_suggestion,27
+Text CNN,text_cnn,run_03_seed_2024,2,oos,directions,23
+Text CNN,text_cnn,run_03_seed_2024,3,oos,todo_list,21
+Text CNN,text_cnn,run_03_seed_2024,4,oos,recipe,19
+Text CNN,text_cnn,run_03_seed_2024,5,oos,restaurant_suggestion,15
+Text CNN,text_cnn,run_03_seed_2024,6,oos,weather,15
+Text CNN,text_cnn,run_03_seed_2024,7,oos,income,13
+Text CNN,text_cnn,run_03_seed_2024,8,oos,restaurant_reviews,13
+Text CNN,text_cnn,run_03_seed_2024,9,oos,bill_balance,12
+Text CNN,text_cnn,run_03_seed_2024,10,oos,car_rental,12
+BiLSTM,bilstm,run_02_seed_1337,1,oos,smart_home,39
+BiLSTM,bilstm,run_02_seed_1337,2,oos,income,30
+BiLSTM,bilstm,run_02_seed_1337,3,oos,current_location,28
+BiLSTM,bilstm,run_02_seed_1337,4,oos,directions,24
+BiLSTM,bilstm,run_02_seed_1337,5,oos,weather,20
+BiLSTM,bilstm,run_02_seed_1337,6,oos,recipe,17
+BiLSTM,bilstm,run_02_seed_1337,7,oos,sync_device,17
+BiLSTM,bilstm,run_02_seed_1337,8,oos,restaurant_suggestion,16
+BiLSTM,bilstm,run_02_seed_1337,9,oos,ingredients_list,15
+BiLSTM,bilstm,run_02_seed_1337,10,oos,cancel,14

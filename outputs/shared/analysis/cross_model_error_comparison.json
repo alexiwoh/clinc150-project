@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "models_compared": [
+    "mlp",
+    "text_cnn",
+    "bilstm"
+  ],
+  "representative_run_ids": {
+    "mlp": "run_01_seed_42",
+    "text_cnn": "run_03_seed_2024",
+    "bilstm": "run_02_seed_1337"
+  },
+  "total_test_examples": 5500,
+  "categories": {
+    "all_correct": {
+      "count": 4051,
+      "fraction": 0.7365454545454545
+    },
+    "all_wrong": {
+      "count": 608,
+      "fraction": 0.11054545454545454
+    },
+    "model_specific_error": {
+      "count": 464,
+      "fraction": 0.08436363636363636
+    },
+    "partial_error": {
+      "count": 377,
+      "fraction": 0.06854545454545455
+    }
+  },
+  "model_specific_errors": {
+    "mlp": 96,
+    "text_cnn": 106,
+    "bilstm": 262
+  },
+  "all_wrong_agreement": 0.3667763157894737
+}

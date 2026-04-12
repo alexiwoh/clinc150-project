@@ -1,0 +1,24 @@
+{
+  "model_name": "bilstm",
+  "input_type": "token_sequences",
+  "primary_val_metric": "val_macro_f1",
+  "best_val_macro_f1": 0.8791605680729114,
+  "test_accuracy": 0.7692727272727272,
+  "test_macro_f1": 0.8251812309835806,
+  "test_precision": 0.7935660607996641,
+  "test_recall": 0.8793929359823399,
+  "oos_precision": 0.8823529411764706,
+  "oos_recall": 0.255,
+  "oos_f1": 0.395655546935609,
+  "training_time": 125.3846333026886,
+  "inference_latency": {
+    "total_seconds": 0.6721370220184326,
+    "avg_ms_per_example": 0.12220673127607865,
+    "examples_per_sec": 8182.855310489307
+  },
+  "parameter_count": 4284311,
+  "trainable_parameter_count": 4284311,
+  "checkpoint_path": "outputs/checkpoints/bilstm_best_emb256_h256_L2_d0.3_lr0001_wd00_s42.pt",
+  "preprocessing_artifact_refs": "data/artifacts",
+  "notes": "BiLSTM sentence classifier; best tuning run used directly (no retraining)."
+}

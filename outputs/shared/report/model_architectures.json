@@ -1,0 +1,141 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "models": [
+    {
+      "model_id": "mlp",
+      "model_name": "TF-IDF + MLP",
+      "display_name": "TF-IDF + MLP",
+      "input_type": "TF-IDF vectors",
+      "architecture_summary": "2-layer MLP (1 hidden layer)",
+      "hyperparameters": {
+        "hidden_dim": 512,
+        "second_hidden_dim": null,
+        "dropout_rate": 0.2,
+        "learning_rate": 0.0005,
+        "weight_decay": 0.0001,
+        "batch_size": 64,
+        "max_epochs": 100,
+        "early_stopping_patience": 10,
+        "optimizer": "adam",
+        "activation": "relu",
+        "use_class_weights": false,
+        "use_lr_scheduler": false,
+        "random_seed": 42,
+        "dataloader_seed": 42,
+        "monitor_metric": "val_macro_f1",
+        "oos_strategy": "explicit_class"
+      },
+      "parameter_count": 5197975,
+      "trainable_parameter_count": 5197975
+    },
+    {
+      "model_id": "text_cnn",
+      "model_name": "Text CNN",
+      "display_name": "Text CNN",
+      "input_type": "Token-ID sequences",
+      "architecture_summary": "Multi-kernel CNN (3 kernel sizes)",
+      "hyperparameters": {
+        "vocab_size": 6161,
+        "embedding_dim": 256,
+        "num_filters": 100,
+        "kernel_sizes": [
+          3,
+          4,
+          5
+        ],
+        "dropout_rate": 0.5,
+        "activation": "relu",
+        "learning_rate": 0.001,
+        "weight_decay": 0.0001,
+        "batch_size": 64,
+        "max_epochs": 100,
+        "early_stopping_patience": 10,
+        "optimizer": "adam",
+        "trainable_embeddings": true,
+        "use_class_weights": false,
+        "use_lr_scheduler": false,
+        "random_seed": 42,
+        "dataloader_seed": 42,
+        "monitor_metric": "val_macro_f1",
+        "oos_strategy": "explicit_class",
+        "max_seq_length": 20
+      },
+      "parameter_count": 1930167,
+      "trainable_parameter_count": 1930167
+    },
+    {
+      "model_id": "bilstm",
+      "model_name": "BiLSTM",
+      "display_name": "BiLSTM",
+      "input_type": "Token-ID sequences",
+      "architecture_summary": "2-layer bidirectional LSTM",
+      "hyperparameters": {
+        "vocab_size": 6161,
+        "embedding_dim": 256,
+        "hidden_dim": 256,
+        "num_layers": 2,
+        "bidirectional": true,
+        "dropout_rate": 0.3,
+        "learning_rate": 0.001,
+        "weight_decay": 0.0,
+        "batch_size": 64,
+        "max_epochs": 100,
+        "early_stopping_patience": 10,
+        "optimizer": "adam",
+        "trainable_embeddings": true,
+        "use_class_weights": false,
+        "use_lr_scheduler": false,
+        "random_seed": 42,
+        "dataloader_seed": 42,
+        "monitor_metric": "val_macro_f1",
+        "oos_strategy": "explicit_class",
+        "max_seq_length": 20,
+        "summarization_mode": "concat_final_hidden",
+        "gradient_clipping": true,
+        "max_grad_norm": 1.0
+      },
+      "parameter_count": 4284311,
+      "trainable_parameter_count": 4284311
+    }
+  ],
+  "comparison_table": [
+    [
+      "TF-IDF + MLP",
+      "TF-IDF vectors",
+      "2-layer MLP (1 hidden layer)",
+      "5,197,975",
+      "5,197,975",
+      "N/A",
+      "0.2",
+      "512"
+    ],
+    [
+      "Text CNN",
+      "Token-ID sequences",
+      "Multi-kernel CNN (3 kernel sizes)",
+      "1,930,167",
+      "1,930,167",
+      "256",
+      "0.5",
+      "N/A"
+    ],
+    [
+      "BiLSTM",
+      "Token-ID sequences",
+      "2-layer bidirectional LSTM",
+      "4,284,311",
+      "4,284,311",
+      "256",
+      "0.3",
+      "256"
+    ]
+  ],
+  "source_artifacts": [
+    "outputs/mlp/frozen_final_config.json",
+    "outputs/text_cnn/frozen_final_config.json",
+    "outputs/bilstm/frozen_final_config.json",
+    "outputs/shared/efficiency_summary_table.json",
+    "data/artifacts/preprocessing_summary.json"
+  ]
+}

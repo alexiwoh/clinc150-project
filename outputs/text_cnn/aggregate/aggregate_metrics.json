@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "model_id": "text_cnn",
+  "run_count_requested": 3,
+  "run_count_completed": 3,
+  "seed_list_requested": [
+    42,
+    1337,
+    2024
+  ],
+  "seed_list_completed": [
+    42,
+    1337,
+    2024
+  ],
+  "all_runs_succeeded": true,
+  "metrics": {
+    "val_accuracy": {
+      "mean": 0.9031182795698923,
+      "std": 0.0019768576678333744
+    },
+    "val_macro_f1": {
+      "mean": 0.9098249697980574,
+      "std": 0.0016809545351468658
+    },
+    "test_accuracy": {
+      "mean": 0.8175757575757575,
+      "std": 0.008393009466046899
+    },
+    "test_macro_f1": {
+      "mean": 0.8634849725331826,
+      "std": 0.005665101741182052
+    },
+    "test_precision": {
+      "mean": 0.8278067292969696,
+      "std": 0.009356518866706645
+    },
+    "test_recall": {
+      "mean": 0.9163406916850626,
+      "std": 0.0015943930092677612
+    },
+    "oos_precision": {
+      "mean": 0.9414484195962342,
+      "std": 0.010232255545086942
+    },
+    "oos_recall": {
+      "mean": 0.35633333333333334,
+      "std": 0.04014418457953227
+    },
+    "oos_f1": {
+      "mean": 0.5153964713570659,
+      "std": 0.041636260475168545
+    },
+    "training_time_seconds": {
+      "mean": 136.48480931917825,
+      "std": 7.7044934372758425
+    },
+    "inference_total_seconds": {
+      "mean": 0.17221697171529135,
+      "std": 0.011747995532814427
+    },
+    "inference_avg_ms_per_example": {
+      "mean": 0.031312176675507515,
+      "std": 0.002135999187784442
+    },
+    "inference_examples_per_sec": {
+      "mean": 32082.231368090364,
+      "std": 2138.804265580692
+    },
+    "parameter_count": {
+      "mean": 1930167.0,
+      "std": 0.0
+    },
+    "trainable_parameter_count": {
+      "mean": 1930167.0,
+      "std": 0.0
+    }
+  },
+  "model_name": "Text CNN",
+  "frozen_config_ref": "outputs/text_cnn/frozen_final_config.json",
+  "protocol_manifest_ref": "outputs/shared/evaluation_protocol.json",
+  "successful_run_ids": [
+    "run_01_seed_42",
+    "run_02_seed_1337",
+    "run_03_seed_2024"
+  ],
+  "failed_run_ids": [],
+  "representative_run_id": "run_03_seed_2024",
+  "validation_summary": {
+    "val_accuracy": {
+      "mean": 0.9031182795698923,
+      "std": 0.0019768576678333744
+    },
+    "val_macro_f1": {
+      "mean": 0.9098249697980574,
+      "std": 0.0016809545351468658
+    }
+  },
+  "test_summary": {
+    "test_accuracy": {
+      "mean": 0.8175757575757575,
+      "std": 0.008393009466046899
+    },
+    "test_macro_f1": {
+      "mean": 0.8634849725331826,
+      "std": 0.005665101741182052
+    },
+    "test_precision": {
+      "mean": 0.8278067292969696,
+      "std": 0.009356518866706645
+    },
+    "test_recall": {
+      "mean": 0.9163406916850626,
+      "std": 0.0015943930092677612
+    }
+  },
+  "oos_summary": {
+    "oos_precision": {
+      "mean": 0.9414484195962342,
+      "std": 0.010232255545086942
+    },
+    "oos_recall": {
+      "mean": 0.35633333333333334,
+      "std": 0.04014418457953227
+    },
+    "oos_f1": {
+      "mean": 0.5153964713570659,
+      "std": 0.041636260475168545
+    }
+  },
+  "efficiency_summary": {
+    "training_time_seconds": {
+      "mean": 136.48480931917825,
+      "std": 7.7044934372758425
+    },
+    "inference_total_seconds": {
+      "mean": 0.17221697171529135,
+      "std": 0.011747995532814427
+    },
+    "inference_avg_ms_per_example": {
+      "mean": 0.031312176675507515,
+      "std": 0.002135999187784442
+    },
+    "inference_examples_per_sec": {
+      "mean": 32082.231368090364,
+      "std": 2138.804265580692
+    }
+  },
+  "parameter_count_summary": {
+    "parameter_count": {
+      "mean": 1930167.0,
+      "std": 0.0
+    },
+    "trainable_parameter_count": {
+      "mean": 1930167.0,
+      "std": 0.0
+    }
+  }
+}

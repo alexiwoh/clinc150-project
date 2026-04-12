@@ -1,0 +1,13 @@
+{
+  // Ruff is the sole linter/formatter for this project (configured in pyproject.toml).
+  // It fully replaces both Flake8 (linting) and Black (formatting).
+
+  // Disable the standalone Flake8 extension (ms-python.flake8).
+  "flake8.enabled": false,
+
+  // Disable all legacy built-in Python linters.
+  "python.linting.enabled": false,
+  "python.linting.pycodestyleEnabled": false,
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": false
+}

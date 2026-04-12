@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "protocol_version": "1.0",
+  "python_version": ">=3.11",
+  "install_command": "uv sync",
+  "pinned_versions_available": true,
+  "dataset_source": "clinc/clinc_oos (plus subset)",
+  "pipeline_command": "python scripts/run_model_pipeline.py --model all --run-count 3",
+  "seed_list": [
+    42,
+    1337,
+    2024
+  ],
+  "run_count": 3,
+  "approximate_runtime_minutes": {
+    "mlp": 3.0,
+    "text_cnn": 6.8,
+    "bilstm": 4.6
+  },
+  "hardware_context": "Apple Silicon (MPS)",
+  "nondeterminism_notes": [
+    "MPS backend nondeterminism on Apple Silicon (PyTorch does not guarantee deterministic MPS operations).",
+    "DataLoader worker ordering may vary across runs.",
+    "Exact numeric reproduction across different hardware is not guaranteed."
+  ],
+  "reproduction_steps": [
+    "Clone the repository: `git clone <repo-url> && cd clinc150-project`",
+    "Install dependencies: `uv sync` (or `pip install -r requirements.txt`)",
+    "Run the full pipeline: `python scripts/run_model_pipeline.py --model all --run-count 3`",
+    "Verify outputs exist under `outputs/` with the expected directory structure"
+  ],
+  "source_artifacts": [
+    "outputs/shared/evaluation_protocol.json",
+    "outputs/shared/efficiency_summary_table.json"
+  ]
+}
