@@ -49,8 +49,8 @@
 - **tfidf_fitted_on**: training data only
 ## step2_label_mapping_artifacts
 
-- **label_to_id**: /Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/label_to_id.json
-- **id_to_label**: /Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/id_to_label.json
-- **artifact_output_directory**: /Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts
+- **label_to_id**: data/artifacts/label_to_id.json
+- **id_to_label**: data/artifacts/id_to_label.json
+- **artifact_output_directory**: data/artifacts
 - **inference_reuse_note**: Inference must reuse saved vocab and TF-IDF vectorizer; never re-fit.
 - **timestamp**: 2026-04-07T02:08:24.271730+00:00

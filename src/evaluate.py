@@ -16,7 +16,14 @@ import torch
 from torch.utils.data import DataLoader
 
 from src.config import DATASET_CONFIG, BiLSTMConfig, MLPBaselineConfig, TextCNNConfig, get_device
-from src.constants import ARTIFACTS_DIR, NUM_CLASSES, OOS_LABEL_ID, REPORTS_DIR
+from src.constants import (
+    ARTIFACTS_DIR,
+    NUM_CLASSES,
+    OOS_LABEL_ID,
+    PREPROCESSING_MANIFEST_REF,
+    PROJECT_ROOT,
+    REPORTS_DIR,
+)
 from src.enums import ModelID
 from src.dataset import CLINCDataset, TFIDFDataset
 from src.metrics import (
@@ -258,7 +265,7 @@ def save_test_artifacts(results: dict[str, Any], reports_dir: Path | str) -> Non
         "parameter_count": results["total_parameters"],
         "trainable_parameter_count": results["trainable_parameters"],
         "checkpoint_path": results["checkpoint_path"],
-        "preprocessing_artifact_refs": str(ARTIFACTS_DIR),
+        "preprocessing_artifact_refs": str(ARTIFACTS_DIR.relative_to(PROJECT_ROOT)),
         "notes": "TF-IDF + MLP baseline; best tuning run used directly (no retraining).",
     }
     (reports_dir / "mlp_comparison_row.json").write_text(json.dumps(comparison_row, indent=2))
@@ -312,7 +319,7 @@ def _build_run_summary(results: dict[str, Any], run_name: str) -> dict[str, Any]
     return {
         "run_name": run_name,
         "config_snapshot": config,
-        "preprocessing_artifact_refs": str(ARTIFACTS_DIR),
+        "preprocessing_artifact_refs": str(ARTIFACTS_DIR.relative_to(PROJECT_ROOT)),
         "tfidf_input_dim": results.get("input_dim"),
         "num_classes": NUM_CLASSES,
         "model_architecture": "MLPClassifier",
@@ -347,7 +354,7 @@ def _build_run_summary(results: dict[str, Any], run_name: str) -> dict[str, Any]
             "validation": "no shuffle",
             "test": "no shuffle",
         },
-        "preprocessing_refs_for_comparison": str(ARTIFACTS_DIR),
+        "preprocessing_refs_for_comparison": str(ARTIFACTS_DIR.relative_to(PROJECT_ROOT)),
         "label_name_ordering": results.get("label_names"),
         "device_and_environment": {
             "device": training_result.get("device", str(get_device())),
@@ -566,7 +573,7 @@ def _save_text_cnn_artifacts(results: dict[str, Any], reports_dir: Path | str) -
         "parameter_count": results["total_parameters"],
         "trainable_parameter_count": results["trainable_parameters"],
         "checkpoint_path": results["checkpoint_path"],
-        "preprocessing_artifact_refs": str(ARTIFACTS_DIR),
+        "preprocessing_artifact_refs": str(ARTIFACTS_DIR.relative_to(PROJECT_ROOT)),
         "notes": "Kim-style Text CNN; best tuning run used directly (no retraining).",
     }
     (reports_dir / "text_cnn_comparison_row.json").write_text(json.dumps(comparison_row, indent=2))
@@ -678,7 +685,7 @@ def _build_text_cnn_run_summary(
         # 28
         "label_name_ordering": results["label_names"],
         # 29
-        "preprocessing_manifest_reference": str(ARTIFACTS_DIR / "preprocessing_summary.json"),
+        "preprocessing_manifest_reference": PREPROCESSING_MANIFEST_REF,
         # 30
         "preprocessing_config_hash_or_version": metadata.get("manifest_timestamp"),
         # 31
@@ -920,7 +927,7 @@ def _save_bilstm_artifacts(results: dict[str, Any], reports_dir: Path | str) -> 
         "parameter_count": results["total_parameters"],
         "trainable_parameter_count": results["trainable_parameters"],
         "checkpoint_path": results["checkpoint_path"],
-        "preprocessing_artifact_refs": str(ARTIFACTS_DIR),
+        "preprocessing_artifact_refs": str(ARTIFACTS_DIR.relative_to(PROJECT_ROOT)),
         "notes": "BiLSTM sentence classifier; best tuning run used directly (no retraining).",
     }
     (reports_dir / "bilstm_comparison_row.json").write_text(json.dumps(comparison_row, indent=2))
@@ -1020,7 +1027,7 @@ def _build_bilstm_run_summary(
         },
         "preprocessing_refs_for_comparison": metadata["artifact_refs"],
         "label_name_ordering": results["label_names"],
-        "preprocessing_manifest_reference": str(ARTIFACTS_DIR / "preprocessing_summary.json"),
+        "preprocessing_manifest_reference": PREPROCESSING_MANIFEST_REF,
         "preprocessing_config_hash_or_version": metadata.get("manifest_timestamp"),
         "inherited_text_preprocessing_policy": metadata["preprocessing_policy"],
         "sequence_truncation_percentages_by_split": metadata["truncation_stats"],

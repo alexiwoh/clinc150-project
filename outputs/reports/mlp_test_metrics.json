@@ -13,5 +13,5 @@
   },
   "total_parameters": 5197975,
   "trainable_parameters": 5197975,
-  "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/mlp_best_h512_d0.2_lr00005_wd00001_1layer_s42.pt"
+  "checkpoint_path": "outputs/checkpoints/mlp_best_h512_d0.2_lr00005_wd00001_1layer_s42.pt"
 }

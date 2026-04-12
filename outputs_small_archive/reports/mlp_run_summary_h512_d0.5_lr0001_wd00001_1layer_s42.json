@@ -17,7 +17,7 @@
     "monitor_metric": "val_macro_f1",
     "oos_strategy": "explicit_class"
   },
-  "preprocessing_artifact_refs": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts",
+  "preprocessing_artifact_refs": "data/artifacts",
   "tfidf_input_dim": 10000,
   "num_classes": 151,
   "model_architecture": "MLPClassifier",
@@ -35,7 +35,7 @@
   "best_val_metric": 0.8995450175593113,
   "primary_model_selection_metric": "val_macro_f1",
   "training_duration": 26.74034094810486,
-  "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/mlp_best_h512_d0.5_lr0001_wd00001_1layer_s42.pt",
+  "checkpoint_path": "outputs/checkpoints/mlp_best_h512_d0.5_lr0001_wd00001_1layer_s42.pt",
   "oos_strategy": "explicit_class",
   "class_weight_policy": "disabled (default)",
   "tfidf_input_format": "sparse-origin, dense float32 per-row in TFIDFDataset.__getitem__",
@@ -46,7 +46,7 @@
   },
   "lr_scheduling_used": false,
   "shuffle_policy": "train=shuffled (seeded Generator), val/test=no shuffle",
-  "preprocessing_refs_for_comparison": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts",
+  "preprocessing_refs_for_comparison": "data/artifacts",
   "label_name_ordering": [
     "restaurant_reviews",
     "nutrition_info",

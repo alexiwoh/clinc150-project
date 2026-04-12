@@ -18,7 +18,7 @@
   },
   "parameter_count": 5197975,
   "trainable_parameter_count": 5197975,
-  "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/mlp_best_h512_d0.2_lr00005_wd00001_1layer_s42.pt",
-  "preprocessing_artifact_refs": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts",
+  "checkpoint_path": "outputs/checkpoints/mlp_best_h512_d0.2_lr00005_wd00001_1layer_s42.pt",
+  "preprocessing_artifact_refs": "data/artifacts",
   "notes": "TF-IDF + MLP baseline; best tuning run used directly (no retraining)."
 }

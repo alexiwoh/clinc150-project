@@ -18,7 +18,7 @@ from scipy.sparse import spmatrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from src.config import PreprocessingConfig
-from src.constants import ARTIFACTS_DIR
+from src.constants import ARTIFACTS_DIR, PROJECT_ROOT
 
 # ---------------------------------------------------------------------------
 # Special token constants
@@ -619,10 +619,10 @@ def _build_summary_dict(
         "vocab_fitted_on": "training data only",
         "tfidf_fitted_on": "training data only",
         "step2_label_mapping_artifacts": {
-            "label_to_id": str(ARTIFACTS_DIR / "label_to_id.json"),
-            "id_to_label": str(ARTIFACTS_DIR / "id_to_label.json"),
+            "label_to_id": str((ARTIFACTS_DIR / "label_to_id.json").relative_to(PROJECT_ROOT)),
+            "id_to_label": str((ARTIFACTS_DIR / "id_to_label.json").relative_to(PROJECT_ROOT)),
         },
-        "artifact_output_directory": str(config.artifacts_dir),
+        "artifact_output_directory": str(Path(config.artifacts_dir).relative_to(PROJECT_ROOT)),
         "inference_reuse_note": "Inference must reuse saved vocab and TF-IDF vectorizer; never re-fit.",
         "timestamp": datetime.now(tz=timezone.utc).isoformat(),
     }

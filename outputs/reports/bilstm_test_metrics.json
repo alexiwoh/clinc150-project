@@ -13,5 +13,5 @@
   },
   "total_parameters": 4284311,
   "trainable_parameters": 4284311,
-  "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/bilstm_best_emb256_h256_L2_d0.3_lr0001_wd00_s42.pt"
+  "checkpoint_path": "outputs/checkpoints/bilstm_best_emb256_h256_L2_d0.3_lr0001_wd00_s42.pt"
 }

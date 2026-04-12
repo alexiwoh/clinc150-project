@@ -100,6 +100,7 @@ def test_fresh_eval_loads_and_evaluates(mock_eval_env: dict) -> None:
         patch("src.evaluate.load_preprocessing_artifacts", return_value=fake_artifacts),
         patch("src.evaluate.CLINCDataset", FakeCLINCDataset),
         patch("src.evaluate.ARTIFACTS_DIR", env["artifacts_dir"]),
+        patch("src.evaluate.PROJECT_ROOT", env["tmp_path"]),
         patch("src.evaluate.REPORTS_DIR", reports_dir),
         patch("src.evaluate.NUM_CLASSES", env["num_classes"]),
     ):

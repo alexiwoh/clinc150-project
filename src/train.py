@@ -25,6 +25,7 @@ from src.constants import (
     NUM_CLASSES,
     OOS_LABEL_ID,
     OOS_LABEL_NAME,
+    PROJECT_ROOT,
     REPORTS_DIR,
 )
 from src.dataset import CLINCDataset, IntentDataset, TFIDFDataset, create_dataloaders
@@ -184,10 +185,10 @@ def load_tfidf_data(
     logger.info("Model consumes sparse-origin inputs converted to dense float32 per-row in TFIDFDataset.__getitem__")
 
     artifact_refs: dict[str, str] = {
-        "tfidf_vectorizer": str(ARTIFACTS_DIR / "tfidf_vectorizer.pkl"),
-        "label_to_id": str(label_to_id_path),
-        "id_to_label": str(id_to_label_path),
-        "preprocessing_summary": str(ARTIFACTS_DIR / "preprocessing_summary.json"),
+        "tfidf_vectorizer": str((ARTIFACTS_DIR / "tfidf_vectorizer.pkl").relative_to(PROJECT_ROOT)),
+        "label_to_id": str(label_to_id_path.relative_to(PROJECT_ROOT)),
+        "id_to_label": str(id_to_label_path.relative_to(PROJECT_ROOT)),
+        "preprocessing_summary": str((ARTIFACTS_DIR / "preprocessing_summary.json").relative_to(PROJECT_ROOT)),
     }
 
     metadata: TFIDFMetadata = {
@@ -658,10 +659,10 @@ def load_neural_data(
         )
 
     artifact_refs: dict[str, str] = {
-        "vocab": str(vocab_path),
-        "label_to_id": str(label_to_id_path),
-        "id_to_label": str(id_to_label_path),
-        "preprocessing_summary": str(summary_path),
+        "vocab": str(vocab_path.relative_to(PROJECT_ROOT)),
+        "label_to_id": str(label_to_id_path.relative_to(PROJECT_ROOT)),
+        "id_to_label": str(id_to_label_path.relative_to(PROJECT_ROOT)),
+        "preprocessing_summary": str(summary_path.relative_to(PROJECT_ROOT)),
     }
 
     preprocessing_policy: dict[str, bool | str] = {

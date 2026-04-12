@@ -18,7 +18,7 @@
   },
   "parameter_count": 1379767,
   "trainable_parameter_count": 1379767,
-  "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/text_cnn_best_emb256_nf100_ks2x3x4_d0.5_lr00005_wd00_s42.pt",
-  "preprocessing_artifact_refs": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts",
+  "checkpoint_path": "outputs/checkpoints/text_cnn_best_emb256_nf100_ks2x3x4_d0.5_lr00005_wd00_s42.pt",
+  "preprocessing_artifact_refs": "data/artifacts",
   "notes": "Kim-style Text CNN; best tuning run used directly (no retraining)."
 }

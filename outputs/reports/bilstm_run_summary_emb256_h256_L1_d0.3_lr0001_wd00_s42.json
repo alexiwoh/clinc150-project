@@ -26,10 +26,10 @@
     "max_grad_norm": 1.0
   },
   "preprocessing_artifact_refs": {
-    "vocab": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/vocab.json",
-    "label_to_id": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/label_to_id.json",
-    "id_to_label": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/id_to_label.json",
-    "preprocessing_summary": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/preprocessing_summary.json"
+    "vocab": "data/artifacts/vocab.json",
+    "label_to_id": "data/artifacts/label_to_id.json",
+    "id_to_label": "data/artifacts/id_to_label.json",
+    "preprocessing_summary": "data/artifacts/preprocessing_summary.json"
   },
   "vocab_size": 6161,
   "max_sequence_length": 20,
@@ -55,7 +55,7 @@
   "best_val_metric": 0.880720979608434,
   "primary_model_selection_metric": "val_macro_f1",
   "training_duration": 88.33377814292908,
-  "checkpoint_path": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/outputs/checkpoints/bilstm_best_emb256_h256_L1_d0.3_lr0001_wd00_s42.pt",
+  "checkpoint_path": "outputs/checkpoints/bilstm_best_emb256_h256_L1_d0.3_lr0001_wd00_s42.pt",
   "oos_strategy": "explicit_class",
   "class_weight_policy": "disabled (default)",
   "inference_latency": {
@@ -73,10 +73,10 @@
     "test": "no shuffle"
   },
   "preprocessing_refs_for_comparison": {
-    "vocab": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/vocab.json",
-    "label_to_id": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/label_to_id.json",
-    "id_to_label": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/id_to_label.json",
-    "preprocessing_summary": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/preprocessing_summary.json"
+    "vocab": "data/artifacts/vocab.json",
+    "label_to_id": "data/artifacts/label_to_id.json",
+    "id_to_label": "data/artifacts/id_to_label.json",
+    "preprocessing_summary": "data/artifacts/preprocessing_summary.json"
   },
   "label_name_ordering": [
     "restaurant_reviews",
@@ -231,7 +231,7 @@
     "travel_suggestion",
     "change_volume"
   ],
-  "preprocessing_manifest_reference": "/Users/alexanderiwoh/Programming-Local/GitHub/clinc150-project/data/artifacts/preprocessing_summary.json",
+  "preprocessing_manifest_reference": "data/artifacts/preprocessing_summary.json",
   "preprocessing_config_hash_or_version": "2026-04-07T02:08:24.271730+00:00",
   "inherited_text_preprocessing_policy": {
     "lowercase": true,
