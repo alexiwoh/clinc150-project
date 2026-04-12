@@ -17,8 +17,8 @@
 ## Training Class Balance
 
 - Min count per class: 100
-- Max count per class: 250
-- Mean count per class: 101.0
+- Max count per class: 100
+- Mean count per class: 100.0
 
 ## OOS Evaluation Strategy
 
@@ -26,6 +26,6 @@ Multiclass classification with an explicit OOS class (label 42). All models clas
 
 ## Quirks and Caveats
 
-- Test split has ~18% OOS examples vs ~1% in train — heavy distribution shift.
-- In-scope classes are perfectly balanced in the 'plus' subset.
-- OOS has 100 train examples (2x any single in-scope class in 'small'; ~0.67x in 'plus').
+- Test split has ~18.2% OOS examples vs ~1.6% in train, creating a substantial distribution shift.
+- In-scope classes are perfectly balanced in the 'plus' subset (100 training examples per class).
+- OOS has 250 training examples, 2.50x the per-class in-scope training count (100).

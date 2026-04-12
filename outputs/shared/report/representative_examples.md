@@ -4,6 +4,21 @@
 
 Examples selected to cover key error patterns: at least 3 OOS false accepts, 3 semantic confusions, 3 cross-domain confusions, 3 short-query ambiguity, and 2+ examples per model. Sorted by category then confidence.
 
+### Coverage in Selected Examples
+
+- Selected examples include 12 OOS false-accept cases.
+- Selected examples include 7 within-domain semantic-confusion cases.
+- Selected examples include 5 cross-domain confusion cases.
+- Selected examples include 0 short-query ambiguity cases.
+
+Related figures: `outputs/mlp/analysis/oos_error_breakdown.png`, `outputs/text_cnn/analysis/oos_error_breakdown.png`, `outputs/bilstm/analysis/oos_error_breakdown.png`, `outputs/shared/analysis/oos_error_comparison.png`
+
+Related figures: `outputs/mlp/figures/representative_confusion_matrix.png`, `outputs/mlp/figures/representative_top_confused_pairs.png`, `outputs/text_cnn/figures/representative_confusion_matrix.png`, `outputs/text_cnn/figures/representative_top_confused_pairs.png`, `outputs/bilstm/figures/representative_confusion_matrix.png`, `outputs/bilstm/figures/representative_top_confused_pairs.png`
+
+Related figures: `outputs/mlp/figures/representative_error_summary.png`, `outputs/text_cnn/figures/representative_error_summary.png`, `outputs/bilstm/figures/representative_error_summary.png`, `outputs/shared/analysis/cross_model_error_overlap.png`
+
+Related figure: `outputs/shared/analysis/length_slice_comparison.png`
+
 | Text                                                            | True Label                | Predicted            | Model        | Confidence | Category                | Annotation             |
 | --------------------------------------------------------------- | ------------------------- | -------------------- | ------------ | ---------- | ----------------------- | ---------------------- |
 | what other countries speak the english language                 | oos                       | change_language      | BiLSTM       | 1.0000     | oos_as_inscope          | confident false accept |

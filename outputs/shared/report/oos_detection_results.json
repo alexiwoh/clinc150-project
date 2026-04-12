@@ -65,6 +65,53 @@
     "model_id": "text_cnn",
     "rationale": "Highest AUROC (0.9523)"
   },
+  "claims": [
+    {
+      "claim_id": "aggregate_oos_metrics",
+      "claim_text": "TF-IDF + MLP achieved the highest aggregate OOS F1 (0.6261 +/- 0.0348).",
+      "source_artifacts": [
+        "outputs/shared/oos_summary_table.json"
+      ],
+      "related_figure_types": [
+        "oos_metrics_comparison",
+        "model_comparison_oos_f1"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/figures/oos_metrics_comparison.png"
+      ],
+      "scope_hint": "aggregate"
+    },
+    {
+      "claim_id": "threshold_analysis",
+      "claim_text": "Text CNN achieved the highest AUROC (0.9523), indicating the strongest threshold-independent OOS discrimination.",
+      "source_artifacts": [
+        "outputs/shared/analysis/oos_threshold_comparison.json"
+      ],
+      "related_figure_types": [
+        "oos_roc_comparison",
+        "oos_pr_comparison"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/analysis/oos_roc_comparison.png",
+        "outputs/shared/analysis/oos_pr_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    },
+    {
+      "claim_id": "false_accept_patterns",
+      "claim_text": "False accepts remain the dominant OOS failure pattern, with a small set of intents repeatedly capturing OOS examples.",
+      "source_artifacts": [
+        "outputs/shared/analysis/oos_false_accept_comparison.json"
+      ],
+      "related_figure_types": [
+        "oos_error_comparison"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/analysis/oos_error_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    }
+  ],
   "false_accept_summary": {
     "mlp": [
       {

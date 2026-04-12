@@ -11,9 +11,10 @@ from typing import Any
 
 from src.constants import PROTOCOL_VERSION, SCHEMA_VERSION
 from src.enums import ModelID
-from src.report.artifact_loader import load_json, resolve_repo_path
+from src.report.figure_metadata import FigureCaptionContext, FigureManifestEntry, load_figure_manifest_entries
 
 SectionOutput = tuple[str, dict[str, Any]]
+CatalogueEntry = dict[str, Any]
 
 _MANIFEST_PATH = "outputs/shared/figure_manifest.json"
 
@@ -67,56 +68,123 @@ _SECTION_ORDER: list[str] = [
 # ---------------------------------------------------------------------------
 
 _TYPE_DESCRIPTIONS: dict[str, str] = {
-    "train_val_loss_curve": "Training and validation loss curves",
-    "val_macro_f1_curve": "Validation macro F1 progression during training",
-    "val_accuracy_curve": "Validation accuracy progression during training",
-    "confusion_matrix": "Test-set confusion matrix across 151 intent classes including OOS",
-    "top_confused_pairs": "Top confused intent pairs on the test set",
-    "bottom_classes_f1": "Bottom classes by test F1 score",
-    "oos_metrics": "OOS detection metrics summary (precision, recall, F1)",
-    "error_summary": "Most frequent misclassification categories on the test set",
-    "model_comparison_test_accuracy": "Aggregate test accuracy comparison with error bars",
-    "model_comparison_test_macro_f1": "Aggregate test macro F1 comparison with error bars",
-    "model_comparison_oos_f1": "Aggregate OOS F1 comparison with error bars",
-    "oos_metrics_comparison": "Aggregate OOS precision, recall, and F1 comparison",
-    "model_efficiency_comparison": "Model efficiency comparison (parameters, training time, throughput)",
-    "reliability_diagram": "Reliability diagram showing calibration quality (predicted confidence vs actual accuracy)",
-    "confidence_histogram": "Prediction confidence distribution for correct and incorrect predictions",
-    "oos_roc_curve": "OOS detection ROC curve (explicit OOS class probability method)",
-    "oos_pr_curve": "OOS detection precision-recall curve",
-    "oos_error_breakdown": "OOS error breakdown: false accepts (OOS as in-scope) vs false rejects",
-    "confidence_vs_accuracy": "Confidence vs accuracy analysis across confidence bins",
-    "worst_classes_heatmap": "Confusion heatmap for worst-performing intent classes",
-    "confusion_stability": "Confusion stability across repeated runs (3 seeds)",
-    "calibration_comparison": "Calibration comparison (ECE, MCE, Brier, NLL) across models",
-    "oos_roc_comparison": "OOS ROC curve comparison overlay across models",
-    "oos_pr_comparison": "OOS precision-recall curve comparison overlay across models",
-    "error_taxonomy": "Error taxonomy comparison (OOS-as-inscope, inscope-as-OOS, semantic, cross-domain) per model",
-    "oos_error_comparison": "OOS false-accept and false-reject pattern comparison across models",
-    "length_slice": "Accuracy by query length (short/medium/long) across models",
-    "frequency_slice": "Accuracy by class frequency across models",
-    "cross_model_error_overlap": "Cross-model error overlap: examples wrong by all/some/one model",
+    "train_val_loss_curve": "Training and validation loss by epoch",
+    "val_macro_f1_curve": "Validation macro F1 by training epoch",
+    "val_accuracy_curve": "Validation accuracy by training epoch",
+    "confusion_matrix": "Confusion matrix for intent predictions",
+    "top_confused_pairs": "Most frequent true-label and predicted-label confusion pairs",
+    "bottom_classes_f1": "Lowest-F1 intent classes in the representative evaluation",
+    "oos_metrics": "Representative-run OOS precision, recall, and F1 summary",
+    "error_summary": "Representative-run summary of the most frequent error patterns",
+    "model_comparison_test_accuracy": "Cross-model test accuracy comparison with error bars",
+    "model_comparison_test_macro_f1": "Cross-model test macro F1 comparison with error bars",
+    "model_comparison_oos_f1": "Cross-model OOS F1 comparison with error bars",
+    "oos_metrics_comparison": "Cross-model OOS precision, recall, and F1 comparison",
+    "model_efficiency_comparison": "Cross-model efficiency comparison",
+    "reliability_diagram": "Reliability diagram comparing confidence with empirical accuracy",
+    "confidence_histogram": "Confidence distribution for correct versus incorrect predictions",
+    "oos_roc_curve": "ROC curve for explicit-OOS detection",
+    "oos_pr_curve": "Precision-recall curve for explicit-OOS detection",
+    "oos_error_breakdown": "False-accept and false-reject intent breakdown for OOS analysis",
+    "confidence_vs_accuracy": "Accuracy across confidence buckets",
+    "worst_classes_heatmap": "Confusion heatmap for the weakest intent classes",
+    "confusion_stability": "Run-to-run stability of the highest-count confusion pairs",
+    "calibration_comparison": "Cross-model calibration comparison",
+    "oos_roc_comparison": "Cross-model ROC comparison for explicit-OOS detection",
+    "oos_pr_comparison": "Cross-model precision-recall comparison for explicit-OOS detection",
+    "error_taxonomy": "Cross-model comparison of error-taxonomy fractions",
+    "oos_error_comparison": "Cross-model false-accept versus false-reject comparison",
+    "length_slice": "Cross-model accuracy comparison by utterance length",
+    "frequency_slice": "Cross-model accuracy comparison by class-frequency tier",
+    "cross_model_error_overlap": "Overlap between shared and model-specific prediction failures",
 }
 
 
-def _build_caption(fig: dict[str, Any]) -> str:
+def _build_caption(fig: FigureManifestEntry) -> str:
     """Generate a self-contained caption for a figure entry."""
-    ft: str = fig["figure_type"]
-    scope: str = fig.get("scope", "representative")
-    model_id: str | None = fig.get("model_name")
+    figure_type = fig["figure_type"]
+    context = fig.get("caption_context", {})
+    intro = _caption_intro(fig, context)
+    context_parts = [
+        _basis_sentence(fig, context),
+        _dataset_sentence(context),
+        _detail_sentence(figure_type, context),
+    ]
+    context_parts = [part for part in context_parts if part]
+    if not context_parts:
+        return intro
+    return " ".join([intro, *context_parts])
 
-    model_str = ModelID(model_id).display_name if model_id else "all models"
 
+def _caption_intro(fig: FigureManifestEntry, context: FigureCaptionContext) -> str:
+    figure_type = fig["figure_type"]
+    description = _TYPE_DESCRIPTIONS.get(figure_type, figure_type.replace("_", " ").replace("-", " ").title())
+    model_id = fig.get("model_name")
+    if model_id:
+        return f"{description} for {ModelID(model_id).display_name}."
+    return f"{description} across all evaluated models."
+
+
+def _basis_sentence(fig: FigureManifestEntry, context: FigureCaptionContext) -> str | None:
+    basis = context.get("analysis_basis")
+    scope = fig.get("scope", "representative")
+    run_id = fig.get("representative_run_id")
+    selection_rule = context.get("selection_rule")
     if scope == "representative":
-        run_id = fig.get("representative_run_id", "")
-        scope_str = f"representative run ({run_id})" if run_id else "representative run"
-    elif scope == "aggregate":
-        scope_str = "aggregate over 3 repeated runs"
-    else:
-        scope_str = scope
+        if run_id is None:
+            return None
+        sentence = f"Computed from representative run `{run_id}`"
+        if selection_rule:
+            sentence += f", selected by {selection_rule.replace('_', ' ')}"
+        return sentence + "."
+    if scope == "aggregate":
+        run_count = context.get("run_count")
+        if run_count is not None:
+            return f"Uses aggregate statistics over {run_count} repeated runs per model."
+        return "Uses aggregate statistics over repeated runs."
+    if basis is None:
+        return None
+    if run_id is not None and "representative-run" in basis:
+        return f"Computed from {basis} for representative run `{run_id}`."
+    return f"Computed from {basis}."
 
-    desc = _TYPE_DESCRIPTIONS.get(ft, ft.replace("_", " ").title())
-    return f"{desc} for {model_str}. Data: {scope_str}, CLINC150 test set."
+
+def _dataset_sentence(context: FigureCaptionContext) -> str | None:
+    dataset_name = context.get("dataset_name")
+    dataset_split = context.get("dataset_split")
+    if dataset_name and dataset_split:
+        return f"Uses the {dataset_name} {dataset_split} split."
+    if dataset_name:
+        return f"Uses {dataset_name} artifacts."
+    return None
+
+
+def _detail_sentence(figure_type: str, context: FigureCaptionContext) -> str | None:
+    metric_names = context.get("metric_names", [])
+    class_count = context.get("class_count")
+    run_count = context.get("run_count")
+    top_k = context.get("top_k")
+
+    if figure_type == "confusion_matrix" and class_count is not None:
+        return f"Covers {class_count} intent classes including OOS."
+    if figure_type == "top_confused_pairs" and top_k is not None:
+        return f"Highlights the top {top_k} confusion pairs."
+    if figure_type == "error_summary" and top_k is not None:
+        return f"Summarizes {top_k} ranked error examples or categories."
+    if figure_type == "confusion_stability" and run_count is not None:
+        if top_k is not None:
+            return f"Tracks the top {top_k} confusion pairs across {run_count} completed runs."
+        return f"Tracks run-to-run confusion stability across {run_count} completed runs."
+    if figure_type == "model_efficiency_comparison" and metric_names:
+        return f"Metrics shown: {', '.join(metric_names)}."
+    if metric_names and figure_type in {
+        "oos_metrics",
+        "oos_metrics_comparison",
+        "calibration_comparison",
+        "oos_error_comparison",
+    }:
+        return f"Metrics shown: {', '.join(metric_names)}."
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -126,11 +194,10 @@ def _build_caption(fig: dict[str, Any]) -> str:
 
 def generate_figure_catalogue() -> SectionOutput:
     """Spec section I / I2."""
-    manifest = load_json(resolve_repo_path(_MANIFEST_PATH))
-    figures: list[dict[str, Any]] = manifest["figures"]
+    figures = load_figure_manifest_entries()
 
     # Group by report section
-    by_section: dict[str, list[dict[str, Any]]] = {s: [] for s in _SECTION_ORDER}
+    by_section: dict[str, list[CatalogueEntry]] = {s: [] for s in _SECTION_ORDER}
 
     for fig in figures:
         section = _SECTION_MAP.get(fig["figure_type"], "Error Analysis")
@@ -140,6 +207,8 @@ def generate_figure_catalogue() -> SectionOutput:
             "scope": fig.get("scope", "representative"),
             "model_name": fig.get("model_name"),
             "figure_type": fig["figure_type"],
+            "source_artifact_paths": list(fig.get("source_artifact_paths", [])),
+            "caption_context": dict(fig.get("caption_context", {})),
         }
         by_section.setdefault(section, []).append(entry)
 
@@ -154,7 +223,11 @@ def generate_figure_catalogue() -> SectionOutput:
         md_parts.append("")
         for entry in section_figs:
             md_parts.append(f"- **{entry['figure_type']}** ({entry['scope']}): {entry['caption']}")
-            md_parts.append(f"  Path: `{entry['figure_path']}`")
+            md_parts.append(f"  Figure path: `{entry['figure_path']}`")
+            sources = entry.get("source_artifact_paths", [])
+            if sources:
+                joined = ", ".join(f"`{path}`" for path in sources)
+                md_parts.append(f"  Source artifacts: {joined}")
         md_parts.append("")
 
     md_parts.append(f"Total figures: {len(figures)}")

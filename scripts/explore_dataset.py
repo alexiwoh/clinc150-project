@@ -35,12 +35,6 @@ OOS_EVAL_STRATEGY = (
     "Threshold-based OOS detection is deferred to stretch goals (Step 12)."
 )
 
-QUIRKS_AND_CAVEATS = [
-    "Test split has ~18% OOS examples vs ~1% in train — heavy distribution shift.",
-    f"In-scope classes are perfectly balanced in the '{DATASET_CONFIG.subset}' subset.",
-    "OOS has 100 train examples (2x any single in-scope class in 'small'; ~0.67x in 'plus').",
-]
-
 
 def _section(title: str) -> None:
     print(f"\n{'=' * 60}")
@@ -91,8 +85,54 @@ def _write_sample_queries(ds: CLINCDataset) -> Path:
     return path
 
 
+def _build_quirks_and_caveats(ds: CLINCDataset) -> list[str]:
+    """Compute dataset notes directly from the active subset statistics."""
+
+    sizes = ds.split_sizes()
+    oos_counts = ds.oos_counts()
+    train_distribution = ds.class_distribution("train")
+    in_scope_train_counts = [count for label_id, count in train_distribution.items() if label_id != OOS_LABEL_ID]
+
+    train_oos_pct = 100.0 * oos_counts["train"] / sizes["train"]
+    test_oos_pct = 100.0 * oos_counts["test"] / sizes["test"]
+
+    quirks = [
+        (
+            f"Test split has ~{test_oos_pct:.1f}% OOS examples vs "
+            f"~{train_oos_pct:.1f}% in train, creating a substantial distribution shift."
+        )
+    ]
+
+    in_scope_min = min(in_scope_train_counts)
+    in_scope_max = max(in_scope_train_counts)
+    if in_scope_min == in_scope_max:
+        quirks.append(
+            f"In-scope classes are perfectly balanced in the '{ds.subset}' subset "
+            f"({in_scope_min} training examples per class)."
+        )
+    else:
+        quirks.append(
+            f"In-scope training counts vary between {in_scope_min} and {in_scope_max} "
+            f"examples per class in the '{ds.subset}' subset."
+        )
+
+    oos_train_count = oos_counts["train"]
+    reference_count = in_scope_train_counts[0]
+    ratio = oos_train_count / reference_count
+    if abs(ratio - 1.0) < 0.005:
+        quirks.append(f"OOS has {oos_train_count} training examples, matching the per-class in-scope training count.")
+    else:
+        quirks.append(
+            f"OOS has {oos_train_count} training examples, {ratio:.2f}x the per-class in-scope training count "
+            f"({reference_count})."
+        )
+
+    return quirks
+
+
 def _write_summary_json(ds: CLINCDataset, train_counts: list[int]) -> Path:
     sizes = ds.split_sizes()
+    quirks_and_caveats = _build_quirks_and_caveats(ds)
     summary = {
         "dataset_source": ds.source,
         "subset": ds.subset,
@@ -109,7 +149,7 @@ def _write_summary_json(ds: CLINCDataset, train_counts: list[int]) -> Path:
         "train_class_count_max": train_counts[-1],
         "train_class_count_mean": round(sum(train_counts) / len(train_counts), 2),
         "oos_evaluation_strategy": OOS_EVAL_STRATEGY,
-        "quirks_or_caveats": QUIRKS_AND_CAVEATS,
+        "quirks_or_caveats": quirks_and_caveats,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
     path = ARTIFACTS_DIR / "dataset_summary.json"
@@ -120,6 +160,7 @@ def _write_summary_json(ds: CLINCDataset, train_counts: list[int]) -> Path:
 def _write_summary_md(ds: CLINCDataset, train_counts: list[int]) -> Path:
     sizes = ds.split_sizes()
     oos = ds.oos_counts()
+    quirks_and_caveats = _build_quirks_and_caveats(ds)
     in_scope = ds.in_scope_counts()
 
     lines = [
@@ -155,7 +196,7 @@ def _write_summary_md(ds: CLINCDataset, train_counts: list[int]) -> Path:
         "## Quirks and Caveats",
         "",
     ]
-    for note in QUIRKS_AND_CAVEATS:
+    for note in quirks_and_caveats:
         lines.append(f"- {note}")
 
     path = ARTIFACTS_DIR / "dataset_summary.md"
@@ -209,10 +250,10 @@ def main() -> None:
     # ---- class balance (training set) ----
     _section("Training set class distribution")
     train_dist = ds.class_distribution("train")
-    train_counts = sorted(train_dist.values())
-    print(f"  Min count:  {train_counts[0]}")
-    print(f"  Max count:  {train_counts[-1]}")
-    print(f"  Mean count: {sum(train_counts) / len(train_counts):.1f}")
+    train_counts = sorted(count for label_id, count in train_dist.items() if label_id != OOS_LABEL_ID)
+    print(f"  In-scope min count:  {train_counts[0]}")
+    print(f"  In-scope max count:  {train_counts[-1]}")
+    print(f"  In-scope mean count: {sum(train_counts) / len(train_counts):.1f}")
     print("\n  Bottom-5 classes by count:")
     for label_id, count in train_dist.most_common()[:-6:-1]:
         print(f"    {ds.label_name(label_id):>30s} (id={label_id}): {count}")

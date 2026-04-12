@@ -440,6 +440,8 @@ class TestRepresentativeFigures:
             assert rec.seed == 42
             assert rec.best_epoch == 10
             assert rec.stopping_epoch == 15
+            assert rec.caption_context["dataset_split"] == "validation"
+            assert rec.caption_context["selection_rule"] == "highest_validation_macro_f1"
 
     def test_figure_files_are_nonempty(self, mock_outputs: Path) -> None:
         with _patch_roots(mock_outputs), _patch_model_output_dir(mock_outputs):
@@ -575,6 +577,7 @@ class TestFigureManifest:
                 seed=42,
                 best_epoch=10,
                 stopping_epoch=15,
+                caption_context={"dataset_name": "CLINC150", "dataset_split": "test"},
             ),
             FigureRecord(
                 figure_path="outputs/shared/figures/agg.png",
@@ -596,6 +599,7 @@ class TestFigureManifest:
         assert rep_entry["seed"] == 42
         assert rep_entry["best_epoch"] == 10
         assert rep_entry["stopping_epoch"] == 15
+        assert rep_entry["caption_context"]["dataset_split"] == "test"
 
         agg_entry = data["figures"][1]
         assert "model_name" not in agg_entry

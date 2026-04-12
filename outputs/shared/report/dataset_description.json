@@ -21,11 +21,11 @@
     "validation": 3000,
     "test": 4500
   },
-  "class_balance_note": "In-scope classes are balanced in the 'plus' subset. OOS has different support across splits.",
+  "class_balance_note": "In-scope classes are balanced in the `plus` subset at 100 training examples per class.",
   "distribution_quirks": [
-    "Test split has ~18% OOS examples vs ~1% in train \u2014 heavy distribution shift.",
-    "In-scope classes are perfectly balanced in the 'plus' subset.",
-    "OOS has 100 train examples (2x any single in-scope class in 'small'; ~0.67x in 'plus')."
+    "Test split has ~18.2% OOS examples vs ~1.6% in train, creating a substantial distribution shift.",
+    "In-scope classes are perfectly balanced in the 'plus' subset (100 training examples per class).",
+    "OOS has 250 training examples, 2.50x the per-class in-scope training count (100)."
   ],
   "source_artifact": "data/artifacts/dataset_summary.json"
 }

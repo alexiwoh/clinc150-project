@@ -84,10 +84,16 @@ def compute_and_save_oos_threshold(ctx: HandoffContext) -> tuple[dict[str, Any],
         FigureRecord(
             figure_path=repo_relative(roc_path),
             figure_type="oos_roc_curve",
-            scope="representative",
+            scope="analysis",
             source_artifact_paths=src_paths,
             model_name=str(ctx.model_id),
             representative_run_id=ctx.representative_run_id,
+            caption_context={
+                "analysis_basis": "representative-run OOS threshold analysis",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["AUROC"],
+            },
         )
     )
 
@@ -98,10 +104,16 @@ def compute_and_save_oos_threshold(ctx: HandoffContext) -> tuple[dict[str, Any],
         FigureRecord(
             figure_path=repo_relative(pr_path),
             figure_type="oos_pr_curve",
-            scope="representative",
+            scope="analysis",
             source_artifact_paths=src_paths,
             model_name=str(ctx.model_id),
             representative_run_id=ctx.representative_run_id,
+            caption_context={
+                "analysis_basis": "representative-run OOS threshold analysis",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["AUPR"],
+            },
         )
     )
 
@@ -176,8 +188,14 @@ def generate_oos_threshold_comparison(
             FigureRecord(
                 figure_path=repo_relative(roc_comp),
                 figure_type="oos_roc_comparison",
-                scope="aggregate",
+                scope="analysis",
                 source_artifact_paths=source_paths,
+                caption_context={
+                    "analysis_basis": "cross-model OOS ROC comparison using one representative run per model",
+                    "dataset_name": "CLINC150",
+                    "dataset_split": "test",
+                    "metric_names": ["AUROC"],
+                },
             )
         )
 
@@ -188,8 +206,16 @@ def generate_oos_threshold_comparison(
             FigureRecord(
                 figure_path=repo_relative(pr_comp),
                 figure_type="oos_pr_comparison",
-                scope="aggregate",
+                scope="analysis",
                 source_artifact_paths=source_paths,
+                caption_context={
+                    "analysis_basis": (
+                        "cross-model OOS precision-recall comparison using one representative run per model"
+                    ),
+                    "dataset_name": "CLINC150",
+                    "dataset_split": "test",
+                    "metric_names": ["AUPR"],
+                },
             )
         )
 
@@ -281,10 +307,16 @@ def compute_and_save_oos_deep_dive(ctx: HandoffContext) -> tuple[dict[str, Any],
         FigureRecord(
             figure_path=repo_relative(fig_path),
             figure_type="oos_error_breakdown",
-            scope="representative",
+            scope="analysis",
             source_artifact_paths=[repo_relative(ctx.final_predictions_path)],
             model_name=str(ctx.model_id),
             representative_run_id=ctx.representative_run_id,
+            caption_context={
+                "analysis_basis": "representative-run OOS error analysis",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["false accepts", "false rejects"],
+            },
         )
     )
 
@@ -321,8 +353,14 @@ def generate_oos_error_comparison(
         FigureRecord(
             figure_path=repo_relative(comp_fig_path),
             figure_type="oos_error_comparison",
-            scope="aggregate",
+            scope="analysis",
             source_artifact_paths=source_paths,
+            caption_context={
+                "analysis_basis": "cross-model OOS error comparison using one representative run per model",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["false accepts", "false rejects"],
+            },
         )
     )
 

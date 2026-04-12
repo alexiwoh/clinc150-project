@@ -175,13 +175,13 @@
     "test": 4500
   },
   "train_class_count_min": 100,
-  "train_class_count_max": 250,
-  "train_class_count_mean": 100.99,
+  "train_class_count_max": 100,
+  "train_class_count_mean": 100.0,
   "oos_evaluation_strategy": "Multiclass classification with an explicit OOS class (label 42). All models classify into 151 classes; OOS precision/recall/F1 computed directly from class-42 predictions. Threshold-based OOS detection is deferred to stretch goals (Step 12).",
   "quirks_or_caveats": [
-    "Test split has ~18% OOS examples vs ~1% in train \u2014 heavy distribution shift.",
-    "In-scope classes are perfectly balanced in the 'plus' subset.",
-    "OOS has 100 train examples (2x any single in-scope class in 'small'; ~0.67x in 'plus')."
+    "Test split has ~18.2% OOS examples vs ~1.6% in train, creating a substantial distribution shift.",
+    "In-scope classes are perfectly balanced in the 'plus' subset (100 training examples per class).",
+    "OOS has 250 training examples, 2.50x the per-class in-scope training count (100)."
   ],
-  "timestamp": "2026-04-07T02:08:19.101147+00:00"
+  "timestamp": "2026-04-12T00:34:30.455258+00:00"
 }

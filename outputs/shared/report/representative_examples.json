@@ -1,6 +1,78 @@
 {
   "schema_version": "1.0",
   "protocol_version": "1.0",
+  "claims": [
+    {
+      "claim_id": "oos_false_accept_examples",
+      "claim_text": "Selected examples include 12 OOS false-accept cases.",
+      "source_artifacts": [
+        "outputs/shared/analysis/curated_report_examples.json"
+      ],
+      "related_figure_types": [
+        "oos_error_breakdown",
+        "oos_error_comparison"
+      ],
+      "related_figure_paths": [
+        "outputs/mlp/analysis/oos_error_breakdown.png",
+        "outputs/text_cnn/analysis/oos_error_breakdown.png",
+        "outputs/bilstm/analysis/oos_error_breakdown.png",
+        "outputs/shared/analysis/oos_error_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    },
+    {
+      "claim_id": "semantic_confusion_examples",
+      "claim_text": "Selected examples include 7 within-domain semantic-confusion cases.",
+      "source_artifacts": [
+        "outputs/shared/analysis/curated_report_examples.json"
+      ],
+      "related_figure_types": [
+        "top_confused_pairs",
+        "confusion_matrix"
+      ],
+      "related_figure_paths": [
+        "outputs/mlp/figures/representative_confusion_matrix.png",
+        "outputs/mlp/figures/representative_top_confused_pairs.png",
+        "outputs/text_cnn/figures/representative_confusion_matrix.png",
+        "outputs/text_cnn/figures/representative_top_confused_pairs.png",
+        "outputs/bilstm/figures/representative_confusion_matrix.png",
+        "outputs/bilstm/figures/representative_top_confused_pairs.png"
+      ],
+      "scope_hint": "representative"
+    },
+    {
+      "claim_id": "cross_domain_examples",
+      "claim_text": "Selected examples include 5 cross-domain confusion cases.",
+      "source_artifacts": [
+        "outputs/shared/analysis/curated_report_examples.json"
+      ],
+      "related_figure_types": [
+        "error_summary",
+        "cross_model_error_overlap"
+      ],
+      "related_figure_paths": [
+        "outputs/mlp/figures/representative_error_summary.png",
+        "outputs/text_cnn/figures/representative_error_summary.png",
+        "outputs/bilstm/figures/representative_error_summary.png",
+        "outputs/shared/analysis/cross_model_error_overlap.png"
+      ],
+      "scope_hint": "representative"
+    },
+    {
+      "claim_id": "short_query_examples",
+      "claim_text": "Selected examples include 0 short-query ambiguity cases.",
+      "source_artifacts": [
+        "outputs/shared/analysis/curated_report_examples.json"
+      ],
+      "related_figure_types": [
+        "length_slice"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/analysis/length_slice_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    }
+  ],
   "selection_criteria": "Examples selected to cover key error patterns: at least 3 OOS false accepts, 3 semantic confusions, 3 cross-domain confusions, 3 short-query ambiguity, and 2+ examples per model. Sorted by category then confidence.",
   "total_curated_count": 60,
   "selected_count": 25,

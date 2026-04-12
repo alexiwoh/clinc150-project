@@ -348,6 +348,75 @@
       "source_artifact": "outputs/shared/efficiency_summary_table.json"
     }
   ],
+  "claims": [
+    {
+      "claim_id": "main_comparison",
+      "claim_text": "TF-IDF + MLP achieved the highest aggregate test macro F1 (0.8727 +/- 0.0031).",
+      "source_artifacts": [
+        "outputs/shared/model_comparison_aggregate.json"
+      ],
+      "related_figure_types": [
+        "model_comparison_test_macro_f1"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/figures/model_comparison_test_macro_f1.png"
+      ],
+      "scope_hint": "aggregate"
+    },
+    {
+      "claim_id": "oos_metrics",
+      "claim_text": "TF-IDF + MLP achieved the highest aggregate OOS F1 (0.6261 +/- 0.0348).",
+      "source_artifacts": [
+        "outputs/shared/oos_summary_table.json"
+      ],
+      "related_figure_types": [
+        "oos_metrics_comparison",
+        "model_comparison_oos_f1"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/figures/oos_metrics_comparison.png"
+      ],
+      "scope_hint": "aggregate"
+    },
+    {
+      "claim_id": "extended_metrics",
+      "claim_text": "TF-IDF + MLP has the highest representative-run macro F1 (0.8742) in the extended-metrics table.",
+      "source_artifacts": [
+        "outputs/shared/analysis/extended_metrics_comparison.json"
+      ],
+      "related_figure_types": [],
+      "related_figure_paths": [],
+      "scope_hint": "representative"
+    },
+    {
+      "claim_id": "calibration",
+      "claim_text": "Text CNN is the best calibrated representative run (ECE = 0.0374).",
+      "source_artifacts": [
+        "outputs/shared/analysis/calibration_summary.json"
+      ],
+      "related_figure_types": [
+        "calibration_comparison"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/analysis/calibration_comparison.png"
+      ],
+      "scope_hint": "analysis"
+    },
+    {
+      "claim_id": "efficiency",
+      "claim_text": "Text CNN has the highest mean inference throughput (32082 ex/s).",
+      "source_artifacts": [
+        "outputs/shared/efficiency_summary_table.json"
+      ],
+      "related_figure_types": [
+        "model_efficiency_comparison"
+      ],
+      "related_figure_paths": [
+        "outputs/shared/figures/model_efficiency_comparison.png"
+      ],
+      "scope_hint": "aggregate"
+    }
+  ],
   "source_artifacts": [
     "outputs/shared/model_comparison_aggregate.json",
     "outputs/shared/oos_summary_table.json",

@@ -151,8 +151,14 @@ def compute_and_save_cross_model_comparison(model_ids: list[ModelID]) -> tuple[d
         FigureRecord(
             figure_path=repo_relative(fig_path),
             figure_type="cross_model_error_overlap",
-            scope="aggregate",
+            scope="analysis",
             source_artifact_paths=source_paths,
+            caption_context={
+                "analysis_basis": "cross-model error overlap using one representative run per model",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["all-correct count", "all-wrong count", "model-specific errors"],
+            },
         )
     )
 

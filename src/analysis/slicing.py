@@ -229,7 +229,14 @@ def _generate_grouped_comparison(
         FigureRecord(
             figure_path=repo_relative(fig_path),
             figure_type=figure_type,
-            scope="aggregate",
+            scope="analysis",
             source_artifact_paths=source_paths,
+            caption_context={
+                "analysis_basis": "cross-model slice comparison using representative runs",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["accuracy by slice"],
+                "top_k": len(group_labels),
+            },
         )
     )

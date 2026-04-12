@@ -59,7 +59,7 @@ from src.analysis.utils import (
 )
 from src.constants import PROJECT_ROOT, SHARED_DIR
 from src.enums import ModelID
-from src.report_figure_generation import FigureRecord
+from src.report_figure_generation import FigureRecord, figure_record_to_manifest_entry
 
 logger = logging.getLogger(__name__)
 
@@ -176,24 +176,7 @@ def update_figure_manifest(figure_records: list[FigureRecord]) -> None:
     for rec in figure_records:
         if rec.figure_path in existing_paths:
             continue
-        entry: dict[str, Any] = {
-            "schema_version": SCHEMA_VERSION,
-            "protocol_version": PROTOCOL_VERSION,
-            "figure_path": rec.figure_path,
-            "figure_type": rec.figure_type,
-            "scope": rec.scope,
-            "source_artifact_paths": rec.source_artifact_paths,
-        }
-        if rec.model_name is not None:
-            entry["model_name"] = rec.model_name
-        if rec.representative_run_id is not None:
-            entry["representative_run_id"] = rec.representative_run_id
-        if rec.seed is not None:
-            entry["seed"] = rec.seed
-        if rec.best_epoch is not None:
-            entry["best_epoch"] = rec.best_epoch
-        if rec.stopping_epoch is not None:
-            entry["stopping_epoch"] = rec.stopping_epoch
+        entry = figure_record_to_manifest_entry(rec)
         manifest["figures"].append(entry)
 
     write_json(manifest_path, manifest)

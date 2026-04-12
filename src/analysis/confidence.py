@@ -99,10 +99,16 @@ def compute_and_save_confidence_stratification(ctx: HandoffContext) -> tuple[dic
         FigureRecord(
             figure_path=repo_relative(fig_path),
             figure_type="confidence_vs_accuracy",
-            scope="representative",
+            scope="analysis",
             source_artifact_paths=[repo_relative(ctx.confidences_path)],
             model_name=str(ctx.model_id),
             representative_run_id=ctx.representative_run_id,
+            caption_context={
+                "analysis_basis": "representative-run confidence stratification",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["accuracy by confidence bin"],
+            },
         )
     )
 
@@ -142,8 +148,14 @@ def generate_confidence_comparison(
         FigureRecord(
             figure_path=repo_relative(fig_path),
             figure_type="confidence_vs_accuracy",
-            scope="aggregate",
+            scope="analysis",
             source_artifact_paths=source_paths,
+            caption_context={
+                "analysis_basis": "cross-model confidence stratification comparison using representative runs",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["accuracy by confidence bin"],
+            },
         )
     )
 

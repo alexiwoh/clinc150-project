@@ -119,10 +119,16 @@ def compute_and_save_worst_classes(ctx: HandoffContext) -> tuple[dict[str, Any],
         FigureRecord(
             figure_path=repo_relative(fig_path),
             figure_type="worst_classes_heatmap",
-            scope="representative",
+            scope="analysis",
             source_artifact_paths=[repo_relative(ctx.confusion_matrix_path)],
             model_name=str(ctx.model_id),
             representative_run_id=ctx.representative_run_id,
+            caption_context={
+                "analysis_basis": "representative-run worst-class analysis",
+                "class_count": len(bottom_k_names),
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+            },
         )
     )
 
@@ -307,12 +313,20 @@ def compute_and_save_confusion_stability(
         FigureRecord(
             figure_path=repo_relative(fig_path),
             figure_type="confusion_stability",
-            scope="representative",
+            scope="analysis",
             source_artifact_paths=[
                 repo_relative(rd / "confusion_matrix.csv") for rd in run_dirs if (rd / "confusion_matrix.csv").exists()
             ],
             model_name=str(ctx.model_id),
             representative_run_id=ctx.representative_run_id,
+            caption_context={
+                "analysis_basis": "cross-run confusion stability analysis",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["mean confusion count", "std confusion count"],
+                "run_count": len(run_dirs),
+                "top_k": len(top_pairs),
+            },
         )
     )
 

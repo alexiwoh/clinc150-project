@@ -11,7 +11,6 @@ from src.analysis.constants import (
     ERROR_ANALYSIS_NOTES_FILENAME,
     ERROR_ANALYSIS_SUMMARY_FILENAME,
     ERROR_TAXONOMY_SUMMARY_FILENAME,
-    LENGTH_SLICE_COMPARISON_FILENAME,
     OOS_THRESHOLD_COMPARISON_FILENAME,
 )
 from src.analysis.utils import (
@@ -100,7 +99,10 @@ def generate_error_analysis_summary(model_ids: list[ModelID]) -> dict[str, Any]:
     }
 
     # Length finding
-    length_finding: dict[str, Any] = {"source_artifact": f"outputs/shared/analysis/{LENGTH_SLICE_COMPARISON_FILENAME}"}
+    length_finding: dict[str, Any] = {
+        "source_artifact": f"outputs/shared/analysis/{ERROR_ANALYSIS_SUMMARY_FILENAME}",
+        "source_artifacts": [],
+    }
     for mid in model_ids:
         from src.analysis.constants import LENGTH_SLICE_FILENAME
         from src.analysis.utils import analysis_output_dir
@@ -108,6 +110,7 @@ def generate_error_analysis_summary(model_ids: list[ModelID]) -> dict[str, Any]:
         length_path = analysis_output_dir(mid) / LENGTH_SLICE_FILENAME
         if length_path.exists():
             length_data = read_json(length_path)
+            length_finding["source_artifacts"].append(f"outputs/{mid}/analysis/{LENGTH_SLICE_FILENAME}")
             slices = length_data.get("slices", [])
             short_slice = next((s for s in slices if s["slice"] == "short"), None)
             if short_slice:

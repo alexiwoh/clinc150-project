@@ -30,10 +30,13 @@ from src.constants import (
     model_output_dir,
 )
 from src.enums import ModelID
+from src.report.figure_metadata import FigureCaptionContext
 from src.utils import ensure_dir
 from src.visualizers import ResultsVisualizer, TrainingVisualizer
 
 logger = logging.getLogger(__name__)
+
+_DEFAULT_DATASET_NAME = "CLINC150"
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -64,13 +67,14 @@ class FigureRecord:
 
     figure_path: str
     figure_type: str
-    scope: str  # "representative" or "aggregate"
+    scope: str  # "representative", "aggregate", or "analysis"
     source_artifact_paths: list[str]
     model_name: str | None = None
     representative_run_id: str | None = None
     seed: int | None = None
     best_epoch: int | None = None
     stopping_epoch: int | None = None
+    caption_context: FigureCaptionContext = field(default_factory=dict)
 
 
 # ---------------------------------------------------------------------------
@@ -87,6 +91,7 @@ class RepresentativeContext:
     seed: int
     best_epoch: int
     stopping_epoch: int
+    selection_rule: str
     artifact_dir: Path
     figures_dir: Path
     epoch_history: list[dict[str, Any]] = field(default_factory=list)
@@ -204,6 +209,7 @@ def _resolve_representative_context(model_id: ModelID) -> RepresentativeContext:
         seed=rep_meta["seed"],
         best_epoch=run_meta["best_epoch"],
         stopping_epoch=run_meta["stopping_epoch"],
+        selection_rule=rep_meta["selection_rule"],
         artifact_dir=artifact_dir,
         figures_dir=figures_dir,
         epoch_history=epoch_history,
@@ -214,6 +220,68 @@ def _resolve_representative_context(model_id: ModelID) -> RepresentativeContext:
         oos_metrics=oos_metrics,
         label_names=label_names,
     )
+
+
+# ---------------------------------------------------------------------------
+# Figure-manifest helpers
+# ---------------------------------------------------------------------------
+
+
+def _caption_context(
+    *,
+    analysis_basis: str,
+    dataset_split: str | None = None,
+    metric_names: list[str] | None = None,
+    run_count: int | None = None,
+    class_count: int | None = None,
+    top_k: int | None = None,
+    selection_rule: str | None = None,
+) -> FigureCaptionContext:
+    """Build a compact producer-side caption context."""
+
+    context: FigureCaptionContext = {
+        "analysis_basis": analysis_basis,
+        "dataset_name": _DEFAULT_DATASET_NAME,
+    }
+    if dataset_split is not None:
+        context["dataset_split"] = dataset_split
+    if metric_names:
+        context["metric_names"] = metric_names
+    if run_count is not None:
+        context["run_count"] = run_count
+    if class_count is not None:
+        context["class_count"] = class_count
+    if top_k is not None:
+        context["top_k"] = top_k
+    if selection_rule is not None:
+        context["selection_rule"] = selection_rule
+    return context
+
+
+def figure_record_to_manifest_entry(rec: FigureRecord) -> dict[str, Any]:
+    """Serialize a ``FigureRecord`` into the manifest entry format."""
+
+    entry: dict[str, Any] = {
+        "schema_version": SCHEMA_VERSION,
+        "protocol_version": PROTOCOL_VERSION,
+        "figure_path": rec.figure_path,
+        "figure_type": rec.figure_type,
+        "scope": rec.scope,
+        "source_artifact_paths": rec.source_artifact_paths,
+    }
+    if rec.model_name is not None:
+        entry["model_name"] = rec.model_name
+    if rec.representative_run_id is not None:
+        entry["representative_run_id"] = rec.representative_run_id
+    if rec.seed is not None:
+        entry["seed"] = rec.seed
+    if rec.best_epoch is not None:
+        entry["best_epoch"] = rec.best_epoch
+    if rec.stopping_epoch is not None:
+        entry["stopping_epoch"] = rec.stopping_epoch
+    if rec.caption_context:
+        entry["caption_context"] = rec.caption_context
+    return entry
 
 
 # ---------------------------------------------------------------------------
@@ -236,6 +304,11 @@ def generate_representative_figures(model_id: ModelID) -> list[FigureRecord]:
         "seed": ctx.seed,
         "best_epoch": ctx.best_epoch,
         "stopping_epoch": ctx.stopping_epoch,
+        "caption_context": _caption_context(
+            analysis_basis="representative run",
+            dataset_split="validation",
+            selection_rule=ctx.selection_rule,
+        ),
     }
 
     # --- Training curves ---
@@ -305,6 +378,12 @@ def generate_representative_figures(model_id: ModelID) -> list[FigureRecord]:
             source_artifact_paths=_src("confusion_matrix.csv"),
             model_name=str(model_id),
             representative_run_id=ctx.run_id,
+            caption_context=_caption_context(
+                analysis_basis="representative run",
+                dataset_split="test",
+                class_count=len(ctx.label_names),
+                selection_rule=ctx.selection_rule,
+            ),
         )
     )
     logger.info("Saved: %s", cm_path)
@@ -320,6 +399,12 @@ def generate_representative_figures(model_id: ModelID) -> list[FigureRecord]:
             source_artifact_paths=_src("top_confusions.json"),
             model_name=str(model_id),
             representative_run_id=ctx.run_id,
+            caption_context=_caption_context(
+                analysis_basis="representative run",
+                dataset_split="test",
+                top_k=len(ctx.top_confusions),
+                selection_rule=ctx.selection_rule,
+            ),
         )
     )
     logger.info("Saved: %s", tcp_path)
@@ -335,6 +420,11 @@ def generate_representative_figures(model_id: ModelID) -> list[FigureRecord]:
             source_artifact_paths=_src("per_class_metrics.json"),
             model_name=str(model_id),
             representative_run_id=ctx.run_id,
+            caption_context=_caption_context(
+                analysis_basis="representative run",
+                dataset_split="test",
+                selection_rule=ctx.selection_rule,
+            ),
         )
     )
     logger.info("Saved: %s", bf1_path)
@@ -350,6 +440,12 @@ def generate_representative_figures(model_id: ModelID) -> list[FigureRecord]:
             source_artifact_paths=_src("test_metrics.json"),
             model_name=str(model_id),
             representative_run_id=ctx.run_id,
+            caption_context=_caption_context(
+                analysis_basis="representative run",
+                dataset_split="test",
+                metric_names=["OOS precision", "OOS recall", "OOS F1"],
+                selection_rule=ctx.selection_rule,
+            ),
         )
     )
     logger.info("Saved: %s", oos_path)
@@ -365,6 +461,12 @@ def generate_representative_figures(model_id: ModelID) -> list[FigureRecord]:
             source_artifact_paths=_src("top_errors.json"),
             model_name=str(model_id),
             representative_run_id=ctx.run_id,
+            caption_context=_caption_context(
+                analysis_basis="representative run",
+                dataset_split="test",
+                top_k=len(ctx.top_errors),
+                selection_rule=ctx.selection_rule,
+            ),
         )
     )
     logger.info("Saved: %s", err_path)
@@ -386,6 +488,7 @@ def generate_aggregate_figures() -> list[FigureRecord]:
     comp_data = _read_json(comp_path)
     comp_rows: list[dict[str, Any]] = comp_data["rows"]
     comp_src = [_repo_relative(comp_path)]
+    run_count = int(comp_rows[0]["run_count"]) if comp_rows else None
 
     # Test accuracy comparison
     acc_stats = [(r["display_name"], r["test_accuracy_mean"], r["test_accuracy_std"]) for r in comp_rows]
@@ -397,6 +500,12 @@ def generate_aggregate_figures() -> list[FigureRecord]:
             figure_type="model_comparison_test_accuracy",
             scope="aggregate",
             source_artifact_paths=comp_src,
+            caption_context=_caption_context(
+                analysis_basis="aggregate comparison across repeated evaluation runs",
+                dataset_split="test",
+                metric_names=["test accuracy"],
+                run_count=run_count,
+            ),
         )
     )
     logger.info("Saved: %s", acc_fig)
@@ -411,6 +520,12 @@ def generate_aggregate_figures() -> list[FigureRecord]:
             figure_type="model_comparison_test_macro_f1",
             scope="aggregate",
             source_artifact_paths=comp_src,
+            caption_context=_caption_context(
+                analysis_basis="aggregate comparison across repeated evaluation runs",
+                dataset_split="test",
+                metric_names=["test macro F1"],
+                run_count=run_count,
+            ),
         )
     )
     logger.info("Saved: %s", f1_fig)
@@ -425,6 +540,12 @@ def generate_aggregate_figures() -> list[FigureRecord]:
             figure_type="model_comparison_oos_f1",
             scope="aggregate",
             source_artifact_paths=comp_src,
+            caption_context=_caption_context(
+                analysis_basis="aggregate comparison across repeated evaluation runs",
+                dataset_split="test",
+                metric_names=["OOS F1"],
+                run_count=run_count,
+            ),
         )
     )
     logger.info("Saved: %s", oos_f1_fig)
@@ -441,6 +562,12 @@ def generate_aggregate_figures() -> list[FigureRecord]:
             figure_type="oos_metrics_comparison",
             scope="aggregate",
             source_artifact_paths=[_repo_relative(oos_path)],
+            caption_context=_caption_context(
+                analysis_basis="aggregate comparison across repeated evaluation runs",
+                dataset_split="test",
+                metric_names=["OOS precision", "OOS recall", "OOS F1"],
+                run_count=run_count,
+            ),
         )
     )
     logger.info("Saved: %s", oos_fig)
@@ -457,6 +584,11 @@ def generate_aggregate_figures() -> list[FigureRecord]:
             figure_type="model_efficiency_comparison",
             scope="aggregate",
             source_artifact_paths=[_repo_relative(eff_path)],
+            caption_context=_caption_context(
+                analysis_basis="aggregate comparison across repeated evaluation runs",
+                metric_names=["parameter count", "training time", "inference throughput"],
+                run_count=run_count,
+            ),
         )
     )
     logger.info("Saved: %s", eff_fig)
@@ -582,27 +714,7 @@ def generate_representative_examples_index(model_ids: list[ModelID]) -> Path:
 
 def generate_figure_manifest(figure_records: list[FigureRecord]) -> Path:
     """Write the shared figure manifest from collected figure records."""
-    entries: list[dict[str, Any]] = []
-    for rec in figure_records:
-        entry: dict[str, Any] = {
-            "schema_version": SCHEMA_VERSION,
-            "protocol_version": PROTOCOL_VERSION,
-            "figure_path": rec.figure_path,
-            "figure_type": rec.figure_type,
-            "scope": rec.scope,
-            "source_artifact_paths": rec.source_artifact_paths,
-        }
-        if rec.model_name is not None:
-            entry["model_name"] = rec.model_name
-        if rec.representative_run_id is not None:
-            entry["representative_run_id"] = rec.representative_run_id
-        if rec.seed is not None:
-            entry["seed"] = rec.seed
-        if rec.best_epoch is not None:
-            entry["best_epoch"] = rec.best_epoch
-        if rec.stopping_epoch is not None:
-            entry["stopping_epoch"] = rec.stopping_epoch
-        entries.append(entry)
+    entries = [figure_record_to_manifest_entry(rec) for rec in figure_records]
 
     manifest: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,

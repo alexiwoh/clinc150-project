@@ -180,6 +180,13 @@ def _build_all_artifacts(root: Path) -> None:
             "figure_type": "model_comparison_test_macro_f1",
             "figure_path": "outputs/shared/figures/model_comparison_test_macro_f1.png",
             "scope": "aggregate",
+            "source_artifact_paths": ["outputs/shared/model_comparison_aggregate.json"],
+            "caption_context": {
+                "analysis_basis": "aggregate comparison across repeated evaluation runs",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "run_count": 3,
+            },
         },
         {
             "figure_type": "val_macro_f1_curve",
@@ -187,6 +194,13 @@ def _build_all_artifacts(root: Path) -> None:
             "scope": "representative",
             "model_name": "mlp",
             "representative_run_id": "run_01_seed_42",
+            "source_artifact_paths": ["outputs/mlp/final_runs/run_01_seed_42/epoch_history.json"],
+            "caption_context": {
+                "analysis_basis": "representative run",
+                "dataset_name": "CLINC150",
+                "dataset_split": "validation",
+                "selection_rule": "highest_validation_macro_f1",
+            },
         },
         {
             "figure_type": "confusion_matrix",
@@ -194,11 +208,24 @@ def _build_all_artifacts(root: Path) -> None:
             "scope": "representative",
             "model_name": "mlp",
             "representative_run_id": "run_01_seed_42",
+            "source_artifact_paths": ["outputs/mlp/final_runs/run_01_seed_42/confusion_matrix.csv"],
+            "caption_context": {
+                "analysis_basis": "representative run",
+                "class_count": 151,
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+            },
         },
         {
             "figure_type": "oos_roc_comparison",
             "figure_path": "outputs/shared/analysis/oos_roc_comparison.png",
             "scope": "analysis",
+            "source_artifact_paths": ["outputs/shared/analysis/oos_threshold_comparison.json"],
+            "caption_context": {
+                "analysis_basis": "cross-model OOS ROC comparison using one representative run per model",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+            },
         },
     ]
     _write(shared / "figure_manifest.json", {"figures": figures})
@@ -588,9 +615,13 @@ class TestMainResults:
 
         _, meta = generate_main_results()
         assert "tables" in meta and len(meta["tables"]) == 5
+        assert "claims" in meta and len(meta["claims"]) == 5
         for t in meta["tables"]:
             for key in ("table_id", "title", "data_scope", "columns", "rows", "source_artifact"):
                 assert key in t, f"Missing key in table: {key}"
+        for claim in meta["claims"]:
+            for key in ("claim_id", "claim_text", "source_artifacts", "related_figure_paths", "related_figure_types"):
+                assert key in claim, f"Missing key in claim: {key}"
         assert "source_artifacts" in meta
 
     def test_scope_annotations(self, synth: Path) -> None:
@@ -624,10 +655,12 @@ class TestOosDetection:
             "best_oos_model",
             "false_accept_summary",
             "figure_references",
+            "claims",
             "source_artifacts",
         ]
         for key in required:
             assert key in meta, f"Missing key: {key}"
+        assert len(meta["claims"]) == 3
 
     def test_roc_figure_reference(self, synth: Path) -> None:
         from src.report.sections import generate_oos_detection
@@ -657,6 +690,7 @@ class TestFigureCatalogue:
         for sec in meta["sections"]:
             for fig in sec["figures"]:
                 assert fig["caption"], f"Empty caption for {fig['figure_path']}"
+                assert "source_artifact_paths" in fig
 
     def test_scope_tags_valid(self, synth: Path) -> None:
         from src.report.figures import generate_figure_catalogue
@@ -686,10 +720,12 @@ class TestErrorAnalysis:
             "worst_classes_finding",
             "confused_pairs_finding",
             "length_finding",
+            "claims",
             "source_artifacts",
         ]
         for key in required:
             assert key in meta, f"Missing key: {key}"
+        assert len(meta["claims"]) >= 6
 
     def test_every_claim_cites_artifact(self, synth: Path) -> None:
         from src.report.sections import generate_error_analysis
@@ -720,12 +756,14 @@ class TestRepresentativeExamples:
             "selected_count",
             "examples",
             "data_scope",
+            "claims",
             "source_artifact",
         ]
         for key in required:
             assert key in meta, f"Missing key: {key}"
         assert meta["data_scope"] == "representative"
         assert meta["selected_count"] >= 12
+        assert len(meta["claims"]) == 4
 
     def test_scope_label(self, synth: Path) -> None:
         from src.report.sections import generate_representative_examples
@@ -759,6 +797,8 @@ class TestKeyFindings:
         assert categories == expected
         for f in meta["findings"]:
             assert f["source_artifact"], f"No source for finding {f['finding_id']}"
+            for key in ("claim_id", "claim_text", "source_artifacts", "related_figure_paths", "related_figure_types"):
+                assert key in f, f"Missing key in finding: {key}"
 
 
 # ---------------------------------------------------------------------------

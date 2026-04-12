@@ -140,12 +140,8 @@ def generate_report_manifest(report_dir: Path | None = None) -> dict[str, Any]:
     return manifest
 
 
-def assemble_full_report(report_dir: Path | None = None) -> str:
-    """Build ``full_report_draft.md`` (Spec Sections Q / Q2).
-
-    Assembles all section markdown drafts into one document with a table
-    of contents, consistent heading hierarchy, and a Data Sources note.
-    """
+def compose_full_report(report_dir: Path | None = None) -> str:
+    """Compose the assembled report text without writing it to disk."""
     out = report_dir or REPORT_DIR
 
     section_entries: list[tuple[str, str]] = []
@@ -185,7 +181,17 @@ def assemble_full_report(report_dir: Path | None = None) -> str:
             parts.append("")
     parts.extend(data_sources_lines)
 
-    report_text = "\n".join(parts)
+    return "\n".join(parts)
+
+
+def assemble_full_report(report_dir: Path | None = None) -> str:
+    """Build ``full_report_draft.md`` (Spec Sections Q / Q2).
+
+    Assembles all section markdown drafts into one document with a table
+    of contents, consistent heading hierarchy, and a Data Sources note.
+    """
+    out = report_dir or REPORT_DIR
+    report_text = compose_full_report(out)
     report_path = out / "full_report_draft.md"
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(report_text)

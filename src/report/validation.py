@@ -1,7 +1,9 @@
 """Output validation for report generation (Spec Section R).
 
-Implements all 12 validation checks from the spec plus the assertion list.
-Returns a list of failure messages; an empty list means all checks passed.
+Implements the base validation checks from the spec plus report-drift,
+claim-to-figure, and provenance assertions introduced for caption and
+figure-link automation. Returns a list of failure messages; an empty list
+means all checks passed.
 """
 
 from __future__ import annotations
@@ -11,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from src.enums import ModelID
+from src.report.assembler import compose_full_report
 from src.report.artifact_loader import REPORT_DIR, load_json, resolve_repo_path
 
 EXPECTED_FILES: tuple[str, ...] = (
@@ -71,6 +74,35 @@ def _collect_sources(data: dict[str, Any]) -> list[str]:
     return []
 
 
+def _iter_dicts(value: Any) -> list[dict[str, Any]]:
+    if isinstance(value, dict):
+        dicts = [value]
+        for nested_value in value.values():
+            dicts.extend(_iter_dicts(nested_value))
+        return dicts
+    if isinstance(value, list):
+        dicts: list[dict[str, Any]] = []
+        for item in value:
+            dicts.extend(_iter_dicts(item))
+        return dicts
+    return []
+
+
+def _collect_all_sources(data: dict[str, Any]) -> list[str]:
+    sources: list[str] = []
+    for record in _iter_dicts(data):
+        sources.extend(_collect_sources(record))
+    return list(dict.fromkeys(sources))
+
+
+def _iter_structured_claims(data: dict[str, Any]) -> list[dict[str, Any]]:
+    claims: list[dict[str, Any]] = []
+    for record in _iter_dicts(data):
+        if any(key in record for key in ("claim_id", "finding_id", "related_figure_paths", "related_figure_types")):
+            claims.append(record)
+    return claims
+
+
 def validate_report_outputs(report_dir: Path | None = None) -> list[str]:
     """Run all validation checks on report outputs.
 
@@ -104,7 +136,7 @@ def validate_report_outputs(report_dir: Path | None = None) -> list[str]:
         if not fpath.exists():
             continue
         data = load_json(fpath)
-        for src in _collect_sources(data):
+        for src in _collect_all_sources(data):
             if not resolve_repo_path(src).exists():
                 failures.append(f"[R3] {fname}: source artifact missing: {src}")
 
@@ -205,5 +237,46 @@ def validate_report_outputs(report_dir: Path | None = None) -> list[str]:
                     f"[R12] dataset_description oos_label_id ({ds_oos_id}) "
                     f"!= evaluation_protocol oos_class_id ({proto_oos_id})"
                 )
+
+    # Check 13: assembled report exactly matches current section markdown
+    if report_path.exists():
+        expected_report = compose_full_report(out)
+        actual_report = report_path.read_text()
+        if actual_report != expected_report:
+            failures.append("[R13] full_report_draft.md does not match the current section markdown assembly")
+
+    # Check 14: every related_figure_paths entry resolves to the manifest and disk
+    manifest_paths: set[str] = set()
+    if fig_manifest_path.exists():
+        manifest_paths = {entry["figure_path"] for entry in load_json(fig_manifest_path).get("figures", [])}
+    for fname in EXPECTED_FILES:
+        if not fname.endswith(".json"):
+            continue
+        fpath = out / fname
+        if not fpath.exists():
+            continue
+        data = load_json(fpath)
+        for claim in _iter_structured_claims(data):
+            for fig_rel in claim.get("related_figure_paths", []):
+                if fig_rel not in manifest_paths:
+                    claim_id = claim.get("claim_id", claim.get("finding_id", "unknown"))
+                    failures.append(f"[R14] {fname}: claim '{claim_id}' references figure not in manifest: {fig_rel}")
+                if not resolve_repo_path(fig_rel).exists():
+                    claim_id = claim.get("claim_id", claim.get("finding_id", "unknown"))
+                    failures.append(f"[R14] {fname}: claim '{claim_id}' references missing figure file: {fig_rel}")
+
+    # Check 15: structured claims should cite machine-readable sources, not PNGs
+    for fname in EXPECTED_FILES:
+        if not fname.endswith(".json"):
+            continue
+        fpath = out / fname
+        if not fpath.exists():
+            continue
+        data = load_json(fpath)
+        for claim in _iter_structured_claims(data):
+            claim_id = claim.get("claim_id", claim.get("finding_id", "unknown"))
+            for src in _collect_sources(claim):
+                if src.endswith(".png"):
+                    failures.append(f"[R15] {fname}: claim '{claim_id}' cites non-canonical PNG source: {src}")
 
     return failures

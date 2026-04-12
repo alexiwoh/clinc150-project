@@ -81,10 +81,16 @@ def compute_and_save_calibration(ctx: HandoffContext) -> tuple[dict[str, Any], l
         FigureRecord(
             figure_path=repo_relative(rel_path),
             figure_type="reliability_diagram",
-            scope="representative",
+            scope="analysis",
             source_artifact_paths=[repo_relative(ctx.confidences_path)],
             model_name=str(ctx.model_id),
             representative_run_id=ctx.representative_run_id,
+            caption_context={
+                "analysis_basis": "representative-run calibration analysis",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["calibration accuracy by confidence bin"],
+            },
         )
     )
 
@@ -97,10 +103,16 @@ def compute_and_save_calibration(ctx: HandoffContext) -> tuple[dict[str, Any], l
         FigureRecord(
             figure_path=repo_relative(hist_path),
             figure_type="confidence_histogram",
-            scope="representative",
+            scope="analysis",
             source_artifact_paths=[repo_relative(ctx.confidences_path)],
             model_name=str(ctx.model_id),
             representative_run_id=ctx.representative_run_id,
+            caption_context={
+                "analysis_basis": "representative-run calibration analysis",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["prediction confidence distribution"],
+            },
         )
     )
 
@@ -151,8 +163,14 @@ def generate_calibration_comparison(
         FigureRecord(
             figure_path=repo_relative(comp_path),
             figure_type="calibration_comparison",
-            scope="aggregate",
+            scope="analysis",
             source_artifact_paths=source_paths,
+            caption_context={
+                "analysis_basis": "cross-model calibration comparison using one representative run per model",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["ECE", "MCE", "Brier score", "NLL"],
+            },
         )
     )
 

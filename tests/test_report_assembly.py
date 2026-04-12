@@ -326,3 +326,83 @@ class TestValidation:
             stack.enter_context(patch("src.report.artifact_loader.PROJECT_ROOT", tmp_path))
             failures = validate_report_outputs(report_dir)
         assert any("[R10]" in f for f in failures)
+
+    def test_report_drift_detected(self, tmp_path: Path) -> None:
+        report_dir = _build_report_dir(tmp_path)
+        _build_upstream(tmp_path)
+        generate_report_manifest(report_dir)
+        assemble_full_report(report_dir)
+        (report_dir / "full_report_draft.md").write_text("drifted report\n")
+        with ExitStack() as stack:
+            stack.enter_context(patch("src.report.validation.REPORT_DIR", report_dir))
+            stack.enter_context(patch("src.report.artifact_loader.PROJECT_ROOT", tmp_path))
+            failures = validate_report_outputs(report_dir)
+        assert any("[R13]" in f for f in failures)
+
+    def test_related_figure_reference_must_exist_in_manifest(self, tmp_path: Path) -> None:
+        report_dir = _build_report_dir(tmp_path)
+        _build_upstream(tmp_path)
+        _write(
+            report_dir / "key_findings.json",
+            {
+                "schema_version": SCHEMA_VERSION,
+                "protocol_version": PROTOCOL_VERSION,
+                "findings": [
+                    {
+                        "finding_id": "headline",
+                        "claim_id": "headline",
+                        "claim_text": "Test claim",
+                        "claim": "Test claim",
+                        "source_artifact": "data/artifacts/dataset_summary.json",
+                        "source_artifacts": ["data/artifacts/dataset_summary.json"],
+                        "related_figure_types": ["model_comparison_test_macro_f1"],
+                        "related_figure_paths": ["outputs/shared/figures/missing.png"],
+                        "metric_value": 1.0,
+                        "metric_std": None,
+                    }
+                ],
+                "source_artifacts": ["data/artifacts/dataset_summary.json"],
+            },
+        )
+        generate_report_manifest(report_dir)
+        assemble_full_report(report_dir)
+        with ExitStack() as stack:
+            stack.enter_context(patch("src.report.validation.REPORT_DIR", report_dir))
+            stack.enter_context(patch("src.report.artifact_loader.PROJECT_ROOT", tmp_path))
+            failures = validate_report_outputs(report_dir)
+        assert any("[R14]" in f for f in failures)
+
+    def test_png_claim_source_detected(self, tmp_path: Path) -> None:
+        report_dir = _build_report_dir(tmp_path)
+        _build_upstream(tmp_path)
+        _write(
+            report_dir / "key_findings.json",
+            {
+                "schema_version": SCHEMA_VERSION,
+                "protocol_version": PROTOCOL_VERSION,
+                "findings": [
+                    {
+                        "finding_id": "length",
+                        "claim_id": "length",
+                        "claim_text": "Short-query accuracy is low",
+                        "claim": "Short-query accuracy is low",
+                        "source_artifact": "outputs/shared/analysis/length_slice_comparison.png",
+                        "source_artifacts": ["outputs/shared/analysis/length_slice_comparison.png"],
+                        "related_figure_types": ["length_slice"],
+                        "related_figure_paths": [],
+                        "metric_value": None,
+                        "metric_std": None,
+                    }
+                ],
+                "source_artifacts": ["outputs/shared/analysis/length_slice_comparison.png"],
+            },
+        )
+        (tmp_path / "outputs/shared/analysis").mkdir(parents=True, exist_ok=True)
+        (tmp_path / "outputs/shared/analysis/length_slice_comparison.png").write_bytes(b"PNG")
+        generate_report_manifest(report_dir)
+        assemble_full_report(report_dir)
+        with ExitStack() as stack:
+            stack.enter_context(patch("src.report.validation.REPORT_DIR", report_dir))
+            stack.enter_context(patch("src.report.artifact_loader.PROJECT_ROOT", tmp_path))
+            failures = validate_report_outputs(report_dir)
+        assert any("[R15]" in f for f in failures)

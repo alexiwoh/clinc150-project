@@ -38,7 +38,12 @@
     "source_artifact": "outputs/shared/analysis/cross_model_error_comparison.json"
   },
   "length": {
-    "source_artifact": "outputs/shared/analysis/length_slice_comparison.png",
+    "source_artifact": "outputs/shared/analysis/error_analysis_summary.json",
+    "source_artifacts": [
+      "outputs/mlp/analysis/length_slice_analysis.json",
+      "outputs/text_cnn/analysis/length_slice_analysis.json",
+      "outputs/bilstm/analysis/length_slice_analysis.json"
+    ],
     "mlp": {
       "short_accuracy": 0.829126213592233,
       "short_error_rate": 0.170873786407767

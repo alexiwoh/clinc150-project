@@ -12,7 +12,16 @@
         "outputs/mlp/final_runs/run_01_seed_42/epoch_history.json"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "seed": 42,
+      "best_epoch": 19,
+      "stopping_epoch": 29,
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "validation",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -24,7 +33,16 @@
         "outputs/mlp/final_runs/run_01_seed_42/epoch_history.json"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "seed": 42,
+      "best_epoch": 19,
+      "stopping_epoch": 29,
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "validation",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -36,7 +54,16 @@
         "outputs/mlp/final_runs/run_01_seed_42/epoch_history.json"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "seed": 42,
+      "best_epoch": 19,
+      "stopping_epoch": 29,
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "validation",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -48,7 +75,14 @@
         "outputs/mlp/final_runs/run_01_seed_42/confusion_matrix.csv"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "class_count": 151,
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -60,7 +94,14 @@
         "outputs/mlp/final_runs/run_01_seed_42/top_confusions.json"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "top_k": 10,
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -72,7 +113,13 @@
         "outputs/mlp/final_runs/run_01_seed_42/per_class_metrics.json"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -84,7 +131,18 @@
         "outputs/mlp/final_runs/run_01_seed_42/test_metrics.json"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "OOS precision",
+          "OOS recall",
+          "OOS F1"
+        ],
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -96,7 +154,14 @@
         "outputs/mlp/final_runs/run_01_seed_42/top_errors.json"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "top_k": 20,
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -108,7 +173,16 @@
         "outputs/text_cnn/final_runs/run_03_seed_2024/epoch_history.json"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "seed": 2024,
+      "best_epoch": 54,
+      "stopping_epoch": 64,
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "validation",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -120,7 +194,16 @@
         "outputs/text_cnn/final_runs/run_03_seed_2024/epoch_history.json"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "seed": 2024,
+      "best_epoch": 54,
+      "stopping_epoch": 64,
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "validation",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -132,7 +215,16 @@
         "outputs/text_cnn/final_runs/run_03_seed_2024/epoch_history.json"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "seed": 2024,
+      "best_epoch": 54,
+      "stopping_epoch": 64,
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "validation",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -144,7 +236,14 @@
         "outputs/text_cnn/final_runs/run_03_seed_2024/confusion_matrix.csv"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "class_count": 151,
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -156,7 +255,14 @@
         "outputs/text_cnn/final_runs/run_03_seed_2024/top_confusions.json"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "top_k": 10,
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -168,7 +274,13 @@
         "outputs/text_cnn/final_runs/run_03_seed_2024/per_class_metrics.json"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -180,7 +292,18 @@
         "outputs/text_cnn/final_runs/run_03_seed_2024/test_metrics.json"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "OOS precision",
+          "OOS recall",
+          "OOS F1"
+        ],
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -192,7 +315,14 @@
         "outputs/text_cnn/final_runs/run_03_seed_2024/top_errors.json"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "top_k": 20,
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -204,7 +334,16 @@
         "outputs/bilstm/final_runs/run_02_seed_1337/epoch_history.json"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "seed": 1337,
+      "best_epoch": 19,
+      "stopping_epoch": 29,
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "validation",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -216,7 +355,16 @@
         "outputs/bilstm/final_runs/run_02_seed_1337/epoch_history.json"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "seed": 1337,
+      "best_epoch": 19,
+      "stopping_epoch": 29,
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "validation",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -228,7 +376,16 @@
         "outputs/bilstm/final_runs/run_02_seed_1337/epoch_history.json"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "seed": 1337,
+      "best_epoch": 19,
+      "stopping_epoch": 29,
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "validation",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -240,7 +397,14 @@
         "outputs/bilstm/final_runs/run_02_seed_1337/confusion_matrix.csv"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "class_count": 151,
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -252,7 +416,14 @@
         "outputs/bilstm/final_runs/run_02_seed_1337/top_confusions.json"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "top_k": 10,
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -264,7 +435,13 @@
         "outputs/bilstm/final_runs/run_02_seed_1337/per_class_metrics.json"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -276,7 +453,18 @@
         "outputs/bilstm/final_runs/run_02_seed_1337/test_metrics.json"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "OOS precision",
+          "OOS recall",
+          "OOS F1"
+        ],
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -288,7 +476,14 @@
         "outputs/bilstm/final_runs/run_02_seed_1337/top_errors.json"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative run",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "top_k": 20,
+        "selection_rule": "highest_validation_macro_f1"
+      }
     },
     {
       "schema_version": "1.0",
@@ -298,7 +493,16 @@
       "scope": "aggregate",
       "source_artifact_paths": [
         "outputs/shared/model_comparison_aggregate.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "aggregate comparison across repeated evaluation runs",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "test accuracy"
+        ],
+        "run_count": 3
+      }
     },
     {
       "schema_version": "1.0",
@@ -308,7 +512,16 @@
       "scope": "aggregate",
       "source_artifact_paths": [
         "outputs/shared/model_comparison_aggregate.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "aggregate comparison across repeated evaluation runs",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "test macro F1"
+        ],
+        "run_count": 3
+      }
     },
     {
       "schema_version": "1.0",
@@ -318,7 +531,16 @@
       "scope": "aggregate",
       "source_artifact_paths": [
         "outputs/shared/model_comparison_aggregate.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "aggregate comparison across repeated evaluation runs",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "OOS F1"
+        ],
+        "run_count": 3
+      }
     },
     {
       "schema_version": "1.0",
@@ -328,7 +550,18 @@
       "scope": "aggregate",
       "source_artifact_paths": [
         "outputs/shared/oos_summary_table.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "aggregate comparison across repeated evaluation runs",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "OOS precision",
+          "OOS recall",
+          "OOS F1"
+        ],
+        "run_count": 3
+      }
     },
     {
       "schema_version": "1.0",
@@ -338,409 +571,697 @@
       "scope": "aggregate",
       "source_artifact_paths": [
         "outputs/shared/efficiency_summary_table.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "aggregate comparison across repeated evaluation runs",
+        "dataset_name": "CLINC150",
+        "metric_names": [
+          "parameter count",
+          "training time",
+          "inference throughput"
+        ],
+        "run_count": 3
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/mlp/analysis/reliability_diagram.png",
       "figure_type": "reliability_diagram",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative-run calibration analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "calibration accuracy by confidence bin"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/mlp/analysis/confidence_histogram.png",
       "figure_type": "confidence_histogram",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative-run calibration analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "prediction confidence distribution"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/mlp/analysis/oos_roc_curve.png",
       "figure_type": "oos_roc_curve",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative-run OOS threshold analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "AUROC"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/mlp/analysis/oos_pr_curve.png",
       "figure_type": "oos_pr_curve",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative-run OOS threshold analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "AUPR"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/mlp/analysis/oos_error_breakdown.png",
       "figure_type": "oos_error_breakdown",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/final_runs/run_01_seed_42/final_predictions.csv"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative-run OOS error analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "false accepts",
+          "false rejects"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/mlp/analysis/confidence_vs_accuracy.png",
       "figure_type": "confidence_vs_accuracy",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/final_runs/run_01_seed_42/confidences.npz"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative-run confidence stratification",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "accuracy by confidence bin"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/mlp/analysis/worst_classes_confusion_heatmap.png",
       "figure_type": "worst_classes_heatmap",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/final_runs/run_01_seed_42/confusion_matrix.csv"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "representative-run worst-class analysis",
+        "class_count": 15,
+        "dataset_name": "CLINC150",
+        "dataset_split": "test"
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/mlp/analysis/confusion_stability.png",
       "figure_type": "confusion_stability",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/final_runs/run_01_seed_42/confusion_matrix.csv",
         "outputs/mlp/final_runs/run_02_seed_1337/confusion_matrix.csv",
         "outputs/mlp/final_runs/run_03_seed_2024/confusion_matrix.csv"
       ],
       "model_name": "mlp",
-      "representative_run_id": "run_01_seed_42"
+      "representative_run_id": "run_01_seed_42",
+      "caption_context": {
+        "analysis_basis": "cross-run confusion stability analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "mean confusion count",
+          "std confusion count"
+        ],
+        "run_count": 3,
+        "top_k": 20
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/text_cnn/analysis/reliability_diagram.png",
       "figure_type": "reliability_diagram",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative-run calibration analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "calibration accuracy by confidence bin"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/text_cnn/analysis/confidence_histogram.png",
       "figure_type": "confidence_histogram",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative-run calibration analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "prediction confidence distribution"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/text_cnn/analysis/oos_roc_curve.png",
       "figure_type": "oos_roc_curve",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative-run OOS threshold analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "AUROC"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/text_cnn/analysis/oos_pr_curve.png",
       "figure_type": "oos_pr_curve",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative-run OOS threshold analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "AUPR"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/text_cnn/analysis/oos_error_breakdown.png",
       "figure_type": "oos_error_breakdown",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/text_cnn/final_runs/run_03_seed_2024/final_predictions.csv"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative-run OOS error analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "false accepts",
+          "false rejects"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/text_cnn/analysis/confidence_vs_accuracy.png",
       "figure_type": "confidence_vs_accuracy",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/text_cnn/final_runs/run_03_seed_2024/confidences.npz"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative-run confidence stratification",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "accuracy by confidence bin"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/text_cnn/analysis/worst_classes_confusion_heatmap.png",
       "figure_type": "worst_classes_heatmap",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/text_cnn/final_runs/run_03_seed_2024/confusion_matrix.csv"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "representative-run worst-class analysis",
+        "class_count": 15,
+        "dataset_name": "CLINC150",
+        "dataset_split": "test"
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/text_cnn/analysis/confusion_stability.png",
       "figure_type": "confusion_stability",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/text_cnn/final_runs/run_01_seed_42/confusion_matrix.csv",
         "outputs/text_cnn/final_runs/run_02_seed_1337/confusion_matrix.csv",
         "outputs/text_cnn/final_runs/run_03_seed_2024/confusion_matrix.csv"
       ],
       "model_name": "text_cnn",
-      "representative_run_id": "run_03_seed_2024"
+      "representative_run_id": "run_03_seed_2024",
+      "caption_context": {
+        "analysis_basis": "cross-run confusion stability analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "mean confusion count",
+          "std confusion count"
+        ],
+        "run_count": 3,
+        "top_k": 20
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/bilstm/analysis/reliability_diagram.png",
       "figure_type": "reliability_diagram",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative-run calibration analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "calibration accuracy by confidence bin"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/bilstm/analysis/confidence_histogram.png",
       "figure_type": "confidence_histogram",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative-run calibration analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "prediction confidence distribution"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/bilstm/analysis/oos_roc_curve.png",
       "figure_type": "oos_roc_curve",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative-run OOS threshold analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "AUROC"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/bilstm/analysis/oos_pr_curve.png",
       "figure_type": "oos_pr_curve",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative-run OOS threshold analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "AUPR"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/bilstm/analysis/oos_error_breakdown.png",
       "figure_type": "oos_error_breakdown",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative-run OOS error analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "false accepts",
+          "false rejects"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/bilstm/analysis/confidence_vs_accuracy.png",
       "figure_type": "confidence_vs_accuracy",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative-run confidence stratification",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "accuracy by confidence bin"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/bilstm/analysis/worst_classes_confusion_heatmap.png",
       "figure_type": "worst_classes_heatmap",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/bilstm/final_runs/run_02_seed_1337/confusion_matrix.csv"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "representative-run worst-class analysis",
+        "class_count": 15,
+        "dataset_name": "CLINC150",
+        "dataset_split": "test"
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/bilstm/analysis/confusion_stability.png",
       "figure_type": "confusion_stability",
-      "scope": "representative",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/bilstm/final_runs/run_01_seed_42/confusion_matrix.csv",
         "outputs/bilstm/final_runs/run_02_seed_1337/confusion_matrix.csv",
         "outputs/bilstm/final_runs/run_03_seed_2024/confusion_matrix.csv"
       ],
       "model_name": "bilstm",
-      "representative_run_id": "run_02_seed_1337"
+      "representative_run_id": "run_02_seed_1337",
+      "caption_context": {
+        "analysis_basis": "cross-run confusion stability analysis",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "mean confusion count",
+          "std confusion count"
+        ],
+        "run_count": 3,
+        "top_k": 20
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/shared/analysis/calibration_comparison.png",
       "figure_type": "calibration_comparison",
-      "scope": "aggregate",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/analysis/calibration_metrics.json",
         "outputs/text_cnn/analysis/calibration_metrics.json",
         "outputs/bilstm/analysis/calibration_metrics.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "cross-model calibration comparison using one representative run per model",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "ECE",
+          "MCE",
+          "Brier score",
+          "NLL"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/shared/analysis/oos_roc_comparison.png",
       "figure_type": "oos_roc_comparison",
-      "scope": "aggregate",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/analysis/oos_threshold_metrics.json",
         "outputs/text_cnn/analysis/oos_threshold_metrics.json",
         "outputs/bilstm/analysis/oos_threshold_metrics.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "cross-model OOS ROC comparison using one representative run per model",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "AUROC"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/shared/analysis/oos_pr_comparison.png",
       "figure_type": "oos_pr_comparison",
-      "scope": "aggregate",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/analysis/oos_threshold_metrics.json",
         "outputs/text_cnn/analysis/oos_threshold_metrics.json",
         "outputs/bilstm/analysis/oos_threshold_metrics.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "cross-model OOS precision-recall comparison using one representative run per model",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "AUPR"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/shared/analysis/error_taxonomy_comparison.png",
       "figure_type": "error_taxonomy",
-      "scope": "aggregate",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/analysis/error_taxonomy.json",
         "outputs/text_cnn/analysis/error_taxonomy.json",
         "outputs/bilstm/analysis/error_taxonomy.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "cross-model error taxonomy comparison using representative runs",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "fraction of errors by taxonomy category"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/shared/analysis/oos_error_comparison.png",
       "figure_type": "oos_error_comparison",
-      "scope": "aggregate",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/analysis/oos_error_deep_dive.json",
         "outputs/text_cnn/analysis/oos_error_deep_dive.json",
         "outputs/bilstm/analysis/oos_error_deep_dive.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "cross-model OOS error comparison using one representative run per model",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "false accepts",
+          "false rejects"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/shared/analysis/confidence_accuracy_comparison.png",
       "figure_type": "confidence_vs_accuracy",
-      "scope": "aggregate",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/analysis/confidence_stratification.json",
         "outputs/text_cnn/analysis/confidence_stratification.json",
         "outputs/bilstm/analysis/confidence_stratification.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "cross-model confidence stratification comparison using representative runs",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "accuracy by confidence bin"
+        ]
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/shared/analysis/length_slice_comparison.png",
       "figure_type": "length_slice",
-      "scope": "aggregate",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/analysis/length_slice_analysis.json",
         "outputs/text_cnn/analysis/length_slice_analysis.json",
         "outputs/bilstm/analysis/length_slice_analysis.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "cross-model slice comparison using representative runs",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "accuracy by slice"
+        ],
+        "top_k": 3
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/shared/analysis/frequency_slice_comparison.png",
       "figure_type": "frequency_slice",
-      "scope": "aggregate",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/analysis/frequency_slice_analysis.json",
         "outputs/text_cnn/analysis/frequency_slice_analysis.json",
         "outputs/bilstm/analysis/frequency_slice_analysis.json"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "cross-model slice comparison using representative runs",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "accuracy by slice"
+        ],
+        "top_k": 2
+      }
     },
     {
       "schema_version": "1.0",
       "protocol_version": "1.0",
       "figure_path": "outputs/shared/analysis/cross_model_error_overlap.png",
       "figure_type": "cross_model_error_overlap",
-      "scope": "aggregate",
+      "scope": "analysis",
       "source_artifact_paths": [
         "outputs/mlp/final_runs/run_01_seed_42/final_predictions.csv",
         "outputs/text_cnn/final_runs/run_03_seed_2024/final_predictions.csv",
         "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv"
-      ]
+      ],
+      "caption_context": {
+        "analysis_basis": "cross-model error overlap using one representative run per model",
+        "dataset_name": "CLINC150",
+        "dataset_split": "test",
+        "metric_names": [
+          "all-correct count",
+          "all-wrong count",
+          "model-specific errors"
+        ]
+      }
     }
   ]
 }

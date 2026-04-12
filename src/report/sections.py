@@ -18,6 +18,12 @@ from src.constants import (
 )
 from src.enums import ModelID
 from src.report.artifact_loader import load_json, resolve_repo_path
+from src.report.figure_metadata import (
+    StructuredClaim,
+    build_structured_claim,
+    load_figure_manifest_entries,
+    render_related_figure_note,
+)
 from src.report.tables import (
     build_markdown_table,
     format_mean_std,
@@ -88,6 +94,16 @@ def _scope_note(scope: str) -> str:
     if scope == "aggregate":
         return "*Aggregate over 3 runs (mean +/- std)*"
     return "*Representative run only (single seed)*"
+
+
+def _append_related_figure_note(lines: list[str], claim: StructuredClaim) -> None:
+    """Append a markdown note for resolved figure links when present."""
+
+    note = render_related_figure_note(claim["related_figure_paths"])
+    if note is None:
+        return
+    lines.append(note)
+    lines.append("")
 
 
 # ---------------------------------------------------------------------------
@@ -194,6 +210,18 @@ def generate_dataset_description() -> SectionOutput:
     test_oos_pct = oos_c["test"] / splits["test"] * 100
     quirks: list[str] = ds.get("quirks_or_caveats", [])
     quirk_lines = [f"- {q}" for q in quirks]
+    in_scope_train_min = ds.get("train_class_count_min")
+    in_scope_train_max = ds.get("train_class_count_max")
+    if in_scope_train_min == in_scope_train_max:
+        class_balance_note = (
+            f"In-scope classes are balanced in the `{ds['subset']}` subset at "
+            f"{in_scope_train_min} training examples per class."
+        )
+    else:
+        class_balance_note = (
+            f"In-scope class counts in the `{ds['subset']}` subset range from "
+            f"{in_scope_train_min} to {in_scope_train_max} training examples."
+        )
 
     md = "\n".join(
         [
@@ -210,7 +238,7 @@ def generate_dataset_description() -> SectionOutput:
             "",
             "### Class Balance",
             "",
-            f"In-scope classes are balanced in the `{ds['subset']}` subset. "
+            f"{class_balance_note} "
             f"OOS support varies across splits: train has {oos_c['train']} OOS examples "
             f"(~{train_oos_pct:.1f}%), while test has {oos_c['test']} OOS examples "
             f"(~{test_oos_pct:.1f}%), creating a significant distribution shift.",
@@ -231,9 +259,7 @@ def generate_dataset_description() -> SectionOutput:
         oos_label_id=ds["oos_label_id"],
         oos_counts=oos_c,
         in_scope_counts=ins_c,
-        class_balance_note=(
-            f"In-scope classes are balanced in the '{ds['subset']}' subset. OOS has different support across splits."
-        ),
+        class_balance_note=class_balance_note,
         distribution_quirks=quirks,
         source_artifact=source,
     )
@@ -541,7 +567,7 @@ def generate_main_results() -> SectionOutput:
     ext = _load("extended_metrics_comparison")
     cal = _load("calibration_summary")
     eff = _load("efficiency_summary_table")
-    manifest = _load("figure_manifest")
+    figure_entries = load_figure_manifest_entries()
 
     source_keys = [
         "model_comparison_aggregate",
@@ -557,6 +583,11 @@ def generate_main_results() -> SectionOutput:
     ext_by = _rows_by_model(ext["rows"])
     cal_by = _rows_by_model(cal["rows"])
     eff_by = _rows_by_model(eff["rows"])
+    best_agg = _best_row(agg["rows"], "test_macro_f1_mean")
+    best_oos = _best_row(oos["rows"], "oos_f1_mean")
+    best_ext = max(ext["rows"], key=lambda row: row["macro_f1"])
+    best_cal = min(cal["rows"], key=lambda row: row["ece"])
+    fastest = max(eff["rows"], key=lambda row: row["inference_examples_per_sec_mean"])
 
     def _agg_row(mid: ModelID, metrics: list[str]) -> list[str]:
         r = agg_by[str(mid)]
@@ -636,49 +667,137 @@ def generate_main_results() -> SectionOutput:
     ]
     t5_md = build_markdown_table(t5_headers, t5_rows)
 
-    md = "\n".join(
+    t1_claim = build_structured_claim(
+        claim_id="main_comparison",
+        claim_text=(
+            f"{ModelID(best_agg['model_id']).display_name} achieved the highest aggregate test macro F1 "
+            f"({format_mean_std(best_agg['test_macro_f1_mean'], best_agg['test_macro_f1_std'])})."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["model_comparison_aggregate"]],
+        related_figure_types=["model_comparison_test_macro_f1"],
+        scopes=["aggregate"],
+    )
+    t2_claim = build_structured_claim(
+        claim_id="oos_metrics",
+        claim_text=(
+            f"{ModelID(best_oos['model_id']).display_name} achieved the highest aggregate OOS F1 "
+            f"({format_mean_std(best_oos['oos_f1_mean'], best_oos['oos_f1_std'])})."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["oos_summary_table"]],
+        related_figure_types=["oos_metrics_comparison", "model_comparison_oos_f1"],
+        scopes=["aggregate"],
+    )
+    t3_claim = build_structured_claim(
+        claim_id="extended_metrics",
+        claim_text=(
+            f"{ModelID(best_ext['model_id']).display_name} has the highest representative-run macro F1 "
+            f"({format_ratio(best_ext['macro_f1'])}) in the extended-metrics table."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["extended_metrics_comparison"]],
+        related_figure_types=[],
+        scopes=["representative", "analysis"],
+    )
+    t4_claim = build_structured_claim(
+        claim_id="calibration",
+        claim_text=(
+            f"{ModelID(best_cal['model_id']).display_name} is the best calibrated representative run "
+            f"(ECE = {format_ratio(best_cal['ece'])})."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["calibration_summary"]],
+        related_figure_types=["calibration_comparison"],
+        scopes=["analysis"],
+    )
+    t5_claim = build_structured_claim(
+        claim_id="efficiency",
+        claim_text=(
+            f"{ModelID(fastest['model_id']).display_name} has the highest mean inference throughput "
+            f"({fastest['inference_examples_per_sec_mean']:.0f} ex/s)."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["efficiency_summary_table"]],
+        related_figure_types=["model_efficiency_comparison"],
+        scopes=["aggregate"],
+    )
+    claims = [t1_claim, t2_claim, t3_claim, t4_claim, t5_claim]
+
+    md_parts: list[str] = [
+        "## Main Results",
+        "",
+        "### Table 1: Main Model Comparison",
+        "",
+        _scope_note("aggregate"),
+        "",
+        t1_md,
+        "",
+        t1_claim["claim_text"],
+        "",
+    ]
+    _append_related_figure_note(md_parts, t1_claim)
+    md_parts.extend(
         [
-            "## Main Results",
-            "",
-            "### Table 1: Main Model Comparison",
-            "",
-            _scope_note("aggregate"),
-            "",
-            t1_md,
-            "",
             "### Table 2: OOS Detection Metrics",
             "",
             _scope_note("aggregate"),
             "",
             t2_md,
             "",
+            t2_claim["claim_text"],
+            "",
+        ]
+    )
+    _append_related_figure_note(md_parts, t2_claim)
+    md_parts.extend(
+        [
             "### Table 3: Extended Metrics",
             "",
             _scope_note("representative"),
             "",
             t3_md,
             "",
+            t3_claim["claim_text"],
+            "",
+        ]
+    )
+    _append_related_figure_note(md_parts, t3_claim)
+    md_parts.extend(
+        [
             "### Table 4: Calibration Metrics",
             "",
             _scope_note("representative"),
             "",
             t4_md,
             "",
+            t4_claim["claim_text"],
+            "",
+        ]
+    )
+    _append_related_figure_note(md_parts, t4_claim)
+    md_parts.extend(
+        [
             "### Table 5: Efficiency Comparison",
             "",
             _scope_note("aggregate"),
             "",
             t5_md,
             "",
+            t5_claim["claim_text"],
+            "",
         ]
     )
+    _append_related_figure_note(md_parts, t5_claim)
+
+    md = "\n".join(md_parts)
 
     agg_fig = next(
-        (f for f in manifest["figures"] if f["figure_type"] == "model_comparison_test_macro_f1"),
+        (f for f in figure_entries if f["figure_type"] == "model_comparison_test_macro_f1"),
         None,
     )
     train_fig = next(
-        (f for f in manifest["figures"] if f["figure_type"] == "val_macro_f1_curve"),
+        (f for f in figure_entries if f["figure_type"] == "val_macro_f1_curve"),
         None,
     )
     fig_parts: list[str] = []
@@ -727,7 +846,7 @@ def generate_main_results() -> SectionOutput:
             }
         )
 
-    metadata = _meta(tables=tables_json, source_artifacts=sources)
+    metadata = _meta(tables=tables_json, claims=claims, source_artifacts=sources)
     return md, metadata
 
 
@@ -741,7 +860,7 @@ def generate_oos_detection() -> SectionOutput:
     oos = _load("oos_summary_table")
     thresh = _load("oos_threshold_comparison")
     fa = _load("oos_false_accept_comparison")
-    manifest = _load("figure_manifest")
+    figure_entries = load_figure_manifest_entries()
 
     sources = [
         _ARTIFACTS["oos_summary_table"],
@@ -757,6 +876,7 @@ def generate_oos_detection() -> SectionOutput:
     best_thresh = _best_row(thresh["rows"], "auroc")
     best_oos_id = best_thresh["model_id"]
     best_display = ModelID(best_oos_id).display_name
+    best_oos_row = _best_row(oos["rows"], "oos_f1_mean")
 
     # Collect OOS-related figure paths
     oos_fig_types = {
@@ -767,7 +887,7 @@ def generate_oos_detection() -> SectionOutput:
         "oos_pr_comparison",
         "oos_error_comparison",
     }
-    figure_refs = [f["figure_path"] for f in manifest["figures"] if f["figure_type"] in oos_fig_types]
+    figure_refs = [f["figure_path"] for f in figure_entries if f["figure_type"] in oos_fig_types]
 
     # Aggregate OOS table
     agg_oos_table = build_markdown_table(
@@ -813,32 +933,74 @@ def generate_oos_detection() -> SectionOutput:
 
     # Shared ROC comparison figure reference
     roc_comp_path = next(
-        (f["figure_path"] for f in manifest["figures"] if f["figure_type"] == "oos_roc_comparison"),
+        (f["figure_path"] for f in figure_entries if f["figure_type"] == "oos_roc_comparison"),
         None,
     )
+    aggregate_claim = build_structured_claim(
+        claim_id="aggregate_oos_metrics",
+        claim_text=(
+            f"{ModelID(best_oos_row['model_id']).display_name} achieved the highest aggregate OOS F1 "
+            f"({format_mean_std(best_oos_row['oos_f1_mean'], best_oos_row['oos_f1_std'])})."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["oos_summary_table"]],
+        related_figure_types=["oos_metrics_comparison", "model_comparison_oos_f1"],
+        scopes=["aggregate"],
+    )
+    threshold_claim = build_structured_claim(
+        claim_id="threshold_analysis",
+        claim_text=(
+            f"{best_display} achieved the highest AUROC ({format_ratio(best_thresh['auroc'])}), "
+            "indicating the strongest threshold-independent OOS discrimination."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["oos_threshold_comparison"]],
+        related_figure_types=["oos_roc_comparison", "oos_pr_comparison"],
+        scopes=["analysis"],
+    )
+    false_accept_claim = build_structured_claim(
+        claim_id="false_accept_patterns",
+        claim_text=(
+            "False accepts remain the dominant OOS failure pattern, "
+            "with a small set of intents repeatedly capturing OOS examples."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["oos_false_accept_comparison"]],
+        related_figure_types=["oos_error_comparison"],
+        scopes=["analysis"],
+    )
+    claims = [aggregate_claim, threshold_claim, false_accept_claim]
 
-    md = "\n".join(
+    md_parts = [
+        "## OOS Detection Results",
+        "",
+        "### Aggregate OOS Metrics",
+        "",
+        _scope_note("aggregate"),
+        "",
+        agg_oos_table,
+        "",
+        aggregate_claim["claim_text"],
+        "",
+    ]
+    _append_related_figure_note(md_parts, aggregate_claim)
+    md_parts.extend(
         [
-            "## OOS Detection Results",
-            "",
-            "### Aggregate OOS Metrics",
-            "",
-            _scope_note("aggregate"),
-            "",
-            agg_oos_table,
-            "",
             "### OOS Threshold Analysis",
             "",
             _scope_note("representative"),
             "",
             thresh_table,
             "",
-            f"{best_display} achieved the highest AUROC ({format_ratio(best_thresh['auroc'])}), "
-            f"indicating the best threshold-independent OOS discrimination "
-            f"({_ARTIFACTS['oos_threshold_comparison']}). "
+            f"{threshold_claim['claim_text']} ({_ARTIFACTS['oos_threshold_comparison']}). "
             "The explicit OOS class probability method substantially outperforms the "
             "maximum softmax probability (MSP) baseline across all models.",
             "",
+        ]
+    )
+    _append_related_figure_note(md_parts, threshold_claim)
+    md_parts.extend(
+        [
             "### OOS Distribution Challenge",
             "",
             "The test split contains ~18% OOS examples versus ~1.6% in training, "
@@ -850,9 +1012,15 @@ def generate_oos_detection() -> SectionOutput:
             "",
             *fa_lines,
             "",
-            *([f"![OOS ROC Comparison]({roc_comp_path})", ""] if roc_comp_path else []),
+            f"{false_accept_claim['claim_text']} ({_ARTIFACTS['oos_false_accept_comparison']}).",
+            "",
         ]
     )
+    _append_related_figure_note(md_parts, false_accept_claim)
+    if roc_comp_path:
+        md_parts.extend([f"![OOS ROC Comparison]({roc_comp_path})", ""])
+
+    md = "\n".join(md_parts)
 
     # Build metadata
     agg_oos_meta = {
@@ -884,6 +1052,7 @@ def generate_oos_detection() -> SectionOutput:
         threshold_metrics=thresh_meta,
         msp_baseline=msp_meta,
         best_oos_model={"model_id": best_oos_id, "rationale": f"Highest AUROC ({format_ratio(best_thresh['auroc'])})"},
+        claims=claims,
         false_accept_summary=fa_meta,
         figure_references=figure_refs,
         source_artifacts=sources,
@@ -905,7 +1074,7 @@ def generate_error_analysis() -> SectionOutput:
     pairs = _load("most_confused_pairs_table")
     eas = _load("error_analysis_summary")
     thresh = _load("oos_threshold_comparison")
-    manifest = _load("figure_manifest")
+    figure_entries = load_figure_manifest_entries()
 
     sources = [
         _ARTIFACTS["error_taxonomy_summary"],
@@ -955,39 +1124,134 @@ def generate_error_analysis() -> SectionOutput:
 
     # Length finding
     length = eas.get("length", {})
+    length_sources = list(length.get("source_artifacts", [_ARTIFACTS["error_analysis_summary"]]))
 
     shared_worst_fmt = ", ".join(f"`{c}`" for c in worst["shared_worst_classes"])
     persistent_fmt = ", ".join(f"`{i}`" for i in persistent[:6])
 
-    md = "\n".join(
+    taxonomy_claim = build_structured_claim(
+        claim_id="error_taxonomy",
+        claim_text="All models share `oos_as_inscope` as the dominant error category.",
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["error_taxonomy_summary"]],
+        related_figure_types=["error_taxonomy"],
+        scopes=["analysis"],
+    )
+    calibration_claim = build_structured_claim(
+        claim_id="calibration_confidence",
+        claim_text=(
+            f"Best-calibrated model: {best_cal['model_name']} (ECE = {format_ratio(best_cal['ece'])}); "
+            f"worst-calibrated: {worst_cal['model_name']} (ECE = {format_ratio(worst_cal['ece'])})."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["calibration_summary"]],
+        related_figure_types=["calibration_comparison", "reliability_diagram", "confidence_histogram"],
+        scopes=["analysis"],
+    )
+    oos_claim = build_structured_claim(
+        claim_id="oos_deep_dive",
+        claim_text=(
+            f"Best OOS detector by AUROC: {ModelID(best_oos['model_id']).display_name} "
+            f"({format_ratio(best_oos['auroc'])}); the main failure mode remains `oos_as_inscope`."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["oos_threshold_comparison"], _ARTIFACTS["oos_false_accept_comparison"]],
+        related_figure_types=["oos_error_comparison", "oos_error_breakdown", "oos_roc_comparison"],
+        scopes=["analysis"],
+    )
+    overlap_claim = build_structured_claim(
+        claim_id="cross_model_overlap",
+        claim_text=(
+            f"{cats['all_wrong']['count']:,} examples "
+            f"({format_ratio(cats['all_wrong']['fraction'])}) are wrong for all models, "
+            f"while {cats['model_specific_error']['count']:,} "
+            f"({format_ratio(cats['model_specific_error']['fraction'])}) "
+            "are model-specific."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["cross_model_error_comparison"]],
+        related_figure_types=["cross_model_error_overlap"],
+        scopes=["analysis"],
+    )
+    worst_classes_claim = build_structured_claim(
+        claim_id="worst_classes",
+        claim_text=f"Shared worst classes across models: {shared_worst_fmt}.",
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["worst_classes_comparison"]],
+        related_figure_types=["worst_classes_heatmap"],
+        scopes=["analysis"],
+    )
+    confused_pairs_claim = build_structured_claim(
+        claim_id="persistent_confused_pairs",
+        claim_text=f"Persistent OOS-capturing intents across multiple models: {persistent_fmt}.",
+        figure_entries=figure_entries,
+        source_artifacts=[_ARTIFACTS["most_confused_pairs_table"]],
+        related_figure_types=["top_confused_pairs"],
+        scopes=["representative"],
+    )
+    length_claim = build_structured_claim(
+        claim_id="length_frequency_slices",
+        claim_text=(
+            "Short-query accuracy remains lower than desired across models, "
+            "reinforcing the short-query ambiguity pattern."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=length_sources,
+        related_figure_types=["length_slice", "frequency_slice"],
+        scopes=["analysis"],
+    )
+    claims = [
+        taxonomy_claim,
+        calibration_claim,
+        oos_claim,
+        overlap_claim,
+        worst_classes_claim,
+        confused_pairs_claim,
+        length_claim,
+    ]
+
+    md_parts = [
+        "## Error Analysis Discussion",
+        "",
+        "### Error Taxonomy",
+        "",
+        *[
+            f"- **{mid.display_name}**: dominant error category is `{dominant[str(mid)]}` "
+            f"({tax_by[str(mid)][f'{dominant[str(mid)]}_count']} errors, "
+            f"{format_ratio(tax_by[str(mid)][f'{dominant[str(mid)]}_fraction'])} of all errors) "
+            f"({_ARTIFACTS['error_taxonomy_summary']})"
+            for mid in ModelID
+        ],
+        "",
+        "All models share `oos_as_inscope` as the dominant error category, indicating "
+        "that OOS false accepts are the primary failure mode across architectures.",
+        "",
+    ]
+    _append_related_figure_note(md_parts, taxonomy_claim)
+    md_parts.extend(
         [
-            "## Error Analysis Discussion",
-            "",
-            "### Error Taxonomy",
-            "",
-            *[
-                f"- **{mid.display_name}**: dominant error category is `{dominant[str(mid)]}` "
-                f"({tax_by[str(mid)][f'{dominant[str(mid)]}_count']} errors, "
-                f"{format_ratio(tax_by[str(mid)][f'{dominant[str(mid)]}_fraction'])} of all errors) "
-                f"({_ARTIFACTS['error_taxonomy_summary']})"
-                for mid in ModelID
-            ],
-            "",
-            "All models share `oos_as_inscope` as the dominant error category, indicating "
-            "that OOS false accepts are the primary failure mode across architectures.",
-            "",
             "### Calibration and Confidence",
             "",
             f"Best-calibrated model: {best_cal['model_name']} (ECE = {format_ratio(best_cal['ece'])}). "
             f"Worst-calibrated: {worst_cal['model_name']} (ECE = {format_ratio(worst_cal['ece'])}) "
             f"({_ARTIFACTS['calibration_summary']}).",
             "",
+        ]
+    )
+    _append_related_figure_note(md_parts, calibration_claim)
+    md_parts.extend(
+        [
             "### OOS Detection Deep Dive",
             "",
             f"Best OOS detector by AUROC: {ModelID(best_oos['model_id']).display_name} "
             f"(AUROC = {format_ratio(best_oos['auroc'])}) ({_ARTIFACTS['oos_threshold_comparison']}). "
             f"The main failure mode across all models is `oos_as_inscope` (false accepts).",
             "",
+        ]
+    )
+    _append_related_figure_note(md_parts, oos_claim)
+    md_parts.extend(
+        [
             "### Cross-Model Error Overlap",
             "",
             f"Of {cross['total_test_examples']:,} test examples:",
@@ -1002,6 +1266,11 @@ def generate_error_analysis() -> SectionOutput:
             f"incorrect class ({_ARTIFACTS['cross_model_error_comparison']}). "
             "See also `outputs/shared/analysis/universally_misclassified_examples.csv`.",
             "",
+        ]
+    )
+    _append_related_figure_note(md_parts, overlap_claim)
+    md_parts.extend(
+        [
             "### Worst-Class Analysis",
             "",
             f"Classes consistently worst across all models (shared): {shared_worst_fmt} "
@@ -1013,12 +1282,22 @@ def generate_error_analysis() -> SectionOutput:
                 for mid in ModelID
             ],
             "",
+        ]
+    )
+    _append_related_figure_note(md_parts, worst_classes_claim)
+    md_parts.extend(
+        [
             "### Confused Pairs (OOS False-Accept Targets)",
             "",
             f"Intents that persistently capture OOS examples across 2+ models: "
             f"{persistent_fmt} ({_ARTIFACTS['most_confused_pairs_table']}). "
             "These span multiple domains (travel, food, finance), suggesting OOS queries are topically diverse.",
             "",
+        ]
+    )
+    _append_related_figure_note(md_parts, confused_pairs_claim)
+    md_parts.extend(
+        [
             "### Length and Frequency Slices",
             "",
             "Short-query accuracy per model (representative run):",
@@ -1032,9 +1311,12 @@ def generate_error_analysis() -> SectionOutput:
             "",
         ]
     )
+    _append_related_figure_note(md_parts, length_claim)
+
+    md = "\n".join(md_parts)
 
     confusion_fig = next(
-        (f for f in manifest["figures"] if f["figure_type"] == "confusion_matrix"),
+        (f for f in figure_entries if f["figure_type"] == "confusion_matrix"),
         None,
     )
     if confusion_fig:
@@ -1050,6 +1332,7 @@ def generate_error_analysis() -> SectionOutput:
         )
 
     metadata = _meta(
+        claims=claims,
         taxonomy_summary={
             str(mid): {
                 "dominant_category": dominant[str(mid)],
@@ -1161,6 +1444,7 @@ def generate_representative_examples() -> SectionOutput:
     """Spec section K / K2."""
     curated = _load("curated_report_examples")
     source = _ARTIFACTS["curated_report_examples"]
+    figure_entries = load_figure_manifest_entries()
     all_examples: list[dict[str, Any]] = curated["examples"]
     selected = _select_examples(all_examples)
 
@@ -1187,22 +1471,82 @@ def generate_representative_examples() -> SectionOutput:
         "and 2+ examples per model. Sorted by category then confidence."
     )
 
-    md = "\n".join(
+    selected_counts: dict[str, int] = {}
+    for example in selected:
+        category = example["primary_category"]
+        selected_counts[category] = selected_counts.get(category, 0) + 1
+
+    oos_claim = build_structured_claim(
+        claim_id="oos_false_accept_examples",
+        claim_text=f"Selected examples include {selected_counts.get('oos_as_inscope', 0)} OOS false-accept cases.",
+        figure_entries=figure_entries,
+        source_artifacts=[source],
+        related_figure_types=["oos_error_breakdown", "oos_error_comparison"],
+        scopes=["analysis"],
+    )
+    semantic_claim = build_structured_claim(
+        claim_id="semantic_confusion_examples",
+        claim_text=(
+            f"Selected examples include {selected_counts.get('near_semantic_confusion', 0)} "
+            "within-domain semantic-confusion cases."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[source],
+        related_figure_types=["top_confused_pairs", "confusion_matrix"],
+        scopes=["representative"],
+    )
+    cross_domain_claim = build_structured_claim(
+        claim_id="cross_domain_examples",
+        claim_text=(
+            f"Selected examples include {selected_counts.get('cross_domain_confusion', 0)} "
+            "cross-domain confusion cases."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[source],
+        related_figure_types=["error_summary", "cross_model_error_overlap"],
+        scopes=["representative", "analysis"],
+    )
+    short_query_claim = build_structured_claim(
+        claim_id="short_query_examples",
+        claim_text=(
+            f"Selected examples include {selected_counts.get('short_query_ambiguity', 0)} short-query ambiguity cases."
+        ),
+        figure_entries=figure_entries,
+        source_artifacts=[source],
+        related_figure_types=["length_slice"],
+        scopes=["analysis"],
+    )
+    claims = [oos_claim, semantic_claim, cross_domain_claim, short_query_claim]
+
+    md_parts = [
+        "## Representative Examples",
+        "",
+        _scope_note("representative"),
+        "",
+        criteria,
+        "",
+        "### Coverage in Selected Examples",
+        "",
+        f"- {oos_claim['claim_text']}",
+        f"- {semantic_claim['claim_text']}",
+        f"- {cross_domain_claim['claim_text']}",
+        f"- {short_query_claim['claim_text']}",
+        "",
+    ]
+    for claim in claims:
+        _append_related_figure_note(md_parts, claim)
+    md_parts.extend(
         [
-            "## Representative Examples",
-            "",
-            _scope_note("representative"),
-            "",
-            criteria,
-            "",
             example_table,
             "",
             f"Total curated examples: {curated['total_curated']}; selected for report: {len(selected)} ({source}).",
             "",
         ]
     )
+    md = "\n".join(md_parts)
 
     metadata = _meta(
+        claims=claims,
         selection_criteria=criteria,
         total_curated_count=curated["total_curated"],
         selected_count=len(selected),
@@ -1233,6 +1577,7 @@ def generate_key_findings() -> SectionOutput:
     """Spec section L / L2."""
     eas = _load("error_analysis_summary")
     eff = _load("efficiency_summary_table")
+    figure_entries = load_figure_manifest_entries()
 
     sources = [
         _ARTIFACTS["error_analysis_summary"],
@@ -1251,6 +1596,7 @@ def generate_key_findings() -> SectionOutput:
     len_find = eas["length"]
 
     eff_by = _rows_by_model(eff["rows"])
+    length_source_artifacts = list(len_find.get("source_artifacts", [_ARTIFACTS["error_analysis_summary"]]))
 
     findings: list[dict[str, Any]] = [
         {
@@ -1263,6 +1609,21 @@ def generate_key_findings() -> SectionOutput:
             "metric_value": hl["test_macro_f1_mean"],
             "metric_std": hl["test_macro_f1_std"],
             "source_artifact": hl["source_artifact"],
+            "source_artifacts": [hl["source_artifact"]],
+            "claim_id": "headline",
+            "claim_text": (
+                f"{ModelID(hl['best_model']).display_name} achieved the best aggregate test macro F1 of "
+                f"{format_mean_std(hl['test_macro_f1_mean'], hl['test_macro_f1_std'])}"
+            ),
+            "related_figure_types": ["model_comparison_test_macro_f1"],
+            "related_figure_paths": build_structured_claim(
+                claim_id="headline",
+                claim_text="",
+                figure_entries=figure_entries,
+                source_artifacts=[hl["source_artifact"]],
+                related_figure_types=["model_comparison_test_macro_f1"],
+                scopes=["aggregate"],
+            )["related_figure_paths"],
         },
         {
             "finding_id": "calibration",
@@ -1274,6 +1635,21 @@ def generate_key_findings() -> SectionOutput:
             "metric_value": cal_find["best_ece"],
             "metric_std": None,
             "source_artifact": cal_find["source_artifact"],
+            "source_artifacts": [cal_find["source_artifact"]],
+            "claim_id": "calibration",
+            "claim_text": (
+                f"Best calibrated: {cal_find['best_calibrated']} (ECE = {format_ratio(cal_find['best_ece'])}). "
+                f"Worst: {cal_find['worst_calibrated']} (ECE = {format_ratio(cal_find['worst_ece'])})"
+            ),
+            "related_figure_types": ["calibration_comparison"],
+            "related_figure_paths": build_structured_claim(
+                claim_id="calibration",
+                claim_text="",
+                figure_entries=figure_entries,
+                source_artifacts=[cal_find["source_artifact"]],
+                related_figure_types=["calibration_comparison"],
+                scopes=["analysis"],
+            )["related_figure_paths"],
         },
         {
             "finding_id": "oos_detection",
@@ -1285,6 +1661,21 @@ def generate_key_findings() -> SectionOutput:
             "metric_value": oos_find["best_auroc"],
             "metric_std": None,
             "source_artifact": oos_find["source_artifact"],
+            "source_artifacts": [oos_find["source_artifact"]],
+            "claim_id": "oos_detection",
+            "claim_text": (
+                f"{ModelID(oos_find['best_model']).display_name} achieved the best OOS detection "
+                f"with AUROC = {format_ratio(oos_find['best_auroc'])} and AUPR = {format_ratio(oos_find['best_aupr'])}"
+            ),
+            "related_figure_types": ["oos_roc_comparison", "oos_pr_comparison"],
+            "related_figure_paths": build_structured_claim(
+                claim_id="oos_detection",
+                claim_text="",
+                figure_entries=figure_entries,
+                source_artifacts=[oos_find["source_artifact"]],
+                related_figure_types=["oos_roc_comparison", "oos_pr_comparison"],
+                scopes=["analysis"],
+            )["related_figure_paths"],
         },
         {
             "finding_id": "confusion",
@@ -1299,6 +1690,23 @@ def generate_key_findings() -> SectionOutput:
             "metric_value": None,
             "metric_std": None,
             "source_artifact": conf_find["source_artifact"],
+            "source_artifacts": [conf_find["source_artifact"]],
+            "claim_id": "confusion",
+            "claim_text": (
+                "Dominant error category across all models: `oos_as_inscope`. Dominant per model: "
+                + ", ".join(
+                    f"{ModelID(k).display_name}: {v}" for k, v in conf_find["dominant_error_categories"].items()
+                )
+            ),
+            "related_figure_types": ["error_taxonomy", "top_confused_pairs"],
+            "related_figure_paths": build_structured_claim(
+                claim_id="confusion",
+                claim_text="",
+                figure_entries=figure_entries,
+                source_artifacts=[conf_find["source_artifact"]],
+                related_figure_types=["error_taxonomy", "top_confused_pairs"],
+                scopes=["analysis", "representative"],
+            )["related_figure_paths"],
         },
         {
             "finding_id": "architecture",
@@ -1312,6 +1720,23 @@ def generate_key_findings() -> SectionOutput:
             "metric_value": arch_find["all_wrong_fraction"],
             "metric_std": None,
             "source_artifact": arch_find["source_artifact"],
+            "source_artifacts": [arch_find["source_artifact"]],
+            "claim_id": "architecture",
+            "claim_text": (
+                f"{arch_find['all_wrong_count']} examples ({format_ratio(arch_find['all_wrong_fraction'])}) "
+                f"misclassified by all models; {arch_find['model_specific_count']} "
+                f"({format_ratio(arch_find['model_specific_fraction'])}) unique to one model. "
+                f"Agreement on wrong class: {format_ratio(arch_find['all_wrong_agreement'])}"
+            ),
+            "related_figure_types": ["cross_model_error_overlap"],
+            "related_figure_paths": build_structured_claim(
+                claim_id="architecture",
+                claim_text="",
+                figure_entries=figure_entries,
+                source_artifacts=[arch_find["source_artifact"]],
+                related_figure_types=["cross_model_error_overlap"],
+                scopes=["analysis"],
+            )["related_figure_paths"],
         },
         {
             "finding_id": "length",
@@ -1326,7 +1751,26 @@ def generate_key_findings() -> SectionOutput:
             ),
             "metric_value": None,
             "metric_std": None,
-            "source_artifact": len_find.get("source_artifact", _ARTIFACTS["error_analysis_summary"]),
+            "source_artifact": _ARTIFACTS["error_analysis_summary"],
+            "source_artifacts": length_source_artifacts,
+            "claim_id": "length",
+            "claim_text": (
+                "Short-query accuracy: "
+                + ", ".join(
+                    f"{ModelID(k).display_name} {format_ratio(v['short_accuracy'])}"
+                    for k, v in len_find.items()
+                    if isinstance(v, dict) and "short_accuracy" in v
+                )
+            ),
+            "related_figure_types": ["length_slice"],
+            "related_figure_paths": build_structured_claim(
+                claim_id="length",
+                claim_text="",
+                figure_entries=figure_entries,
+                source_artifacts=length_source_artifacts,
+                related_figure_types=["length_slice"],
+                scopes=["analysis"],
+            )["related_figure_paths"],
         },
         {
             "finding_id": "efficiency",
@@ -1345,6 +1789,28 @@ def generate_key_findings() -> SectionOutput:
             "metric_value": None,
             "metric_std": None,
             "source_artifact": _ARTIFACTS["efficiency_summary_table"],
+            "source_artifacts": [_ARTIFACTS["efficiency_summary_table"]],
+            "claim_id": "efficiency",
+            "claim_text": (
+                "Parameter counts: "
+                + ", ".join(
+                    f"{mid.display_name} {format_param_count(eff_by[str(mid)]['parameter_count'])}" for mid in ModelID
+                )
+                + ". Inference throughput: "
+                + ", ".join(
+                    f"{mid.display_name} {eff_by[str(mid)]['inference_examples_per_sec_mean']:.0f} ex/s"
+                    for mid in ModelID
+                )
+            ),
+            "related_figure_types": ["model_efficiency_comparison"],
+            "related_figure_paths": build_structured_claim(
+                claim_id="efficiency",
+                claim_text="",
+                figure_entries=figure_entries,
+                source_artifacts=[_ARTIFACTS["efficiency_summary_table"]],
+                related_figure_types=["model_efficiency_comparison"],
+                scopes=["aggregate"],
+            )["related_figure_paths"],
         },
         {
             "finding_id": "recommendation",
@@ -1353,25 +1819,38 @@ def generate_key_findings() -> SectionOutput:
             "metric_value": None,
             "metric_std": None,
             "source_artifact": _ARTIFACTS["error_analysis_summary"],
+            "source_artifacts": [_ARTIFACTS["error_analysis_summary"]],
+            "claim_id": "recommendation",
+            "claim_text": eas["top_recommendation"],
+            "related_figure_types": ["oos_error_comparison", "top_confused_pairs"],
+            "related_figure_paths": build_structured_claim(
+                claim_id="recommendation",
+                claim_text="",
+                figure_entries=figure_entries,
+                source_artifacts=[_ARTIFACTS["error_analysis_summary"]],
+                related_figure_types=["oos_error_comparison", "top_confused_pairs"],
+                scopes=["analysis", "representative"],
+            )["related_figure_paths"],
         },
     ]
 
-    numbered = [
-        f"{i}. **{f['category'].replace('_', ' ').title()}**: {f['claim']} ({f['source_artifact']})"
-        for i, f in enumerate(findings, 1)
+    md_parts = [
+        "## Key Findings",
+        "",
+        "With only 3 repeated runs, differences between models may not be statistically meaningful. "
+        "Where models have overlapping mean +/- std ranges, this is noted rather than declaring one superior.",
+        "",
     ]
-
-    md = "\n".join(
-        [
-            "## Key Findings",
-            "",
-            "With only 3 repeated runs, differences between models may not be statistically meaningful. "
-            "Where models have overlapping mean +/- std ranges, this is noted rather than declaring one superior.",
-            "",
-            *numbered,
-            "",
-        ]
-    )
+    for idx, finding in enumerate(findings, start=1):
+        md_parts.append(
+            f"{idx}. **{finding['category'].replace('_', ' ').title()}**: "
+            f"{finding['claim']} ({finding['source_artifact']})"
+        )
+        note = render_related_figure_note(finding["related_figure_paths"])
+        if note is not None:
+            md_parts.append(note)
+        md_parts.append("")
+    md = "\n".join(md_parts)
 
     metadata = _meta(findings=findings, source_artifacts=sources)
     return md, metadata

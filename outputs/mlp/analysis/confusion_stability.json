@@ -169,19 +169,7 @@
   "stable_pairs": [
     {
       "true_class": "oos",
-      "predicted_class": "who_made_you"
-    },
-    {
-      "true_class": "oos",
       "predicted_class": "text"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "calculator"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "definition"
     },
     {
       "true_class": "oos",
@@ -193,19 +181,19 @@
     },
     {
       "true_class": "oos",
-      "predicted_class": "smart_home"
+      "predicted_class": "ingredient_substitution"
     },
     {
       "true_class": "oos",
-      "predicted_class": "directions"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "income"
+      "predicted_class": "who_made_you"
     },
     {
       "true_class": "oos",
       "predicted_class": "order"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "definition"
     },
     {
       "true_class": "oos",
@@ -217,29 +205,37 @@
     },
     {
       "true_class": "oos",
-      "predicted_class": "ingredient_substitution"
+      "predicted_class": "income"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "calculator"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "directions"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "smart_home"
     }
   ],
   "unstable_pairs": [
     {
+      "true_class": "calendar",
+      "predicted_class": "calendar_update"
+    },
+    {
       "true_class": "oos",
-      "predicted_class": "todo_list"
+      "predicted_class": "insurance_change"
     },
     {
       "true_class": "oos",
       "predicted_class": "how_old_are_you"
     },
     {
-      "true_class": "redeem_rewards",
-      "predicted_class": "rewards_balance"
-    },
-    {
       "true_class": "oos",
-      "predicted_class": "jump_start"
-    },
-    {
-      "true_class": "calendar",
-      "predicted_class": "calendar_update"
+      "predicted_class": "todo_list"
     },
     {
       "true_class": "oos",
@@ -254,8 +250,12 @@
       "predicted_class": "what_can_i_ask_you"
     },
     {
+      "true_class": "redeem_rewards",
+      "predicted_class": "rewards_balance"
+    },
+    {
       "true_class": "oos",
-      "predicted_class": "insurance_change"
+      "predicted_class": "jump_start"
     }
   ],
   "stable_count": 13,

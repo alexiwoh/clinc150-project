@@ -198,8 +198,14 @@ def generate_taxonomy_summary(
         FigureRecord(
             figure_path=repo_relative(fig_path),
             figure_type="error_taxonomy",
-            scope="aggregate",
+            scope="analysis",
             source_artifact_paths=source_paths,
+            caption_context={
+                "analysis_basis": "cross-model error taxonomy comparison using representative runs",
+                "dataset_name": "CLINC150",
+                "dataset_split": "test",
+                "metric_names": ["fraction of errors by taxonomy category"],
+            },
         )
     )
 

@@ -169,11 +169,7 @@
   "stable_pairs": [
     {
       "true_class": "oos",
-      "predicted_class": "smart_home"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "directions"
+      "predicted_class": "weather"
     },
     {
       "true_class": "oos",
@@ -181,37 +177,29 @@
     },
     {
       "true_class": "oos",
-      "predicted_class": "weather"
+      "predicted_class": "directions"
     },
     {
       "true_class": "oos",
-      "predicted_class": "restaurant_suggestion"
+      "predicted_class": "smart_home"
     },
     {
       "true_class": "oos",
       "predicted_class": "ingredients_list"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "restaurant_suggestion"
     }
   ],
   "unstable_pairs": [
     {
       "true_class": "oos",
-      "predicted_class": "replacement_card_duration"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "calculator"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "tell_joke"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "definition"
-    },
-    {
-      "true_class": "oos",
       "predicted_class": "date"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "exchange_rate"
     },
     {
       "true_class": "oos",
@@ -219,23 +207,11 @@
     },
     {
       "true_class": "oos",
+      "predicted_class": "transactions"
+    },
+    {
+      "true_class": "oos",
       "predicted_class": "nutrition_info"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "maybe"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "next_song"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "play_music"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "reminder_update"
     },
     {
       "true_class": "oos",
@@ -243,7 +219,11 @@
     },
     {
       "true_class": "oos",
-      "predicted_class": "what_song"
+      "predicted_class": "definition"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "play_music"
     },
     {
       "true_class": "oos",
@@ -251,11 +231,31 @@
     },
     {
       "true_class": "oos",
-      "predicted_class": "transactions"
+      "predicted_class": "next_song"
     },
     {
       "true_class": "oos",
-      "predicted_class": "exchange_rate"
+      "predicted_class": "tell_joke"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "reminder_update"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "calculator"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "maybe"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "what_song"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "replacement_card_duration"
     }
   ],
   "stable_count": 6,
