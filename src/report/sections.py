@@ -491,6 +491,13 @@ def generate_experimental_setup() -> SectionOutput:
     metric_defs = proto["metric_definitions"]
     oos_policy = proto["oos_evaluation_policy"]
     seed_policy = proto["seed_policy"]
+    seed_behavior_note = seed_policy.get(
+        "report_note",
+        "The repeated-evaluation pipeline derives `training_seed = seed` and "
+        "`dataloader_seed = seed + 1`. `dataloader_seed` controls train-batch "
+        "shuffling, but model initialization currently depends on "
+        "`config.random_seed`, not necessarily the nominal seed.",
+    )
 
     lr_items = ", ".join(f"{ModelID(k).display_name}: {v}" for k, v in per_model_lr.items())
     wd_items = ", ".join(f"{ModelID(k).display_name}: {v}" for k, v in per_model_wd.items())
@@ -516,7 +523,7 @@ def generate_experimental_setup() -> SectionOutput:
             f"- **Max epochs**: {configs[ModelID.MLP]['hyperparameters']['max_epochs']}",
             f"- **Early stopping**: patience {configs[ModelID.MLP]['hyperparameters']['early_stopping_patience']}, "
             f"monitoring {configs[ModelID.MLP]['hyperparameters']['monitor_metric']}",
-            f"- **Seed derivation**: {seed_policy['derivation_rule']}",
+            f"- **Seed behavior**: {seed_behavior_note}",
             "",
             "### Metric Definitions",
             "",

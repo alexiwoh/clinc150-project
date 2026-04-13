@@ -107,7 +107,15 @@ def _build_all_artifacts(root: Path) -> None:
                 "evaluation_method": "one-vs-rest",
                 "one_vs_rest_rule": "OOS positive, all in-scope negative",
             },
-            "seed_policy": {"derivation_rule": "training_seed=seed, dataloader_seed=seed+1"},
+            "seed_policy": {
+                "derivation_rule": "training_seed=seed, dataloader_seed=seed+1",
+                "report_note": (
+                    "The repeated-evaluation pipeline derives `training_seed = seed` and "
+                    "`dataloader_seed = seed + 1`. `dataloader_seed` controls train-batch "
+                    "shuffling, but model initialization currently depends on "
+                    "`config.random_seed`, not necessarily the nominal seed."
+                ),
+            },
         },
     )
 
@@ -602,6 +610,15 @@ class TestExperimentalSetup:
         for key in required:
             assert key in meta, f"Missing key: {key}"
         assert meta["seed_list"] == [42, 1337, 2024]
+
+    def test_markdown_reports_actual_seed_behavior(self, synth: Path) -> None:
+        from src.report.sections import generate_experimental_setup
+
+        md, _ = generate_experimental_setup()
+
+        assert "**Seed behavior**" in md
+        assert "`dataloader_seed` controls train-batch shuffling" in md
+        assert "`config.random_seed`" in md
 
 
 # ---------------------------------------------------------------------------

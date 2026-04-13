@@ -524,6 +524,12 @@ def save_evaluation_protocol(
             "seed_list": list(protocol.seed_list),
             "effective_seed_list": protocol.effective_seed_list(),
             "derivation_rule": "training_seed = seed, dataloader_seed = seed + 1",
+            "report_note": (
+                "The repeated-evaluation pipeline derives `training_seed = seed` and "
+                "`dataloader_seed = seed + 1`. `dataloader_seed` controls train-batch "
+                "shuffling, but model initialization currently depends on "
+                "`config.random_seed`, not necessarily the nominal seed."
+            ),
             "note": "Same seed list reused across all models",
         },
         "final_model_rule": "best checkpoint from early stopping on monitor metric (same as representative_run_rule)",

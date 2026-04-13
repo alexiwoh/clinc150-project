@@ -14,7 +14,7 @@ Repeated-run evaluation with 3 seeds: [42, 1337, 2024]. Representative run selec
 - **Batch size**: 64
 - **Max epochs**: 100
 - **Early stopping**: patience 10, monitoring val_macro_f1
-- **Seed derivation**: training_seed = seed, dataloader_seed = seed + 1
+- **Seed behavior**: The repeated-evaluation pipeline derives `training_seed = seed` and `dataloader_seed = seed + 1`. `dataloader_seed` controls train-batch shuffling, but model initialization currently depends on `config.random_seed`, not necessarily the nominal seed.
 
 ### Metric Definitions
 

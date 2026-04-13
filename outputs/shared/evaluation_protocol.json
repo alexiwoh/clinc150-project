@@ -94,6 +94,7 @@
       2024
     ],
     "derivation_rule": "training_seed = seed, dataloader_seed = seed + 1",
+    "report_note": "The repeated-evaluation pipeline derives `training_seed = seed` and `dataloader_seed = seed + 1`. `dataloader_seed` controls train-batch shuffling, but model initialization currently depends on `config.random_seed`, not necessarily the nominal seed.",
     "note": "Same seed list reused across all models"
   },
   "timestamp": "2026-04-08T03:53:44.024407+00:00",
