@@ -258,6 +258,78 @@ def _patch_for_analysis(tmp_path: Path):
 
 
 # ---------------------------------------------------------------------------
+# TestTaxonomySummaryFigure
+# ---------------------------------------------------------------------------
+
+
+class TestTaxonomySummaryFigure:
+    def test_figure_omits_short_query_ambiguity_bucket(self, tmp_path: Path) -> None:
+        """Keep the taxonomy summary intact while hiding the short-query bar."""
+        from src.analysis.taxonomy import generate_taxonomy_summary
+
+        captured_plot: dict[str, Any] = {}
+        total_count = sum(range(1, len(ErrorCategory) + 1))
+
+        def _model_dir(model_id: ModelID) -> Path:
+            return tmp_path / "outputs" / str(model_id)
+
+        def _capture_plot(
+            group_labels: list[str],
+            series: dict[str, list[float]],
+            ylabel: str,
+            title: str,
+            out_path: Path,
+            **_: Any,
+        ) -> None:
+            captured_plot["group_labels"] = list(group_labels)
+            captured_plot["series"] = {label: list(values) for label, values in series.items()}
+            captured_plot["ylabel"] = ylabel
+            captured_plot["title"] = title
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_bytes(b"test-figure")
+
+        per_model_taxonomy: dict[str, dict[str, Any]] = {}
+        for model_id in ModelID:
+            categories: dict[ErrorCategory, dict[str, float | int]] = {}
+            for category_index, category in enumerate(ErrorCategory, start=1):
+                categories[category] = {
+                    "count": category_index,
+                    "fraction_of_errors": category_index / total_count,
+                    "fraction_of_test_set": category_index / 100.0,
+                }
+            per_model_taxonomy[str(model_id)] = {"categories": categories}
+
+        patches = [
+            patch("src.analysis.utils.PROJECT_ROOT", tmp_path),
+            patch("src.analysis.utils.SHARED_DIR", tmp_path / "outputs" / "shared"),
+            patch("src.analysis.utils.model_output_dir", side_effect=_model_dir),
+            patch("src.analysis.taxonomy.plot_grouped_bar", side_effect=_capture_plot),
+        ]
+        for active_patch in patches:
+            active_patch.start()
+        try:
+            generate_taxonomy_summary(list(ModelID), per_model_taxonomy)
+        finally:
+            for active_patch in patches:
+                active_patch.stop()
+
+        expected_group_labels = [
+            category.value for category in ErrorCategory if category != ErrorCategory.SHORT_QUERY_AMBIGUITY
+        ]
+        assert captured_plot["group_labels"] == expected_group_labels
+        assert captured_plot["ylabel"] == "Fraction of Errors"
+        assert captured_plot["title"] == "Error Taxonomy Comparison"
+        for values in captured_plot["series"].values():
+            assert len(values) == len(expected_group_labels)
+
+        summary_path = tmp_path / "outputs" / "shared" / "analysis" / ERROR_TAXONOMY_SUMMARY_FILENAME
+        summary = json.loads(summary_path.read_text())
+        for row in summary["rows"]:
+            assert "short_query_ambiguity_count" in row
+            assert "short_query_ambiguity_fraction" in row
+
+
+# ---------------------------------------------------------------------------
 # TestLengthBucketing
 # ---------------------------------------------------------------------------
 

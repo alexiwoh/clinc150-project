@@ -33,6 +33,10 @@ from src.report_figure_generation import FigureRecord
 
 logger = logging.getLogger(__name__)
 
+_FIGURE_ERROR_CATEGORIES: tuple[ErrorCategory, ...] = tuple(
+    category for category in ErrorCategory if category != ErrorCategory.SHORT_QUERY_AMBIGUITY
+)
+
 
 # ---------------------------------------------------------------------------
 # Single-example classification
@@ -178,12 +182,13 @@ def generate_taxonomy_summary(
     write_json(shared_dir / ERROR_TAXONOMY_SUMMARY_FILENAME, summary)
     logger.info("Saved: %s", shared_dir / ERROR_TAXONOMY_SUMMARY_FILENAME)
 
-    # Grouped bar chart
-    group_labels = [cat.value for cat in ErrorCategory]
+    # ``short_query_ambiguity`` is recorded only as a secondary tag in practice,
+    # so omit it from the primary-category comparison figure.
+    group_labels = [cat.value for cat in _FIGURE_ERROR_CATEGORIES]
     series: dict[str, list[float]] = {}
     for mid in model_ids:
         tax = per_model_taxonomy[str(mid)]
-        series[mid.display_name] = [tax["categories"][cat]["fraction_of_errors"] for cat in ErrorCategory]
+        series[mid.display_name] = [tax["categories"][cat]["fraction_of_errors"] for cat in _FIGURE_ERROR_CATEGORIES]
 
     fig_path = shared_dir / ERROR_TAXONOMY_COMPARISON_FILENAME
     plot_grouped_bar(
