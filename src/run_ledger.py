@@ -9,6 +9,7 @@ from typing import Any
 
 from src.constants import AGGREGATE_SUBDIR, FINAL_RUNS_SUBDIR, PROJECT_ROOT, model_output_dir
 from src.enums import ModelID
+from src.provenance import validate_generation_identity
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -93,6 +94,7 @@ def load_current_run_ledger(
         raise ValueError(f"{ledger_path}: completed run missing per_run_metadata_refs entry")
 
     metadata_paths: dict[str, Path] = {}
+    completed_metadata: list[dict[str, Any]] = []
     actual_completed_seeds: list[int] = []
     for index, run_id in enumerate(requested, 1):
         if run_id not in refs:
@@ -114,6 +116,7 @@ def load_current_run_ledger(
         if run_id in groups["completed_run_ids"]:
             if metadata.get("status") != "completed":
                 raise ValueError(f"{metadata_path}: completed ledger run has status {metadata.get('status')!r}")
+            completed_metadata.append(metadata)
         elif run_id in groups["failed_run_ids"] and metadata.get("status") != "failed":
             raise ValueError(f"{metadata_path}: failed ledger run has status {metadata.get('status')!r}")
         elif run_id in groups["skipped_run_ids"] and metadata.get("status") != "skipped":
@@ -124,6 +127,7 @@ def load_current_run_ledger(
         actual_completed_seeds.append(_read_json(metadata_paths[run_id])["seed"])
     if completed_seeds != actual_completed_seeds:
         raise ValueError(f"{ledger_path}: seed_list_completed does not match completed run metadata")
+    validate_generation_identity(completed_metadata)
 
     return CurrentRunLedger(
         requested_run_ids=requested,

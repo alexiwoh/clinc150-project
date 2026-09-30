@@ -30,6 +30,7 @@ from src.constants import (
     model_output_dir,
 )
 from src.enums import ModelID
+from src.provenance import validate_generation_identity
 from src.run_ledger import CurrentRunLedger, load_current_run_ledger, resolve_current_run
 
 logger = logging.getLogger(__name__)
@@ -1141,6 +1142,16 @@ def run_experiment_tracking(
         except (FileNotFoundError, ValueError) as exc:
             print(f"ERROR: {exc}")
             return False
+    records = [
+        _read_json(ledger.metadata_paths[run_id])
+        for ledger in current_ledgers.values()
+        for run_id in ledger.completed_run_ids
+    ]
+    try:
+        validate_generation_identity(records, same_model=False)
+    except ValueError as exc:
+        print(f"ERROR: {exc}")
+        return False
 
     print("=" * 70)
     print("  Experiment Tracking")

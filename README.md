@@ -87,10 +87,21 @@ and locally generated Torch checkpoints are trusted local artifacts; only load
 artifacts you trust.
 
 `uv run --frozen python main.py --model all --run-count 3` is a convenience route
-that extracts frozen settings from canonical tuning tables, trains, tracks, and
+that extracts frozen settings from existing tuning tables, trains, tracks, and
 produces figures and analysis. Report generation remains the final explicit
 command. Run counts are 1 through 3, with seeds 42, 1337, and 2024. The pipeline
 reuses tuning; it does not launch a hyperparameter search.
+If canonical and legacy tuning CSVs differ, extraction stops before writing.
+Choose `--tuning-source canonical` or `--tuning-source legacy` explicitly after
+inspecting them; both original CSVs are preserved. The dedicated repeated-run
+command above reads the committed frozen settings directly.
+
+New run metadata records the pinned `clinc/clinc_oos` revision, ordered raw
+split and label hashes, fitted preprocessing and encoded-input hashes, runtime
+source hashes and Git state, effective model and loader settings, and hardware.
+Historical metadata without these identities remains unknown. Current run
+ledgers define downstream membership, so leftover run directories are preserved
+and excluded. Tracking rejects mixed or disagreeing generation identities.
 
 Device selection is MPS, then CUDA, then CPU. These are full final training runs,
 not a quick inference demo; runtime depends on hardware and early stopping.

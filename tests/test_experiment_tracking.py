@@ -1307,6 +1307,21 @@ class TestProtocolEnrichment:
 # ── Integration: full tracking against real artifacts ────────────────────
 
 
+def test_tracking_rejects_mixed_generation_before_enrichment(mock_outputs: Path) -> None:
+    metadata_path = mock_outputs / "outputs/mlp/final_runs/run_01_seed_42/run_metadata.json"
+    metadata = _read_json(metadata_path)
+    metadata["provenance"] = {}
+    _write(metadata_path, metadata)
+    before = {path: path.read_bytes() for path in mock_outputs.rglob("*") if path.is_file()}
+    with (
+        patch("src.experiment_tracking.PROJECT_ROOT", mock_outputs),
+        patch("src.experiment_tracking.model_output_dir", side_effect=lambda mid: mock_outputs / "outputs" / str(mid)),
+    ):
+        assert run_experiment_tracking() is False
+    after = {path: path.read_bytes() for path in mock_outputs.rglob("*") if path.is_file()}
+    assert before == after
+
+
 @pytest.mark.generated_artifacts
 class TestIntegrationRealArtifacts:
     """Run validation against the actual project output artifacts.

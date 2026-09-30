@@ -65,6 +65,7 @@ from src.metrics import (
     find_top_confusions,
     find_top_errors,
 )
+from src.provenance import provenance_dict, validate_generation_identity
 from src.utils import count_parameters, set_seed
 
 logger = logging.getLogger(__name__)
@@ -136,6 +137,7 @@ class RunResult:
     # Artifacts
     run_dir: str = ""
     epoch_history: list[dict[str, Any]] = field(default_factory=list)
+    provenance: dict[str, Any] | None = None
 
     # Failure info (for failed runs)
     failure_reason: str = ""
@@ -644,7 +646,7 @@ def extract_and_freeze_configs(
 def _frozen_config_hash(frozen: FrozenModelConfig) -> str:
     """Deterministic hash of the frozen config for provenance tracking."""
     raw = json.dumps(frozen.to_dict(), sort_keys=True)
-    return hashlib.sha256(raw.encode()).hexdigest()[:16]
+    return hashlib.sha256(raw.encode()).hexdigest()
 
 
 def _derive_seeds(base_seed: int) -> tuple[int, int]:
@@ -682,14 +684,7 @@ def _load_data_for_model(
         assert isinstance(config, (TextCNNConfig, BiLSTMConfig))
         loaders, metadata = load_neural_data(config)
 
-        from src.config import DATASET_CONFIG
-        from src.dataset import CLINCDataset
-        from src.preprocessing import clean_text
-
-        dataset = CLINCDataset.load(DATASET_CONFIG)
-        for split in ("train", "validation", "test"):
-            raw = dataset[split]
-            texts_by_split[split] = [clean_text(t) for t in raw["text"]]
+        texts_by_split = metadata["texts_by_split"]
 
         return {
             "loaders": loaders,
@@ -730,7 +725,7 @@ def _run_inference(
     all_targets: list[int] = []
     all_probs: list[np.ndarray] = []
 
-    start_time = time.time()
+    start_time = time.perf_counter()
     with torch.no_grad():
         for inputs, targets in loader:
             inputs = inputs.to(device)
@@ -740,7 +735,7 @@ def _run_inference(
             preds = logits.argmax(dim=1).cpu().tolist()
             all_preds.extend(preds)
             all_targets.extend(targets.tolist())
-    inference_time = time.time() - start_time
+    inference_time = time.perf_counter() - start_time
 
     probs_array = np.concatenate(all_probs, axis=0)
 
@@ -815,6 +810,7 @@ def _save_run_metadata(
         "python_version": platform.python_version(),
         "pytorch_version": torch.__version__,
         "frozen_config_hash": _frozen_config_hash(frozen),
+        "provenance": run_result.provenance,
     }
     if run_result.status == "failed":
         metadata["failure_reason"] = run_result.failure_reason
@@ -1121,11 +1117,37 @@ def execute_single_run(
         set_seed(training_seed)
 
         loaders = _rebuild_dataloaders(data_bundle, model_id, model_config, dataloader_seed)
+        metadata = data_bundle["metadata"]
+        effective_settings = {
+            "model_config": model_config.to_dict(),
+            "device": str(get_device()),
+            "num_classes": data_bundle["num_classes"],
+            "input_dim": data_bundle.get("input_dim"),
+            "dataloader": {
+                "batch_size": model_config.batch_size,
+                "num_workers": 0,
+                "pin_memory": False,
+                "train_shuffle": True,
+                "validation_shuffle": False,
+                "test_shuffle": False,
+                "drop_last": False,
+            },
+            "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(),
+            "cudnn_deterministic": torch.backends.cudnn.deterministic,
+            "cudnn_benchmark": torch.backends.cudnn.benchmark,
+            "protocol": protocol.to_dict(),
+        }
+        result.provenance = provenance_dict(
+            metadata["dataset_identity"],
+            metadata["artifact_refs"],
+            metadata["model_input_hashes"],
+            effective_settings=effective_settings,
+        )
+        result.provenance["frozen_config_hash"] = _frozen_config_hash(frozen)
 
         result.stage_reached = "data_loaded"
 
         # --- Stage 2: Train ---
-        metadata = data_bundle["metadata"]
         num_classes: int = data_bundle["num_classes"]
 
         checkpoint_filename = f"best_{run_id}.pt"
@@ -1360,6 +1382,7 @@ def save_aggregate_artifacts(
         raise ValueError("Run results do not match the requested aggregate membership")
     if representative_run_id and representative_run_id not in {run.run_id for run in completed}:
         raise ValueError("Representative run is not a completed member of this evaluation")
+    validate_generation_identity([{"provenance": run.provenance} for run in completed])
 
     agg_dir = model_output_dir(model_id) / AGGREGATE_SUBDIR
     agg_dir.mkdir(parents=True, exist_ok=True)

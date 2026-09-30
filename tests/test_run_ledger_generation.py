@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -14,7 +16,9 @@ from src.repeated_evaluation import RunResult, compute_aggregate_metrics, save_a
 from src.run_ledger import load_current_run_ledger
 
 
-def _result(root: Path, index: int, seed: int, *, status: str = "completed") -> RunResult:
+def _result(
+    root: Path, index: int, seed: int, *, status: str = "completed", provenance: dict[str, Any] | None = None
+) -> RunResult:
     run_id = f"run_{index:02d}_seed_{seed}"
     directory = root / "outputs/mlp/final_runs" / run_id
     directory.mkdir(parents=True, exist_ok=True)
@@ -26,10 +30,31 @@ def _result(root: Path, index: int, seed: int, *, status: str = "completed") -> 
                 "run_index": index,
                 "seed": seed,
                 "status": status,
+                "provenance": provenance,
             }
         )
     )
-    return RunResult("mlp", run_id, index, seed, seed, seed + 1, status, run_dir=str(directory))
+    return RunResult("mlp", run_id, index, seed, seed, seed + 1, status, run_dir=str(directory), provenance=provenance)
+
+
+def _provenance() -> dict[str, Any]:
+    digest = "a" * 64
+    return {
+        "source": {"git_commit": "commit", "source_dirty": False, "files_sha256": {"src/train.py": digest}},
+        "dataset": {
+            "name": "synthetic",
+            "subset": "fixture",
+            "revision": "pinned",
+            "label_order_sha256": digest,
+            "splits": {
+                split: {"count": 2, "texts_sha256": digest, "labels_sha256": digest, "examples_sha256": digest}
+                for split in ("train", "validation", "test")
+            },
+        },
+        "preprocessing_artifact_hashes": {"vocab": digest},
+        "model_input_hashes": {split: digest for split in ("train", "validation", "test")},
+        "frozen_config_hash": digest,
+    }
 
 
 def test_reducing_run_count_replaces_ledger_and_preserves_directories(tmp_path: Path) -> None:
@@ -70,3 +95,29 @@ def test_mismatched_membership_is_rejected_before_writes(tmp_path: Path) -> None
         with pytest.raises(ValueError, match="membership"):
             save_aggregate_artifacts(aggregate, runs, ModelID.MLP)
     assert not (tmp_path / "outputs/mlp/aggregate").exists()
+
+
+def test_mixed_generation_is_rejected_before_aggregate_writes(tmp_path: Path) -> None:
+    current = _provenance()
+    changed = deepcopy(current)
+    changed["dataset"]["splits"]["test"]["examples_sha256"] = "b" * 64
+    runs = [_result(tmp_path, 1, 42, provenance=current), _result(tmp_path, 2, 1337, provenance=changed)]
+    aggregate = compute_aggregate_metrics(runs, RepeatedRunProtocol(run_count=2), ModelID.MLP)
+    with patch("src.repeated_evaluation.model_output_dir", return_value=tmp_path / "outputs/mlp"):
+        with pytest.raises(ValueError, match="dataset"):
+            save_aggregate_artifacts(aggregate, runs, ModelID.MLP)
+    assert not (tmp_path / "outputs/mlp/aggregate").exists()
+
+
+def test_discovery_rejects_changed_recorded_identity(tmp_path: Path) -> None:
+    model_dir = tmp_path / "outputs/mlp"
+    runs = [_result(tmp_path, 1, 42, provenance=_provenance()), _result(tmp_path, 2, 1337, provenance=_provenance())]
+    aggregate = compute_aggregate_metrics(runs, RepeatedRunProtocol(run_count=2), ModelID.MLP)
+    with patch("src.repeated_evaluation.model_output_dir", return_value=model_dir):
+        save_aggregate_artifacts(aggregate, runs, ModelID.MLP)
+    metadata_path = Path(runs[1].run_dir) / "run_metadata.json"
+    metadata = json.loads(metadata_path.read_text())
+    metadata["provenance"]["source"]["files_sha256"]["src/train.py"] = "b" * 64
+    metadata_path.write_text(json.dumps(metadata))
+    with pytest.raises(ValueError, match="source"):
+        load_current_run_ledger(ModelID.MLP, model_dir=model_dir, project_root=tmp_path)
