@@ -11,11 +11,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from src.analysis.constants import SHORT_QUERY_TOKEN_THRESHOLD
 from src.constants import (
     PROJECT_ROOT,
     PROTOCOL_VERSION,
     SCHEMA_VERSION,
+    SHORT_QUERY_TOKEN_THRESHOLD,
 )
 from src.enums import ModelID
 from src.report.artifact_loader import load_json, resolve_repo_path

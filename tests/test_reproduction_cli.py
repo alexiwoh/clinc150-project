@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -22,6 +24,30 @@ from src.repeated_evaluation import (
     normalize_tuning_artifacts,
     save_frozen_config,
 )
+
+
+@pytest.mark.parametrize(
+    "script_name",
+    [
+        "run_repeated_evaluation.py",
+        "run_experiment_tracking.py",
+        "run_report_figures.py",
+        "run_error_analysis.py",
+        "run_report_generation.py",
+    ],
+)
+def test_reproduction_commands_start_in_fresh_process(script_name: str) -> None:
+    """Cold imports must work independently of pytest's module import order."""
+    result = subprocess.run(
+        [sys.executable, str(PROJECT_ROOT / "scripts" / script_name), "--help"],
+        cwd=PROJECT_ROOT,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "usage:" in result.stdout
 
 
 def _committed_config(model_id: ModelID) -> dict[str, Any]:
