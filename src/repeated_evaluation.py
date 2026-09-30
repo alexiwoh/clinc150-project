@@ -14,7 +14,7 @@ import platform
 import shutil
 import time
 import traceback
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -525,14 +525,16 @@ def save_evaluation_protocol(
             "effective_seed_list": protocol.effective_seed_list(),
             "derivation_rule": "training_seed = seed, dataloader_seed = seed + 1",
             "report_note": (
-                "The repeated-evaluation pipeline derives `training_seed = seed` and "
-                "`dataloader_seed = seed + 1`. `dataloader_seed` controls train-batch "
-                "shuffling, but model initialization currently depends on "
-                "`config.random_seed`, not necessarily the nominal seed."
+                "Each run copies the frozen model configuration with `random_seed = seed` "
+                "and `dataloader_seed = seed + 1`. The training seed controls initialization "
+                "and training randomness; the dataloader seed controls train-batch shuffling."
             ),
             "note": "Same seed list reused across all models",
         },
-        "final_model_rule": "best checkpoint from early stopping on monitor metric (same as representative_run_rule)",
+        "final_model_rule": (
+            "best checkpoint by the configured validation monitor, with lower validation loss as tie-break; "
+            "representative run selected separately by validation macro F1"
+        ),
         "timestamp": datetime.now(tz=timezone.utc).isoformat(),
     }
 
@@ -1038,8 +1040,7 @@ def save_per_run_bundle(
     }
     (run_dir / "label_order.json").write_text(json.dumps(label_order_artifact, indent=2) + "\n")
 
-    # Confidences: always saved per run; .gitignore excludes **/confidences.npz from VCS.
-    # Representative vs all_runs distinction documented in probability_saving_policy field.
+    # The supported all_runs policy saves probabilities for every completed run.
     _save_confidences(test_probs, test_preds, test_targets, label_names, run_dir)
 
 
@@ -1073,6 +1074,9 @@ def execute_single_run(
     from src.utils import load_checkpoint
 
     training_seed, dataloader_seed = _derive_seeds(seed)
+    if frozen.model_id != model_id:
+        raise ValueError(f"Frozen config model_id {frozen.model_id!r} does not match {model_id!r}")
+    model_config = replace(frozen.to_model_config(), random_seed=training_seed, dataloader_seed=dataloader_seed)
     run_id = run_dir_name(run_index, seed)
 
     checkpoint_subdir = run_dir / RUN_CHECKPOINT_SUBDIR
@@ -1085,8 +1089,8 @@ def execute_single_run(
         run_id=run_id,
         run_index=run_index,
         seed=seed,
-        training_seed=training_seed,
-        dataloader_seed=dataloader_seed,
+        training_seed=model_config.random_seed,
+        dataloader_seed=model_config.dataloader_seed,
         status="in_progress",
         run_dir=str(run_dir),
         monitor_metric=frozen.monitor_metric,
@@ -1096,7 +1100,6 @@ def execute_single_run(
         # --- Stage 1: Seed and rebuild DataLoaders ---
         set_seed(training_seed)
 
-        model_config = frozen.to_model_config()
         loaders = _rebuild_dataloaders(data_bundle, model_id, model_config, dataloader_seed)
 
         result.stage_reached = "data_loaded"
@@ -1508,6 +1511,7 @@ def run_repeated_evaluation(
     assert len(effective_seeds) > 0, "Seed list must be non-empty"
     assert len(effective_seeds) == len(set(effective_seeds)), f"Seed list contains duplicates: {effective_seeds}"
 
+    model_config = frozen.to_model_config()
     final_runs_dir = model_output_dir(model_id) / FINAL_RUNS_SUBDIR
     final_runs_dir.mkdir(parents=True, exist_ok=True)
 
@@ -1523,7 +1527,6 @@ def run_repeated_evaluation(
     print()
 
     # Load data once
-    model_config = frozen.to_model_config()
     data_bundle, texts_by_split = _load_data_for_model(model_id, model_config)
 
     run_results: list[RunResult] = []
