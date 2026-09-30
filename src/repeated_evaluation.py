@@ -1321,12 +1321,28 @@ def save_aggregate_artifacts(
     frozen_config_ref: str = "",
 ) -> Path:
     """Save aggregate artifacts to ``outputs/{model}/aggregate/``."""
-    agg_dir = model_output_dir(model_id) / AGGREGATE_SUBDIR
-    agg_dir.mkdir(parents=True, exist_ok=True)
-
     mid = ModelID(model_id)
     completed = [r for r in run_results if r.status == "completed"]
     failed = [r for r in run_results if r.status == "failed"]
+    expected_ids = [run_dir_name(index, seed) for index, seed in enumerate(aggregate.seed_list_requested, 1)]
+    if (
+        aggregate.model_id != model_id
+        or len(run_results) != aggregate.run_count_requested
+        or [run.run_id for run in run_results] != expected_ids
+        or any(run.model_id != model_id or run.status not in {"completed", "failed"} for run in run_results)
+        or any(
+            run.run_index != index or run.seed != aggregate.seed_list_requested[index - 1]
+            for index, run in enumerate(run_results, 1)
+        )
+        or aggregate.run_count_completed != len(completed)
+        or aggregate.seed_list_completed != [run.seed for run in completed]
+    ):
+        raise ValueError("Run results do not match the requested aggregate membership")
+    if representative_run_id and representative_run_id not in {run.run_id for run in completed}:
+        raise ValueError("Representative run is not a completed member of this evaluation")
+
+    agg_dir = model_output_dir(model_id) / AGGREGATE_SUBDIR
+    agg_dir.mkdir(parents=True, exist_ok=True)
 
     if not frozen_config_ref:
         frozen_config_ref = _to_repo_relative(model_output_dir(model_id) / "frozen_final_config.json")
@@ -1417,6 +1433,32 @@ def save_aggregate_artifacts(
     comparison_row["representative_run_id"] = representative_run_id
     comparison_row["frozen_config_ref"] = frozen_config_ref
     (agg_dir / "aggregate_comparison_row.json").write_text(json.dumps(comparison_row, indent=2) + "\n")
+
+    # Evaluation owns current membership. Tracking/analysis must never infer it
+    # from old directories left behind by a smaller subsequent run count.
+    ledger = {
+        "schema_version": SCHEMA_VERSION,
+        "protocol_version": PROTOCOL_VERSION,
+        "model_name": mid.display_name,
+        "model_id": model_id,
+        "run_count_requested": aggregate.run_count_requested,
+        "run_count_completed": len(completed),
+        "run_count_failed": len(failed),
+        "run_count_skipped": 0,
+        "requested_run_ids": expected_ids,
+        "completed_run_ids": [run.run_id for run in completed],
+        "failed_run_ids": [run.run_id for run in failed],
+        "skipped_run_ids": [],
+        "seed_list_requested": aggregate.seed_list_requested,
+        "seed_list_completed": aggregate.seed_list_completed,
+        "failure_reasons": {run.run_id: run.failure_reason for run in failed},
+        "per_run_metadata_refs": {
+            run.run_id: f"outputs/{model_id}/{FINAL_RUNS_SUBDIR}/{run.run_id}/run_metadata.json" for run in run_results
+        },
+    }
+    temporary_ledger = agg_dir / "run_ledger.json.tmp"
+    temporary_ledger.write_text(json.dumps(ledger, indent=2) + "\n")
+    temporary_ledger.replace(agg_dir / "run_ledger.json")
 
     return agg_dir
 
