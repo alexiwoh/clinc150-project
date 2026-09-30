@@ -43,6 +43,8 @@ def _build_all_artifacts(root: Path) -> None:
             "oos_label_id": 42,
             "oos_counts": {"train": 250, "validation": 100, "test": 1000},
             "in_scope_counts": {"train": 15000, "validation": 3000, "test": 4500},
+            "train_class_count_min": 100,
+            "train_class_count_max": 100,
             "quirks_or_caveats": ["Test has ~18% OOS vs ~1.6% in train"],
         },
     )
@@ -437,6 +439,7 @@ def _build_all_artifacts(root: Path) -> None:
     (analysis / "error_analysis_notes.md").write_text("# Error Analysis Notes\n")
 
     (root / "uv.lock").write_text("")
+    (root / "LICENSE").write_text("GNU GENERAL PUBLIC LICENSE\nVersion 3\n")
 
 
 # ---------------------------------------------------------------------------
@@ -489,6 +492,15 @@ class TestAbstract:
         md, _ = generate_abstract()
         assert md.startswith("## Abstract")
 
+    def test_supervised_and_descriptive_scope(self, synth: Path) -> None:
+        from src.report.sections import generate_abstract
+
+        markdown, _ = generate_abstract()
+        assert "supervised 151st class" in markdown
+        assert "aggregate argmax OOS F1" in markdown
+        assert "population standard deviations" in markdown
+        assert "not confidence intervals or significance tests" in markdown
+
 
 # ---------------------------------------------------------------------------
 # Section C: Dataset description
@@ -517,6 +529,33 @@ class TestDatasetDescription:
             assert key in meta, f"Missing key: {key}"
         assert meta["num_classes"] == 151
         assert meta["oos_label_id"] == 42
+
+    def test_balance_and_preserved_benchmark_overlaps(self, synth: Path) -> None:
+        from src.report.sections import generate_dataset_description
+
+        markdown, metadata = generate_dataset_description()
+        assert "In-scope classes are balanced" in metadata["class_balance_note"]
+        assert "100 training examples per class" in markdown
+        assert "OOS support is reported separately" in markdown
+        assert "3 normalized texts shared between train and validation" in markdown
+        assert "2 shared between train and test" in markdown
+        assert (
+            "Two of the three train/validation overlaps and both train/test overlaps have conflicting labels"
+            in markdown
+        )
+        assert "official splits are preserved" in markdown
+
+    def test_missing_balance_statistics_do_not_invent_counts(self, synth: Path) -> None:
+        from src.report.sections import generate_dataset_description
+
+        path = synth / "data/artifacts/dataset_summary.json"
+        summary = json.loads(path.read_text())
+        del summary["train_class_count_min"]
+        del summary["train_class_count_max"]
+        _write(path, summary)
+        markdown, metadata = generate_dataset_description()
+        assert "not recorded" in metadata["class_balance_note"]
+        assert "None training examples" not in markdown
 
 
 # ---------------------------------------------------------------------------
@@ -580,6 +619,15 @@ class TestModelArchitectures:
         md, _ = generate_model_architectures()
         assert "10,000 TF-IDF features" in md
 
+    def test_fixed_padding_limitation_and_cnn_attribution(self, synth: Path) -> None:
+        from src.report.sections import generate_model_architectures
+
+        markdown, _ = generate_model_architectures()
+        assert "https://aclanthology.org/D14-1181/" in markdown
+        assert "concatenates final forward/backward hidden states" in markdown
+        assert "zero PAD embedding does not mask recurrent transitions" in markdown
+        assert "changing padding length can change logits" in markdown
+
 
 # ---------------------------------------------------------------------------
 # Section F: Experimental setup
@@ -620,6 +668,40 @@ class TestExperimentalSetup:
         assert "`dataloader_seed` controls train-batch shuffling" in md
         assert "`config.random_seed`" in md
 
+    def test_current_seed_note_replaces_historical_disclosure(self, synth: Path) -> None:
+        from src.report.sections import generate_experimental_setup
+
+        path = synth / "outputs/shared/evaluation_protocol.json"
+        protocol = json.loads(path.read_text())
+        note = "Effective training seed controls initialization; dataloader seed controls train-batch shuffling."
+        protocol["seed_policy"]["report_note"] = note
+        _write(path, protocol)
+        markdown, _ = generate_experimental_setup()
+        assert note in markdown
+        assert "model initialization currently depends" not in markdown
+
+    def test_missing_seed_note_does_not_invent_historical_behavior(self, synth: Path) -> None:
+        from src.report.sections import generate_experimental_setup
+
+        path = synth / "outputs/shared/evaluation_protocol.json"
+        protocol = json.loads(path.read_text())
+        del protocol["seed_policy"]["report_note"]
+        _write(path, protocol)
+        markdown, _ = generate_experimental_setup()
+        assert "nominal seed labels alone do not verify historical seed behavior" in markdown
+        assert "model initialization currently depends" not in markdown
+
+    def test_pipeline_comparison_and_original_tuning_order_caveat(self, synth: Path) -> None:
+        from src.report.sections import generate_experimental_setup
+
+        markdown, _ = generate_experimental_setup()
+        assert "limited model-specific searches" in markdown
+        assert "original tuning reused advancing loader RNG state" in markdown
+        assert "neural smoke checks also consumed a train shuffle" in markdown
+        assert "compares complete pipelines rather than isolating architecture" in markdown
+        assert "MPS, then CUDA, then CPU" in markdown
+        assert "hardware model, processor and RAM" in markdown
+
 
 # ---------------------------------------------------------------------------
 # Section G: Main results
@@ -654,6 +736,14 @@ class TestMainResults:
         md, _ = generate_main_results()
         assert "![" in md
 
+    def test_efficiency_and_argmax_scope_are_local_to_tables(self, synth: Path) -> None:
+        from src.report.sections import generate_main_results
+
+        markdown, _ = generate_main_results()
+        assert "score argmax predictions in the supervised 151-class classifier" in markdown
+        assert "Batched evaluation timing" in markdown
+        assert "single-query deployment latency was not measured" in markdown
+
 
 # ---------------------------------------------------------------------------
 # Section H: OOS detection
@@ -684,6 +774,37 @@ class TestOosDetection:
 
         md, _ = generate_oos_detection()
         assert "oos_roc_comparison" in md
+
+    def test_different_argmax_and_probability_leaders_keep_metric_scope(self, synth: Path) -> None:
+        from src.report.sections import generate_oos_detection
+
+        oos_path = synth / "outputs/shared/oos_summary_table.json"
+        oos = json.loads(oos_path.read_text())
+        for row in oos["rows"]:
+            row["oos_f1_mean"] = 0.95 if row["model_id"] == ModelID.MLP else 0.50
+        _write(oos_path, oos)
+        threshold_path = synth / "outputs/shared/analysis/oos_threshold_comparison.json"
+        threshold = json.loads(threshold_path.read_text())
+        for row in threshold["rows"]:
+            row["auroc"] = 0.98 if row["model_id"] == ModelID.TEXT_CNN else 0.80
+            row["msp_auroc"] = 0.99
+        _write(threshold_path, threshold)
+        markdown, metadata = generate_oos_detection()
+        assert "TF-IDF + MLP achieved the highest aggregate argmax OOS F1" in markdown
+        assert "Text CNN has the highest representative-run OOS-probability AUROC" in markdown
+        assert metadata["best_oos_model"]["model_id"] == ModelID.TEXT_CNN
+        assert "substantially outperforms" not in markdown
+        assert "probability ranking measures different behavior" in markdown
+
+    def test_msp_and_test_roc_points_are_diagnostics(self, synth: Path) -> None:
+        from src.report.sections import generate_oos_detection
+
+        markdown, _ = generate_oos_detection()
+        assert "`1 - max(p)` over all 151 softmax classes, including OOS" in markdown
+        assert "confidently correct OOS prediction can therefore receive a low MSP OOS score" in markdown
+        assert "representative test ROC curve" in markdown
+        assert "thresholds and calibration must be selected on validation data" in markdown
+        assert "do not establish a deployable operating point" in markdown
 
 
 # ---------------------------------------------------------------------------
@@ -756,6 +877,24 @@ class TestErrorAnalysis:
         md, _ = generate_error_analysis()
         assert "confusion_matrix" in md
 
+    def test_taxonomy_is_heuristic_and_dominant_claim_tracks_actual_counts(self, synth: Path) -> None:
+        from src.report.sections import generate_error_analysis
+
+        path = synth / "outputs/shared/analysis/error_taxonomy_summary.json"
+        taxonomy = json.loads(path.read_text())
+        for row in taxonomy["rows"]:
+            row["near_semantic_confusion_count"] = 10000
+        _write(path, taxonomy)
+        markdown, metadata = generate_error_analysis()
+        assert "same-domain misclassification" in markdown
+        assert "at most 5 whitespace tokens" in markdown
+        assert "do not establish semantic similarity or query ambiguity" in markdown
+        assert "not three-run aggregates" in markdown
+        assert "All models share `oos_as_inscope` as the dominant" not in markdown
+        taxonomy_claim = next(claim for claim in metadata["claims"] if claim["claim_id"] == "error_taxonomy")
+        assert "`near_semantic_confusion`" in taxonomy_claim["claim_text"]
+        assert metadata["oos_finding"]["main_failure_mode"] == "near_semantic_confusion"
+
 
 # ---------------------------------------------------------------------------
 # Section K: Representative examples
@@ -788,6 +927,14 @@ class TestRepresentativeExamples:
         md, _ = generate_representative_examples()
         assert "Representative run only" in md
 
+    def test_example_labels_do_not_prove_semantics_or_ambiguity(self, synth: Path) -> None:
+        from src.report.sections import generate_representative_examples
+
+        markdown, _ = generate_representative_examples()
+        assert "same-domain cases tagged `near_semantic_confusion`" in markdown
+        assert "short-query tagged errors" in markdown
+        assert "do not establish semantic similarity or query ambiguity" in markdown
+
 
 # ---------------------------------------------------------------------------
 # Section L: Key findings
@@ -817,6 +964,19 @@ class TestKeyFindings:
             for key in ("claim_id", "claim_text", "source_artifacts", "related_figure_paths", "related_figure_types"):
                 assert key in f, f"Missing key in finding: {key}"
 
+    def test_scopes_and_dispersion_do_not_imply_significance(self, synth: Path) -> None:
+        from src.report.sections import generate_key_findings
+
+        markdown, metadata = generate_key_findings()
+        assert "not confidence intervals or significance tests" in markdown
+        assert "architecture-only causal interpretation" in markdown
+        calibration_claim = next(f["claim"] for f in metadata["findings"] if f["category"] == "calibration")
+        assert "Lowest representative-run ECE" in calibration_claim
+        assert "Best calibrated" not in calibration_claim
+        oos = next(f["claim"] for f in metadata["findings"] if f["category"] == "oos_detection")
+        assert "highest representative-run OOS-probability AUROC" in oos
+        assert "best OOS detection" not in oos
+
 
 # ---------------------------------------------------------------------------
 # Section M: Limitations
@@ -839,6 +999,20 @@ class TestLimitations:
         assert "### Analysis-Level Limitations" in md
         assert "### Project-Level Limitations" in md
 
+    def test_preserves_scientific_caveats(self, synth: Path) -> None:
+        from src.report.sections import generate_limitations
+
+        markdown, _ = generate_limitations()
+        assert "Only the 150 in-scope classes are balanced" in markdown
+        assert "CLINC150 is balanced" not in markdown
+        assert "supervised 151st class" in markdown
+        assert "fixed right-PAD positions" in markdown
+        assert "sensitive to padding length" in markdown
+        assert "3 train/validation text overlaps (2 with conflicting labels)" in markdown
+        assert "2 train/test overlaps (both with conflicting labels)" in markdown
+        assert "original trial order part of the search" in markdown
+        assert "without measuring their variability across seeds" in markdown
+
 
 # ---------------------------------------------------------------------------
 # Section N: Future improvements
@@ -855,6 +1029,18 @@ class TestFutureImprovements:
         assert len(meta["lower_priority"]) == 5
         for item in meta["high_priority"]:
             assert "improvement" in item and "rationale" in item
+
+    def test_validation_selected_followups_preserve_benchmark(self, synth: Path) -> None:
+        from src.report.sections import generate_future_improvements
+
+        markdown, _ = generate_future_improvements()
+        assert "Merge or relabel" not in markdown
+        assert "preserve official benchmark labels" in markdown
+        assert "Select OOS or abstention thresholds on validation data" in markdown
+        assert "Fit temperature scaling on validation data" in markdown
+        assert "requires new tuning and final evaluations" in markdown
+        assert "modeling change requires new training, tuning and comparisons" in markdown
+        assert "service-latency claims from batch throughput" in markdown
 
 
 # ---------------------------------------------------------------------------
@@ -891,6 +1077,36 @@ class TestReproducibility:
         md, _ = generate_reproducibility()
         assert "1. Clone" in md
         assert "2. Install" in md
+
+    def test_exact_timing_boundaries_and_hardware_identity(self, synth: Path) -> None:
+        from src.report.sections import generate_reproducibility
+
+        markdown, _ = generate_reproducibility()
+        assert "final training-log serialization" in markdown
+        assert "time.perf_counter" in markdown
+        assert "hardware model, processor and RAM" in markdown
+        assert "Batched evaluation timing covers loader traversal, device transfer" in markdown
+        assert "softmax and CPU result collection" in markdown
+        assert (
+            "excludes preprocessing, checkpoint loading, array concatenation, metrics and artifact writes" in markdown
+        )
+        assert "no controlled warmup or repeated timing trials" in markdown
+        assert "single-query deployment latency was not measured" in markdown
+
+    def test_primary_citations_and_separate_licenses(self, synth: Path) -> None:
+        from src.report.sections import generate_reproducibility
+
+        markdown, metadata = generate_reproducibility()
+        assert "https://aclanthology.org/D19-1131/" in markdown
+        assert "https://aclanthology.org/D14-1181/" in markdown
+        assert "https://huggingface.co/datasets/clinc/clinc_oos" in markdown
+        assert "dataset card metadata lists CC BY 3.0" in markdown
+        assert "Dataset licensing is separate" in markdown
+        assert "[GPLv3 source license](../../../LICENSE)" in markdown
+        license_ref = next(ref for ref in metadata["references"] if ref["title"] == "GPLv3 source license")
+        report_dir = synth / "outputs/shared/report"
+        assert (report_dir / license_ref["url"]).resolve() == synth / "LICENSE"
+        assert (report_dir / license_ref["url"]).resolve().is_file()
 
 
 def test_reproduction_commands_include_environment_and_all_stages(synth: Path) -> None:

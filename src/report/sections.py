@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from typing import Any
 
+from src.analysis.constants import SHORT_QUERY_TOKEN_THRESHOLD
 from src.constants import (
     PROJECT_ROOT,
     PROTOCOL_VERSION,
@@ -58,6 +59,38 @@ _ARTIFACTS: dict[str, str] = {
     "error_analysis_summary": "outputs/shared/analysis/error_analysis_summary.json",
     "error_analysis_notes": "outputs/shared/analysis/error_analysis_notes.md",
 }
+
+_SUPERVISED_OOS_SCOPE = (
+    "OOS is a supervised 151st class with labeled training examples. "
+    "These results describe this explicit-class setting and do not establish general open-set detection."
+)
+_DESCRIPTIVE_DISPERSION_NOTE = (
+    "Means and population standard deviations describe the recorded runs. "
+    "They are descriptive dispersion measures, not confidence intervals or significance tests."
+)
+_TAXONOMY_CAVEAT = (
+    "Taxonomy labels are heuristics: `near_semantic_confusion` means a same-domain misclassification; "
+    f"`short_query_ambiguity` marks errors with at most {SHORT_QUERY_TOKEN_THRESHOLD} whitespace tokens. "
+    "These rules do not establish semantic similarity or query ambiguity."
+)
+_TIMING_SCOPE_NOTE = (
+    "Batched evaluation timing covers loader traversal, device transfer, forward pass, softmax and CPU result "
+    "collection; it excludes preprocessing, checkpoint loading, array concatenation, metrics and artifact writes. "
+    "The per-example figures describe batched throughput, with no controlled warmup or repeated timing trials; "
+    "single-query deployment latency was not measured."
+)
+_REFERENCES: list[dict[str, str]] = [
+    {
+        "title": "Larson et al. (2019), An Evaluation Dataset for Intent Classification and Out-of-Scope Prediction",
+        "url": "https://aclanthology.org/D19-1131/",
+    },
+    {
+        "title": "Kim (2014), Convolutional Neural Networks for Sentence Classification",
+        "url": "https://aclanthology.org/D14-1181/",
+    },
+    {"title": "CLINC150 dataset card", "url": "https://huggingface.co/datasets/clinc/clinc_oos"},
+    {"title": "GPLv3 source license", "url": "../../../LICENSE"},
+]
 
 
 # ---------------------------------------------------------------------------
@@ -130,7 +163,7 @@ def generate_abstract() -> SectionOutput:
 
     goal = (
         "Evaluate lightweight deep learning models for intent classification "
-        "and out-of-scope (OOS) detection on the CLINC150 dataset."
+        "and supervised out-of-scope (OOS) classification on the CLINC150 dataset."
     )
     framing = (
         "Comparison of a sparse-feature baseline (TF-IDF + MLP), a convolutional "
@@ -149,15 +182,19 @@ def generate_abstract() -> SectionOutput:
             "",
             framing,
             "",
+            _SUPERVISED_OOS_SCOPE,
+            "",
             f"Three models are compared: {', '.join(models)}.",
             "",
             f"**Headline Result**: {best_f1['display_name']} achieved the highest aggregate test macro F1 "
             f"of {f1_fmt} across {run_count} repeated runs ({sources[0]}).",
             "",
-            f"**OOS Detection**: {best_oos['display_name']} achieved the highest aggregate OOS F1 "
+            f"**OOS Classification**: {best_oos['display_name']} achieved the highest aggregate argmax OOS F1 "
             f"of {oos_fmt} ({sources[1]}).",
             "",
             f"**Key Finding**: {key_finding} ({sources[2]}).",
+            "",
+            _DESCRIPTIVE_DISPERSION_NOTE,
             "",
         ]
     )
@@ -212,7 +249,9 @@ def generate_dataset_description() -> SectionOutput:
     quirk_lines = [f"- {q}" for q in quirks]
     in_scope_train_min = ds.get("train_class_count_min")
     in_scope_train_max = ds.get("train_class_count_max")
-    if in_scope_train_min == in_scope_train_max:
+    if in_scope_train_min is None or in_scope_train_max is None:
+        class_balance_note = "In-scope class balance is not recorded in this dataset summary."
+    elif in_scope_train_min == in_scope_train_max:
         class_balance_note = (
             f"In-scope classes are balanced in the `{ds['subset']}` subset at "
             f"{in_scope_train_min} training examples per class."
@@ -232,6 +271,8 @@ def generate_dataset_description() -> SectionOutput:
             f"The dataset contains {ds['num_classes']} intent classes (150 in-scope + 1 OOS). "
             f"The OOS class uses label name `{ds['oos_label_name']}` (label ID {ds['oos_label_id']}).",
             "",
+            _SUPERVISED_OOS_SCOPE,
+            "",
             "### Split Sizes",
             "",
             split_table,
@@ -241,11 +282,16 @@ def generate_dataset_description() -> SectionOutput:
             f"{class_balance_note} "
             f"OOS support varies across splits: train has {oos_c['train']} OOS examples "
             f"(~{train_oos_pct:.1f}%), while test has {oos_c['test']} OOS examples "
-            f"(~{test_oos_pct:.1f}%), creating a significant distribution shift.",
+            f"(~{test_oos_pct:.1f}%). OOS support is reported separately from in-scope class balance.",
             "",
             "### Distribution Quirks",
             "",
             *quirk_lines,
+            "",
+            "The pinned official splits contain 3 normalized texts shared between train and validation and "
+            "2 shared between train and test. Two of the three train/validation overlaps and both train/test "
+            "overlaps have conflicting labels. "
+            "These are benchmark overlaps, separate from train-only preprocessing; official splits are preserved.",
             "",
         ]
     )
@@ -452,7 +498,7 @@ def generate_model_architectures() -> SectionOutput:
             f"Embedding dimension: {cnn_hp['embedding_dim']}. "
             f"Kernel sizes: {cnn_hp['kernel_sizes']} with {cnn_hp['num_filters']} filters each. "
             f"ReLU activation, max-over-time pooling, dropout {cnn_hp['dropout_rate']}. "
-            "Trainable embeddings.",
+            "Trainable embeddings; sentence-CNN design follows [Kim (2014)](https://aclanthology.org/D14-1181/).",
             "",
             "### BiLSTM",
             "",
@@ -461,6 +507,10 @@ def generate_model_architectures() -> SectionOutput:
             f"Summarization: {lstm_hp.get('summarization_mode', 'concat_final_hidden')}. "
             f"Gradient clipping (max norm {lstm_hp.get('max_grad_norm', 1.0)}). "
             f"Dropout {lstm_hp['dropout_rate']}. Trainable embeddings.",
+            "",
+            "The BiLSTM concatenates final forward/backward hidden states after processing the fixed right-PAD "
+            "sequence. A zero PAD embedding does not mask recurrent transitions, so changing padding length "
+            "can change logits. This representation is retained in the reported experiment.",
             "",
         ]
     )
@@ -493,10 +543,9 @@ def generate_experimental_setup() -> SectionOutput:
     seed_policy = proto["seed_policy"]
     seed_behavior_note = seed_policy.get(
         "report_note",
-        "The repeated-evaluation pipeline derives `training_seed = seed` and "
-        "`dataloader_seed = seed + 1`. `dataloader_seed` controls train-batch "
-        "shuffling, but model initialization currently depends on "
-        "`config.random_seed`, not necessarily the nominal seed.",
+        "Seed derivation is `training_seed = seed` and `dataloader_seed = seed + 1`. "
+        "Consult each run's effective settings for actual initialization and shuffle seeds; "
+        "nominal seed labels alone do not verify historical seed behavior.",
     )
 
     lr_items = ", ".join(f"{ModelID(k).display_name}: {v}" for k, v in per_model_lr.items())
@@ -514,6 +563,8 @@ def generate_experimental_setup() -> SectionOutput:
             f"Representative run selection: {pc['representative_run_rule']} "
             "(highest validation macro F1).",
             "",
+            _DESCRIPTIVE_DISPERSION_NOTE,
+            "",
             "### Training Configuration",
             "",
             "- **Optimizer**: Adam (all models)",
@@ -525,6 +576,11 @@ def generate_experimental_setup() -> SectionOutput:
             f"monitoring {configs[ModelID.MLP]['hyperparameters']['monitor_metric']}",
             f"- **Seed behavior**: {seed_behavior_note}",
             "",
+            "Final evaluations reuse frozen hyperparameters from limited model-specific searches. "
+            "The original tuning reused advancing loader RNG state across trials, and neural smoke checks "
+            "also consumed a train shuffle, making trial order part of that search. Preprocessing and tuning "
+            "budgets differ across models; this compares complete pipelines rather than isolating architecture.",
+            "",
             "### Metric Definitions",
             "",
             *[f"- **{k}**: {v}" for k, v in metric_defs.items()],
@@ -535,10 +591,19 @@ def generate_experimental_setup() -> SectionOutput:
             f"- Method: {oos_policy['evaluation_method']}",
             f"- Rule: {oos_policy['one_vs_rest_rule']}",
             "",
+            _SUPERVISED_OOS_SCOPE,
+            "",
+            "Aggregate OOS precision/recall/F1 use the 151-class argmax prediction. "
+            "Probability-based AUROC and calibration diagnostics use one validation-selected representative run "
+            "per model, without averaging across seeds.",
+            "",
             "### Timing and Device",
             "",
             f"Timing includes DataLoader overhead: {pc['timing_includes_dataloader_overhead']}. "
-            "Device: Apple Silicon MPS when available, CPU fallback.",
+            "Automatic device selection checks MPS, then CUDA, then CPU. Refreshed run metadata records the actual "
+            "device, hardware model, processor and RAM; historical metadata may lack these fields.",
+            "",
+            _TIMING_SCOPE_NOTE,
             "",
         ]
     )
@@ -688,7 +753,7 @@ def generate_main_results() -> SectionOutput:
     t2_claim = build_structured_claim(
         claim_id="oos_metrics",
         claim_text=(
-            f"{ModelID(best_oos['model_id']).display_name} achieved the highest aggregate OOS F1 "
+            f"{ModelID(best_oos['model_id']).display_name} achieved the highest aggregate argmax OOS F1 "
             f"({format_mean_std(best_oos['oos_f1_mean'], best_oos['oos_f1_std'])})."
         ),
         figure_entries=figure_entries,
@@ -734,6 +799,8 @@ def generate_main_results() -> SectionOutput:
     md_parts: list[str] = [
         "## Main Results",
         "",
+        _DESCRIPTIVE_DISPERSION_NOTE,
+        "",
         "### Table 1: Main Model Comparison",
         "",
         _scope_note("aggregate"),
@@ -749,6 +816,8 @@ def generate_main_results() -> SectionOutput:
             "### Table 2: OOS Detection Metrics",
             "",
             _scope_note("aggregate"),
+            "",
+            "OOS precision/recall/F1 score argmax predictions in the supervised 151-class classifier.",
             "",
             t2_md,
             "",
@@ -792,6 +861,8 @@ def generate_main_results() -> SectionOutput:
             t5_md,
             "",
             t5_claim["claim_text"],
+            "",
+            _TIMING_SCOPE_NOTE,
             "",
         ]
     )
@@ -879,7 +950,7 @@ def generate_oos_detection() -> SectionOutput:
     oos_by = _rows_by_model(oos["rows"])
     thresh_by = _rows_by_model(thresh["rows"])
 
-    # Find best OOS model by AUROC
+    # Compare OOS probability ranking for the validation-selected representatives.
     best_thresh = _best_row(thresh["rows"], "auroc")
     best_oos_id = best_thresh["model_id"]
     best_display = ModelID(best_oos_id).display_name
@@ -946,7 +1017,7 @@ def generate_oos_detection() -> SectionOutput:
     aggregate_claim = build_structured_claim(
         claim_id="aggregate_oos_metrics",
         claim_text=(
-            f"{ModelID(best_oos_row['model_id']).display_name} achieved the highest aggregate OOS F1 "
+            f"{ModelID(best_oos_row['model_id']).display_name} achieved the highest aggregate argmax OOS F1 "
             f"({format_mean_std(best_oos_row['oos_f1_mean'], best_oos_row['oos_f1_std'])})."
         ),
         figure_entries=figure_entries,
@@ -957,8 +1028,8 @@ def generate_oos_detection() -> SectionOutput:
     threshold_claim = build_structured_claim(
         claim_id="threshold_analysis",
         claim_text=(
-            f"{best_display} achieved the highest AUROC ({format_ratio(best_thresh['auroc'])}), "
-            "indicating the strongest threshold-independent OOS discrimination."
+            f"{best_display} has the highest representative-run OOS-probability AUROC "
+            f"({format_ratio(best_thresh['auroc'])}) among the compared runs."
         ),
         figure_entries=figure_entries,
         source_artifacts=[_ARTIFACTS["oos_threshold_comparison"]],
@@ -968,8 +1039,7 @@ def generate_oos_detection() -> SectionOutput:
     false_accept_claim = build_structured_claim(
         claim_id="false_accept_patterns",
         claim_text=(
-            "False accepts remain the dominant OOS failure pattern, "
-            "with a small set of intents repeatedly capturing OOS examples."
+            "The representative-run false-accept counts identify in-scope intents that capture labeled OOS examples."
         ),
         figure_entries=figure_entries,
         source_artifacts=[_ARTIFACTS["oos_false_accept_comparison"]],
@@ -980,6 +1050,8 @@ def generate_oos_detection() -> SectionOutput:
 
     md_parts = [
         "## OOS Detection Results",
+        "",
+        _SUPERVISED_OOS_SCOPE,
         "",
         "### Aggregate OOS Metrics",
         "",
@@ -1000,8 +1072,15 @@ def generate_oos_detection() -> SectionOutput:
             thresh_table,
             "",
             f"{threshold_claim['claim_text']} ({_ARTIFACTS['oos_threshold_comparison']}). "
-            "The explicit OOS class probability method substantially outperforms the "
-            "maximum softmax probability (MSP) baseline across all models.",
+            "This probability ranking measures different behavior from aggregate argmax OOS F1.",
+            "",
+            "The MSP diagnostic uses `1 - max(p)` over all 151 softmax classes, including OOS. "
+            "A confidently correct OOS prediction can therefore receive a low MSP OOS score. "
+            "This is a diagnostic of the supervised classifier, rather than a conventional in-scope-only MSP detector.",
+            "",
+            "FPR@95TPR and FPR@90TPR are descriptive points on the representative test ROC curve. "
+            "They do not establish a deployable operating point: thresholds and calibration must be selected "
+            "on validation data before separate held-out evaluation.",
             "",
         ]
     )
@@ -1011,9 +1090,8 @@ def generate_oos_detection() -> SectionOutput:
             "### OOS Distribution Challenge",
             "",
             "The test split contains ~18% OOS examples versus ~1.6% in training, "
-            "creating a severe distribution shift that challenges all models. "
-            "All models show low OOS recall, indicating difficulty detecting OOS examples "
-            "despite reasonable OOS precision.",
+            "with 250 labeled OOS training examples and 1,000 OOS test examples. "
+            "Interpret the observed precision and recall within this benchmark support pattern.",
             "",
             "### False-Accept Patterns",
             "",
@@ -1058,7 +1136,10 @@ def generate_oos_detection() -> SectionOutput:
         aggregate_oos_metrics=agg_oos_meta,
         threshold_metrics=thresh_meta,
         msp_baseline=msp_meta,
-        best_oos_model={"model_id": best_oos_id, "rationale": f"Highest AUROC ({format_ratio(best_thresh['auroc'])})"},
+        best_oos_model={
+            "model_id": best_oos_id,
+            "rationale": f"Highest representative-run OOS-probability AUROC ({format_ratio(best_thresh['auroc'])})",
+        },
         claims=claims,
         false_accept_summary=fa_meta,
         figure_references=figure_refs,
@@ -1138,7 +1219,9 @@ def generate_error_analysis() -> SectionOutput:
 
     taxonomy_claim = build_structured_claim(
         claim_id="error_taxonomy",
-        claim_text="All models share `oos_as_inscope` as the dominant error category.",
+        claim_text="Representative-run dominant taxonomy categories: "
+        + ", ".join(f"{mid.display_name}: `{dominant[str(mid)]}`" for mid in ModelID)
+        + ".",
         figure_entries=figure_entries,
         source_artifacts=[_ARTIFACTS["error_taxonomy_summary"]],
         related_figure_types=["error_taxonomy"],
@@ -1147,8 +1230,8 @@ def generate_error_analysis() -> SectionOutput:
     calibration_claim = build_structured_claim(
         claim_id="calibration_confidence",
         claim_text=(
-            f"Best-calibrated model: {best_cal['model_name']} (ECE = {format_ratio(best_cal['ece'])}); "
-            f"worst-calibrated: {worst_cal['model_name']} (ECE = {format_ratio(worst_cal['ece'])})."
+            f"Lowest representative-run ECE: {best_cal['model_name']} ({format_ratio(best_cal['ece'])}); "
+            f"highest: {worst_cal['model_name']} ({format_ratio(worst_cal['ece'])})."
         ),
         figure_entries=figure_entries,
         source_artifacts=[_ARTIFACTS["calibration_summary"]],
@@ -1158,8 +1241,8 @@ def generate_error_analysis() -> SectionOutput:
     oos_claim = build_structured_claim(
         claim_id="oos_deep_dive",
         claim_text=(
-            f"Best OOS detector by AUROC: {ModelID(best_oos['model_id']).display_name} "
-            f"({format_ratio(best_oos['auroc'])}); the main failure mode remains `oos_as_inscope`."
+            f"Highest representative-run OOS-probability AUROC: {ModelID(best_oos['model_id']).display_name} "
+            f"({format_ratio(best_oos['auroc'])})."
         ),
         figure_entries=figure_entries,
         source_artifacts=[_ARTIFACTS["oos_threshold_comparison"], _ARTIFACTS["oos_false_accept_comparison"]],
@@ -1199,8 +1282,7 @@ def generate_error_analysis() -> SectionOutput:
     length_claim = build_structured_claim(
         claim_id="length_scope_slices",
         claim_text=(
-            "Short-query accuracy remains lower than desired across models, "
-            "reinforcing the short-query ambiguity pattern."
+            "Short-query accuracy is a representative-run length slice; query length alone does not prove ambiguity."
         ),
         figure_entries=figure_entries,
         source_artifacts=length_sources,
@@ -1220,6 +1302,9 @@ def generate_error_analysis() -> SectionOutput:
     md_parts = [
         "## Error Analysis Discussion",
         "",
+        "The following taxonomy, calibration and overlap diagnostics use one validation-selected representative "
+        "run per model; they are not three-run aggregates.",
+        "",
         "### Error Taxonomy",
         "",
         *[
@@ -1230,8 +1315,7 @@ def generate_error_analysis() -> SectionOutput:
             for mid in ModelID
         ],
         "",
-        "All models share `oos_as_inscope` as the dominant error category, indicating "
-        "that OOS false accepts are the primary failure mode across architectures.",
+        _TAXONOMY_CAVEAT,
         "",
     ]
     _append_related_figure_note(md_parts, taxonomy_claim)
@@ -1239,8 +1323,8 @@ def generate_error_analysis() -> SectionOutput:
         [
             "### Calibration and Confidence",
             "",
-            f"Best-calibrated model: {best_cal['model_name']} (ECE = {format_ratio(best_cal['ece'])}). "
-            f"Worst-calibrated: {worst_cal['model_name']} (ECE = {format_ratio(worst_cal['ece'])}) "
+            f"Lowest representative-run ECE: {best_cal['model_name']} ({format_ratio(best_cal['ece'])}). "
+            f"Highest: {worst_cal['model_name']} ({format_ratio(worst_cal['ece'])}) "
             f"({_ARTIFACTS['calibration_summary']}).",
             "",
         ]
@@ -1250,9 +1334,9 @@ def generate_error_analysis() -> SectionOutput:
         [
             "### OOS Detection Deep Dive",
             "",
-            f"Best OOS detector by AUROC: {ModelID(best_oos['model_id']).display_name} "
-            f"(AUROC = {format_ratio(best_oos['auroc'])}) ({_ARTIFACTS['oos_threshold_comparison']}). "
-            f"The main failure mode across all models is `oos_as_inscope` (false accepts).",
+            f"Highest representative-run OOS-probability AUROC: {ModelID(best_oos['model_id']).display_name} "
+            f"({format_ratio(best_oos['auroc'])}) ({_ARTIFACTS['oos_threshold_comparison']}). "
+            "This ranking diagnostic is separate from aggregate argmax OOS F1.",
             "",
         ]
     )
@@ -1298,7 +1382,8 @@ def generate_error_analysis() -> SectionOutput:
             "",
             f"Intents that persistently capture OOS examples across 2+ models: "
             f"{persistent_fmt} ({_ARTIFACTS['most_confused_pairs_table']}). "
-            "These span multiple domains (travel, food, finance), suggesting OOS queries are topically diverse.",
+            "Their domain assignments identify prediction targets, without proving the topics or intent "
+            "of OOS queries.",
             "",
         ]
     )
@@ -1359,7 +1444,7 @@ def generate_error_analysis() -> SectionOutput:
         oos_finding={
             "best_model": best_oos["model_id"],
             "best_auroc": best_oos["auroc"],
-            "main_failure_mode": "oos_as_inscope",
+            "main_failure_mode": dominant[str(best_oos["model_id"])],
         },
         cross_model_overlap={
             "all_correct": cats["all_correct"],
@@ -1477,7 +1562,7 @@ def generate_representative_examples() -> SectionOutput:
 
     criteria = (
         "Examples selected to cover key error patterns: at least 3 OOS false accepts, "
-        "3 semantic confusions, 3 cross-domain confusions, 3 short-query ambiguity, "
+        "3 same-domain confusions, 3 cross-domain confusions, 3 short-query tagged errors, "
         "and 2+ examples per model. Sorted by category then confidence."
     )
 
@@ -1498,7 +1583,7 @@ def generate_representative_examples() -> SectionOutput:
         claim_id="semantic_confusion_examples",
         claim_text=(
             f"Selected examples include {selected_counts.get('near_semantic_confusion', 0)} "
-            "within-domain semantic-confusion cases."
+            "same-domain cases tagged `near_semantic_confusion`."
         ),
         figure_entries=figure_entries,
         source_artifacts=[source],
@@ -1519,7 +1604,7 @@ def generate_representative_examples() -> SectionOutput:
     short_query_claim = build_structured_claim(
         claim_id="short_query_examples",
         claim_text=(
-            f"Selected examples include {selected_counts.get('short_query_ambiguity', 0)} short-query ambiguity cases."
+            f"Selected examples include {selected_counts.get('short_query_ambiguity', 0)} short-query tagged errors."
         ),
         figure_entries=figure_entries,
         source_artifacts=[source],
@@ -1534,6 +1619,8 @@ def generate_representative_examples() -> SectionOutput:
         _scope_note("representative"),
         "",
         criteria,
+        "",
+        _TAXONOMY_CAVEAT,
         "",
         "### Coverage in Selected Examples",
         "",
@@ -1639,8 +1726,9 @@ def generate_key_findings() -> SectionOutput:
             "finding_id": "calibration",
             "category": "calibration",
             "claim": (
-                f"Best calibrated: {cal_find['best_calibrated']} (ECE = {format_ratio(cal_find['best_ece'])}). "
-                f"Worst: {cal_find['worst_calibrated']} (ECE = {format_ratio(cal_find['worst_ece'])})"
+                f"Lowest representative-run ECE: {cal_find['best_calibrated']} "
+                f"({format_ratio(cal_find['best_ece'])}). "
+                f"Highest: {cal_find['worst_calibrated']} ({format_ratio(cal_find['worst_ece'])})"
             ),
             "metric_value": cal_find["best_ece"],
             "metric_std": None,
@@ -1648,8 +1736,9 @@ def generate_key_findings() -> SectionOutput:
             "source_artifacts": [cal_find["source_artifact"]],
             "claim_id": "calibration",
             "claim_text": (
-                f"Best calibrated: {cal_find['best_calibrated']} (ECE = {format_ratio(cal_find['best_ece'])}). "
-                f"Worst: {cal_find['worst_calibrated']} (ECE = {format_ratio(cal_find['worst_ece'])})"
+                f"Lowest representative-run ECE: {cal_find['best_calibrated']} "
+                f"({format_ratio(cal_find['best_ece'])}). "
+                f"Highest: {cal_find['worst_calibrated']} ({format_ratio(cal_find['worst_ece'])})"
             ),
             "related_figure_types": ["calibration_comparison"],
             "related_figure_paths": build_structured_claim(
@@ -1665,8 +1754,9 @@ def generate_key_findings() -> SectionOutput:
             "finding_id": "oos_detection",
             "category": "oos_detection",
             "claim": (
-                f"{ModelID(oos_find['best_model']).display_name} achieved the best OOS detection "
-                f"with AUROC = {format_ratio(oos_find['best_auroc'])} and AUPR = {format_ratio(oos_find['best_aupr'])}"
+                f"{ModelID(oos_find['best_model']).display_name} has the highest representative-run "
+                f"OOS-probability AUROC ({format_ratio(oos_find['best_auroc'])}), "
+                f"with AUPR = {format_ratio(oos_find['best_aupr'])}"
             ),
             "metric_value": oos_find["best_auroc"],
             "metric_std": None,
@@ -1674,8 +1764,9 @@ def generate_key_findings() -> SectionOutput:
             "source_artifacts": [oos_find["source_artifact"]],
             "claim_id": "oos_detection",
             "claim_text": (
-                f"{ModelID(oos_find['best_model']).display_name} achieved the best OOS detection "
-                f"with AUROC = {format_ratio(oos_find['best_auroc'])} and AUPR = {format_ratio(oos_find['best_aupr'])}"
+                f"{ModelID(oos_find['best_model']).display_name} has the highest representative-run "
+                f"OOS-probability AUROC ({format_ratio(oos_find['best_auroc'])}), "
+                f"with AUPR = {format_ratio(oos_find['best_aupr'])}"
             ),
             "related_figure_types": ["oos_roc_comparison", "oos_pr_comparison"],
             "related_figure_paths": build_structured_claim(
@@ -1691,8 +1782,7 @@ def generate_key_findings() -> SectionOutput:
             "finding_id": "confusion",
             "category": "confusion",
             "claim": (
-                "Dominant error category across all models: `oos_as_inscope`. "
-                "Dominant per model: "
+                "Representative-run dominant heuristic category per model: "
                 + ", ".join(
                     f"{ModelID(k).display_name}: {v}" for k, v in conf_find["dominant_error_categories"].items()
                 )
@@ -1703,7 +1793,7 @@ def generate_key_findings() -> SectionOutput:
             "source_artifacts": [conf_find["source_artifact"]],
             "claim_id": "confusion",
             "claim_text": (
-                "Dominant error category across all models: `oos_as_inscope`. Dominant per model: "
+                "Representative-run dominant heuristic category per model: "
                 + ", ".join(
                     f"{ModelID(k).display_name}: {v}" for k, v in conf_find["dominant_error_categories"].items()
                 )
@@ -1847,8 +1937,11 @@ def generate_key_findings() -> SectionOutput:
     md_parts = [
         "## Key Findings",
         "",
-        "With only 3 repeated runs, differences between models may not be statistically meaningful. "
-        "Where models have overlapping mean +/- std ranges, this is noted rather than declaring one superior.",
+        _DESCRIPTIVE_DISPERSION_NOTE,
+        "",
+        "Calibration, OOS-probability ranking and qualitative findings use one validation-selected "
+        "representative run per model. Differences in preprocessing and search budgets prevent an "
+        "architecture-only causal interpretation.",
         "",
     ]
     for idx, finding in enumerate(findings, start=1):
@@ -1871,22 +1964,31 @@ def generate_key_findings() -> SectionOutput:
 # ---------------------------------------------------------------------------
 
 _ANALYSIS_LIMITATIONS: list[str] = [
-    "Qualitative analysis uses a single representative run per model, not all seeds.",
-    "CLINC150 is balanced; real-world class distributions may differ significantly.",
-    "No interpretability analysis (attention, saliency) was performed.",
-    "Post-hoc calibration (temperature scaling) was not applied.",
+    "Qualitative, calibration and probability-ranking diagnostics use one validation-selected representative run "
+    "per model, without measuring their variability across seeds.",
+    "Only the 150 in-scope classes are balanced. The OOS class has 250 training and 1,000 test examples; "
+    "these supports differ from each in-scope class and from many deployment distributions.",
+    _TAXONOMY_CAVEAT,
+    "Post-hoc calibration was not applied. Test-derived ROC points do not establish validation-selected "
+    "thresholds or a deployable operating point.",
     "Length slices use whitespace tokenization; scope slices compare supervised in-scope and OOS classes, "
     "not training frequency.",
 ]
 
 _PROJECT_LIMITATIONS: list[str] = [
-    "Single dataset only (CLINC150); results may not generalize to other intent-classification benchmarks.",
-    "No pretrained word embeddings (GloVe, word2vec) used; embeddings trained from scratch.",
-    "Whitespace tokenizer rather than subword tokenization (BPE, WordPiece).",
-    "No transformer-based models compared (BERT, DistilBERT, etc.).",
-    "3 repeated runs provide limited statistical power; 5+ runs would strengthen variance estimates.",
-    "OOS training data is sparse relative to test distribution (250 train vs 1,000 test OOS examples).",
-    "No cross-dataset validation or domain-transfer evaluation.",
+    "Single benchmark only (CLINC150), with no cross-dataset or domain-transfer evaluation. Its official normalized "
+    "splits contain 3 train/validation text overlaps (2 with conflicting labels) and 2 train/test overlaps "
+    "(both with conflicting labels); "
+    "splits are preserved.",
+    _SUPERVISED_OOS_SCOPE,
+    "Models use different representations and search budgets. Neural models use whitespace tokens and embeddings "
+    "trained from scratch; no pretrained embeddings or transformers were compared.",
+    "The BiLSTM processes fixed right-PAD positions and concatenates final hidden states. Recurrent transitions "
+    "remain active on PAD tokens, making the representation sensitive to padding length.",
+    _DESCRIPTIVE_DISPERSION_NOTE,
+    "Frozen hyperparameters come from limited earlier searches. Advancing tuning-loader RNG state and neural "
+    "smoke checks made the original trial order part of the search; fair seeded loaders would require new experiments.",
+    _TIMING_SCOPE_NOTE,
     "Model checkpoints not committed to repository; reproduction requires retraining.",
 ]
 
@@ -1927,55 +2029,60 @@ def generate_limitations() -> SectionOutput:
 
 _HIGH_PRIORITY: list[dict[str, str]] = [
     {
-        "improvement": "Collect more OOS training examples to reduce false accepts",
+        "improvement": "Evaluate additional labeled OOS training data in a separate experiment",
         "rationale": (
-            "OOS false accepts are the dominant error across all models; "
-            "more OOS training data directly addresses the distribution mismatch."
+            "Observed false accepts motivate testing broader OOS coverage; document any new data protocol "
+            "and retain the current official benchmark for comparability."
         ),
     },
     {
-        "improvement": "Merge or relabel persistently confused intent pairs within the same domain",
-        "rationale": ("Several intent pairs share near-identical semantics and consistently confuse all models."),
+        "improvement": "Manually inspect persistent same-domain confusions",
+        "rationale": "Domain-based taxonomy tags are heuristics. Inspect examples before drawing semantic conclusions; "
+        "preserve official benchmark labels in the current comparison.",
     },
     {
-        "improvement": "Apply confidence thresholding in deployment to flag uncertain predictions",
+        "improvement": "Select OOS or abstention thresholds on validation data",
         "rationale": (
-            "Many errors occur at high confidence; a deployment threshold "
-            "could redirect uncertain queries to human review."
+            "Specify a target trade-off on validation data and evaluate the fixed threshold on held-out data. "
+            "Test ROC operating points alone do not establish deployment behavior."
         ),
     },
     {
         "improvement": "Evaluate temperature scaling for post-hoc calibration improvement",
         "rationale": (
-            "Calibration varies significantly across models; "
-            "temperature scaling could improve reliability without retraining."
+            "Fit temperature scaling on validation data, then compare held-out calibration. "
+            "Representative-run ECE differences alone do not establish its benefit across seeds."
         ),
     },
 ]
 
 _MEDIUM_PRIORITY: list[dict[str, str]] = [
     {
-        "improvement": "Add pretrained word embeddings (GloVe, word2vec) to Text CNN and BiLSTM",
-        "rationale": ("Pretrained embeddings could improve generalization especially for rare words and OOS queries."),
+        "improvement": "Use fresh seeded loaders for each tuning trial",
+        "rationale": "Make comparisons independent of advancing loader state and smoke-check shuffles. "
+        "Changing this search policy requires new tuning and final evaluations.",
     },
     {
-        "improvement": "Systematic hyperparameter tuning (dropout, hidden size, learning rate)",
-        "rationale": ("Current configs use limited grid search; broader exploration may improve all models."),
+        "improvement": "Evaluate length-aware BiLSTM sequence handling",
+        "rationale": "Packed sequences or length-aware summaries could avoid processing right-PAD positions. "
+        "This modeling change requires new training, tuning and comparisons.",
     },
     {
-        "improvement": "Add parameter-count vs accuracy Pareto analysis",
-        "rationale": ("Quantify the efficiency-accuracy trade-off to guide model selection for deployment."),
+        "improvement": "Evaluate pretrained word embeddings",
+        "rationale": "Test their effect on the neural pipelines through new training and tuning rather than "
+        "assuming improved generalization.",
     },
     {
-        "improvement": "Add threshold analysis for OOS detection with operating-point selection",
-        "rationale": ("Enable tunable precision-recall trade-off for OOS detection in production."),
+        "improvement": "Measure controlled deployment latency separately",
+        "rationale": "Use a specified device, warmup and repeated single-query measurements before making "
+        "service-latency claims from batch throughput.",
     },
 ]
 
 _LOWER_PRIORITY: list[dict[str, str]] = [
     {
         "improvement": "Compare against transformer-based models (DistilBERT, BERT-base)",
-        "rationale": "Establish an upper-bound reference for the lightweight models evaluated.",
+        "rationale": "Add a separately trained and tuned reference with its own preprocessing and compute budget.",
     },
     {
         "improvement": "Evaluate on additional intent-classification datasets",
@@ -1986,12 +2093,14 @@ _LOWER_PRIORITY: list[dict[str, str]] = [
         "rationale": "Reduce OOV rates and improve generalization to unseen vocabulary.",
     },
     {
-        "improvement": "Multi-task learning combining intent classification and OOS detection",
-        "rationale": ("Joint training may improve OOS discrimination by explicitly modeling the boundary."),
+        "improvement": "Evaluate a conventional in-scope-only MSP baseline",
+        "rationale": "Train a separate classifier without the supervised OOS class; its uncertainty score answers "
+        "a different question from the current 151-class MSP diagnostic.",
     },
     {
-        "improvement": "Bootstrap confidence intervals for more rigorous statistical comparison",
-        "rationale": ("3 repeated runs provide limited statistical power; bootstrapping would strengthen claims."),
+        "improvement": "Expand independently seeded runs and design uncertainty estimates",
+        "rationale": "Distinguish test-example sampling uncertainty from training-run variation; three seeds "
+        "and overlapping mean/std ranges alone do not justify significance claims.",
     },
 ]
 
@@ -2127,7 +2236,11 @@ def generate_reproducibility() -> SectionOutput:
             "",
             "Hardware, device, source commit, input hashes and effective settings are recorded per run. "
             "These times cover the training loop including validation/checkpoint writes, excluding setup, "
-            "preprocessing and tuning. Batched evaluation ms/example is throughput, not single-query service latency.",
+            "preprocessing, neural smoke checks, tuning and final training-log serialization. "
+            "Refreshed runs use `time.perf_counter` and record the exact hardware model, processor and RAM in "
+            "`run_metadata.json`; historical outputs without these identities remain explicitly unknown.",
+            "",
+            _TIMING_SCOPE_NOTE,
             "",
             "### Nondeterminism Notes",
             "",
@@ -2136,6 +2249,14 @@ def generate_reproducibility() -> SectionOutput:
             "### Reproduction Checklist",
             "",
             *[f"{i}. {step}" for i, step in enumerate(steps, 1)],
+            "",
+            "### References and Licensing",
+            "",
+            *[f"- [{reference['title']}]({reference['url']})" for reference in _REFERENCES],
+            "",
+            "The CLINC150 dataset card metadata lists CC BY 3.0 for the dataset. "
+            "Dataset licensing is separate from this repository's GPLv3 source license. "
+            "The sentence-CNN design follows Kim (2014); the benchmark is attributed to Larson et al. (2019).",
             "",
         ]
     )
@@ -2153,6 +2274,7 @@ def generate_reproducibility() -> SectionOutput:
         hardware_context="See each current run_metadata.json for the actual machine and device",
         nondeterminism_notes=nondeterminism,
         reproduction_steps=steps,
+        references=_REFERENCES,
         source_artifacts=sources,
     )
     return md, metadata
