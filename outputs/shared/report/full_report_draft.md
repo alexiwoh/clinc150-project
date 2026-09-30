@@ -31,7 +31,7 @@ Three models are compared: TF-IDF + MLP, Text CNN, BiLSTM.
 
 **OOS Classification**: TF-IDF + MLP achieved the highest aggregate argmax OOS F1 of 0.6103 +/- 0.0352 (outputs/shared/oos_summary_table.json).
 
-**Key Finding**: Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors. (outputs/shared/analysis/error_analysis_summary.json).
+**Key Finding**: Inspect representative OOS false accepts and same-domain confusions as heuristic error groups. Preserve official benchmark labels and splits. Select any proposed calibration or rejection threshold on validation data before final test evaluation. (outputs/shared/analysis/error_analysis_summary.json).
 
 Means and population standard deviations describe the recorded runs. They are descriptive dispersion measures, not confidence intervals or significance tests.
 
@@ -383,7 +383,7 @@ Related figure: `outputs/shared/analysis/length_slice_comparison.png`
 
 *Representative run only (single seed)*
 
-Examples selected to cover key error patterns: at least 3 OOS false accepts, 3 same-domain confusions, 3 cross-domain confusions, 3 short-query tagged errors, and 2+ examples per model. Sorted by category then confidence.
+Selection prioritizes OOS false accepts, same-domain and cross-domain confusions, and per-model coverage, subject to available curated candidates. Short-query coverage is measured independently and can overlap primary categories. Sorted by category then confidence.
 
 Taxonomy labels are heuristics: `near_semantic_confusion` means a same-domain misclassification; `short_query_ambiguity` marks errors with at most 5 whitespace tokens. These rules do not establish semantic similarity or query ambiguity.
 
@@ -392,7 +392,7 @@ Taxonomy labels are heuristics: `near_semantic_confusion` means a same-domain mi
 - Selected examples include 12 OOS false-accept cases.
 - Selected examples include 5 same-domain cases tagged `near_semantic_confusion`.
 - Selected examples include 7 cross-domain confusion cases.
-- Selected examples include 0 short-query tagged errors.
+- Selected examples include 4 short-query tagged errors (at most 5 whitespace tokens; categories may overlap).
 
 Related figures: `outputs/mlp/analysis/oos_error_breakdown.png`, `outputs/text_cnn/analysis/oos_error_breakdown.png`, `outputs/bilstm/analysis/oos_error_breakdown.png`, `outputs/shared/analysis/oos_error_comparison.png`
 
@@ -416,11 +416,11 @@ Related figure: `outputs/shared/analysis/length_slice_comparison.png`
 | forward the text i just got from henry to giselle               | oos                  | text                  | Text CNN     | 0.9988     | oos_as_inscope          | confident false accept |
 | ignore call                                                     | oos                  | make_call             | TF-IDF + MLP | 0.9980     | oos_as_inscope          | confident false accept |
 | deny incoming phone call                                        | oos                  | make_call             | TF-IDF + MLP | 0.9972     | oos_as_inscope          | confident false accept |
-| give me a recipe for tacos                                      | ingredients_list     | recipe                | BiLSTM       | 1.0000     | near_semantic_confusion | semantic overlap       |
-| what's a good recipe foe tacos                                  | ingredients_list     | recipe                | BiLSTM       | 1.0000     | near_semantic_confusion | semantic overlap       |
-| what is the next date for which i can get an oil change appo... | schedule_maintenance | oil_change_when       | BiLSTM       | 1.0000     | near_semantic_confusion | semantic overlap       |
-| what are the steps to get my rewards for my visa card           | redeem_rewards       | rewards_balance       | BiLSTM       | 0.9999     | near_semantic_confusion | semantic overlap       |
-| what have i spent things on                                     | transactions         | spending_history      | BiLSTM       | 0.9999     | near_semantic_confusion | semantic overlap       |
+| give me a recipe for tacos                                      | ingredients_list     | recipe                | BiLSTM       | 1.0000     | near_semantic_confusion | same-domain confusion  |
+| what's a good recipe foe tacos                                  | ingredients_list     | recipe                | BiLSTM       | 1.0000     | near_semantic_confusion | same-domain confusion  |
+| what is the next date for which i can get an oil change appo... | schedule_maintenance | oil_change_when       | BiLSTM       | 1.0000     | near_semantic_confusion | same-domain confusion  |
+| what are the steps to get my rewards for my visa card           | redeem_rewards       | rewards_balance       | BiLSTM       | 0.9999     | near_semantic_confusion | same-domain confusion  |
+| what have i spent things on                                     | transactions         | spending_history      | BiLSTM       | 0.9999     | near_semantic_confusion | same-domain confusion  |
 | repeat what the weather will be like                            | transfer             | weather               | BiLSTM       | 1.0000     | cross_domain_confusion  | cross-domain mix-up    |
 | i'd like for this person to know my location                    | share_location       | current_location      | BiLSTM       | 1.0000     | cross_domain_confusion  | cross-domain mix-up    |
 | what time is it in phoenix                                      | timezone             | time                  | BiLSTM       | 1.0000     | cross_domain_confusion  | cross-domain mix-up    |
@@ -459,7 +459,7 @@ Related figure: `outputs/shared/analysis/length_slice_comparison.png`
 7. **Efficiency**: Parameter counts: TF-IDF + MLP 5,197,975, Text CNN 1,930,167, BiLSTM 4,284,311. Inference throughput: TF-IDF + MLP 18069 ex/s, Text CNN 28456 ex/s, BiLSTM 7910 ex/s (outputs/shared/efficiency_summary_table.json)
 Related figure: `outputs/shared/figures/model_efficiency_comparison.png`
 
-8. **Recommendation**: Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors. (outputs/shared/analysis/error_analysis_summary.json)
+8. **Recommendation**: Inspect representative OOS false accepts and same-domain confusions as heuristic error groups. Preserve official benchmark labels and splits. Select any proposed calibration or rejection threshold on validation data before final test evaluation. (outputs/shared/analysis/error_analysis_summary.json)
 Related figures: `outputs/mlp/figures/representative_top_confused_pairs.png`, `outputs/text_cnn/figures/representative_top_confused_pairs.png`, `outputs/bilstm/figures/representative_top_confused_pairs.png`, `outputs/shared/analysis/oos_error_comparison.png`
 
 ## Limitations

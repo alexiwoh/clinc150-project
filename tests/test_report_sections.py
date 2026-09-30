@@ -935,6 +935,51 @@ class TestRepresentativeExamples:
         assert "short-query tagged errors" in markdown
         assert "do not establish semantic similarity or query ambiguity" in markdown
 
+    @pytest.mark.parametrize(
+        ("text", "primary_category", "predicted_label", "expected_count"),
+        [
+            ("ignore call", "oos_as_inscope", "make_call", 1),
+            ("one\t two\nthree four five", "cross_domain_confusion", "make_call", 1),
+            ("one two three four five six", "short_query_ambiguity", "make_call", 0),
+            ("ignore call", "oos_as_inscope", "oos", 0),
+            (None, None, None, 0),
+        ],
+    )
+    def test_short_query_coverage_uses_overlapping_error_rule(
+        self,
+        synth: Path,
+        text: str | None,
+        primary_category: str | None,
+        predicted_label: str | None,
+        expected_count: int,
+    ) -> None:
+        """Sparse pools, secondary tags, boundary lengths and correct cases stay truthful."""
+        from src.report.sections import generate_representative_examples
+
+        examples = []
+        if text is not None:
+            examples.append(
+                {
+                    "text": text,
+                    "true_label_name": "oos",
+                    "predicted_label_name": predicted_label,
+                    "model_id": "mlp",
+                    "max_confidence": 0.95,
+                    "primary_category": primary_category,
+                    "annotation_tag": "fixture",
+                }
+            )
+        _write(
+            synth / "outputs/shared/analysis/curated_report_examples.json",
+            {"total_curated": len(examples), "examples": examples},
+        )
+        markdown, metadata = generate_representative_examples()
+        claim = next(row for row in metadata["claims"] if row["claim_id"] == "short_query_examples")
+        assert f"include {expected_count} short-query tagged errors" in claim["claim_text"]
+        assert "categories may overlap" in claim["claim_text"]
+        assert "available curated candidates" in metadata["selection_criteria"]
+        assert "at least 3" not in markdown
+
 
 # ---------------------------------------------------------------------------
 # Section L: Key findings

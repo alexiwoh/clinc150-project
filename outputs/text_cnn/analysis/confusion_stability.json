@@ -169,19 +169,7 @@
   "stable_pairs": [
     {
       "true_class": "oos",
-      "predicted_class": "travel_suggestion"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "car_rental"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "restaurant_suggestion"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "cook_time"
+      "predicted_class": "smart_home"
     },
     {
       "true_class": "oos",
@@ -189,15 +177,11 @@
     },
     {
       "true_class": "oos",
-      "predicted_class": "recipe"
-    },
-    {
-      "true_class": "oos",
       "predicted_class": "restaurant_reviews"
     },
     {
       "true_class": "oos",
-      "predicted_class": "sync_device"
+      "predicted_class": "travel_suggestion"
     },
     {
       "true_class": "oos",
@@ -205,29 +189,33 @@
     },
     {
       "true_class": "oos",
-      "predicted_class": "smart_home"
+      "predicted_class": "recipe"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "car_rental"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "sync_device"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "cook_time"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "restaurant_suggestion"
     }
   ],
   "unstable_pairs": [
-    {
-      "true_class": "oos",
-      "predicted_class": "weather"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "todo_list_update"
-    },
     {
       "true_class": "oos",
       "predicted_class": "jump_start"
     },
     {
       "true_class": "oos",
-      "predicted_class": "where_are_you_from"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "gas"
+      "predicted_class": "what_song"
     },
     {
       "true_class": "oos",
@@ -239,31 +227,7 @@
     },
     {
       "true_class": "oos",
-      "predicted_class": "income"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "spending_history"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "book_flight"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "fun_fact"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "meal_suggestion"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "lost_luggage"
-    },
-    {
-      "true_class": "oos",
-      "predicted_class": "what_song"
+      "predicted_class": "todo_list_update"
     },
     {
       "true_class": "oos",
@@ -271,7 +235,39 @@
     },
     {
       "true_class": "oos",
-      "predicted_class": "tell_joke"
+      "predicted_class": "spending_history"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "how_old_are_you"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "income"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "fun_fact"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "lost_luggage"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "meal_suggestion"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "where_are_you_from"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "book_flight"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "gas"
     },
     {
       "true_class": "oos",
@@ -279,7 +275,11 @@
     },
     {
       "true_class": "oos",
-      "predicted_class": "how_old_are_you"
+      "predicted_class": "weather"
+    },
+    {
+      "true_class": "oos",
+      "predicted_class": "tell_joke"
     }
   ],
   "stable_count": 10,

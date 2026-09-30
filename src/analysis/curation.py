@@ -125,7 +125,7 @@ def _annotation_tag(cat: ErrorCategory) -> str:
     return {
         ErrorCategory.OOS_AS_INSCOPE: "confident false accept",
         ErrorCategory.INSCOPE_AS_OOS: "false rejection",
-        ErrorCategory.NEAR_SEMANTIC_CONFUSION: "semantic overlap",
+        ErrorCategory.NEAR_SEMANTIC_CONFUSION: "same-domain confusion",
         ErrorCategory.CROSS_DOMAIN_CONFUSION: "cross-domain mix-up",
         ErrorCategory.SHORT_QUERY_AMBIGUITY: "short query",
     }[cat]

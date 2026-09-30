@@ -696,6 +696,49 @@ class TestHandoffValidation:
 # ---------------------------------------------------------------------------
 
 
+def test_summary_recommendations_respect_heuristic_and_representative_scope(mock_analysis_env: Path) -> None:
+    """Even dominant same-domain errors cannot establish ambiguity or merging advice."""
+    from src.analysis.summary import generate_error_analysis_notes, generate_error_analysis_summary
+
+    shared_analysis = mock_analysis_env / "outputs/shared/analysis"
+    for filename, payload in (
+        (CALIBRATION_SUMMARY_FILENAME, {"rows": [{"model_id": "text_cnn", "ece": 0.03}]}),
+        (OOS_THRESHOLD_COMPARISON_FILENAME, {"rows": [{"model_id": "text_cnn", "auroc": 0.95, "aupr": 0.8}]}),
+        (
+            ERROR_TAXONOMY_SUMMARY_FILENAME,
+            {"rows": [{"model_id": "mlp", "near_semantic_confusion_fraction": 0.99}]},
+        ),
+        (CROSS_MODEL_ERROR_COMPARISON_FILENAME, {"categories": {}, "all_wrong_agreement": 0.5}),
+    ):
+        _write_json(shared_analysis / filename, payload)
+    with ExitStack() as stack:
+        for context in _patch_for_analysis(mock_analysis_env):
+            stack.enter_context(context)
+        stack.enter_context(patch("src.analysis.summary.SHARED_DIR", mock_analysis_env / "outputs/shared"))
+        summary = generate_error_analysis_summary(list(ModelID))
+        generate_error_analysis_notes(list(ModelID))
+
+    notes = (shared_analysis / ERROR_ANALYSIS_NOTES_FILENAME).read_text()
+    recommendation = summary["top_recommendation"]
+    assert "heuristic" in recommendation
+    assert "official benchmark labels and splits" in recommendation
+    assert "validation" in recommendation
+    assert "semantically ambiguous" not in recommendation
+    assert "merging" not in notes
+    assert "highest representative-run OOS probability AUROC" in notes
+    assert "Only in-scope intent classes are balanced" in notes
+    assert "Apply confidence thresholding in deployment" not in notes
+    assert "test-set ROC points" in notes
+    assert summary["calibration"]["best_ece"] == 0.03
+    assert summary["oos_detection"]["best_auroc"] == 0.95
+
+
+def test_same_domain_annotation_does_not_claim_semantic_overlap() -> None:
+    from src.analysis.curation import _annotation_tag
+
+    assert _annotation_tag(ErrorCategory.NEAR_SEMANTIC_CONFUSION) == "same-domain confusion"
+
+
 class TestFullPipelineIntegration:
     @pytest.mark.parametrize("models", [list(ModelID), [ModelID.MLP]])
     def test_mixed_generation_fails_before_any_analysis_write(

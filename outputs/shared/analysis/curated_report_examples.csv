@@ -9,11 +9,11 @@ how many holidays are there and when is the next one here,next_holiday,oos,0.782
 how many minutes are involved in the preparation of curry,cook_time,oos,0.76766437292099,inscope_as_oos,mlp,false rejection
 how many stars does babbo have,restaurant_reviews,oos,0.7348247170448303,inscope_as_oos,mlp,false rejection
 how many stars does brasserie les halles have,restaurant_reviews,oos,0.7348247170448303,inscope_as_oos,mlp,false rejection
-who controls you,who_do_you_work_for,who_made_you,0.969076931476593,near_semantic_confusion,mlp,semantic overlap
-who employs you,who_do_you_work_for,who_made_you,0.969076931476593,near_semantic_confusion,mlp,semantic overlap
-give me a recipe for tacos,ingredients_list,recipe,0.9607388973236084,near_semantic_confusion,mlp,semantic overlap
-"thanks for your help, goodbye!",goodbye,thank_you,0.9539374113082886,near_semantic_confusion,mlp,semantic overlap
-have i told you to add washing dishes to my todo list,todo_list,todo_list_update,0.9494496583938599,near_semantic_confusion,mlp,semantic overlap
+who controls you,who_do_you_work_for,who_made_you,0.969076931476593,near_semantic_confusion,mlp,same-domain confusion
+who employs you,who_do_you_work_for,who_made_you,0.969076931476593,near_semantic_confusion,mlp,same-domain confusion
+give me a recipe for tacos,ingredients_list,recipe,0.9607388973236084,near_semantic_confusion,mlp,same-domain confusion
+"thanks for your help, goodbye!",goodbye,thank_you,0.9539374113082886,near_semantic_confusion,mlp,same-domain confusion
+have i told you to add washing dishes to my todo list,todo_list,todo_list_update,0.9494496583938599,near_semantic_confusion,mlp,same-domain confusion
 what time is it in phoenix,timezone,time,0.9946780204772949,cross_domain_confusion,mlp,cross-domain mix-up
 repeat what the weather will be like,transfer,weather,0.9552571773529053,cross_domain_confusion,mlp,cross-domain mix-up
 what is my current location,share_location,current_location,0.9497719407081604,cross_domain_confusion,mlp,cross-domain mix-up
@@ -29,11 +29,11 @@ how expensive is my internet,bill_balance,oos,0.8825438022613525,inscope_as_oos,
 what's the phone number for my credit card company,replacement_card_duration,oos,0.8534485101699829,inscope_as_oos,text_cnn,false rejection
 how many minutes are involved in the preparation of curry,cook_time,oos,0.81864333152771,inscope_as_oos,text_cnn,false rejection
 what kind of electrical outlet does that country use,plug_type,oos,0.7949949502944946,inscope_as_oos,text_cnn,false rejection
-give me a recipe for tacos,ingredients_list,recipe,0.9964855909347534,near_semantic_confusion,text_cnn,semantic overlap
-who controls you,who_do_you_work_for,who_made_you,0.9963486194610596,near_semantic_confusion,text_cnn,semantic overlap
-who employs you,who_do_you_work_for,who_made_you,0.9963486194610596,near_semantic_confusion,text_cnn,semantic overlap
-when will my new credit card arrive,expiration_date,replacement_card_duration,0.995201587677002,near_semantic_confusion,text_cnn,semantic overlap
-what is the next date for which i can get an oil change appointment,schedule_maintenance,oil_change_when,0.995166540145874,near_semantic_confusion,text_cnn,semantic overlap
+give me a recipe for tacos,ingredients_list,recipe,0.9964855909347534,near_semantic_confusion,text_cnn,same-domain confusion
+who controls you,who_do_you_work_for,who_made_you,0.9963486194610596,near_semantic_confusion,text_cnn,same-domain confusion
+who employs you,who_do_you_work_for,who_made_you,0.9963486194610596,near_semantic_confusion,text_cnn,same-domain confusion
+when will my new credit card arrive,expiration_date,replacement_card_duration,0.995201587677002,near_semantic_confusion,text_cnn,same-domain confusion
+what is the next date for which i can get an oil change appointment,schedule_maintenance,oil_change_when,0.995166540145874,near_semantic_confusion,text_cnn,same-domain confusion
 what is my current location,share_location,current_location,0.9987926483154297,cross_domain_confusion,text_cnn,cross-domain mix-up
 what time is it in phoenix,timezone,time,0.9986510872840881,cross_domain_confusion,text_cnn,cross-domain mix-up
 i don't want to forget to call mom,reminder_update,make_call,0.9979006052017212,cross_domain_confusion,text_cnn,cross-domain mix-up
@@ -49,11 +49,11 @@ how expensive is my internet,bill_balance,oos,0.9978415966033936,inscope_as_oos,
 is the breakfast place full in the mornings,how_busy,oos,0.995961606502533,inscope_as_oos,bilstm,false rejection
 "what kind of traffic can i expect driving to newark, new jersey on i-95 from philadelphia at noon",traffic,oos,0.992024302482605,inscope_as_oos,bilstm,false rejection
 "what is the average of 54, 23, 43, 12, and 442",calculator,oos,0.9799848794937134,inscope_as_oos,bilstm,false rejection
-give me a recipe for tacos,ingredients_list,recipe,0.9999964237213135,near_semantic_confusion,bilstm,semantic overlap
-what's a good recipe foe tacos,ingredients_list,recipe,0.9999785423278809,near_semantic_confusion,bilstm,semantic overlap
-what is the next date for which i can get an oil change appointment,schedule_maintenance,oil_change_when,0.9999744892120361,near_semantic_confusion,bilstm,semantic overlap
-what are the steps to get my rewards for my visa card,redeem_rewards,rewards_balance,0.9998942613601685,near_semantic_confusion,bilstm,semantic overlap
-what have i spent things on,transactions,spending_history,0.9998698234558105,near_semantic_confusion,bilstm,semantic overlap
+give me a recipe for tacos,ingredients_list,recipe,0.9999964237213135,near_semantic_confusion,bilstm,same-domain confusion
+what's a good recipe foe tacos,ingredients_list,recipe,0.9999785423278809,near_semantic_confusion,bilstm,same-domain confusion
+what is the next date for which i can get an oil change appointment,schedule_maintenance,oil_change_when,0.9999744892120361,near_semantic_confusion,bilstm,same-domain confusion
+what are the steps to get my rewards for my visa card,redeem_rewards,rewards_balance,0.9998942613601685,near_semantic_confusion,bilstm,same-domain confusion
+what have i spent things on,transactions,spending_history,0.9998698234558105,near_semantic_confusion,bilstm,same-domain confusion
 repeat what the weather will be like,transfer,weather,0.999997615814209,cross_domain_confusion,bilstm,cross-domain mix-up
 i'd like for this person to know my location,share_location,current_location,0.9999790191650391,cross_domain_confusion,bilstm,cross-domain mix-up
 what time is it in phoenix,timezone,time,0.9999691247940063,cross_domain_confusion,bilstm,cross-domain mix-up

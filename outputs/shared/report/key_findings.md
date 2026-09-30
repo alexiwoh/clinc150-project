@@ -25,5 +25,5 @@ Related figure: `outputs/shared/analysis/length_slice_comparison.png`
 7. **Efficiency**: Parameter counts: TF-IDF + MLP 5,197,975, Text CNN 1,930,167, BiLSTM 4,284,311. Inference throughput: TF-IDF + MLP 18069 ex/s, Text CNN 28456 ex/s, BiLSTM 7910 ex/s (outputs/shared/efficiency_summary_table.json)
 Related figure: `outputs/shared/figures/model_efficiency_comparison.png`
 
-8. **Recommendation**: Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors. (outputs/shared/analysis/error_analysis_summary.json)
+8. **Recommendation**: Inspect representative OOS false accepts and same-domain confusions as heuristic error groups. Preserve official benchmark labels and splits. Select any proposed calibration or rejection threshold on validation data before final test evaluation. (outputs/shared/analysis/error_analysis_summary.json)
 Related figures: `outputs/mlp/figures/representative_top_confused_pairs.png`, `outputs/text_cnn/figures/representative_top_confused_pairs.png`, `outputs/bilstm/figures/representative_top_confused_pairs.png`, `outputs/shared/analysis/oos_error_comparison.png`

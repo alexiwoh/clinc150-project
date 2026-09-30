@@ -146,7 +146,7 @@
     {
       "finding_id": "recommendation",
       "category": "recommendation",
-      "claim": "Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors.",
+      "claim": "Inspect representative OOS false accepts and same-domain confusions as heuristic error groups. Preserve official benchmark labels and splits. Select any proposed calibration or rejection threshold on validation data before final test evaluation.",
       "metric_value": null,
       "metric_std": null,
       "source_artifact": "outputs/shared/analysis/error_analysis_summary.json",
@@ -154,7 +154,7 @@
         "outputs/shared/analysis/error_analysis_summary.json"
       ],
       "claim_id": "recommendation",
-      "claim_text": "Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors.",
+      "claim_text": "Inspect representative OOS false accepts and same-domain confusions as heuristic error groups. Preserve official benchmark labels and splits. Select any proposed calibration or rejection threshold on validation data before final test evaluation.",
       "related_figure_types": [
         "oos_error_comparison",
         "top_confused_pairs"

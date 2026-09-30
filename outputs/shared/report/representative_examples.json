@@ -60,7 +60,7 @@
     },
     {
       "claim_id": "short_query_examples",
-      "claim_text": "Selected examples include 0 short-query tagged errors.",
+      "claim_text": "Selected examples include 4 short-query tagged errors (at most 5 whitespace tokens; categories may overlap).",
       "source_artifacts": [
         "outputs/shared/analysis/curated_report_examples.json"
       ],
@@ -73,7 +73,7 @@
       "scope_hint": "analysis"
     }
   ],
-  "selection_criteria": "Examples selected to cover key error patterns: at least 3 OOS false accepts, 3 same-domain confusions, 3 cross-domain confusions, 3 short-query tagged errors, and 2+ examples per model. Sorted by category then confidence.",
+  "selection_criteria": "Selection prioritizes OOS false accepts, same-domain and cross-domain confusions, and per-model coverage, subject to available curated candidates. Short-query coverage is measured independently and can overlap primary categories. Sorted by category then confidence.",
   "total_curated_count": 60,
   "selected_count": 25,
   "examples": [
@@ -192,7 +192,7 @@
       "model_id": "bilstm",
       "max_confidence": 0.9999964237213135,
       "primary_category": "near_semantic_confusion",
-      "annotation": "semantic overlap"
+      "annotation": "same-domain confusion"
     },
     {
       "text": "what's a good recipe foe tacos",
@@ -201,7 +201,7 @@
       "model_id": "bilstm",
       "max_confidence": 0.9999785423278809,
       "primary_category": "near_semantic_confusion",
-      "annotation": "semantic overlap"
+      "annotation": "same-domain confusion"
     },
     {
       "text": "what is the next date for which i can get an oil change appointment",
@@ -210,7 +210,7 @@
       "model_id": "bilstm",
       "max_confidence": 0.9999744892120361,
       "primary_category": "near_semantic_confusion",
-      "annotation": "semantic overlap"
+      "annotation": "same-domain confusion"
     },
     {
       "text": "what are the steps to get my rewards for my visa card",
@@ -219,7 +219,7 @@
       "model_id": "bilstm",
       "max_confidence": 0.9998942613601685,
       "primary_category": "near_semantic_confusion",
-      "annotation": "semantic overlap"
+      "annotation": "same-domain confusion"
     },
     {
       "text": "what have i spent things on",
@@ -228,7 +228,7 @@
       "model_id": "bilstm",
       "max_confidence": 0.9998698234558105,
       "primary_category": "near_semantic_confusion",
-      "annotation": "semantic overlap"
+      "annotation": "same-domain confusion"
     },
     {
       "text": "repeat what the weather will be like",

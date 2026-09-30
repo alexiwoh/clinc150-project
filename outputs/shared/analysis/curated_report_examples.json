@@ -105,7 +105,7 @@
       "max_confidence": 0.969076931476593,
       "primary_category": "near_semantic_confusion",
       "model_id": "mlp",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "who employs you",
@@ -114,7 +114,7 @@
       "max_confidence": 0.969076931476593,
       "primary_category": "near_semantic_confusion",
       "model_id": "mlp",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "give me a recipe for tacos",
@@ -123,7 +123,7 @@
       "max_confidence": 0.9607388973236084,
       "primary_category": "near_semantic_confusion",
       "model_id": "mlp",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "thanks for your help, goodbye!",
@@ -132,7 +132,7 @@
       "max_confidence": 0.9539374113082886,
       "primary_category": "near_semantic_confusion",
       "model_id": "mlp",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "have i told you to add washing dishes to my todo list",
@@ -141,7 +141,7 @@
       "max_confidence": 0.9494496583938599,
       "primary_category": "near_semantic_confusion",
       "model_id": "mlp",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "what time is it in phoenix",
@@ -285,7 +285,7 @@
       "max_confidence": 0.9964855909347534,
       "primary_category": "near_semantic_confusion",
       "model_id": "text_cnn",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "who controls you",
@@ -294,7 +294,7 @@
       "max_confidence": 0.9963486194610596,
       "primary_category": "near_semantic_confusion",
       "model_id": "text_cnn",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "who employs you",
@@ -303,7 +303,7 @@
       "max_confidence": 0.9963486194610596,
       "primary_category": "near_semantic_confusion",
       "model_id": "text_cnn",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "when will my new credit card arrive",
@@ -312,7 +312,7 @@
       "max_confidence": 0.995201587677002,
       "primary_category": "near_semantic_confusion",
       "model_id": "text_cnn",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "what is the next date for which i can get an oil change appointment",
@@ -321,7 +321,7 @@
       "max_confidence": 0.995166540145874,
       "primary_category": "near_semantic_confusion",
       "model_id": "text_cnn",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "what is my current location",
@@ -465,7 +465,7 @@
       "max_confidence": 0.9999964237213135,
       "primary_category": "near_semantic_confusion",
       "model_id": "bilstm",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "what's a good recipe foe tacos",
@@ -474,7 +474,7 @@
       "max_confidence": 0.9999785423278809,
       "primary_category": "near_semantic_confusion",
       "model_id": "bilstm",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "what is the next date for which i can get an oil change appointment",
@@ -483,7 +483,7 @@
       "max_confidence": 0.9999744892120361,
       "primary_category": "near_semantic_confusion",
       "model_id": "bilstm",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "what are the steps to get my rewards for my visa card",
@@ -492,7 +492,7 @@
       "max_confidence": 0.9998942613601685,
       "primary_category": "near_semantic_confusion",
       "model_id": "bilstm",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "what have i spent things on",
@@ -501,7 +501,7 @@
       "max_confidence": 0.9998698234558105,
       "primary_category": "near_semantic_confusion",
       "model_id": "bilstm",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "repeat what the weather will be like",

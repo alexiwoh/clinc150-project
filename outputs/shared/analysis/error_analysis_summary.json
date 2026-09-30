@@ -57,5 +57,5 @@
       "short_error_rate": 0.19805825242718447
     }
   },
-  "top_recommendation": "Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors."
+  "top_recommendation": "Inspect representative OOS false accepts and same-domain confusions as heuristic error groups. Preserve official benchmark labels and splits. Select any proposed calibration or rejection threshold on validation data before final test evaluation."
 }
