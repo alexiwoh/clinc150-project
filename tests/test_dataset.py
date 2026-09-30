@@ -8,6 +8,8 @@ from src.config import DATASET_CONFIG
 from src.constants import NUM_CLASSES, OOS_LABEL_ID, OOS_LABEL_NAME
 from src.dataset import CLINCDataset
 
+pytestmark = pytest.mark.network
+
 EXPECTED_SPLIT_NAMES = {"train", "validation", "test"}
 EXPECTED_COLUMNS = {"text", "intent"}
 EXPECTED_TRAIN_SIZE = 15250

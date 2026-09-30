@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -22,8 +23,10 @@ from src.analysis.constants import (
     STEP11_HANDOFF_FILENAME,
 )
 from src.analysis.cross_model import align_predictions_across_models
+from src.analysis.class_analysis import compute_and_save_confusion_stability
 from src.analysis.enums import ErrorCategory, LengthBucket
 from src.analysis.slicing import bucket_by_length
+from src.analysis.utils import discover_all_run_dirs, resolve_handoff
 from src.constants import (
     AGGREGATE_SUBDIR,
     FINAL_RUNS_SUBDIR,
@@ -31,6 +34,8 @@ from src.constants import (
     SCHEMA_VERSION,
 )
 from src.enums import ModelID
+from src.run_ledger import load_current_run_ledger
+from tests.provenance_fixtures import write_current_provenance
 
 
 # ---------------------------------------------------------------------------
@@ -163,6 +168,16 @@ def _build_mock_model(tmp_path: Path, model_id: str) -> None:
         _make_confusion_matrix(run_dir)
         _make_label_order(run_dir)
         _make_test_metrics(run_dir)
+        _write_json(
+            run_dir / "run_metadata.json",
+            {
+                "model_id": model_id,
+                "run_id": run_id,
+                "run_index": seed_idx + 1,
+                "seed": seed,
+                "status": "completed",
+            },
+        )
         _write_json(run_dir / "top_confusions.json", {"schema_version": SCHEMA_VERSION, "confusions": []})
         _write_json(
             run_dir / "top_errors.json",
@@ -172,6 +187,26 @@ def _build_mock_model(tmp_path: Path, model_id: str) -> None:
     agg_dir = model_dir / AGGREGATE_SUBDIR
     agg_dir.mkdir(parents=True, exist_ok=True)
     rep_run = "run_01_seed_42"
+    run_ids = [f"run_{index:02d}_seed_{seed}" for index, seed in enumerate([42, 1337, 2024], 1)]
+    _write_json(
+        agg_dir / "run_ledger.json",
+        {
+            "model_id": model_id,
+            "run_count_requested": 3,
+            "run_count_completed": 3,
+            "run_count_failed": 0,
+            "run_count_skipped": 0,
+            "requested_run_ids": run_ids,
+            "completed_run_ids": run_ids,
+            "failed_run_ids": [],
+            "skipped_run_ids": [],
+            "seed_list_requested": [42, 1337, 2024],
+            "seed_list_completed": [42, 1337, 2024],
+            "per_run_metadata_refs": {
+                run_id: f"outputs/{model_id}/{FINAL_RUNS_SUBDIR}/{run_id}/run_metadata.json" for run_id in run_ids
+            },
+        },
+    )
     _write_json(
         agg_dir / "error_analysis_handoff.json",
         {
@@ -248,13 +283,82 @@ def _patch_for_analysis(tmp_path: Path):
         patch("src.constants.SHARED_DIR", tmp_path / "outputs" / "shared"),
         patch("src.constants.model_output_dir", side_effect=_model_dir),
         patch("src.analysis.utils.PROJECT_ROOT", tmp_path),
-        patch("src.analysis.utils.OUTPUTS_DIR", tmp_path / "outputs"),
         patch("src.analysis.utils.SHARED_DIR", tmp_path / "outputs" / "shared"),
         patch("src.analysis.utils.model_output_dir", side_effect=_model_dir),
         patch("src.analysis.pipeline.SHARED_DIR", tmp_path / "outputs" / "shared"),
         patch("src.analysis.pipeline.PROJECT_ROOT", tmp_path),
         patch("src.analysis.pipeline.model_output_dir", side_effect=_model_dir),
     ]
+
+
+class TestCurrentRunDiscovery:
+    def test_three_to_one_ledger_excludes_preserved_stale_runs(self, mock_analysis_env: Path) -> None:
+        model_dir = mock_analysis_env / "outputs" / "mlp"
+        ledger_path = model_dir / AGGREGATE_SUBDIR / "run_ledger.json"
+        ledger = json.loads(ledger_path.read_text())
+        first_run = ledger["completed_run_ids"][0]
+        for key in ("requested_run_ids", "completed_run_ids", "seed_list_requested", "seed_list_completed"):
+            ledger[key] = ledger[key][:1]
+        ledger["run_count_requested"] = ledger["run_count_completed"] = 1
+        ledger["per_run_metadata_refs"] = {first_run: ledger["per_run_metadata_refs"][first_run]}
+        _write_json(ledger_path, ledger)
+        stale_metadata = model_dir / FINAL_RUNS_SUBDIR / "run_02_seed_1337" / "run_metadata.json"
+        stale_metadata.write_text("historical data deliberately outside current validation")
+        stale_before = stale_metadata.read_bytes()
+
+        patches = _patch_for_analysis(mock_analysis_env)
+        for context in patches:
+            context.start()
+        try:
+            run_dirs = discover_all_run_dirs(ModelID.MLP)
+            ctx = resolve_handoff(ModelID.MLP)
+            stability, records = compute_and_save_confusion_stability(ctx)
+        finally:
+            for context in reversed(patches):
+                context.stop()
+
+        assert [directory.name for directory in run_dirs] == [first_run]
+        assert "Fewer than 2 runs" in stability["note"]
+        assert records == []
+        assert stale_metadata.read_bytes() == stale_before
+        assert (model_dir / FINAL_RUNS_SUBDIR / "run_03_seed_2024").is_dir()
+
+    def test_missing_ledger_has_no_directory_fallback(self, mock_analysis_env: Path) -> None:
+        model_dir = mock_analysis_env / "outputs" / "mlp"
+        (model_dir / AGGREGATE_SUBDIR / "run_ledger.json").unlink()
+        with pytest.raises(FileNotFoundError, match="Current run ledger not found"):
+            load_current_run_ledger(ModelID.MLP, model_dir=model_dir, project_root=mock_analysis_env)
+
+    def test_handoff_cannot_point_to_inactive_run(self, mock_analysis_env: Path) -> None:
+        model_dir = mock_analysis_env / "outputs" / "mlp"
+        handoff_path = model_dir / AGGREGATE_SUBDIR / "error_analysis_handoff.json"
+        handoff = json.loads(handoff_path.read_text())
+        handoff["representative_run_id"] = "historical_run"
+        _write_json(handoff_path, handoff)
+        with (
+            patch("src.analysis.utils.PROJECT_ROOT", mock_analysis_env),
+            patch("src.analysis.utils.model_output_dir", return_value=model_dir),
+            pytest.raises(ValueError, match="not a completed member"),
+        ):
+            resolve_handoff(ModelID.MLP)
+
+    @pytest.mark.parametrize("artifact_key", ["final_predictions", "label_order"])
+    def test_handoff_artifact_from_different_active_run_rejected(
+        self, mock_analysis_env: Path, artifact_key: str
+    ) -> None:
+        model_dir = mock_analysis_env / "outputs" / "mlp"
+        handoff_path = model_dir / AGGREGATE_SUBDIR / "error_analysis_handoff.json"
+        handoff = json.loads(handoff_path.read_text())
+        handoff["artifacts"][artifact_key] = handoff["artifacts"][artifact_key].replace(
+            "run_01_seed_42", "run_02_seed_1337"
+        )
+        _write_json(handoff_path, handoff)
+        with (
+            patch("src.analysis.utils.PROJECT_ROOT", mock_analysis_env),
+            patch("src.analysis.utils.model_output_dir", return_value=model_dir),
+            pytest.raises(ValueError, match="references a different run"),
+        ):
+            resolve_handoff(ModelID.MLP)
 
 
 # ---------------------------------------------------------------------------
@@ -593,6 +697,25 @@ class TestHandoffValidation:
 
 
 class TestFullPipelineIntegration:
+    @pytest.mark.parametrize("models", [list(ModelID), [ModelID.MLP]])
+    def test_mixed_generation_fails_before_any_analysis_write(
+        self, mock_analysis_env: Path, models: list[ModelID]
+    ) -> None:
+        from src.analysis.pipeline import run_error_analysis, run_preflight_validation
+
+        for mid in ModelID:
+            write_current_provenance(
+                mock_analysis_env, mid, dataset_digest=("b" if mid is ModelID.BILSTM else "a") * 64
+            )
+        before = {path: path.read_bytes() for path in mock_analysis_env.rglob("*") if path.is_file()}
+        with ExitStack() as stack:
+            for context in _patch_for_analysis(mock_analysis_env):
+                stack.enter_context(context)
+            with pytest.raises(ValueError, match="dataset"):
+                run_preflight_validation(models)
+            assert run_error_analysis(models) is False
+        assert before == {path: path.read_bytes() for path in mock_analysis_env.rglob("*") if path.is_file()}
+
     def test_pipeline_produces_key_artifacts(self, mock_analysis_env: Path) -> None:
         """Run the full pipeline on mock data and check key outputs exist."""
         from src.analysis.pipeline import run_error_analysis

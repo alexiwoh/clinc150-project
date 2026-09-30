@@ -16,7 +16,6 @@ from src.constants import (
     AGGREGATE_SUBDIR,
     ANALYSIS_SUBDIR,
     OOS_LABEL_NAME,
-    OUTPUTS_DIR,
     PROJECT_ROOT,
     PROTOCOL_VERSION,
     SCHEMA_VERSION,
@@ -24,6 +23,7 @@ from src.constants import (
     model_output_dir,
 )
 from src.enums import ModelID
+from src.run_ledger import load_current_run_ledger, resolve_current_run
 
 logger = logging.getLogger(__name__)
 
@@ -93,9 +93,24 @@ def resolve_handoff(model_id: ModelID) -> HandoffContext:
     """Read ``error_analysis_handoff.json`` for *model_id* and resolve all paths."""
     handoff_path = model_output_dir(model_id) / AGGREGATE_SUBDIR / "error_analysis_handoff.json"
     handoff = read_json(handoff_path)
+    if handoff.get("model_id") != model_id:
+        raise ValueError(f"{handoff_path}: model_id does not match {model_id}")
     artifacts: dict[str, str] = handoff["artifacts"]
 
-    run_dir = (PROJECT_ROOT / artifacts["final_predictions"]).parent
+    run_dir = resolve_current_run(
+        model_id, handoff["representative_run_id"], model_dir=model_output_dir(model_id), project_root=PROJECT_ROOT
+    )
+    for name, ref in artifacts.items():
+        if name in {
+            "final_predictions",
+            "per_class_metrics",
+            "confusion_matrix",
+            "top_confusions",
+            "top_errors",
+            "label_order",
+        }:
+            if (PROJECT_ROOT / ref).resolve().parent != run_dir.resolve():
+                raise ValueError(f"{handoff_path}: {name} references a different run")
 
     return HandoffContext(
         model_id=model_id,
@@ -220,13 +235,12 @@ def artifact_envelope(
 
 
 # ---------------------------------------------------------------------------
-# All-run directory discovery
+# Current-run ledger discovery
 # ---------------------------------------------------------------------------
 
 
 def discover_all_run_dirs(model_id: ModelID) -> list[Path]:
-    """Return paths to all final-run directories for *model_id*, sorted by name."""
-    final_runs_dir = OUTPUTS_DIR / str(model_id) / "final_runs"
-    if not final_runs_dir.is_dir():
-        return []
-    return sorted(p for p in final_runs_dir.iterdir() if p.is_dir())
+    """Return current completed runs from the ledger; never scan leftover directories."""
+    return load_current_run_ledger(
+        model_id, model_dir=model_output_dir(model_id), project_root=PROJECT_ROOT
+    ).completed_run_dirs

@@ -21,6 +21,7 @@ from unittest.mock import patch
 
 import pandas as pd
 import pytest
+from tests.provenance_fixtures import write_current_provenance
 
 from src.constants import (
     AGGREGATE_SUBDIR,
@@ -232,6 +233,23 @@ def _build_model_tree(root: Path, model_id: str) -> None:
     agg_dir.mkdir(parents=True, exist_ok=True)
     _write(agg_dir / "representative_run.json", _minimal_representative_run(model_id))
     _write(
+        agg_dir / "run_ledger.json",
+        {
+            "model_id": model_id,
+            "run_count_requested": 1,
+            "run_count_completed": 1,
+            "run_count_failed": 0,
+            "run_count_skipped": 0,
+            "requested_run_ids": [run_id],
+            "completed_run_ids": [run_id],
+            "failed_run_ids": [],
+            "skipped_run_ids": [],
+            "seed_list_requested": [42],
+            "seed_list_completed": [42],
+            "per_run_metadata_refs": {run_id: f"outputs/{model_id}/{FINAL_RUNS_SUBDIR}/{run_id}/run_metadata.json"},
+        },
+    )
+    _write(
         agg_dir / "aggregate_metrics.json",
         {
             "schema_version": SCHEMA_VERSION,
@@ -344,6 +362,35 @@ def _patch_model_output_dir(tmp_path: Path):
 
 
 class TestPreflightValidation:
+    def test_inactive_representative_fails_before_figure_outputs(self, mock_outputs: Path) -> None:
+        model_dir = mock_outputs / "outputs" / "mlp"
+        rep_path = model_dir / AGGREGATE_SUBDIR / "representative_run.json"
+        rep = json.loads(rep_path.read_text())
+        rep["run_id"] = "run_02_seed_1337"
+        rep["artifact_path"] = "outputs/mlp/final_runs/run_02_seed_1337"
+        _write(rep_path, rep)
+        with (
+            _patch_roots(mock_outputs),
+            _patch_model_output_dir(mock_outputs),
+            pytest.raises(ValueError, match="not a completed member"),
+        ):
+            run_preflight_validation([ModelID.MLP])
+        assert not (model_dir / MODEL_FIGURES_SUBDIR).exists()
+
+    def test_direct_misclassification_generation_requires_active_representative(self, mock_outputs: Path) -> None:
+        model_dir = mock_outputs / "outputs" / "mlp"
+        rep_path = model_dir / AGGREGATE_SUBDIR / "representative_run.json"
+        rep = json.loads(rep_path.read_text())
+        rep["artifact_path"] = "outputs/mlp/final_runs/run_02_seed_1337"
+        _write(rep_path, rep)
+        with (
+            _patch_roots(mock_outputs),
+            _patch_model_output_dir(mock_outputs),
+            pytest.raises(ValueError, match="artifact_path does not match"),
+        ):
+            generate_representative_misclassifications(ModelID.MLP)
+        assert not (model_dir / AGGREGATE_SUBDIR / "representative_misclassifications.csv").exists()
+
     def test_passes_with_complete_artifacts(self, mock_outputs: Path) -> None:
         with _patch_roots(mock_outputs), _patch_model_output_dir(mock_outputs):
             run_preflight_validation(list(ModelID))
@@ -613,6 +660,15 @@ class TestFigureManifest:
 
 
 class TestStep10Handoff:
+    def test_run_count_comes_from_this_models_current_ledger(self, mock_outputs: Path) -> None:
+        shared_path = mock_outputs / "outputs" / "shared" / "model_comparison_aggregate.json"
+        shared = json.loads(shared_path.read_text())
+        shared["rows"][0]["run_count"] = 9
+        _write(shared_path, shared)
+        with _patch_roots(mock_outputs), _patch_model_output_dir(mock_outputs):
+            out = generate_step10_handoff(ModelID.BILSTM)
+        assert json.loads(out.read_text())["total_runs_aggregated"] == 1
+
     def test_creates_handoff_with_required_refs(self, mock_outputs: Path) -> None:
         with _patch_roots(mock_outputs), _patch_model_output_dir(mock_outputs):
             generate_representative_figures(ModelID.MLP)
@@ -654,6 +710,19 @@ class TestStep10Handoff:
 
 
 class TestFullPipeline:
+    @pytest.mark.parametrize("models", [list(ModelID), [ModelID.MLP]])
+    def test_rejects_mixed_shared_generation_without_writes(self, mock_outputs: Path, models: list[ModelID]) -> None:
+        for mid in ModelID:
+            write_current_provenance(mock_outputs, mid, dataset_digest=("b" if mid is ModelID.BILSTM else "a") * 64)
+        before = {path: path.read_bytes() for path in mock_outputs.rglob("*") if path.is_file()}
+        with _patch_roots(mock_outputs), _patch_model_output_dir(mock_outputs):
+            with pytest.raises(ValueError, match="dataset"):
+                run_preflight_validation(models)
+            assert run_report_figure_generation(models) is False
+            with pytest.raises(ValueError, match="dataset"):
+                generate_aggregate_figures()
+        assert before == {path: path.read_bytes() for path in mock_outputs.rglob("*") if path.is_file()}
+
     def test_succeeds_with_complete_artifacts(self, mock_outputs: Path) -> None:
         with _patch_roots(mock_outputs), _patch_model_output_dir(mock_outputs):
             success = run_report_figure_generation(list(ModelID))

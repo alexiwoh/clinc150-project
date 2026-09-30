@@ -33,3 +33,10 @@ line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "W"]
+
+[tool.pytest.ini_options]
+addopts = "-m 'not network and not generated_artifacts'"
+markers = [
+  "network: downloads the public benchmark and needs network access or an existing cache",
+  "generated_artifacts: validates saved experiment outputs and requires trained checkpoints for bundle checks",
+]
