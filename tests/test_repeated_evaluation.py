@@ -991,9 +991,6 @@ class TestNoTestBeforeSelection:
         """Duplicate seeds are rejected."""
         from src.repeated_evaluation import extract_and_freeze_configs
 
-        protocol = RepeatedRunProtocol(
-            run_count=2,
-            seed_list=(42, 42, 2024),
-        )
-        with pytest.raises(AssertionError, match="duplicates"):
+        with pytest.raises(ValueError, match="duplicates"):
+            protocol = RepeatedRunProtocol(run_count=2, seed_list=(42, 42, 2024))
             extract_and_freeze_configs([], protocol)
