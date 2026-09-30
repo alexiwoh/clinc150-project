@@ -15,6 +15,8 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
+import pytest
+
 
 from src.constants import PROTOCOL_VERSION, SCHEMA_VERSION
 from src.enums import ModelID
@@ -406,3 +408,53 @@ class TestValidation:
             stack.enter_context(patch("src.report.artifact_loader.PROJECT_ROOT", tmp_path))
             failures = validate_report_outputs(report_dir)
         assert any("[R15]" in f for f in failures)
+
+
+@pytest.mark.parametrize("mutation", ["mean", "std", "missing_field", "missing_row", "duplicate_row", "extra_field"])
+def test_report_table_drift_is_rejected(tmp_path: Path, mutation: str) -> None:
+    report_dir = _build_report_dir(tmp_path)
+    _build_upstream(tmp_path)
+    source = "outputs/shared/model_comparison_aggregate.json"
+    rows = [{"model_id": mid, "test_accuracy_mean": 0.8, "test_accuracy_std": 0.01} for mid in ModelID]
+    _write(tmp_path / source, {"rows": rows})
+    table_path = report_dir / "main_results.json"
+    data = json.loads(table_path.read_text())
+    data["tables"][0]["rows"] = json.loads(json.dumps(rows))
+    modified = data["tables"][0]["rows"]
+    if mutation == "mean":
+        modified[0]["test_accuracy_mean"] = 0.123456
+    elif mutation == "std":
+        modified[0]["test_accuracy_std"] = 0.2
+    elif mutation == "missing_field":
+        del modified[0]["test_accuracy_mean"]
+    elif mutation == "missing_row":
+        modified.pop()
+    elif mutation == "duplicate_row":
+        modified.append(modified[0])
+    else:
+        modified[0]["extra_metric"] = 0.9
+    _write(table_path, data)
+    generate_report_manifest(report_dir)
+    assemble_full_report(report_dir)
+    with patch("src.report.artifact_loader.PROJECT_ROOT", tmp_path):
+        failures = validate_report_outputs(report_dir)
+    assert any("[R5]" in failure and "values differ" in failure for failure in failures)
+
+
+def test_saved_report_figures_resolve_from_document(tmp_path: Path) -> None:
+    from src.report.artifact_loader import save_section
+
+    report_dir = _build_report_dir(tmp_path)
+    _build_upstream(tmp_path)
+    repository_target = "outputs/shared/figures/comparison.png"
+    markdown = f"## Main Results\n\n![comparison]({repository_target})\n"
+    with patch("src.report.artifact_loader.PROJECT_ROOT", tmp_path):
+        save_section("main_results", markdown, {"tables": []}, report_dir)
+        text = assemble_full_report(report_dir)
+        assert "![comparison](../figures/comparison.png)" in text
+        assert not any("[R16]" in failure for failure in validate_report_outputs(report_dir))
+        # A repository-root link is invalid in either the section or full report.
+        (report_dir / "main_results.md").write_text(markdown)
+        assemble_full_report(report_dir)
+        failures = validate_report_outputs(report_dir)
+    assert sum("[R16]" in failure for failure in failures) == 2

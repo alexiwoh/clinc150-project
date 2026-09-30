@@ -95,7 +95,7 @@ _TYPE_DESCRIPTIONS: dict[str, str] = {
     "error_taxonomy": "Cross-model comparison of error-taxonomy fractions",
     "oos_error_comparison": "Cross-model false-accept versus false-reject comparison",
     "length_slice": "Cross-model accuracy comparison by utterance length",
-    "frequency_slice": "Cross-model accuracy comparison by class-frequency tier",
+    "frequency_slice": "Cross-model accuracy comparison for in-scope versus OOS classes",
     "cross_model_error_overlap": "Overlap between shared and model-specific prediction failures",
 }
 
