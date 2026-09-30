@@ -207,6 +207,19 @@ def _read_linux_hardware(path: Path) -> str | None:
         return None
 
 
+def _linux_memory_bytes() -> int | None:
+    try:
+        pages = os.sysconf("SC_PHYS_PAGES")
+        page_size = os.sysconf("SC_PAGE_SIZE")
+    except (OSError, ValueError) as error:
+        logger.warning("Physical memory unavailable: %s", error)
+        return None
+    if pages <= 0 or page_size <= 0:
+        logger.warning("Physical memory unavailable: sysconf returned %s pages of %s bytes", pages, page_size)
+        return None
+    return pages * page_size
+
+
 def identify_hardware() -> HardwareIdentity:
     """Record macOS/Linux model, processor and physical RAM; unknown fields stay null."""
     system = platform.system()
@@ -226,7 +239,7 @@ def identify_hardware() -> HardwareIdentity:
                 (line.partition(":")[2].strip() for line in cpu_info.splitlines() if line.startswith("model name")),
                 processor,
             )
-        memory = os.sysconf("SC_PHYS_PAGES") * os.sysconf("SC_PAGE_SIZE")
+        memory = _linux_memory_bytes()
     return HardwareIdentity(system, platform.release(), platform.machine(), model, processor, memory, os.cpu_count())
 
 

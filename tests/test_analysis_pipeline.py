@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -34,6 +35,7 @@ from src.constants import (
 )
 from src.enums import ModelID
 from src.run_ledger import load_current_run_ledger
+from tests.provenance_fixtures import write_current_provenance
 
 
 # ---------------------------------------------------------------------------
@@ -695,6 +697,22 @@ class TestHandoffValidation:
 
 
 class TestFullPipelineIntegration:
+    def test_mixed_generation_fails_before_any_analysis_write(self, mock_analysis_env: Path) -> None:
+        from src.analysis.pipeline import run_error_analysis, run_preflight_validation
+
+        for mid in ModelID:
+            write_current_provenance(
+                mock_analysis_env, mid, dataset_digest=("b" if mid is ModelID.BILSTM else "a") * 64
+            )
+        before = {path: path.read_bytes() for path in mock_analysis_env.rglob("*") if path.is_file()}
+        with ExitStack() as stack:
+            for context in _patch_for_analysis(mock_analysis_env):
+                stack.enter_context(context)
+            with pytest.raises(ValueError, match="dataset"):
+                run_preflight_validation(list(ModelID))
+            assert run_error_analysis(list(ModelID)) is False
+        assert before == {path: path.read_bytes() for path in mock_analysis_env.rglob("*") if path.is_file()}
+
     def test_pipeline_produces_key_artifacts(self, mock_analysis_env: Path) -> None:
         """Run the full pipeline on mock data and check key outputs exist."""
         from src.analysis.pipeline import run_error_analysis

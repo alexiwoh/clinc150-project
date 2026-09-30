@@ -21,6 +21,7 @@ from unittest.mock import patch
 
 import pandas as pd
 import pytest
+from tests.provenance_fixtures import write_current_provenance
 
 from src.constants import (
     AGGREGATE_SUBDIR,
@@ -709,6 +710,19 @@ class TestStep10Handoff:
 
 
 class TestFullPipeline:
+    @pytest.mark.parametrize("models", [list(ModelID), [ModelID.MLP]])
+    def test_rejects_mixed_shared_generation_without_writes(self, mock_outputs: Path, models: list[ModelID]) -> None:
+        for mid in ModelID:
+            write_current_provenance(mock_outputs, mid, dataset_digest=("b" if mid is ModelID.BILSTM else "a") * 64)
+        before = {path: path.read_bytes() for path in mock_outputs.rglob("*") if path.is_file()}
+        with _patch_roots(mock_outputs), _patch_model_output_dir(mock_outputs):
+            with pytest.raises(ValueError, match="dataset"):
+                run_preflight_validation(models)
+            assert run_report_figure_generation(models) is False
+            with pytest.raises(ValueError, match="dataset"):
+                generate_aggregate_figures()
+        assert before == {path: path.read_bytes() for path in mock_outputs.rglob("*") if path.is_file()}
+
     def test_succeeds_with_complete_artifacts(self, mock_outputs: Path) -> None:
         with _patch_roots(mock_outputs), _patch_model_output_dir(mock_outputs):
             success = run_report_figure_generation(list(ModelID))

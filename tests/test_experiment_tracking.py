@@ -45,6 +45,7 @@ from src.constants import (
 )
 from src.enums import ModelID
 from src.run_ledger import load_current_run_ledger
+from tests.provenance_fixtures import write_current_provenance
 from src.experiment_tracking import (
     CANONICAL_MODEL_ORDER,
     LEGACY_DIRS,
@@ -1307,17 +1308,20 @@ class TestProtocolEnrichment:
 # ── Integration: full tracking against real artifacts ────────────────────
 
 
-def test_tracking_rejects_mixed_generation_before_enrichment(mock_outputs: Path) -> None:
+@pytest.mark.parametrize("models", [list(ModelID), [ModelID.MLP]])
+def test_tracking_rejects_mixed_generation_before_enrichment(mock_outputs: Path, models: list[ModelID]) -> None:
+    for mid in ModelID:
+        write_current_provenance(mock_outputs, mid, dataset_digest=("b" if mid is ModelID.BILSTM else "a") * 64)
     metadata_path = mock_outputs / "outputs/mlp/final_runs/run_01_seed_42/run_metadata.json"
     metadata = _read_json(metadata_path)
-    metadata["provenance"] = {}
-    _write(metadata_path, metadata)
+    # Every model is internally consistent, but the shared dataset disagrees.
+    assert metadata["provenance"]["dataset"]["revision"] == "pinned"
     before = {path: path.read_bytes() for path in mock_outputs.rglob("*") if path.is_file()}
     with (
         patch("src.experiment_tracking.PROJECT_ROOT", mock_outputs),
         patch("src.experiment_tracking.model_output_dir", side_effect=lambda mid: mock_outputs / "outputs" / str(mid)),
     ):
-        assert run_experiment_tracking() is False
+        assert run_experiment_tracking(models) is False
     after = {path: path.read_bytes() for path in mock_outputs.rglob("*") if path.is_file()}
     assert before == after
 

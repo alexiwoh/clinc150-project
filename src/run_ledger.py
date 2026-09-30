@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -136,6 +137,21 @@ def load_current_run_ledger(
         skipped_run_ids=groups["skipped_run_ids"],
         metadata_paths=metadata_paths,
     )
+
+
+def load_current_generation(
+    model_ids: Sequence[ModelID], *, model_dirs: Mapping[ModelID, Path], project_root: Path
+) -> dict[ModelID, CurrentRunLedger]:
+    """Load every shared-output contributor and reject mixed generation identities."""
+    ledgers = {
+        model_id: load_current_run_ledger(model_id, model_dir=model_dirs[model_id], project_root=project_root)
+        for model_id in model_ids
+    }
+    records = [
+        _read_json(ledger.metadata_paths[run_id]) for ledger in ledgers.values() for run_id in ledger.completed_run_ids
+    ]
+    validate_generation_identity(records, same_model=False)
+    return ledgers
 
 
 def resolve_current_run(

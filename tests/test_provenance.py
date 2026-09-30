@@ -218,6 +218,28 @@ def test_linux_hardware_identity(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     assert actual.memory_bytes == 4194304
 
 
+@pytest.mark.parametrize("error", [OSError("unsupported counter"), ValueError("unknown sysconf key")])
+def test_linux_memory_probe_failure_is_logged_and_null(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture, error: Exception
+) -> None:
+    monkeypatch.setattr("src.provenance.platform.system", lambda: "Linux")
+    monkeypatch.setattr("src.provenance._read_linux_hardware", lambda _path: None)
+    monkeypatch.setattr("src.provenance.os.sysconf", Mock(side_effect=error))
+    assert identify_hardware().memory_bytes is None
+    assert "Physical memory unavailable" in caplog.text
+
+
+@pytest.mark.parametrize("pages,page_size", [(-1, 4096), (1024, -1), (0, 4096), (1024, 0)])
+def test_linux_unknown_memory_counters_are_logged_and_null(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture, pages: int, page_size: int
+) -> None:
+    monkeypatch.setattr("src.provenance.platform.system", lambda: "Linux")
+    monkeypatch.setattr("src.provenance._read_linux_hardware", lambda _path: None)
+    monkeypatch.setattr("src.provenance.os.sysconf", {"SC_PHYS_PAGES": pages, "SC_PAGE_SIZE": page_size}.__getitem__)
+    assert identify_hardware().memory_bytes is None
+    assert "Physical memory unavailable" in caplog.text
+
+
 def test_provenance_serialization_and_missing_artifact_failure(
     dataset: CLINCDataset, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

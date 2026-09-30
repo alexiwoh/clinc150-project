@@ -31,7 +31,7 @@ from src.constants import (
 )
 from src.enums import ModelID
 from src.report.figure_metadata import FigureCaptionContext
-from src.run_ledger import load_current_run_ledger, resolve_current_run
+from src.run_ledger import load_current_generation, load_current_run_ledger, resolve_current_run
 from src.utils import ensure_dir
 from src.visualizers import ResultsVisualizer, TrainingVisualizer
 
@@ -162,6 +162,9 @@ def run_preflight_validation(model_ids: list[ModelID]) -> None:
             f"Preflight validation failed — {len(missing)} required artifact(s) missing:\n  {formatted}"
         )
 
+    load_current_generation(
+        list(ModelID), model_dirs={mid: model_output_dir(mid) for mid in ModelID}, project_root=PROJECT_ROOT
+    )
     logger.info("Preflight validation passed for %d model(s).", len(model_ids))
 
 
@@ -499,6 +502,9 @@ def generate_representative_figures(model_id: ModelID) -> list[FigureRecord]:
 
 def generate_aggregate_figures() -> list[FigureRecord]:
     """Generate shared aggregate comparison figures from the tracking tables."""
+    load_current_generation(
+        list(ModelID), model_dirs={mid: model_output_dir(mid) for mid in ModelID}, project_root=PROJECT_ROOT
+    )
     figures_dir = ensure_dir(SHARED_FIGURES_DIR)
     records: list[FigureRecord] = []
 

@@ -21,6 +21,7 @@ from src.constants import (
 )
 from src.enums import ModelID
 from src.report_figure_generation import FigureRecord
+from src.run_ledger import load_current_generation
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,11 @@ def run_preflight_validation(model_ids: list[ModelID]) -> None:
             f"Step 10 preflight failed — {len(missing)} required artifact(s) missing:\n  {formatted}"
         )
 
+    load_current_generation(
+        model_ids, model_dirs={mid: model_output_dir(mid) for mid in model_ids}, project_root=PROJECT_ROOT
+    )
+    for mid in model_ids:
+        resolve_handoff(mid)
     logger.info("Step 10 preflight validation passed for %d model(s).", len(model_ids))
 
 
