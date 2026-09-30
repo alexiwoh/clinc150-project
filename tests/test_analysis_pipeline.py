@@ -17,6 +17,7 @@ from src.analysis.constants import (
     CROSS_MODEL_ERROR_COMPARISON_FILENAME,
     ERROR_ANALYSIS_NOTES_FILENAME,
     ERROR_ANALYSIS_SUMMARY_FILENAME,
+    ERROR_TAXONOMY_FILENAME,
     ERROR_TAXONOMY_SUMMARY_FILENAME,
     EXTENDED_METRICS_COMPARISON_FILENAME,
     OOS_THRESHOLD_COMPARISON_FILENAME,
@@ -737,6 +738,41 @@ def test_same_domain_annotation_does_not_claim_semantic_overlap() -> None:
     from src.analysis.curation import _annotation_tag
 
     assert _annotation_tag(ErrorCategory.NEAR_SEMANTIC_CONFUSION) == "same-domain confusion"
+
+
+@pytest.mark.parametrize("existing_count", [0, 1])
+@pytest.mark.parametrize("padding_scope", ["per_model", "total"])
+def test_sparse_same_domain_padding_keeps_heuristic_annotation(
+    tmp_path: Path, existing_count: int, padding_scope: str
+) -> None:
+    from src.analysis.curation import _ensure_minimums, _pad_to_minimum
+
+    taxonomy_examples = [
+        {
+            "text": text,
+            "true_label_name": "freeze_account",
+            "predicted_label_name": "routing",
+            "max_confidence": 0.6,
+            "primary_category": ErrorCategory.NEAR_SEMANTIC_CONFUSION,
+        }
+        for text in ("freeze my account", "place a hold on my account")
+    ]
+    curated = [
+        {**example, "model_id": "mlp", "annotation_tag": "same-domain confusion"}
+        for example in taxonomy_examples[:existing_count]
+    ]
+    if padding_scope == "per_model":
+        _ensure_minimums(curated, {example["text"] for example in curated}, "mlp", {}, {}, taxonomy_examples)
+    else:
+        _write_json(tmp_path / ERROR_TAXONOMY_FILENAME, {"examples": taxonomy_examples})
+        with patch("src.analysis.curation.analysis_output_dir", return_value=tmp_path):
+            curated = _pad_to_minimum(curated, [ModelID.MLP])
+
+    assert len(curated) == 2
+    assert len({example["text"] for example in curated}) == 2
+    assert {example["annotation_tag"] for example in curated} == {"same-domain confusion"}
+    assert all(example["true_label_name"] == "freeze_account" for example in curated)
+    assert all(example["predicted_label_name"] == "routing" for example in curated)
 
 
 class TestFullPipelineIntegration:
