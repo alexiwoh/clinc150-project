@@ -64,7 +64,7 @@ class CLINCDataset:
     @classmethod
     def load(cls, config: DatasetConfig) -> CLINCDataset:
         """Download (or load from cache) the CLINC150 dataset and build label maps."""
-        dataset = load_dataset(config.name, config.subset, cache_dir=str(config.cache_dir))
+        dataset = load_dataset(config.name, config.subset, revision=config.revision, cache_dir=str(config.cache_dir))
         assert isinstance(dataset, DatasetDict)
 
         cls._validate_schema(dataset)

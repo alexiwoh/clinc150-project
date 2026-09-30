@@ -46,6 +46,7 @@ from src.preprocessing import (
     pad_or_truncate,
     tokenize_text,
 )
+from src.provenance import DatasetIdentity, hash_tensor, hash_tfidf_inputs, identify_dataset
 from src.trainers.trainer import Trainer
 from src.utils import count_parameters, ensure_dir, load_checkpoint, set_seed
 
@@ -76,6 +77,8 @@ class TFIDFMetadata(TypedDict):
     label_to_id: dict[str, int]
     id_to_label: dict[int, str]
     texts_by_split: dict[str, list[str]]
+    dataset_identity: DatasetIdentity
+    model_input_hashes: dict[str, str]
 
 
 class NeuralMetadata(TypedDict):
@@ -91,6 +94,9 @@ class NeuralMetadata(TypedDict):
     truncation_stats: dict[str, dict[str, int | float]]
     preprocessing_policy: dict[str, bool | str]
     manifest_timestamp: str | None
+    texts_by_split: dict[str, list[str]]
+    dataset_identity: DatasetIdentity
+    model_input_hashes: dict[str, str]
 
 
 def _validate_split_labels(labels: torch.Tensor, num_classes: int, split: str, expected_rows: int) -> None:
@@ -159,6 +165,7 @@ def load_tfidf_data(
     assert dense_mb < 2048, f"Dense TF-IDF memory ({dense_mb:.0f} MB) exceeds 2 GB safety limit"
 
     datasets_dict: dict[str, TFIDFDataset] = {}
+    model_input_hashes: dict[str, str] = {}
     for split in _SPLIT_NAMES:
         label_tensor = torch.tensor(labels_by_split[split])
 
@@ -166,6 +173,7 @@ def load_tfidf_data(
         if not np.isfinite(mat.data).all():
             raise ValueError(f"Non-finite TF-IDF features in {split}")
         _validate_split_labels(label_tensor, num_classes, split, mat.shape[0])
+        model_input_hashes[split] = hash_tfidf_inputs(mat)
 
         datasets_dict[split] = TFIDFDataset(tfidf_matrices[split], label_tensor)
 
@@ -198,6 +206,8 @@ def load_tfidf_data(
         "label_to_id": str(label_to_id_path.relative_to(PROJECT_ROOT)),
         "id_to_label": str(id_to_label_path.relative_to(PROJECT_ROOT)),
         "preprocessing_summary": str((ARTIFACTS_DIR / "preprocessing_summary.json").relative_to(PROJECT_ROOT)),
+        "vocab": str((ARTIFACTS_DIR / "vocab.json").relative_to(PROJECT_ROOT)),
+        "sequence_length_stats": str((ARTIFACTS_DIR / "sequence_length_stats.json").relative_to(PROJECT_ROOT)),
     }
 
     metadata: TFIDFMetadata = {
@@ -206,6 +216,8 @@ def load_tfidf_data(
         "label_to_id": label_to_id,
         "id_to_label": id_to_label,
         "texts_by_split": texts_by_split,
+        "dataset_identity": identify_dataset(dataset, DATASET_CONFIG),
+        "model_input_hashes": model_input_hashes,
     }
 
     return loaders, input_dim, num_classes, metadata
@@ -598,10 +610,13 @@ def load_neural_data(
     oov_stats: dict[str, dict[str, int | float]] = {}
     truncation_stats: dict[str, dict[str, int | float]] = {}
     datasets_dict: dict[str, IntentDataset] = {}
+    texts_by_split: dict[str, list[str]] = {}
+    model_input_hashes: dict[str, str] = {}
 
     for split in _SPLIT_NAMES:
         raw = dataset[split]
         texts = [clean_text(t) for t in raw["text"]]
+        texts_by_split[split] = texts
         tokenized = [tokenize_text(t) for t in texts]
 
         oov_stats[split] = compute_oov_stats(tokenized, vocab)
@@ -615,6 +630,7 @@ def load_neural_data(
         label_list: list[int] = raw["intent"]
         label_tensor = torch.tensor(label_list)
         _validate_split_labels(label_tensor, num_classes, split, seq_tensor.shape[0])
+        model_input_hashes[split] = hash_tensor(seq_tensor)
 
         datasets_dict[split] = IntentDataset(seq_tensor, label_tensor)
 
@@ -689,6 +705,9 @@ def load_neural_data(
         "truncation_stats": truncation_stats,
         "preprocessing_policy": preprocessing_policy,
         "manifest_timestamp": summary.get("timestamp"),
+        "texts_by_split": texts_by_split,
+        "dataset_identity": identify_dataset(dataset, DATASET_CONFIG),
+        "model_input_hashes": model_input_hashes,
     }
 
     return loaders, metadata

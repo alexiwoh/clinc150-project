@@ -56,6 +56,7 @@ class DatasetConfig:
     name: str = "clinc/clinc_oos"
     subset: str = "plus"
     cache_dir: Path = constants.RAW_DIR
+    revision: str = "155b9c710419136e17307b80d0a13e68cd46b4ec"
 
 
 DATASET_CONFIG: DatasetConfig = DatasetConfig()
