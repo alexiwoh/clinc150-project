@@ -242,7 +242,7 @@ class TestFrozenModelConfig:
             monitor_metric="val_loss",
             hyperparameters={**sample_frozen.hyperparameters, "monitor_metric": "val_loss"},
         )
-        with pytest.raises(ValueError, match="Repeated evaluation only supports"):
+        with pytest.raises(ValueError, match="only support monitor_metric"):
             frozen.to_model_config()
 
 
@@ -257,9 +257,16 @@ class TestSupportedModelSettings:
         with pytest.raises(ValueError):
             config_class(**setting)
 
+    @pytest.mark.parametrize("config_class", [MLPBaselineConfig, TextCNNConfig, BiLSTMConfig])
     @pytest.mark.parametrize("monitor", MONITOR_METRIC_DIRECTIONS)
-    def test_supported_monitor_accepted(self, monitor: str) -> None:
-        assert MLPBaselineConfig(monitor_metric=monitor).monitor_metric == monitor
+    def test_model_workflow_only_accepts_macro_f1_monitor(
+        self, config_class: type[MLPBaselineConfig | TextCNNConfig | BiLSTMConfig], monitor: str
+    ) -> None:
+        if monitor == "val_macro_f1":
+            assert config_class(monitor_metric=monitor).monitor_metric == monitor
+        else:
+            with pytest.raises(ValueError, match="only support monitor_metric"):
+                config_class(monitor_metric=monitor)
 
     def test_unsupported_bilstm_summarization_rejected(self) -> None:
         with pytest.raises(ValueError, match="summarization_mode"):

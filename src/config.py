@@ -11,7 +11,6 @@ import torch
 
 from src import constants
 from src.enums import ModelID
-from src.training_contracts import MONITOR_METRIC_DIRECTIONS
 
 SUPPORTED_OPTIMIZER: str = "adam"
 SUPPORTED_OOS_STRATEGY: str = "explicit_class"
@@ -96,8 +95,8 @@ class BaseModelConfig:
             raise ValueError(f"Only optimizer={SUPPORTED_OPTIMIZER!r} is supported, got {self.optimizer!r}")
         if self.oos_strategy != SUPPORTED_OOS_STRATEGY:
             raise ValueError(f"Only oos_strategy={SUPPORTED_OOS_STRATEGY!r} is supported, got {self.oos_strategy!r}")
-        if self.monitor_metric not in MONITOR_METRIC_DIRECTIONS:
-            raise ValueError(f"Unsupported monitor_metric: {self.monitor_metric!r}")
+        if self.monitor_metric != SUPPORTED_REPEATED_MONITOR:
+            raise ValueError(f"Model workflows only support monitor_metric={SUPPORTED_REPEATED_MONITOR!r}")
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize all fields to a JSON-safe dict."""
