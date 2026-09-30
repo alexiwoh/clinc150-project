@@ -12,6 +12,13 @@ import torch
 from src import constants
 from src.enums import ModelID
 
+SUPPORTED_OPTIMIZER: str = "adam"
+SUPPORTED_OOS_STRATEGY: str = "explicit_class"
+SUPPORTED_SUMMARIZATION_MODE: str = "concat_final_hidden"
+SUPPORTED_REPRESENTATIVE_RULE: str = "highest_validation_macro_f1"
+SUPPORTED_REPEATED_MONITOR: str = "val_macro_f1"
+ALL_RUNS_ARTIFACT_POLICY: str = "all_runs"
+
 
 def get_device() -> torch.device:
     """Auto-detect the best available device: MPS > CUDA > CPU."""
@@ -74,13 +81,22 @@ class BaseModelConfig:
     batch_size: int = 64
     max_epochs: int = 100
     early_stopping_patience: int = 10
-    optimizer: str = "adam"
+    optimizer: str = SUPPORTED_OPTIMIZER
     use_class_weights: bool = False
     use_lr_scheduler: bool = False
     random_seed: int = 42
     dataloader_seed: int = 42
-    monitor_metric: str = "val_macro_f1"
-    oos_strategy: str = "explicit_class"
+    monitor_metric: str = SUPPORTED_REPEATED_MONITOR
+    oos_strategy: str = SUPPORTED_OOS_STRATEGY
+
+    def __post_init__(self) -> None:
+        """Reject settings that the training functions do not implement."""
+        if self.optimizer != SUPPORTED_OPTIMIZER:
+            raise ValueError(f"Only optimizer={SUPPORTED_OPTIMIZER!r} is supported, got {self.optimizer!r}")
+        if self.oos_strategy != SUPPORTED_OOS_STRATEGY:
+            raise ValueError(f"Only oos_strategy={SUPPORTED_OOS_STRATEGY!r} is supported, got {self.oos_strategy!r}")
+        if self.monitor_metric != SUPPORTED_REPEATED_MONITOR:
+            raise ValueError(f"Model workflows only support monitor_metric={SUPPORTED_REPEATED_MONITOR!r}")
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize all fields to a JSON-safe dict."""
@@ -123,9 +139,17 @@ class BiLSTMConfig(BaseNeuralConfig):
     num_layers: int = 1
     bidirectional: bool = True
     learning_rate: float = 5e-4
-    summarization_mode: str = "concat_final_hidden"
+    summarization_mode: str = SUPPORTED_SUMMARIZATION_MODE
     gradient_clipping: bool = True
     max_grad_norm: float = 1.0
+
+    def __post_init__(self) -> None:
+        super().__post_init__()
+        if self.summarization_mode != SUPPORTED_SUMMARIZATION_MODE:
+            raise ValueError(
+                f"Only summarization_mode={SUPPORTED_SUMMARIZATION_MODE!r} is supported, "
+                f"got {self.summarization_mode!r}"
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -152,12 +176,31 @@ class RepeatedRunProtocol:
     protocol_version: str = constants.PROTOCOL_VERSION
     run_count: int = 3
     seed_list: tuple[int, ...] = constants.DEFAULT_SEED_LIST
-    representative_run_rule: str = "highest_validation_macro_f1"
-    probability_saving_policy: str = "representative_only"
-    confusion_artifact_policy: str = "all_runs"
+    representative_run_rule: str = SUPPORTED_REPRESENTATIVE_RULE
+    probability_saving_policy: str = ALL_RUNS_ARTIFACT_POLICY
+    confusion_artifact_policy: str = ALL_RUNS_ARTIFACT_POLICY
     aggregate_metric_list: tuple[str, ...] = constants.DEFAULT_AGGREGATE_METRICS
     test_evaluation_enabled: bool = True
     timing_includes_dataloader_overhead: bool = True
+
+    def __post_init__(self) -> None:
+        """Enforce the single evaluation/artifact contract implemented by this project."""
+        if self.schema_version != constants.SCHEMA_VERSION:
+            raise ValueError(f"Unsupported schema_version: {self.schema_version!r}")
+        if self.protocol_version != constants.PROTOCOL_VERSION:
+            raise ValueError(f"Unsupported protocol_version: {self.protocol_version!r}")
+        if self.representative_run_rule != SUPPORTED_REPRESENTATIVE_RULE:
+            raise ValueError(f"Only representative_run_rule={SUPPORTED_REPRESENTATIVE_RULE!r} is supported")
+        if self.probability_saving_policy != ALL_RUNS_ARTIFACT_POLICY:
+            raise ValueError(f"Only probability_saving_policy={ALL_RUNS_ARTIFACT_POLICY!r} is supported")
+        if self.confusion_artifact_policy != ALL_RUNS_ARTIFACT_POLICY:
+            raise ValueError(f"Only confusion_artifact_policy={ALL_RUNS_ARTIFACT_POLICY!r} is supported")
+        if self.aggregate_metric_list != constants.DEFAULT_AGGREGATE_METRICS:
+            raise ValueError("Only the full DEFAULT_AGGREGATE_METRICS list is supported")
+        if self.test_evaluation_enabled is not True:
+            raise ValueError("Only test_evaluation_enabled=True is supported")
+        if self.timing_includes_dataloader_overhead is not True:
+            raise ValueError("Only timing_includes_dataloader_overhead=True is supported")
 
     def effective_seed_list(self) -> list[int]:
         """Return the prefix of seed_list actually used for this run_count."""
@@ -229,4 +272,13 @@ class FrozenModelConfig:
     def to_model_config(self) -> BaseModelConfig:
         """Reconstruct the concrete model config dataclass from stored hyperparameters."""
         config_cls = MODEL_CONFIG_CLASSES[ModelID(self.model_id)]
-        return config_cls(**self.hyperparameters)
+        config = config_cls(**self.hyperparameters)
+        if self.monitor_metric != config.monitor_metric:
+            raise ValueError("Frozen monitor_metric must match hyperparameters.monitor_metric")
+        if config.monitor_metric != SUPPORTED_REPEATED_MONITOR:
+            raise ValueError(f"Repeated evaluation only supports monitor_metric={SUPPORTED_REPEATED_MONITOR!r}")
+        if self.oos_strategy != config.oos_strategy:
+            raise ValueError("Frozen oos_strategy must match hyperparameters.oos_strategy")
+        if self.oos_class_id != constants.OOS_LABEL_ID:
+            raise ValueError(f"Only oos_class_id={constants.OOS_LABEL_ID} is supported")
+        return config

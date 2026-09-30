@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +22,22 @@ REPORT_DIR: Path = SHARED_DIR / "report"
 ANALYSIS_DIR: Path = SHARED_DIR / "analysis"
 
 HANDOFF_FILENAME: str = "step11_handoff.json"
+
+_REPO_IMAGE_PATTERN = re.compile(r"(!\[[^\]]*\]\()(outputs/[^)]+)(\))")
+
+
+def render_image_links(markdown: str, output_dir: Path) -> str:
+    """Resolve generated repository figure links relative to the saved Markdown.
+
+    Section generators retain repository paths for provenance. Both section
+    files and the assembled report live in the same destination directory.
+    """
+
+    def relative_link(match: re.Match[str]) -> str:
+        target = os.path.relpath(resolve_repo_path(match.group(2)), output_dir)
+        return f"{match.group(1)}{Path(target).as_posix()}{match.group(3)}"
+
+    return _REPO_IMAGE_PATTERN.sub(relative_link, markdown)
 
 
 # ---------------------------------------------------------------------------
@@ -102,7 +120,7 @@ def save_section(
     md_path = out / f"{section_id}.md"
     json_path = out / f"{section_id}.json"
 
-    md_path.write_text(markdown)
+    md_path.write_text(render_image_links(markdown, out))
     write_json(json_path, metadata)
 
     logger.info("Saved report section: %s (.md + .json)", section_id)

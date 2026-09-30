@@ -16,6 +16,7 @@ Covers:
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -23,12 +24,14 @@ import pandas as pd
 import pytest
 
 from src.config import (
+    BiLSTMConfig,
     FrozenModelConfig,
     MLPBaselineConfig,
     RepeatedRunProtocol,
     TextCNNConfig,
 )
 from src.constants import (
+    DEFAULT_AGGREGATE_METRICS,
     LABEL_ORDER_REF,
     OOS_LABEL_ID,
     PREPROCESSING_MANIFEST_REF,
@@ -46,6 +49,7 @@ from src.repeated_evaluation import (
     save_representative_run,
     select_representative_run,
 )
+from src.training_contracts import MONITOR_METRIC_DIRECTIONS
 
 
 # ---------------------------------------------------------------------------
@@ -61,6 +65,26 @@ class TestRepeatedRunProtocol:
         assert protocol.representative_run_rule == "highest_validation_macro_f1"
         assert protocol.timing_includes_dataloader_overhead is True
         assert protocol.test_evaluation_enabled is True
+        assert protocol.probability_saving_policy == "all_runs"
+        assert protocol.confusion_artifact_policy == "all_runs"
+        assert protocol.aggregate_metric_list == DEFAULT_AGGREGATE_METRICS
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [
+            ("schema_version", "unknown"),
+            ("protocol_version", "unknown"),
+            ("representative_run_rule", "highest_test_macro_f1"),
+            ("probability_saving_policy", "representative_only"),
+            ("confusion_artifact_policy", "none"),
+            ("aggregate_metric_list", ("test_accuracy",)),
+            ("test_evaluation_enabled", False),
+            ("timing_includes_dataloader_overhead", False),
+        ],
+    )
+    def test_unsupported_settings_rejected(self, field: str, value: object) -> None:
+        with pytest.raises(ValueError):
+            replace(RepeatedRunProtocol(), **{field: value})
 
     def test_effective_seed_list_truncates(self) -> None:
         protocol = RepeatedRunProtocol(run_count=2, seed_list=(42, 1337, 2024))
@@ -203,6 +227,50 @@ class TestFrozenModelConfig:
     def test_frozen_is_immutable(self, sample_frozen: FrozenModelConfig) -> None:
         with pytest.raises(AttributeError):
             sample_frozen.model_id = "text_cnn"  # type: ignore[misc]
+
+    @pytest.mark.parametrize(
+        ("field", "value"),
+        [("monitor_metric", "val_loss"), ("oos_strategy", "threshold"), ("oos_class_id", 0)],
+    )
+    def test_inconsistent_metadata_rejected(self, sample_frozen: FrozenModelConfig, field: str, value: object) -> None:
+        with pytest.raises(ValueError):
+            replace(sample_frozen, **{field: value}).to_model_config()
+
+    def test_repeated_evaluation_rejects_nondefault_monitor(self, sample_frozen: FrozenModelConfig) -> None:
+        frozen = replace(
+            sample_frozen,
+            monitor_metric="val_loss",
+            hyperparameters={**sample_frozen.hyperparameters, "monitor_metric": "val_loss"},
+        )
+        with pytest.raises(ValueError, match="only support monitor_metric"):
+            frozen.to_model_config()
+
+
+class TestSupportedModelSettings:
+    @pytest.mark.parametrize("config_class", [MLPBaselineConfig, TextCNNConfig, BiLSTMConfig])
+    @pytest.mark.parametrize(
+        "setting", [{"optimizer": "sgd"}, {"oos_strategy": "threshold"}, {"monitor_metric": "val_typo"}]
+    )
+    def test_unsupported_training_settings_rejected(
+        self, config_class: type[MLPBaselineConfig | TextCNNConfig | BiLSTMConfig], setting: dict[str, str]
+    ) -> None:
+        with pytest.raises(ValueError):
+            config_class(**setting)
+
+    @pytest.mark.parametrize("config_class", [MLPBaselineConfig, TextCNNConfig, BiLSTMConfig])
+    @pytest.mark.parametrize("monitor", MONITOR_METRIC_DIRECTIONS)
+    def test_model_workflow_only_accepts_macro_f1_monitor(
+        self, config_class: type[MLPBaselineConfig | TextCNNConfig | BiLSTMConfig], monitor: str
+    ) -> None:
+        if monitor == "val_macro_f1":
+            assert config_class(monitor_metric=monitor).monitor_metric == monitor
+        else:
+            with pytest.raises(ValueError, match="only support monitor_metric"):
+                config_class(monitor_metric=monitor)
+
+    def test_unsupported_bilstm_summarization_rejected(self) -> None:
+        with pytest.raises(ValueError, match="summarization_mode"):
+            BiLSTMConfig(summarization_mode="mean_pool")
 
 
 # ---------------------------------------------------------------------------

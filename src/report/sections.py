@@ -1197,7 +1197,7 @@ def generate_error_analysis() -> SectionOutput:
         scopes=["representative"],
     )
     length_claim = build_structured_claim(
-        claim_id="length_frequency_slices",
+        claim_id="length_scope_slices",
         claim_text=(
             "Short-query accuracy remains lower than desired across models, "
             "reinforcing the short-query ambiguity pattern."
@@ -1305,7 +1305,10 @@ def generate_error_analysis() -> SectionOutput:
     _append_related_figure_note(md_parts, confused_pairs_claim)
     md_parts.extend(
         [
-            "### Length and Frequency Slices",
+            "### Length and In-Scope / OOS Slices",
+            "",
+            "The scope comparison separates in-scope classes from the supervised OOS class; "
+            "it does not measure training frequency. Historical frequency_slice filenames are retained.",
             "",
             "Short-query accuracy per model (representative run):",
             *[
@@ -1872,7 +1875,8 @@ _ANALYSIS_LIMITATIONS: list[str] = [
     "CLINC150 is balanced; real-world class distributions may differ significantly.",
     "No interpretability analysis (attention, saliency) was performed.",
     "Post-hoc calibration (temperature scaling) was not applied.",
-    "Length and frequency slicing uses simple whitespace tokenization.",
+    "Length slices use whitespace tokenization; scope slices compare supervised in-scope and OOS classes, "
+    "not training frequency.",
 ]
 
 _PROJECT_LIMITATIONS: list[str] = [

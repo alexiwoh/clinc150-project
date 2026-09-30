@@ -12,6 +12,7 @@ from typing import Any, TypedDict
 
 import numpy as np
 import pandas as pd
+from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 import torch
 from torch.utils.data import DataLoader
@@ -92,6 +93,18 @@ class NeuralMetadata(TypedDict):
     manifest_timestamp: str | None
 
 
+def _validate_split_labels(labels: torch.Tensor, num_classes: int, split: str, expected_rows: int) -> None:
+    """Reject malformed labels before a dataset wrapper or integer cast can hide them."""
+    if labels.ndim != 1 or labels.shape[0] != expected_rows:
+        raise ValueError(f"Expected {expected_rows} one-dimensional labels in {split}, got shape {tuple(labels.shape)}")
+    if labels.numel() == 0:
+        raise ValueError(f"Empty labels in {split}")
+    if labels.dtype != torch.long:
+        raise TypeError(f"Label dtype is {labels.dtype} in {split}, expected torch.long")
+    if not ((labels >= 0) & (labels < num_classes)).all():
+        raise ValueError(f"Label ids out of range [0, {num_classes}) in {split}")
+
+
 def load_tfidf_data(
     config: MLPBaselineConfig,
 ) -> tuple[dict[str, DataLoader], int, int, TFIDFMetadata]:
@@ -128,7 +141,7 @@ def load_tfidf_data(
         texts_by_split[split] = [clean_text(t) for t in raw["text"]]
         labels_by_split[split] = raw["intent"]
 
-    tfidf_matrices = {}
+    tfidf_matrices: dict[str, csr_matrix] = {}
     for split in _SPLIT_NAMES:
         tfidf_matrices[split] = vectorizer.transform(texts_by_split[split])
 
@@ -147,16 +160,12 @@ def load_tfidf_data(
 
     datasets_dict: dict[str, TFIDFDataset] = {}
     for split in _SPLIT_NAMES:
-        label_tensor = torch.tensor(labels_by_split[split], dtype=torch.long)
+        label_tensor = torch.tensor(labels_by_split[split])
 
         mat = tfidf_matrices[split]
-        arr = mat.toarray() if hasattr(mat, "toarray") else np.asarray(mat)
-        assert not np.isnan(arr).any(), f"NaN in TF-IDF features for {split}"
-        assert not np.isinf(arr).any(), f"Inf in TF-IDF features for {split}"
-        assert label_tensor.dtype == torch.long, f"Label dtype is {label_tensor.dtype}, expected torch.long"
-        assert (label_tensor >= 0).all() and (label_tensor < num_classes).all(), (
-            f"Label ids out of range [0, {num_classes}) in {split}"
-        )
+        if not np.isfinite(mat.data).all():
+            raise ValueError(f"Non-finite TF-IDF features in {split}")
+        _validate_split_labels(label_tensor, num_classes, split, mat.shape[0])
 
         datasets_dict[split] = TFIDFDataset(tfidf_matrices[split], label_tensor)
 
@@ -604,11 +613,8 @@ def load_neural_data(
         padded = [pad_or_truncate(seq, config.max_seq_length) for seq in numericalized]
         seq_tensor = torch.tensor(padded, dtype=torch.long)
         label_list: list[int] = raw["intent"]
-        label_tensor = torch.tensor(label_list, dtype=torch.long)
-
-        assert (label_tensor >= 0).all() and (label_tensor < num_classes).all(), (
-            f"Label ids out of range [0, {num_classes}) in {split}"
-        )
+        label_tensor = torch.tensor(label_list)
+        _validate_split_labels(label_tensor, num_classes, split, seq_tensor.shape[0])
 
         datasets_dict[split] = IntentDataset(seq_tensor, label_tensor)
 

@@ -636,3 +636,32 @@ class TestFullPipelineIntegration:
         finally:
             for p in patches:
                 p.stop()
+
+
+def test_scope_slice_is_independent_of_test_support(mock_analysis_env: Path) -> None:
+    from contextlib import ExitStack
+
+    from src.analysis.slicing import compute_and_save_frequency_analysis
+    from src.analysis.utils import resolve_handoff
+
+    with ExitStack() as stack:
+        for context_patch in _patch_for_analysis(mock_analysis_env):
+            stack.enter_context(context_patch)
+        ctx = resolve_handoff(ModelID.MLP)
+        # Give every class equal test support. Quartiles would collapse them
+        # into one tier, while class scope still has the two correct groups.
+        artifact = compute_and_save_frequency_analysis(ctx)
+        predictions = pd.read_csv(ctx.final_predictions_path)
+        expected_oos = int((predictions.true_label_name == "oos").sum())
+        slices = {row["slice"]: row for row in artifact["slices"]}
+        assert list(slices) == ["in_scope", "oos"]
+        assert slices["oos"]["count"] == expected_oos
+        assert slices["in_scope"]["count"] == len(predictions) - expected_oos
+        assert artifact["analysis_basis"] == "in_scope_vs_oos"
+        assert artifact["source_artifact"].endswith("final_predictions.csv")
+        assert "not a training-frequency analysis" in artifact["note"]
+        assert "quartile_thresholds" not in artifact
+        scope = predictions.true_label_name == "oos"
+        correct = predictions.true_label_id == predictions.predicted_label_id
+        assert slices["oos"]["accuracy"] == pytest.approx(correct[scope].mean())
+        assert slices["in_scope"]["accuracy"] == pytest.approx(correct[~scope].mean())

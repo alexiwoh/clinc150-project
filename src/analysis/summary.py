@@ -210,7 +210,8 @@ def generate_error_analysis_notes(model_ids: list[ModelID]) -> None:
             "- CLINC150 is balanced; real-world class distributions may differ significantly.",
             "- No interpretability analysis (attention, saliency) was performed.",
             "- Post-hoc calibration (e.g., temperature scaling) was not applied.",
-            "- Length and frequency slicing uses simple whitespace tokenization.",
+            "- Length slices use whitespace tokenization; scope slices compare supervised in-scope and OOS classes, "
+            "not training frequency.",
             "",
             "## Recommendations",
             "",

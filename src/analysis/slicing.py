@@ -1,4 +1,4 @@
-"""Section H: Slice-based analysis by utterance length and class frequency."""
+"""Section H: Slice-based analysis by utterance length and supervised class scope."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from src.analysis.constants import (
     LENGTH_SLICE_COMPARISON_FILENAME,
     LENGTH_SLICE_FILENAME,
 )
-from src.analysis.enums import FrequencyTier, LengthBucket
+from src.analysis.enums import LengthBucket, ScopeSlice
 from src.analysis.figures import plot_grouped_bar
 from src.analysis.utils import (
     HandoffContext,
@@ -23,7 +23,6 @@ from src.analysis.utils import (
     artifact_envelope,
     load_confidences,
     load_predictions,
-    read_json,
     repo_relative,
     shared_analysis_dir,
     write_json,
@@ -85,8 +84,8 @@ def _compute_slice_metrics(
             }
         )
     bucket_order = {str(b): i for i, b in enumerate(LengthBucket)}
-    tier_order = {str(t): i for i, t in enumerate(FrequencyTier)}
-    order = {**bucket_order, **tier_order}
+    scope_order = {scope: i for i, scope in enumerate(ScopeSlice)}
+    order = {**bucket_order, **scope_order}
     results.sort(key=lambda r: order.get(r["slice"], 999))
     return results
 
@@ -121,45 +120,33 @@ def compute_and_save_length_analysis(ctx: HandoffContext) -> dict[str, Any]:
 
 
 # ---------------------------------------------------------------------------
-# Per-model frequency analysis
+# Per-model in-scope/OOS analysis
 # ---------------------------------------------------------------------------
 
 
 def compute_and_save_frequency_analysis(ctx: HandoffContext) -> dict[str, Any]:
-    """Compute frequency-slice metrics for one model and save."""
+    """Compute in-scope/OOS metrics; retain the historical filename for compatibility."""
     conf = load_confidences(ctx.confidences_path)
     preds_df = load_predictions(ctx.final_predictions_path)
-    per_class = read_json(ctx.per_class_metrics_path)
     out_dir = analysis_output_dir(ctx.model_id)
 
-    support_by_class: dict[str, int] = {c["label_name"]: c["support"] for c in per_class["classes"]}
-    supports = np.array(list(support_by_class.values()))
-    q25 = float(np.percentile(supports, 25))
-    q75 = float(np.percentile(supports, 75))
-
-    def _tier(label: str) -> FrequencyTier:
-        s = support_by_class.get(label, 0)
-        if s <= q25:
-            return FrequencyTier.LOW
-        if s >= q75:
-            return FrequencyTier.HIGH
-        return FrequencyTier.MEDIUM
-
     preds_df = preds_df.copy()
-    preds_df["frequency_tier"] = preds_df["true_label_name"].map(_tier)
+    preds_df["class_scope"] = np.where(
+        preds_df["true_label_id"] == conf.oos_class_idx, ScopeSlice.OOS, ScopeSlice.IN_SCOPE
+    )
     max_probs = np.max(conf.probabilities, axis=1)
     correct_mask = conf.predictions == conf.targets
 
-    slices = _compute_slice_metrics(preds_df, max_probs, correct_mask, "frequency_tier")
+    slices = _compute_slice_metrics(preds_df, max_probs, correct_mask, "class_scope")
 
     artifact = artifact_envelope(
         model_id=ctx.model_id,
         representative_run_id=ctx.representative_run_id,
-        note="Frequency tiers use test-set support quartiles as proxy for training-set frequency "
-        "(CLINC150 is balanced, so this is a reasonable approximation).",
-        quartile_thresholds={"q25": q25, "q75": q75},
+        analysis_basis="in_scope_vs_oos",
+        note="Supervised in-scope versus OOS class accuracy, not a training-frequency analysis. "
+        "The frequency_slice filename is retained for compatibility with historical artifacts.",
         slices=slices,
-        source_artifact=repo_relative(ctx.per_class_metrics_path),
+        source_artifact=repo_relative(ctx.final_predictions_path),
     )
     write_json(out_dir / FREQUENCY_SLICE_FILENAME, artifact)
     logger.info("Saved: %s", out_dir / FREQUENCY_SLICE_FILENAME)
@@ -176,7 +163,7 @@ def generate_slice_comparisons(
     per_model_length: dict[str, dict[str, Any]],
     per_model_frequency: dict[str, dict[str, Any]],
 ) -> list[FigureRecord]:
-    """Generate shared length-slice and frequency-slice comparison figures."""
+    """Generate shared length-slice and in-scope/OOS comparison figures."""
     records: list[FigureRecord] = []
     shared_dir = shared_analysis_dir()
 
@@ -191,12 +178,12 @@ def generate_slice_comparisons(
         figure_type="length_slice",
     )
 
-    # Frequency slice comparison
+    # In-scope/OOS comparison (historical frequency_slice identifier)
     _generate_grouped_comparison(
         model_ids,
         per_model_frequency,
         shared_dir / FREQUENCY_SLICE_COMPARISON_FILENAME,
-        "Accuracy by Class Frequency Tier",
+        "Accuracy by In-Scope / OOS Class",
         FREQUENCY_SLICE_FILENAME,
         records,
         figure_type="frequency_slice",
