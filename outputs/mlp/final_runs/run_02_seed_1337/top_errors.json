@@ -157,13 +157,6 @@
   ],
   "errors": [
     {
-      "text": "can i do a reservation at sammy's crab shack",
-      "true_label": "accept_reservations",
-      "predicted_label": "confirm_reservation",
-      "true_id": 9,
-      "predicted_id": 85
-    },
-    {
       "text": "can i reserve tables at the new york restaurant",
       "true_label": "accept_reservations",
       "predicted_label": "restaurant_reservation",
@@ -185,11 +178,32 @@
       "predicted_id": 23
     },
     {
+      "text": "is there a reason you put a hold on my chase account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
       "text": "reasons that us bank would place a hold on my account",
       "true_label": "account_blocked",
       "predicted_label": "freeze_account",
       "true_id": 2,
       "predicted_id": 20
+    },
+    {
+      "text": "what could cause a hold on my savings account",
+      "true_label": "account_blocked",
+      "predicted_label": "freeze_account",
+      "true_id": 2,
+      "predicted_id": 20
+    },
+    {
+      "text": "why can't i use my money market account",
+      "true_label": "account_blocked",
+      "predicted_label": "oos",
+      "true_id": 2,
+      "predicted_id": 42
     },
     {
       "text": "i need to up by noon",
@@ -199,11 +213,18 @@
       "predicted_id": 53
     },
     {
+      "text": "can you please let me know the status of my capital one application",
+      "true_label": "application_status",
+      "predicted_label": "order_status",
+      "true_id": 103,
+      "predicted_id": 84
+    },
+    {
       "text": "what are my coffers at",
       "true_label": "balance",
-      "predicted_label": "oos",
+      "predicted_label": "current_location",
       "true_id": 35,
-      "predicted_id": 42
+      "predicted_id": 136
     },
     {
       "text": "i need to know the price of my car payment and insurance please",
@@ -227,13 +248,6 @@
       "predicted_id": 56
     },
     {
-      "text": "what would you say my gas and phone bills are at",
-      "true_label": "bill_balance",
-      "predicted_label": "gas",
-      "true_id": 27,
-      "predicted_id": 110
-    },
-    {
       "text": "how expensive is my internet",
       "true_label": "bill_balance",
       "predicted_label": "oos",
@@ -255,25 +269,18 @@
       "predicted_id": 42
     },
     {
-      "text": "book me a place to chicago from atlanta united airlines",
-      "true_label": "book_flight",
-      "predicted_label": "book_hotel",
-      "true_id": 63,
-      "predicted_id": 116
+      "text": "what's the latest i can pay my cellular bill",
+      "true_label": "bill_due",
+      "predicted_label": "pay_bill",
+      "true_id": 56,
+      "predicted_id": 111
     },
     {
-      "text": "\"i\"m headed out to lax and going to phl for a low price of $120 this weekend on the 12th",
-      "true_label": "book_flight",
-      "predicted_label": "travel_notification",
-      "true_id": 63,
-      "predicted_id": 146
-    },
-    {
-      "text": "\"i'll be travelling from lax and headed to phl for 120 on the 10th of may",
-      "true_label": "book_flight",
-      "predicted_label": "travel_notification",
-      "true_id": 63,
-      "predicted_id": 146
+      "text": "what's the ultimate day for me to pay the internet bill",
+      "true_label": "bill_due",
+      "predicted_label": "pay_bill",
+      "true_id": 56,
+      "predicted_id": 111
     },
     {
       "text": "i'm travelling to boston on march 2 until march 4 please make a hotel reservation for me",
@@ -281,13 +288,6 @@
       "predicted_label": "book_flight",
       "true_id": 116,
       "predicted_id": 63
-    },
-    {
-      "text": "i bought 6 shirts at $499 each what was my total expenditure for them",
-      "true_label": "calculator",
-      "predicted_label": "oos",
-      "true_id": 138,
-      "predicted_id": 42
     },
     {
       "text": "i spent 34 dollars for 12 gallons of paint what is the average price for each gallon",

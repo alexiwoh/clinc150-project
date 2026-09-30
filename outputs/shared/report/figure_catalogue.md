@@ -191,7 +191,7 @@
 - **length_slice** (analysis): Cross-model accuracy comparison by utterance length across all evaluated models. Computed from cross-model slice comparison using representative runs. Uses the CLINC150 test split.
   Figure path: `outputs/shared/analysis/length_slice_comparison.png`
   Source artifacts: `outputs/mlp/analysis/length_slice_analysis.json`, `outputs/text_cnn/analysis/length_slice_analysis.json`, `outputs/bilstm/analysis/length_slice_analysis.json`
-- **frequency_slice** (analysis): Cross-model accuracy comparison by class-frequency tier across all evaluated models. Computed from cross-model slice comparison using representative runs. Uses the CLINC150 test split.
+- **frequency_slice** (analysis): Cross-model accuracy comparison for in-scope versus OOS classes across all evaluated models. Computed from cross-model slice comparison using representative runs. Uses the CLINC150 test split.
   Figure path: `outputs/shared/analysis/frequency_slice_comparison.png`
   Source artifacts: `outputs/mlp/analysis/frequency_slice_analysis.json`, `outputs/text_cnn/analysis/frequency_slice_analysis.json`, `outputs/bilstm/analysis/frequency_slice_analysis.json`
 - **cross_model_error_overlap** (analysis): Overlap between shared and model-specific prediction failures across all evaluated models. Computed from cross-model error overlap using one representative run per model. Uses the CLINC150 test split.

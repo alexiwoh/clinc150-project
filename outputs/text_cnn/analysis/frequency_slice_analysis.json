@@ -4,30 +4,27 @@
   "model_id": "text_cnn",
   "model_name": "Text CNN",
   "representative_run_id": "run_03_seed_2024",
-  "note": "Frequency tiers use test-set support quartiles as proxy for training-set frequency (CLINC150 is balanced, so this is a reasonable approximation).",
-  "quartile_thresholds": {
-    "q25": 30.0,
-    "q75": 30.0
-  },
+  "analysis_basis": "in_scope_vs_oos",
+  "note": "Supervised in-scope versus OOS class accuracy, not a training-frequency analysis. The frequency_slice filename is retained for compatibility with historical artifacts.",
   "slices": [
     {
-      "slice": "low",
+      "slice": "in_scope",
       "count": 4500,
-      "accuracy": 0.9206666666666666,
-      "error_count": 357,
-      "error_rate": 0.07933333333333334,
-      "mean_confidence_correct": 0.9506455063819885,
-      "mean_confidence_incorrect": 0.5637656450271606
+      "accuracy": 0.9173333333333333,
+      "error_count": 372,
+      "error_rate": 0.08266666666666667,
+      "mean_confidence_correct": 0.9505563974380493,
+      "mean_confidence_incorrect": 0.5545198917388916
     },
     {
-      "slice": "high",
+      "slice": "oos",
       "count": 1000,
-      "accuracy": 0.373,
-      "error_count": 627,
-      "error_rate": 0.627,
-      "mean_confidence_correct": 0.5658252835273743,
-      "mean_confidence_incorrect": 0.42258235812187195
+      "accuracy": 0.364,
+      "error_count": 636,
+      "error_rate": 0.636,
+      "mean_confidence_correct": 0.576478123664856,
+      "mean_confidence_incorrect": 0.4246532917022705
     }
   ],
-  "source_artifact": "outputs/text_cnn/final_runs/run_03_seed_2024/per_class_metrics.json"
+  "source_artifact": "outputs/text_cnn/final_runs/run_03_seed_2024/final_predictions.csv"
 }

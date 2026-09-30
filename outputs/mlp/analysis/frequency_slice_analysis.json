@@ -4,14 +4,11 @@
   "model_id": "mlp",
   "model_name": "TF-IDF + MLP",
   "representative_run_id": "run_01_seed_42",
-  "note": "Frequency tiers use test-set support quartiles as proxy for training-set frequency (CLINC150 is balanced, so this is a reasonable approximation).",
-  "quartile_thresholds": {
-    "q25": 30.0,
-    "q75": 30.0
-  },
+  "analysis_basis": "in_scope_vs_oos",
+  "note": "Supervised in-scope versus OOS class accuracy, not a training-frequency analysis. The frequency_slice filename is retained for compatibility with historical artifacts.",
   "slices": [
     {
-      "slice": "low",
+      "slice": "in_scope",
       "count": 4500,
       "accuracy": 0.9148888888888889,
       "error_count": 383,
@@ -20,7 +17,7 @@
       "mean_confidence_incorrect": 0.4126192033290863
     },
     {
-      "slice": "high",
+      "slice": "oos",
       "count": 1000,
       "accuracy": 0.503,
       "error_count": 497,
@@ -29,5 +26,5 @@
       "mean_confidence_incorrect": 0.3249993622303009
     }
   ],
-  "source_artifact": "outputs/mlp/final_runs/run_01_seed_42/per_class_metrics.json"
+  "source_artifact": "outputs/mlp/final_runs/run_01_seed_42/final_predictions.csv"
 }

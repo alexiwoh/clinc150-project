@@ -54,6 +54,9 @@ OOS_LABEL_ID: int = 42
 NUM_CLASSES: int = 151
 NUM_IN_SCOPE_CLASSES: int = 150
 
+# Shared by error taxonomy and its report descriptions.
+SHORT_QUERY_TOKEN_THRESHOLD: int = 5
+
 # ---------------------------------------------------------------------------
 # Protocol versioning and evaluation defaults
 # ---------------------------------------------------------------------------

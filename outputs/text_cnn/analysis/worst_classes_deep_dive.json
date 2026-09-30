@@ -8,77 +8,61 @@
   "worst_classes": [
     {
       "label_name": "oos",
-      "precision": 0.9371859296482412,
-      "recall": 0.373,
-      "f1": 0.5336194563662375,
+      "precision": 0.9215189873417722,
+      "recall": 0.364,
+      "f1": 0.5218637992831541,
       "support": 1000,
       "domain": "unknown",
       "top_confusion_targets": [
         {
-          "target_class": "travel_suggestion",
-          "count": 27,
+          "target_class": "directions",
+          "count": 33,
           "shares_domain": false
         },
         {
-          "target_class": "directions",
-          "count": 23,
+          "target_class": "recipe",
+          "count": 25,
           "shares_domain": false
         },
         {
           "target_class": "todo_list",
-          "count": 21,
+          "count": 24,
           "shares_domain": false
         }
       ],
-      "mean_confidence_misclassified": 0.42258235812187195
+      "mean_confidence_misclassified": 0.4246532917022705
     },
     {
       "label_name": "recipe",
-      "precision": 0.4489795918367347,
-      "recall": 0.7333333333333333,
-      "f1": 0.5569620253164557,
+      "precision": 0.4444444444444444,
+      "recall": 0.8,
+      "f1": 0.5714285714285714,
       "support": 30,
       "domain": "kitchen_and_dining",
       "top_confusion_targets": [
         {
-          "target_class": "greeting",
-          "count": 3,
-          "shares_domain": false
-        },
-        {
-          "target_class": "meal_suggestion",
+          "target_class": "oos",
           "count": 2,
-          "shares_domain": true
+          "shares_domain": false
         },
         {
           "target_class": "ingredients_list",
           "count": 2,
           "shares_domain": true
-        }
-      ],
-      "mean_confidence_misclassified": 0.575722336769104
-    },
-    {
-      "label_name": "travel_suggestion",
-      "precision": 0.45161290322580644,
-      "recall": 0.9333333333333333,
-      "f1": 0.6086956521739131,
-      "support": 30,
-      "domain": "travel",
-      "top_confusion_targets": [
+        },
         {
-          "target_class": "restaurant_suggestion",
-          "count": 2,
-          "shares_domain": false
+          "target_class": "meal_suggestion",
+          "count": 1,
+          "shares_domain": true
         }
       ],
-      "mean_confidence_misclassified": 0.6675886511802673
+      "mean_confidence_misclassified": 0.5005257725715637
     },
     {
       "label_name": "todo_list",
-      "precision": 0.4745762711864407,
+      "precision": 0.4307692307692308,
       "recall": 0.9333333333333333,
-      "f1": 0.6292134831460674,
+      "f1": 0.5894736842105263,
       "support": 30,
       "domain": "home",
       "top_confusion_targets": [
@@ -88,65 +72,23 @@
           "shares_domain": true
         }
       ],
-      "mean_confidence_misclassified": 0.8098416924476624
+      "mean_confidence_misclassified": 0.9015117883682251
     },
     {
-      "label_name": "restaurant_suggestion",
-      "precision": 0.5581395348837209,
-      "recall": 0.8,
-      "f1": 0.6575342465753424,
+      "label_name": "directions",
+      "precision": 0.44776119402985076,
+      "recall": 1.0,
+      "f1": 0.6185567010309279,
       "support": 30,
-      "domain": "kitchen_and_dining",
-      "top_confusion_targets": [
-        {
-          "target_class": "meal_suggestion",
-          "count": 3,
-          "shares_domain": true
-        },
-        {
-          "target_class": "translate",
-          "count": 2,
-          "shares_domain": false
-        },
-        {
-          "target_class": "exchange_rate",
-          "count": 1,
-          "shares_domain": false
-        }
-      ],
-      "mean_confidence_misclassified": 0.46062731742858887
-    },
-    {
-      "label_name": "income",
-      "precision": 0.5531914893617021,
-      "recall": 0.8666666666666667,
-      "f1": 0.6753246753246753,
-      "support": 30,
-      "domain": "work",
-      "top_confusion_targets": [
-        {
-          "target_class": "bill_balance",
-          "count": 1,
-          "shares_domain": false
-        },
-        {
-          "target_class": "payday",
-          "count": 1,
-          "shares_domain": true
-        },
-        {
-          "target_class": "current_location",
-          "count": 1,
-          "shares_domain": false
-        }
-      ],
-      "mean_confidence_misclassified": 0.4323138892650604
+      "domain": "auto_and_commute",
+      "top_confusion_targets": [],
+      "mean_confidence_misclassified": 0.0
     },
     {
       "label_name": "order",
-      "precision": 0.5777777777777777,
-      "recall": 0.8666666666666667,
-      "f1": 0.6933333333333334,
+      "precision": 0.5102040816326531,
+      "recall": 0.8333333333333334,
+      "f1": 0.6329113924050633,
       "support": 30,
       "domain": "home",
       "top_confusion_targets": [
@@ -159,124 +101,67 @@
           "target_class": "order_status",
           "count": 2,
           "shares_domain": true
-        }
-      ],
-      "mean_confidence_misclassified": 0.7837628126144409
-    },
-    {
-      "label_name": "translate",
-      "precision": 0.5909090909090909,
-      "recall": 0.8666666666666667,
-      "f1": 0.7027027027027027,
-      "support": 30,
-      "domain": "travel",
-      "top_confusion_targets": [
-        {
-          "target_class": "change_language",
-          "count": 2,
-          "shares_domain": false
         },
         {
-          "target_class": "spelling",
-          "count": 2,
-          "shares_domain": false
-        }
-      ],
-      "mean_confidence_misclassified": 0.8175966143608093
-    },
-    {
-      "label_name": "directions",
-      "precision": 0.5454545454545454,
-      "recall": 1.0,
-      "f1": 0.7058823529411765,
-      "support": 30,
-      "domain": "auto_and_commute",
-      "top_confusion_targets": [],
-      "mean_confidence_misclassified": 0.0
-    },
-    {
-      "label_name": "order_status",
-      "precision": 0.6875,
-      "recall": 0.7333333333333333,
-      "f1": 0.7096774193548387,
-      "support": 30,
-      "domain": "home",
-      "top_confusion_targets": [
-        {
-          "target_class": "order",
-          "count": 3,
-          "shares_domain": true
-        },
-        {
-          "target_class": "flight_status",
-          "count": 1,
-          "shares_domain": false
-        },
-        {
-          "target_class": "find_phone",
+          "target_class": "order_checks",
           "count": 1,
           "shares_domain": false
         }
       ],
-      "mean_confidence_misclassified": 0.3926118016242981
+      "mean_confidence_misclassified": 0.7242852449417114
     },
     {
-      "label_name": "ingredients_list",
-      "precision": 0.6486486486486487,
+      "label_name": "restaurant_suggestion",
+      "precision": 0.5581395348837209,
       "recall": 0.8,
-      "f1": 0.7164179104477612,
+      "f1": 0.6575342465753424,
       "support": 30,
       "domain": "kitchen_and_dining",
       "top_confusion_targets": [
         {
-          "target_class": "recipe",
+          "target_class": "translate",
           "count": 3,
-          "shares_domain": true
-        },
-        {
-          "target_class": "spelling",
-          "count": 1,
           "shares_domain": false
         },
         {
-          "target_class": "income",
-          "count": 1,
-          "shares_domain": false
-        }
-      ],
-      "mean_confidence_misclassified": 0.6121867895126343
-    },
-    {
-      "label_name": "yes",
-      "precision": 0.7096774193548387,
-      "recall": 0.7333333333333333,
-      "f1": 0.7213114754098361,
-      "support": 30,
-      "domain": "meta",
-      "top_confusion_targets": [
-        {
-          "target_class": "goodbye",
+          "target_class": "travel_suggestion",
           "count": 2,
           "shares_domain": false
         },
         {
-          "target_class": "time",
-          "count": 1,
-          "shares_domain": false
-        },
-        {
-          "target_class": "no",
+          "target_class": "meal_suggestion",
           "count": 1,
           "shares_domain": true
         }
       ],
-      "mean_confidence_misclassified": 0.35243070125579834
+      "mean_confidence_misclassified": 0.5154749751091003
+    },
+    {
+      "label_name": "travel_suggestion",
+      "precision": 0.5384615384615384,
+      "recall": 0.9333333333333333,
+      "f1": 0.6829268292682927,
+      "support": 30,
+      "domain": "travel",
+      "top_confusion_targets": [
+        {
+          "target_class": "directions",
+          "count": 1,
+          "shares_domain": false
+        },
+        {
+          "target_class": "restaurant_suggestion",
+          "count": 1,
+          "shares_domain": false
+        }
+      ],
+      "mean_confidence_misclassified": 0.752335786819458
     },
     {
       "label_name": "smart_home",
-      "precision": 0.6136363636363636,
+      "precision": 0.574468085106383,
       "recall": 0.9,
-      "f1": 0.7297297297297297,
+      "f1": 0.7012987012987013,
       "support": 30,
       "domain": "home",
       "top_confusion_targets": [
@@ -296,19 +181,149 @@
           "shares_domain": false
         }
       ],
-      "mean_confidence_misclassified": 0.8128213286399841
+      "mean_confidence_misclassified": 0.6160898804664612
+    },
+    {
+      "label_name": "todo_list_update",
+      "precision": 0.7407407407407407,
+      "recall": 0.6666666666666666,
+      "f1": 0.7017543859649122,
+      "support": 30,
+      "domain": "home",
+      "top_confusion_targets": [
+        {
+          "target_class": "todo_list",
+          "count": 7,
+          "shares_domain": true
+        },
+        {
+          "target_class": "shopping_list_update",
+          "count": 2,
+          "shares_domain": true
+        },
+        {
+          "target_class": "calendar_update",
+          "count": 1,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.7316032648086548
+    },
+    {
+      "label_name": "restaurant_reviews",
+      "precision": 0.6486486486486487,
+      "recall": 0.8,
+      "f1": 0.7164179104477612,
+      "support": 30,
+      "domain": "kitchen_and_dining",
+      "top_confusion_targets": [
+        {
+          "target_class": "alarm",
+          "count": 2,
+          "shares_domain": false
+        },
+        {
+          "target_class": "weather",
+          "count": 1,
+          "shares_domain": false
+        },
+        {
+          "target_class": "oos",
+          "count": 1,
+          "shares_domain": false
+        }
+      ],
+      "mean_confidence_misclassified": 0.2455221265554428
+    },
+    {
+      "label_name": "distance",
+      "precision": 0.7096774193548387,
+      "recall": 0.7333333333333333,
+      "f1": 0.7213114754098361,
+      "support": 30,
+      "domain": "auto_and_commute",
+      "top_confusion_targets": [
+        {
+          "target_class": "flight_status",
+          "count": 3,
+          "shares_domain": false
+        },
+        {
+          "target_class": "todo_list",
+          "count": 1,
+          "shares_domain": false
+        },
+        {
+          "target_class": "directions",
+          "count": 1,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.44265371561050415
     },
     {
       "label_name": "bill_balance",
-      "precision": 0.6341463414634146,
+      "precision": 0.6190476190476191,
       "recall": 0.8666666666666667,
-      "f1": 0.7323943661971831,
+      "f1": 0.7222222222222222,
       "support": 30,
       "domain": "banking",
       "top_confusion_targets": [
         {
+          "target_class": "oos",
+          "count": 1,
+          "shares_domain": false
+        },
+        {
           "target_class": "bill_due",
-          "count": 2,
+          "count": 1,
+          "shares_domain": true
+        },
+        {
+          "target_class": "transactions",
+          "count": 1,
+          "shares_domain": true
+        }
+      ],
+      "mean_confidence_misclassified": 0.7028414011001587
+    },
+    {
+      "label_name": "yes",
+      "precision": 0.6410256410256411,
+      "recall": 0.8333333333333334,
+      "f1": 0.7246376811594203,
+      "support": 30,
+      "domain": "meta",
+      "top_confusion_targets": [
+        {
+          "target_class": "time",
+          "count": 1,
+          "shares_domain": false
+        },
+        {
+          "target_class": "greeting",
+          "count": 1,
+          "shares_domain": false
+        },
+        {
+          "target_class": "goodbye",
+          "count": 1,
+          "shares_domain": false
+        }
+      ],
+      "mean_confidence_misclassified": 0.34958362579345703
+    },
+    {
+      "label_name": "ingredients_list",
+      "precision": 0.696969696969697,
+      "recall": 0.7666666666666667,
+      "f1": 0.7301587301587301,
+      "support": 30,
+      "domain": "kitchen_and_dining",
+      "top_confusion_targets": [
+        {
+          "target_class": "recipe",
+          "count": 3,
           "shares_domain": true
         },
         {
@@ -317,38 +332,38 @@
           "shares_domain": false
         },
         {
-          "target_class": "insurance_change",
+          "target_class": "shopping_list",
           "count": 1,
           "shares_domain": false
         }
       ],
-      "mean_confidence_misclassified": 0.49318382143974304
+      "mean_confidence_misclassified": 0.6044051051139832
     },
     {
-      "label_name": "who_do_you_work_for",
-      "precision": 0.7586206896551724,
-      "recall": 0.7333333333333333,
-      "f1": 0.7457627118644068,
+      "label_name": "spending_history",
+      "precision": 0.6578947368421053,
+      "recall": 0.8333333333333334,
+      "f1": 0.7352941176470589,
       "support": 30,
-      "domain": "small_talk",
+      "domain": "banking",
       "top_confusion_targets": [
         {
-          "target_class": "what_is_your_name",
-          "count": 3,
+          "target_class": "balance",
+          "count": 1,
           "shares_domain": true
         },
         {
-          "target_class": "who_made_you",
-          "count": 3,
-          "shares_domain": true
+          "target_class": "meal_suggestion",
+          "count": 1,
+          "shares_domain": false
         },
         {
-          "target_class": "repeat",
+          "target_class": "cook_time",
           "count": 1,
           "shares_domain": false
         }
       ],
-      "mean_confidence_misclassified": 0.5773555040359497
+      "mean_confidence_misclassified": 0.2829086184501648
     }
   ],
   "source_artifacts": {
