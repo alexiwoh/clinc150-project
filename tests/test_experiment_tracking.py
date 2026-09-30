@@ -1118,6 +1118,7 @@ class TestProtocolEnrichment:
 # ── Integration: full tracking against real artifacts ────────────────────
 
 
+@pytest.mark.generated_artifacts
 class TestIntegrationRealArtifacts:
     """Run validation against the actual project output artifacts.
 
