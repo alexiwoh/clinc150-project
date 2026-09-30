@@ -80,8 +80,9 @@ def run_preflight_validation(model_ids: list[ModelID]) -> None:
             f"Step 10 preflight failed — {len(missing)} required artifact(s) missing:\n  {formatted}"
         )
 
+    # The analysis headline reads the all-model shared comparison table.
     load_current_generation(
-        model_ids, model_dirs={mid: model_output_dir(mid) for mid in model_ids}, project_root=PROJECT_ROOT
+        list(ModelID), model_dirs={mid: model_output_dir(mid) for mid in ModelID}, project_root=PROJECT_ROOT
     )
     for mid in model_ids:
         resolve_handoff(mid)

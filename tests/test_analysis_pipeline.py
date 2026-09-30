@@ -697,7 +697,10 @@ class TestHandoffValidation:
 
 
 class TestFullPipelineIntegration:
-    def test_mixed_generation_fails_before_any_analysis_write(self, mock_analysis_env: Path) -> None:
+    @pytest.mark.parametrize("models", [list(ModelID), [ModelID.MLP]])
+    def test_mixed_generation_fails_before_any_analysis_write(
+        self, mock_analysis_env: Path, models: list[ModelID]
+    ) -> None:
         from src.analysis.pipeline import run_error_analysis, run_preflight_validation
 
         for mid in ModelID:
@@ -709,8 +712,8 @@ class TestFullPipelineIntegration:
             for context in _patch_for_analysis(mock_analysis_env):
                 stack.enter_context(context)
             with pytest.raises(ValueError, match="dataset"):
-                run_preflight_validation(list(ModelID))
-            assert run_error_analysis(list(ModelID)) is False
+                run_preflight_validation(models)
+            assert run_error_analysis(models) is False
         assert before == {path: path.read_bytes() for path in mock_analysis_env.rglob("*") if path.is_file()}
 
     def test_pipeline_produces_key_artifacts(self, mock_analysis_env: Path) -> None:
