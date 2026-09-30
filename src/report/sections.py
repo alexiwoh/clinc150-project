@@ -2056,15 +2056,18 @@ def generate_reproducibility() -> SectionOutput:
         approx_runtime[str(mid)] = round(per_run_s * pc["run_count"] / 60, 1)
 
     steps = [
-        "Clone the repository: `git clone <repo-url> && cd clinc150-project`",
-        "Install dependencies: `uv sync` (or `pip install -r requirements.txt`)",
-        "Run the full pipeline: `python scripts/run_model_pipeline.py --model all --run-count 3`",
+        "Clone https://github.com/alexiwoh/clinc150-project into a separate checkout; "
+        "generated outputs are replaced in place.",
+        "Install locked dependencies from the repository root with `uv sync --frozen`.",
+        "Run frozen final evaluations, then tracking, report figures, error analysis and report generation.",
+        "For source reconstruction, rebuild dataset summaries and train-only preprocessing before evaluation.",
+        "Run offline tests with `uv run --frozen pytest -q`; generated-artifact checks require trained checkpoints.",
         "Verify outputs exist under `outputs/` with the expected directory structure",
     ]
 
     nondeterminism = [
         "MPS backend nondeterminism on Apple Silicon (PyTorch does not guarantee deterministic MPS operations).",
-        "DataLoader worker ordering may vary across runs.",
+        "DataLoaders use num_workers=0 and the recorded per-run shuffle seed.",
         "Exact numeric reproduction across different hardware is not guaranteed.",
     ]
 
@@ -2075,22 +2078,34 @@ def generate_reproducibility() -> SectionOutput:
             "### Environment Setup",
             "",
             f"- Python version: {python_version}",
-            "- Install: `uv sync` (recommended) or `pip install -r requirements.txt`",
+            "- Install from the repository root: `uv sync --frozen`",
+            "- Secondary route: activate a virtual environment, then `python -m pip install -r requirements.txt`. "
+            "The portable export includes `-e .` to install the project.",
             f"- Pinned dependency versions available: {'`uv.lock`' if uv_lock_exists else '`requirements.txt`'}",
             "- PyTorch with MPS support for Apple Silicon (optional; CPU fallback available)",
             "",
             "### Dataset Acquisition",
             "",
             "CLINC150 is loaded via the HuggingFace `datasets` library (`clinc/clinc_oos`, `plus` subset). "
-            "No manual download is required; the dataset is fetched at runtime.",
+            "The configured revision is pinned and future runs record ordered split hashes. "
+            "The first uncached download requires network access; official split membership is preserved.",
             "",
-            "### Full Pipeline Execution",
+            "### Frozen Final Evaluations and Report",
             "",
             "```bash",
-            "python scripts/run_model_pipeline.py --model all --run-count 3",
+            "uv run --frozen python scripts/run_repeated_evaluation.py --model all --run-count 3",
+            "uv run --frozen python scripts/run_experiment_tracking.py",
+            "uv run --frozen python scripts/run_report_figures.py",
+            "uv run --frozen python scripts/run_error_analysis.py",
+            "uv run --frozen python scripts/run_report_generation.py",
             "```",
             "",
             f"Seeds: {pc['seed_list']}",
+            "",
+            "To rebuild preprocessing from source first run `uv run --frozen python scripts/explore_dataset.py` "
+            "and `uv run --frozen python scripts/run_preprocessing.py`. The evaluation commands reuse existing "
+            "frozen hyperparameters; they do not retune. "
+            "See the repository README for explicit tuning-source selection.",
             "",
             "### Expected Output Structure",
             "",
@@ -2110,7 +2125,9 @@ def generate_reproducibility() -> SectionOutput:
                 for mid in ModelID
             ],
             "",
-            "Hardware context: Apple Silicon (MPS). Runtimes will vary on different hardware.",
+            "Hardware, device, source commit, input hashes and effective settings are recorded per run. "
+            "These times cover the training loop including validation/checkpoint writes, excluding setup, "
+            "preprocessing and tuning. Batched evaluation ms/example is throughput, not single-query service latency.",
             "",
             "### Nondeterminism Notes",
             "",
@@ -2125,14 +2142,15 @@ def generate_reproducibility() -> SectionOutput:
 
     metadata = _meta(
         python_version=python_version,
-        install_command="uv sync",
+        install_command="uv sync --frozen",
         pinned_versions_available=uv_lock_exists,
         dataset_source="clinc/clinc_oos (plus subset)",
-        pipeline_command="python scripts/run_model_pipeline.py --model all --run-count 3",
+        pipeline_command="uv run --frozen python scripts/run_repeated_evaluation.py --model all --run-count 3",
+        report_command="uv run --frozen python scripts/run_report_generation.py",
         seed_list=pc["seed_list"],
         run_count=pc["run_count"],
         approximate_runtime_minutes=approx_runtime,
-        hardware_context="Apple Silicon (MPS)",
+        hardware_context="See each current run_metadata.json for the actual machine and device",
         nondeterminism_notes=nondeterminism,
         reproduction_steps=steps,
         source_artifacts=sources,

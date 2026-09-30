@@ -891,3 +891,22 @@ class TestReproducibility:
         md, _ = generate_reproducibility()
         assert "1. Clone" in md
         assert "2. Install" in md
+
+
+def test_reproduction_commands_include_environment_and_all_stages(synth: Path) -> None:
+    from src.report.sections import generate_reproducibility
+
+    markdown, metadata = generate_reproducibility()
+    for script in (
+        "run_repeated_evaluation",
+        "run_experiment_tracking",
+        "run_report_figures",
+        "run_error_analysis",
+        "run_report_generation",
+    ):
+        assert f"uv run --frozen python scripts/{script}.py" in markdown
+    assert "run_preprocessing.py" in markdown
+    assert "network access" in markdown
+    assert "trained checkpoints" in markdown
+    assert "do not retune" in markdown
+    assert metadata["install_command"] == "uv sync --frozen"
