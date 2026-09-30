@@ -213,21 +213,7 @@
       "predicted_id": 136
     },
     {
-      "text": "how much is due for my water bill",
-      "true_label": "bill_balance",
-      "predicted_label": "bill_due",
-      "true_id": 27,
-      "predicted_id": 56
-    },
-    {
       "text": "i need to know the price of my car payment and insurance please",
-      "true_label": "bill_balance",
-      "predicted_label": "bill_due",
-      "true_id": 27,
-      "predicted_id": 56
-    },
-    {
-      "text": "is the phone bill the same as last month",
       "true_label": "bill_balance",
       "predicted_label": "bill_due",
       "true_id": 27,
@@ -239,6 +225,20 @@
       "predicted_label": "bill_due",
       "true_id": 27,
       "predicted_id": 56
+    },
+    {
+      "text": "what would you say my gas and phone bills are at",
+      "true_label": "bill_balance",
+      "predicted_label": "gas",
+      "true_id": 27,
+      "predicted_id": 110
+    },
+    {
+      "text": "is the phone bill the same as last month",
+      "true_label": "bill_balance",
+      "predicted_label": "min_payment",
+      "true_id": 27,
+      "predicted_id": 143
     },
     {
       "text": "how expensive is my internet",
@@ -262,20 +262,6 @@
       "predicted_id": 42
     },
     {
-      "text": "what's the latest i can pay my cellular bill",
-      "true_label": "bill_due",
-      "predicted_label": "pay_bill",
-      "true_id": 56,
-      "predicted_id": 111
-    },
-    {
-      "text": "\"i'll be travelling from lax and headed to phl for 120 on the 10th of may",
-      "true_label": "book_flight",
-      "predicted_label": "travel_notification",
-      "true_id": 63,
-      "predicted_id": 146
-    },
-    {
       "text": "i'm travelling to boston on march 2 until march 4 please make a hotel reservation for me",
       "true_label": "book_hotel",
       "predicted_label": "book_flight",
@@ -283,18 +269,32 @@
       "predicted_id": 63
     },
     {
-      "text": "i bought 6 shirts at $499 each what was my total expenditure for them",
+      "text": "i spent 34 dollars for 12 gallons of paint what is the average price for each gallon",
       "true_label": "calculator",
-      "predicted_label": "income",
+      "predicted_label": "exchange_rate",
       "true_id": 138,
-      "predicted_id": 93
+      "predicted_id": 38
     },
     {
-      "text": "i spent 34 dollars for 12 gallons of paint what is the average price for each gallon",
+      "text": "what is the average of 54, 23, 43, 12, and 442",
       "true_label": "calculator",
       "predicted_label": "oos",
       "true_id": 138,
       "predicted_id": 42
+    },
+    {
+      "text": "i bought 6 shirts at $499 each what was my total expenditure for them",
+      "true_label": "calculator",
+      "predicted_label": "spending_history",
+      "true_id": 138,
+      "predicted_id": 71
+    },
+    {
+      "text": "did i mark the mechanic's appointment on my calendar",
+      "true_label": "calendar",
+      "predicted_label": "calendar_update",
+      "true_id": 60,
+      "predicted_id": 105
     }
   ]
 }

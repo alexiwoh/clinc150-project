@@ -185,88 +185,95 @@
       "predicted_id": 20
     },
     {
-      "text": "why is there a stop on my deposit account",
+      "text": "reasons that us bank would place a hold on my account",
       "true_label": "account_blocked",
       "predicted_label": "freeze_account",
       "true_id": 2,
       "predicted_id": 20
     },
     {
-      "text": "is there a problem with my account, it appears to be blocked",
+      "text": "what could cause a hold on my savings account",
       "true_label": "account_blocked",
-      "predicted_label": "last_maintenance",
+      "predicted_label": "freeze_account",
       "true_id": 2,
-      "predicted_id": 37
-    },
-    {
-      "text": "there seems to be an issue with my account",
-      "true_label": "account_blocked",
-      "predicted_label": "report_fraud",
-      "true_id": 2,
-      "predicted_id": 70
+      "predicted_id": 20
     },
     {
       "text": "i need to up by noon",
       "true_label": "alarm",
-      "predicted_label": "change_user_name",
+      "predicted_label": "calculator",
       "true_id": 83,
-      "predicted_id": 144
-    },
-    {
-      "text": "is my apr rate better than most",
-      "true_label": "apr",
-      "predicted_label": "interest_rate",
-      "true_id": 132,
-      "predicted_id": 7
-    },
-    {
-      "text": "what the numerical number inside my bank accounts",
-      "true_label": "balance",
-      "predicted_label": "account_blocked",
-      "true_id": 35,
-      "predicted_id": 2
+      "predicted_id": 138
     },
     {
       "text": "what are my coffers at",
       "true_label": "balance",
-      "predicted_label": "current_location",
+      "predicted_label": "income",
       "true_id": 35,
-      "predicted_id": 136
+      "predicted_id": 93
     },
     {
-      "text": "what's my checking look like",
+      "text": "what the numerical number inside my bank accounts",
       "true_label": "balance",
-      "predicted_label": "user_name",
+      "predicted_label": "oos",
       "true_id": 35,
-      "predicted_id": 11
+      "predicted_id": 42
     },
     {
-      "text": "what is the amount due on my visa",
+      "text": "how much is due for my water bill",
       "true_label": "bill_balance",
       "predicted_label": "bill_due",
       "true_id": 27,
       "predicted_id": 56
     },
     {
-      "text": "i think all my bills are paid, but can you double check",
+      "text": "how much is my water and sewer",
       "true_label": "bill_balance",
-      "predicted_label": "find_phone",
+      "predicted_label": "bill_due",
       "true_id": 27,
-      "predicted_id": 81
+      "predicted_id": 56
     },
     {
-      "text": "what do i owe to jcp",
+      "text": "how much is the car bill this month",
       "true_label": "bill_balance",
-      "predicted_label": "income",
+      "predicted_label": "bill_due",
       "true_id": 27,
-      "predicted_id": 93
+      "predicted_id": 56
     },
     {
-      "text": "is the phone bill the same as last month",
+      "text": "tell me my water bill please",
       "true_label": "bill_balance",
-      "predicted_label": "min_payment",
+      "predicted_label": "bill_due",
       "true_id": 27,
-      "predicted_id": 143
+      "predicted_id": 56
+    },
+    {
+      "text": "what price is my credit card and my water bill at",
+      "true_label": "bill_balance",
+      "predicted_label": "bill_due",
+      "true_id": 27,
+      "predicted_id": 56
+    },
+    {
+      "text": "how much do i owe visa",
+      "true_label": "bill_balance",
+      "predicted_label": "credit_limit",
+      "true_id": 27,
+      "predicted_id": 41
+    },
+    {
+      "text": "i think i owe about 100 left on my bills, am i forgetting anything",
+      "true_label": "bill_balance",
+      "predicted_label": "insurance",
+      "true_id": 27,
+      "predicted_id": 74
+    },
+    {
+      "text": "whens my insurance due and how much does it cost",
+      "true_label": "bill_balance",
+      "predicted_label": "insurance",
+      "true_id": 27,
+      "predicted_id": 74
     },
     {
       "text": "how expensive is my internet",
@@ -276,25 +283,18 @@
       "predicted_id": 42
     },
     {
-      "text": "i need to know the price of my car payment and insurance please",
+      "text": "is the phone bill the same as last month",
       "true_label": "bill_balance",
       "predicted_label": "pay_bill",
       "true_id": 27,
       "predicted_id": 111
     },
     {
-      "text": "i think i owe about 100 left on my bills, am i forgetting anything",
+      "text": "what is the amount due on my visa",
       "true_label": "bill_balance",
-      "predicted_label": "share_location",
+      "predicted_label": "rewards_balance",
       "true_id": 27,
-      "predicted_id": 58
-    },
-    {
-      "text": "i need to know the next billing date of my american express card",
-      "true_label": "bill_due",
-      "predicted_label": "expiration_date",
-      "true_id": 56,
-      "predicted_id": 44
+      "predicted_id": 50
     }
   ]
 }

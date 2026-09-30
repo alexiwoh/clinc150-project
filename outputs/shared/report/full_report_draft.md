@@ -19,23 +19,29 @@
 
 ## Abstract
 
-Evaluate lightweight deep learning models for intent classification and out-of-scope (OOS) detection on the CLINC150 dataset.
+Evaluate lightweight deep learning models for intent classification and supervised out-of-scope (OOS) classification on the CLINC150 dataset.
 
 Comparison of a sparse-feature baseline (TF-IDF + MLP), a convolutional sequence model (Text CNN), and a recurrent sequence model (BiLSTM).
 
+OOS is a supervised 151st class with labeled training examples. These results describe this explicit-class setting and do not establish general open-set detection.
+
 Three models are compared: TF-IDF + MLP, Text CNN, BiLSTM.
 
-**Headline Result**: TF-IDF + MLP achieved the highest aggregate test macro F1 of 0.8727 +/- 0.0031 across 3 repeated runs (outputs/shared/model_comparison_aggregate.json).
+**Headline Result**: TF-IDF + MLP achieved the highest aggregate test macro F1 of 0.8716 +/- 0.0029 across 3 repeated runs (outputs/shared/model_comparison_aggregate.json).
 
-**OOS Detection**: TF-IDF + MLP achieved the highest aggregate OOS F1 of 0.6261 +/- 0.0348 (outputs/shared/oos_summary_table.json).
+**OOS Classification**: TF-IDF + MLP achieved the highest aggregate argmax OOS F1 of 0.6103 +/- 0.0352 (outputs/shared/oos_summary_table.json).
 
 **Key Finding**: Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors. (outputs/shared/analysis/error_analysis_summary.json).
+
+Means and population standard deviations describe the recorded runs. They are descriptive dispersion measures, not confidence intervals or significance tests.
 
 ## Dataset Description
 
 **Source**: `clinc/clinc_oos` (subset: `plus`) (data/artifacts/dataset_summary.json).
 
 The dataset contains 151 intent classes (150 in-scope + 1 OOS). The OOS class uses label name `oos` (label ID 42).
+
+OOS is a supervised 151st class with labeled training examples. These results describe this explicit-class setting and do not establish general open-set detection.
 
 ### Split Sizes
 
@@ -47,13 +53,15 @@ The dataset contains 151 intent classes (150 in-scope + 1 OOS). The OOS class us
 
 ### Class Balance
 
-In-scope classes are balanced in the `plus` subset at 100 training examples per class. OOS support varies across splits: train has 250 OOS examples (~1.6%), while test has 1000 OOS examples (~18.2%), creating a significant distribution shift.
+In-scope classes are balanced in the `plus` subset at 100 training examples per class. OOS support varies across splits: train has 250 OOS examples (~1.6%), while test has 1000 OOS examples (~18.2%). OOS support is reported separately from in-scope class balance.
 
 ### Distribution Quirks
 
 - Test split has ~18.2% OOS examples vs ~1.6% in train, creating a substantial distribution shift.
 - In-scope classes are perfectly balanced in the 'plus' subset (100 training examples per class).
 - OOS has 250 training examples, 2.50x the per-class in-scope training count (100).
+
+The pinned official splits contain 3 normalized texts shared between train and validation and 2 shared between train and test. Two of the three train/validation overlaps and both train/test overlaps have conflicting labels. These are benchmark overlaps, separate from train-only preprocessing; official splits are preserved.
 
 ## Preprocessing Summary
 
@@ -107,11 +115,13 @@ Input: 10,000 TF-IDF features (10,000-dimensional). Single hidden layer with 512
 
 ### Text CNN
 
-Embedding dimension: 256. Kernel sizes: [3, 4, 5] with 100 filters each. ReLU activation, max-over-time pooling, dropout 0.5. Trainable embeddings.
+Embedding dimension: 256. Kernel sizes: [3, 4, 5] with 100 filters each. ReLU activation, max-over-time pooling, dropout 0.5. Trainable embeddings; sentence-CNN design follows [Kim (2014)](https://aclanthology.org/D14-1181/).
 
 ### BiLSTM
 
 Embedding dimension: 256. Hidden dimension: 256, 2 layers, bidirectional. Summarization: concat_final_hidden. Gradient clipping (max norm 1.0). Dropout 0.3. Trainable embeddings.
+
+The BiLSTM concatenates final forward/backward hidden states after processing the fixed right-PAD sequence. A zero PAD embedding does not mask recurrent transitions, so changing padding length can change logits. This representation is retained in the reported experiment.
 
 ## Experimental Setup
 
@@ -121,6 +131,8 @@ Embedding dimension: 256. Hidden dimension: 256, 2 layers, bidirectional. Summar
 
 Repeated-run evaluation with 3 seeds: [42, 1337, 2024]. Representative run selection: highest_validation_macro_f1 (highest validation macro F1).
 
+Means and population standard deviations describe the recorded runs. They are descriptive dispersion measures, not confidence intervals or significance tests.
+
 ### Training Configuration
 
 - **Optimizer**: Adam (all models)
@@ -129,7 +141,9 @@ Repeated-run evaluation with 3 seeds: [42, 1337, 2024]. Representative run selec
 - **Batch size**: 64
 - **Max epochs**: 100
 - **Early stopping**: patience 10, monitoring val_macro_f1
-- **Seed behavior**: The repeated-evaluation pipeline derives `training_seed = seed` and `dataloader_seed = seed + 1`. `dataloader_seed` controls train-batch shuffling, but model initialization currently depends on `config.random_seed`, not necessarily the nominal seed.
+- **Seed behavior**: Each run copies the frozen model configuration with `random_seed = seed` and `dataloader_seed = seed + 1`. The training seed controls initialization and training randomness; the dataloader seed controls train-batch shuffling.
+
+Final evaluations reuse frozen hyperparameters from limited model-specific searches. The original tuning reused advancing loader RNG state across trials, and neural smoke checks also consumed a train shuffle, making trial order part of that search. Preprocessing and tuning budgets differ across models; this compares complete pipelines rather than isolating architecture.
 
 ### Metric Definitions
 
@@ -149,11 +163,19 @@ Repeated-run evaluation with 3 seeds: [42, 1337, 2024]. Representative run selec
 - Method: explicit_class
 - Rule: oos is the positive class; all in-scope labels are negative
 
+OOS is a supervised 151st class with labeled training examples. These results describe this explicit-class setting and do not establish general open-set detection.
+
+Aggregate OOS precision/recall/F1 use the 151-class argmax prediction. Probability-based AUROC and calibration diagnostics use one validation-selected representative run per model, without averaging across seeds.
+
 ### Timing and Device
 
-Timing includes DataLoader overhead: True. Device: Apple Silicon MPS when available, CPU fallback.
+Timing includes DataLoader overhead: True. Automatic device selection checks MPS, then CUDA, then CPU. Refreshed run metadata records the actual device, hardware model, processor and RAM; historical metadata may lack these fields.
+
+Batched evaluation timing covers loader traversal, device transfer, forward pass, softmax and CPU result collection; it excludes preprocessing, checkpoint loading, array concatenation, metrics and artifact writes. The per-example figures describe batched throughput, with no controlled warmup or repeated timing trials; single-query deployment latency was not measured.
 
 ## Main Results
+
+Means and population standard deviations describe the recorded runs. They are descriptive dispersion measures, not confidence intervals or significance tests.
 
 ### Table 1: Main Model Comparison
 
@@ -161,11 +183,11 @@ Timing includes DataLoader overhead: True. Device: Apple Silicon MPS when availa
 
 | Model        | Test Accuracy     | Test Macro F1     | Test Precision    | Test Recall       |
 | ------------ | ----------------- | ----------------- | ----------------- | ----------------- |
-| TF-IDF + MLP | 0.8373 +/- 0.0066 | 0.8727 +/- 0.0031 | 0.8464 +/- 0.0065 | 0.9123 +/- 0.0015 |
-| Text CNN     | 0.8176 +/- 0.0084 | 0.8635 +/- 0.0057 | 0.8278 +/- 0.0094 | 0.9163 +/- 0.0016 |
-| BiLSTM       | 0.7751 +/- 0.0088 | 0.8284 +/- 0.0071 | 0.8005 +/- 0.0062 | 0.8780 +/- 0.0068 |
+| TF-IDF + MLP | 0.8345 +/- 0.0063 | 0.8716 +/- 0.0029 | 0.8439 +/- 0.0059 | 0.9132 +/- 0.0014 |
+| Text CNN     | 0.8210 +/- 0.0067 | 0.8645 +/- 0.0031 | 0.8299 +/- 0.0050 | 0.9153 +/- 0.0012 |
+| BiLSTM       | 0.7744 +/- 0.0065 | 0.8283 +/- 0.0046 | 0.7944 +/- 0.0074 | 0.8844 +/- 0.0040 |
 
-TF-IDF + MLP achieved the highest aggregate test macro F1 (0.8727 +/- 0.0031).
+TF-IDF + MLP achieved the highest aggregate test macro F1 (0.8716 +/- 0.0029).
 
 Related figure: `outputs/shared/figures/model_comparison_test_macro_f1.png`
 
@@ -173,13 +195,15 @@ Related figure: `outputs/shared/figures/model_comparison_test_macro_f1.png`
 
 *Aggregate over 3 runs (mean +/- std)*
 
+OOS precision/recall/F1 score argmax predictions in the supervised 151-class classifier.
+
 | Model        | OOS Precision     | OOS Recall        | OOS F1            |
 | ------------ | ----------------- | ----------------- | ----------------- |
-| TF-IDF + MLP | 0.8840 +/- 0.0132 | 0.4867 +/- 0.0444 | 0.6261 +/- 0.0348 |
-| Text CNN     | 0.9414 +/- 0.0102 | 0.3563 +/- 0.0401 | 0.5154 +/- 0.0416 |
-| BiLSTM       | 0.8817 +/- 0.0104 | 0.2947 +/- 0.0236 | 0.4413 +/- 0.0273 |
+| TF-IDF + MLP | 0.8877 +/- 0.0112 | 0.4667 +/- 0.0425 | 0.6103 +/- 0.0352 |
+| Text CNN     | 0.9326 +/- 0.0145 | 0.3810 +/- 0.0375 | 0.5397 +/- 0.0357 |
+| BiLSTM       | 0.8865 +/- 0.0203 | 0.2610 +/- 0.0406 | 0.4019 +/- 0.0511 |
 
-TF-IDF + MLP achieved the highest aggregate OOS F1 (0.6261 +/- 0.0348).
+TF-IDF + MLP achieved the highest aggregate argmax OOS F1 (0.6103 +/- 0.0352).
 
 Related figure: `outputs/shared/figures/oos_metrics_comparison.png`
 
@@ -190,8 +214,8 @@ Related figure: `outputs/shared/figures/oos_metrics_comparison.png`
 | Model        | Macro F1 | Micro F1 | Weighted F1 | Macro Precision | Macro Recall |
 | ------------ | -------- | -------- | ----------- | --------------- | ------------ |
 | TF-IDF + MLP | 0.8742   | 0.8400   | 0.8326      | 0.8492          | 0.9122       |
-| Text CNN     | 0.8658   | 0.8211   | 0.8072      | 0.8315          | 0.9170       |
-| BiLSTM       | 0.8354   | 0.7858   | 0.7727      | 0.8062          | 0.8838       |
+| Text CNN     | 0.8628   | 0.8167   | 0.8027      | 0.8290          | 0.9137       |
+| BiLSTM       | 0.8347   | 0.7816   | 0.7639      | 0.8037          | 0.8882       |
 
 TF-IDF + MLP has the highest representative-run macro F1 (0.8742) in the extended-metrics table.
 
@@ -202,10 +226,10 @@ TF-IDF + MLP has the highest representative-run macro F1 (0.8742) in the extende
 | Model        | ECE    | MCE    | Brier Score | NLL    |
 | ------------ | ------ | ------ | ----------- | ------ |
 | TF-IDF + MLP | 0.1027 | 0.2580 | 0.2532      | 0.7303 |
-| Text CNN     | 0.0374 | 0.1835 | 0.2567      | 0.8647 |
-| BiLSTM       | 0.1125 | 0.4094 | 0.3235      | 1.2145 |
+| Text CNN     | 0.0390 | 0.1772 | 0.2595      | 0.9015 |
+| BiLSTM       | 0.1232 | 0.4381 | 0.3345      | 1.3284 |
 
-Text CNN is the best calibrated representative run (ECE = 0.0374).
+Text CNN is the best calibrated representative run (ECE = 0.0390).
 
 Related figure: `outputs/shared/analysis/calibration_comparison.png`
 
@@ -215,21 +239,25 @@ Related figure: `outputs/shared/analysis/calibration_comparison.png`
 
 | Model        | Parameters | Training Time (s) | Inference (ms/example) | Throughput (ex/s)    |
 | ------------ | ---------- | ----------------- | ---------------------- | -------------------- |
-| TF-IDF + MLP | 5,197,975  | 60.62 +/- 10.80   | 0.0563 +/- 0.0013      | 17782.89 +/- 390.80  |
-| Text CNN     | 1,930,167  | 136.48 +/- 7.70   | 0.0313 +/- 0.0021      | 32082.23 +/- 2138.80 |
-| BiLSTM       | 4,284,311  | 91.74 +/- 23.20   | 0.1205 +/- 0.0150      | 8431.56 +/- 1079.83  |
+| TF-IDF + MLP | 5,197,975  | 82.69 +/- 6.85    | 0.0557 +/- 0.0048      | 18069.35 +/- 1459.73 |
+| Text CNN     | 1,930,167  | 168.54 +/- 18.36  | 0.0353 +/- 0.0023      | 28455.69 +/- 1795.24 |
+| BiLSTM       | 4,284,311  | 144.16 +/- 18.48  | 0.1281 +/- 0.0150      | 7909.59 +/- 862.64   |
 
-Text CNN has the highest mean inference throughput (32082 ex/s).
+Text CNN has the highest mean inference throughput (28456 ex/s).
+
+Batched evaluation timing covers loader traversal, device transfer, forward pass, softmax and CPU result collection; it excludes preprocessing, checkpoint loading, array concatenation, metrics and artifact writes. The per-example figures describe batched throughput, with no controlled warmup or repeated timing trials; single-query deployment latency was not measured.
 
 Related figure: `outputs/shared/figures/model_efficiency_comparison.png`
 
 ### Key Figures
 
-![Aggregate test macro F1 comparison with error bars across all models. Data: aggregate over 3 repeated runs, CLINC150 test set.](outputs/shared/figures/model_comparison_test_macro_f1.png)
+![Aggregate test macro F1 comparison with error bars across all models. Data: aggregate over 3 repeated runs, CLINC150 test set.](../figures/model_comparison_test_macro_f1.png)
 
-![Validation macro F1 progression during training for TF-IDF + MLP. Data: representative run, CLINC150.](outputs/mlp/figures/representative_val_macro_f1_curve.png)
+![Validation macro F1 progression during training for TF-IDF + MLP. Data: representative run, CLINC150.](../../mlp/figures/representative_val_macro_f1_curve.png)
 
 ## OOS Detection Results
+
+OOS is a supervised 151st class with labeled training examples. These results describe this explicit-class setting and do not establish general open-set detection.
 
 ### Aggregate OOS Metrics
 
@@ -237,11 +265,11 @@ Related figure: `outputs/shared/figures/model_efficiency_comparison.png`
 
 | Model        | OOS Precision     | OOS Recall        | OOS F1            |
 | ------------ | ----------------- | ----------------- | ----------------- |
-| TF-IDF + MLP | 0.8840 +/- 0.0132 | 0.4867 +/- 0.0444 | 0.6261 +/- 0.0348 |
-| Text CNN     | 0.9414 +/- 0.0102 | 0.3563 +/- 0.0401 | 0.5154 +/- 0.0416 |
-| BiLSTM       | 0.8817 +/- 0.0104 | 0.2947 +/- 0.0236 | 0.4413 +/- 0.0273 |
+| TF-IDF + MLP | 0.8877 +/- 0.0112 | 0.4667 +/- 0.0425 | 0.6103 +/- 0.0352 |
+| Text CNN     | 0.9326 +/- 0.0145 | 0.3810 +/- 0.0375 | 0.5397 +/- 0.0357 |
+| BiLSTM       | 0.8865 +/- 0.0203 | 0.2610 +/- 0.0406 | 0.4019 +/- 0.0511 |
 
-TF-IDF + MLP achieved the highest aggregate OOS F1 (0.6261 +/- 0.0348).
+TF-IDF + MLP achieved the highest aggregate argmax OOS F1 (0.6103 +/- 0.0352).
 
 Related figure: `outputs/shared/figures/oos_metrics_comparison.png`
 
@@ -252,88 +280,96 @@ Related figure: `outputs/shared/figures/oos_metrics_comparison.png`
 | Model        | AUROC  | AUPR   | FPR@95TPR | FPR@90TPR | MSP AUROC | MSP AUPR |
 | ------------ | ------ | ------ | --------- | --------- | --------- | -------- |
 | TF-IDF + MLP | 0.9415 | 0.7984 | 0.2389    | 0.1531    | 0.8901    | 0.6180   |
-| Text CNN     | 0.9523 | 0.8403 | 0.2082    | 0.1387    | 0.9059    | 0.6560   |
-| BiLSTM       | 0.9436 | 0.8055 | 0.2309    | 0.1436    | 0.8747    | 0.5453   |
+| Text CNN     | 0.9491 | 0.8273 | 0.2322    | 0.1458    | 0.9029    | 0.6423   |
+| BiLSTM       | 0.9455 | 0.8050 | 0.2367    | 0.1478    | 0.8799    | 0.5819   |
 
-Text CNN achieved the highest AUROC (0.9523), indicating the strongest threshold-independent OOS discrimination. (outputs/shared/analysis/oos_threshold_comparison.json). The explicit OOS class probability method substantially outperforms the maximum softmax probability (MSP) baseline across all models.
+Text CNN has the highest representative-run OOS-probability AUROC (0.9491) among the compared runs. (outputs/shared/analysis/oos_threshold_comparison.json). This probability ranking measures different behavior from aggregate argmax OOS F1.
+
+The MSP diagnostic uses `1 - max(p)` over all 151 softmax classes, including OOS. A confidently correct OOS prediction can therefore receive a low MSP OOS score. This is a diagnostic of the supervised classifier, rather than a conventional in-scope-only MSP detector.
+
+FPR@95TPR and FPR@90TPR are descriptive points on the representative test ROC curve. They do not establish a deployable operating point: thresholds and calibration must be selected on validation data before separate held-out evaluation.
 
 Related figures: `outputs/shared/analysis/oos_roc_comparison.png`, `outputs/shared/analysis/oos_pr_comparison.png`
 
 ### OOS Distribution Challenge
 
-The test split contains ~18% OOS examples versus ~1.6% in training, creating a severe distribution shift that challenges all models. All models show low OOS recall, indicating difficulty detecting OOS examples despite reasonable OOS precision.
+The test split contains ~18% OOS examples versus ~1.6% in training, with 250 labeled OOS training examples and 1,000 OOS test examples. Interpret the observed precision and recall within this benchmark support pattern.
 
 ### False-Accept Patterns
 
 - **TF-IDF + MLP**: 497 false accepts. Top capturing intents: `w2` (19), `calculator` (19), `recipe` (16)
-- **Text CNN**: 627 false accepts. Top capturing intents: `travel_suggestion` (27), `directions` (23), `todo_list` (21)
-- **BiLSTM**: 672 false accepts. Top capturing intents: `smart_home` (39), `income` (30), `current_location` (28)
+- **Text CNN**: 636 false accepts. Top capturing intents: `directions` (33), `recipe` (25), `todo_list` (24)
+- **BiLSTM**: 716 false accepts. Top capturing intents: `order` (48), `smart_home` (32), `whisper_mode` (27)
 
-False accepts remain the dominant OOS failure pattern, with a small set of intents repeatedly capturing OOS examples. (outputs/shared/analysis/oos_false_accept_comparison.json).
+The representative-run false-accept counts identify in-scope intents that capture labeled OOS examples. (outputs/shared/analysis/oos_false_accept_comparison.json).
 
 Related figure: `outputs/shared/analysis/oos_error_comparison.png`
 
-![OOS ROC Comparison](outputs/shared/analysis/oos_roc_comparison.png)
+![OOS ROC Comparison](../analysis/oos_roc_comparison.png)
 
 ## Error Analysis Discussion
+
+The following taxonomy, calibration and overlap diagnostics use one validation-selected representative run per model; they are not three-run aggregates.
 
 ### Error Taxonomy
 
 - **TF-IDF + MLP**: dominant error category is `oos_as_inscope` (497 errors, 0.5648 of all errors) (outputs/shared/analysis/error_taxonomy_summary.json)
-- **Text CNN**: dominant error category is `oos_as_inscope` (627 errors, 0.6372 of all errors) (outputs/shared/analysis/error_taxonomy_summary.json)
-- **BiLSTM**: dominant error category is `oos_as_inscope` (672 errors, 0.5705 of all errors) (outputs/shared/analysis/error_taxonomy_summary.json)
+- **Text CNN**: dominant error category is `oos_as_inscope` (636 errors, 0.6310 of all errors) (outputs/shared/analysis/error_taxonomy_summary.json)
+- **BiLSTM**: dominant error category is `oos_as_inscope` (716 errors, 0.5962 of all errors) (outputs/shared/analysis/error_taxonomy_summary.json)
 
-All models share `oos_as_inscope` as the dominant error category, indicating that OOS false accepts are the primary failure mode across architectures.
+Taxonomy labels are heuristics: `near_semantic_confusion` means a same-domain misclassification; `short_query_ambiguity` marks errors with at most 5 whitespace tokens. These rules do not establish semantic similarity or query ambiguity.
 
 Related figure: `outputs/shared/analysis/error_taxonomy_comparison.png`
 
 ### Calibration and Confidence
 
-Best-calibrated model: Text CNN (ECE = 0.0374). Worst-calibrated: BiLSTM (ECE = 0.1125) (outputs/shared/analysis/calibration_summary.json).
+Lowest representative-run ECE: Text CNN (0.0390). Highest: BiLSTM (0.1232) (outputs/shared/analysis/calibration_summary.json).
 
 Related figures: `outputs/mlp/analysis/reliability_diagram.png`, `outputs/mlp/analysis/confidence_histogram.png`, `outputs/text_cnn/analysis/reliability_diagram.png`, `outputs/text_cnn/analysis/confidence_histogram.png`, `outputs/bilstm/analysis/reliability_diagram.png`, `outputs/bilstm/analysis/confidence_histogram.png`, `outputs/shared/analysis/calibration_comparison.png`
 
 ### OOS Detection Deep Dive
 
-Best OOS detector by AUROC: Text CNN (AUROC = 0.9523) (outputs/shared/analysis/oos_threshold_comparison.json). The main failure mode across all models is `oos_as_inscope` (false accepts).
+Highest representative-run OOS-probability AUROC: Text CNN (0.9491) (outputs/shared/analysis/oos_threshold_comparison.json). This ranking diagnostic is separate from aggregate argmax OOS F1.
 
 Related figures: `outputs/mlp/analysis/oos_error_breakdown.png`, `outputs/text_cnn/analysis/oos_error_breakdown.png`, `outputs/bilstm/analysis/oos_error_breakdown.png`, `outputs/shared/analysis/oos_roc_comparison.png`, `outputs/shared/analysis/oos_error_comparison.png`
 
 ### Cross-Model Error Overlap
 
 Of 5,500 test examples:
-- All models correct: 4,051 (0.7365)
-- All models wrong: 608 (0.1105)
-- Model-specific errors: 464 (0.0844)
-- Partial overlap: 377 (0.0685)
+- All models correct: 4,011 (0.7293)
+- All models wrong: 600 (0.1091)
+- Model-specific errors: 489 (0.0889)
+- Partial overlap: 400 (0.0727)
 
-Of universally wrong examples, 0.3668 predict the same incorrect class (outputs/shared/analysis/cross_model_error_comparison.json). See also `outputs/shared/analysis/universally_misclassified_examples.csv`.
+Of universally wrong examples, 0.3633 predict the same incorrect class (outputs/shared/analysis/cross_model_error_comparison.json). See also `outputs/shared/analysis/universally_misclassified_examples.csv`.
 
 Related figure: `outputs/shared/analysis/cross_model_error_overlap.png`
 
 ### Worst-Class Analysis
 
-Classes consistently worst across all models (shared): `income`, `oos`, `order`, `recipe`, `smart_home`, `yes` (outputs/shared/analysis/worst_classes_comparison.json).
+Classes consistently worst across all models (shared): `oos`, `order`, `recipe`, `smart_home`, `yes` (outputs/shared/analysis/worst_classes_comparison.json).
 
 Model-specific worst classes:
-- **TF-IDF + MLP**: `calculator`, `calendar`, `how_busy`, `shopping_list`, `w2`
-- **Text CNN**: `bill_balance`, `order_status`, `translate`, `travel_suggestion`, `who_do_you_work_for`
-- **BiLSTM**: `current_location`, `goodbye`, `weather`
+- **TF-IDF + MLP**: `calendar`, `how_busy`, `income`, `meal_suggestion`, `shopping_list`, `w2`
+- **Text CNN**: `spending_history`, `todo_list_update`, `travel_suggestion`
+- **BiLSTM**: `cancel`, `definition`, `play_music`, `shopping_list_update`, `whisper_mode`
 
 Related figures: `outputs/mlp/analysis/worst_classes_confusion_heatmap.png`, `outputs/text_cnn/analysis/worst_classes_confusion_heatmap.png`, `outputs/bilstm/analysis/worst_classes_confusion_heatmap.png`
 
 ### Confused Pairs (OOS False-Accept Targets)
 
-Intents that persistently capture OOS examples across 2+ models: `recipe`, `directions`, `income`, `smart_home`, `travel_suggestion`, `restaurant_suggestion` (outputs/shared/most_confused_pairs_table.json). These span multiple domains (travel, food, finance), suggesting OOS queries are topically diverse.
+Intents that persistently capture OOS examples across 2+ models: `smart_home`, `directions`, `order`, `calculator`, `recipe`, `travel_suggestion` (outputs/shared/most_confused_pairs_table.json). Their domain assignments identify prediction targets, without proving the topics or intent of OOS queries.
 
 Related figures: `outputs/mlp/figures/representative_top_confused_pairs.png`, `outputs/text_cnn/figures/representative_top_confused_pairs.png`, `outputs/bilstm/figures/representative_top_confused_pairs.png`
 
-### Length and Frequency Slices
+### Length and In-Scope / OOS Slices
+
+The scope comparison separates in-scope classes from the supervised OOS class; it does not measure training frequency. Historical frequency_slice filenames are retained.
 
 Short-query accuracy per model (representative run):
 - **TF-IDF + MLP**: 0.8291
-- **Text CNN**: 0.8583
-- **BiLSTM**: 0.8097
+- **Text CNN**: 0.8641
+- **BiLSTM**: 0.8019
 
 (outputs/shared/analysis/error_analysis_summary.json)
 
@@ -341,20 +377,22 @@ Related figure: `outputs/shared/analysis/length_slice_comparison.png`
 
 ### Confusion Matrix
 
-![Test-set confusion matrix across 151 intent classes including OOS for TF-IDF + MLP. Data: representative run, CLINC150 test set.](outputs/mlp/figures/representative_confusion_matrix.png)
+![Test-set confusion matrix across 151 intent classes including OOS for TF-IDF + MLP. Data: representative run, CLINC150 test set.](../../mlp/figures/representative_confusion_matrix.png)
 
 ## Representative Examples
 
 *Representative run only (single seed)*
 
-Examples selected to cover key error patterns: at least 3 OOS false accepts, 3 semantic confusions, 3 cross-domain confusions, 3 short-query ambiguity, and 2+ examples per model. Sorted by category then confidence.
+Examples selected to cover key error patterns: at least 3 OOS false accepts, 3 same-domain confusions, 3 cross-domain confusions, 3 short-query tagged errors, and 2+ examples per model. Sorted by category then confidence.
+
+Taxonomy labels are heuristics: `near_semantic_confusion` means a same-domain misclassification; `short_query_ambiguity` marks errors with at most 5 whitespace tokens. These rules do not establish semantic similarity or query ambiguity.
 
 ### Coverage in Selected Examples
 
 - Selected examples include 12 OOS false-accept cases.
-- Selected examples include 7 within-domain semantic-confusion cases.
-- Selected examples include 5 cross-domain confusion cases.
-- Selected examples include 0 short-query ambiguity cases.
+- Selected examples include 5 same-domain cases tagged `near_semantic_confusion`.
+- Selected examples include 7 cross-domain confusion cases.
+- Selected examples include 0 short-query tagged errors.
 
 Related figures: `outputs/mlp/analysis/oos_error_breakdown.png`, `outputs/text_cnn/analysis/oos_error_breakdown.png`, `outputs/bilstm/analysis/oos_error_breakdown.png`, `outputs/shared/analysis/oos_error_comparison.png`
 
@@ -364,59 +402,61 @@ Related figures: `outputs/mlp/figures/representative_error_summary.png`, `output
 
 Related figure: `outputs/shared/analysis/length_slice_comparison.png`
 
-| Text                                                            | True Label                | Predicted            | Model        | Confidence | Category                | Annotation             |
-| --------------------------------------------------------------- | ------------------------- | -------------------- | ------------ | ---------- | ----------------------- | ---------------------- |
-| what other countries speak the english language                 | oos                       | change_language      | BiLSTM       | 1.0000     | oos_as_inscope          | confident false accept |
-| how many calories does doing 20 situps burn                     | oos                       | calories             | Text CNN     | 1.0000     | oos_as_inscope          | confident false accept |
-| give me the weather forecast for today                          | oos                       | weather              | Text CNN     | 1.0000     | oos_as_inscope          | confident false accept |
-| look up the conversion rate for the euro to dollar exchange     | oos                       | exchange_rate        | BiLSTM       | 1.0000     | oos_as_inscope          | confident false accept |
-| give me the weather forecast for today                          | oos                       | weather              | BiLSTM       | 1.0000     | oos_as_inscope          | confident false accept |
-| how many calories does jumping up and down burn                 | oos                       | calories             | Text CNN     | 0.9999     | oos_as_inscope          | confident false accept |
-| check the status of my amazon orders for me                     | oos                       | order_status         | BiLSTM       | 0.9999     | oos_as_inscope          | confident false accept |
-| call an uber to take me to the closest grocery store            | oos                       | uber                 | Text CNN     | 0.9999     | oos_as_inscope          | confident false accept |
-| when should i remove my snow tires                              | oos                       | tire_change          | BiLSTM       | 0.9999     | oos_as_inscope          | confident false accept |
-| what's the current prevailing interest rate for mortgages in... | oos                       | interest_rate        | Text CNN     | 0.9995     | oos_as_inscope          | confident false accept |
-| ignore call                                                     | oos                       | make_call            | TF-IDF + MLP | 0.9980     | oos_as_inscope          | confident false accept |
-| deny incoming phone call                                        | oos                       | make_call            | TF-IDF + MLP | 0.9972     | oos_as_inscope          | confident false accept |
-| have i told you to add washing dishes to my todo list           | todo_list                 | todo_list_update     | BiLSTM       | 0.9999     | near_semantic_confusion | semantic overlap       |
-| thanks for your help, goodbye!                                  | goodbye                   | thank_you            | BiLSTM       | 0.9999     | near_semantic_confusion | semantic overlap       |
-| give me a recipe for tacos                                      | ingredients_list          | recipe               | BiLSTM       | 0.9999     | near_semantic_confusion | semantic overlap       |
-| have i added my doctor's appointment to my calendar             | calendar                  | calendar_update      | BiLSTM       | 0.9999     | near_semantic_confusion | semantic overlap       |
-| how can i request a new credit card                             | replacement_card_duration | new_card             | BiLSTM       | 0.9999     | near_semantic_confusion | semantic overlap       |
-| who is responsible for your employment                          | who_do_you_work_for       | who_made_you         | Text CNN     | 0.9986     | near_semantic_confusion | semantic overlap       |
-| i'm trying to raise my credit score can you tell me what it ... | credit_score              | improve_credit_score | Text CNN     | 0.9985     | near_semantic_confusion | semantic overlap       |
-| what time is it in phoenix                                      | timezone                  | time                 | BiLSTM       | 1.0000     | cross_domain_confusion  | cross-domain mix-up    |
-| what is my current location                                     | share_location            | current_location     | BiLSTM       | 1.0000     | cross_domain_confusion  | cross-domain mix-up    |
-| repeat what the weather will be like                            | transfer                  | weather              | BiLSTM       | 1.0000     | cross_domain_confusion  | cross-domain mix-up    |
-| i want to be reminded to pay the electric bill                  | reminder_update           | pay_bill             | BiLSTM       | 0.9999     | cross_domain_confusion  | cross-domain mix-up    |
-| i don't want to forget to call mom                              | reminder_update           | make_call            | BiLSTM       | 0.9998     | cross_domain_confusion  | cross-domain mix-up    |
-| what is the price of bluetooth speakers on amazon               | order                     | oos                  | BiLSTM       | 0.9995     | inscope_as_oos          | false rejection        |
+| Text                                                            | True Label           | Predicted             | Model        | Confidence | Category                | Annotation             |
+| --------------------------------------------------------------- | -------------------- | --------------------- | ------------ | ---------- | ----------------------- | ---------------------- |
+| give me the weather forecast for today                          | oos                  | weather               | BiLSTM       | 1.0000     | oos_as_inscope          | confident false accept |
+| look up the conversion rate for the euro to dollar exchange     | oos                  | exchange_rate         | BiLSTM       | 1.0000     | oos_as_inscope          | confident false accept |
+| what other countries speak the english language                 | oos                  | change_language       | BiLSTM       | 1.0000     | oos_as_inscope          | confident false accept |
+| can you tell me what the best places are to look for a job o... | oos                  | restaurant_suggestion | BiLSTM       | 1.0000     | oos_as_inscope          | confident false accept |
+| give me the weather forecast for today                          | oos                  | weather               | Text CNN     | 1.0000     | oos_as_inscope          | confident false accept |
+| i need you to order a new pair of eyeglasses for me             | oos                  | order                 | BiLSTM       | 1.0000     | oos_as_inscope          | confident false accept |
+| please read the text message i just received                    | oos                  | text                  | Text CNN     | 0.9997     | oos_as_inscope          | confident false accept |
+| what other countries speak the english language                 | oos                  | change_language       | Text CNN     | 0.9991     | oos_as_inscope          | confident false accept |
+| what's the current prevailing interest rate for mortgages in... | oos                  | interest_rate         | Text CNN     | 0.9990     | oos_as_inscope          | confident false accept |
+| forward the text i just got from henry to giselle               | oos                  | text                  | Text CNN     | 0.9988     | oos_as_inscope          | confident false accept |
+| ignore call                                                     | oos                  | make_call             | TF-IDF + MLP | 0.9980     | oos_as_inscope          | confident false accept |
+| deny incoming phone call                                        | oos                  | make_call             | TF-IDF + MLP | 0.9972     | oos_as_inscope          | confident false accept |
+| give me a recipe for tacos                                      | ingredients_list     | recipe                | BiLSTM       | 1.0000     | near_semantic_confusion | semantic overlap       |
+| what's a good recipe foe tacos                                  | ingredients_list     | recipe                | BiLSTM       | 1.0000     | near_semantic_confusion | semantic overlap       |
+| what is the next date for which i can get an oil change appo... | schedule_maintenance | oil_change_when       | BiLSTM       | 1.0000     | near_semantic_confusion | semantic overlap       |
+| what are the steps to get my rewards for my visa card           | redeem_rewards       | rewards_balance       | BiLSTM       | 0.9999     | near_semantic_confusion | semantic overlap       |
+| what have i spent things on                                     | transactions         | spending_history      | BiLSTM       | 0.9999     | near_semantic_confusion | semantic overlap       |
+| repeat what the weather will be like                            | transfer             | weather               | BiLSTM       | 1.0000     | cross_domain_confusion  | cross-domain mix-up    |
+| i'd like for this person to know my location                    | share_location       | current_location      | BiLSTM       | 1.0000     | cross_domain_confusion  | cross-domain mix-up    |
+| what time is it in phoenix                                      | timezone             | time                  | BiLSTM       | 1.0000     | cross_domain_confusion  | cross-domain mix-up    |
+| when will my payment be deposited                               | payday               | bill_due              | BiLSTM       | 1.0000     | cross_domain_confusion  | cross-domain mix-up    |
+| what is my current location                                     | share_location       | current_location      | BiLSTM       | 0.9999     | cross_domain_confusion  | cross-domain mix-up    |
+| what is my current location                                     | share_location       | current_location      | Text CNN     | 0.9988     | cross_domain_confusion  | cross-domain mix-up    |
+| what time is it in phoenix                                      | timezone             | time                  | Text CNN     | 0.9987     | cross_domain_confusion  | cross-domain mix-up    |
+| how many minutes are involved in the preparation of curry       | cook_time            | oos                   | BiLSTM       | 1.0000     | inscope_as_oos          | false rejection        |
 
 Total curated examples: 60; selected for report: 25 (outputs/shared/analysis/curated_report_examples.json).
 
 ## Key Findings
 
-With only 3 repeated runs, differences between models may not be statistically meaningful. Where models have overlapping mean +/- std ranges, this is noted rather than declaring one superior.
+Means and population standard deviations describe the recorded runs. They are descriptive dispersion measures, not confidence intervals or significance tests.
 
-1. **Headline**: TF-IDF + MLP achieved the best aggregate test macro F1 of 0.8727 +/- 0.0031 (outputs/shared/model_comparison_aggregate.json)
+Calibration, OOS-probability ranking and qualitative findings use one validation-selected representative run per model. Differences in preprocessing and search budgets prevent an architecture-only causal interpretation.
+
+1. **Headline**: TF-IDF + MLP achieved the best aggregate test macro F1 of 0.8716 +/- 0.0029 (outputs/shared/model_comparison_aggregate.json)
 Related figure: `outputs/shared/figures/model_comparison_test_macro_f1.png`
 
-2. **Calibration**: Best calibrated: text_cnn (ECE = 0.0374). Worst: bilstm (ECE = 0.1125) (outputs/shared/analysis/calibration_summary.json)
+2. **Calibration**: Lowest representative-run ECE: text_cnn (0.0390). Highest: bilstm (0.1232) (outputs/shared/analysis/calibration_summary.json)
 Related figure: `outputs/shared/analysis/calibration_comparison.png`
 
-3. **Oos Detection**: Text CNN achieved the best OOS detection with AUROC = 0.9523 and AUPR = 0.8403 (outputs/shared/analysis/oos_threshold_comparison.json)
+3. **Oos Detection**: Text CNN has the highest representative-run OOS-probability AUROC (0.9491), with AUPR = 0.8273 (outputs/shared/analysis/oos_threshold_comparison.json)
 Related figures: `outputs/shared/analysis/oos_roc_comparison.png`, `outputs/shared/analysis/oos_pr_comparison.png`
 
-4. **Confusion**: Dominant error category across all models: `oos_as_inscope`. Dominant per model: TF-IDF + MLP: oos_as_inscope, Text CNN: oos_as_inscope, BiLSTM: oos_as_inscope (outputs/shared/analysis/error_taxonomy_summary.json)
+4. **Confusion**: Representative-run dominant heuristic category per model: TF-IDF + MLP: oos_as_inscope, Text CNN: oos_as_inscope, BiLSTM: oos_as_inscope (outputs/shared/analysis/error_taxonomy_summary.json)
 Related figures: `outputs/mlp/figures/representative_top_confused_pairs.png`, `outputs/text_cnn/figures/representative_top_confused_pairs.png`, `outputs/bilstm/figures/representative_top_confused_pairs.png`, `outputs/shared/analysis/error_taxonomy_comparison.png`
 
-5. **Architecture**: 608 examples (0.1105) misclassified by all models; 464 (0.0844) unique to one model. Agreement on wrong class: 0.3668 (outputs/shared/analysis/cross_model_error_comparison.json)
+5. **Architecture**: 600 examples (0.1091) misclassified by all models; 489 (0.0889) unique to one model. Agreement on wrong class: 0.3633 (outputs/shared/analysis/cross_model_error_comparison.json)
 Related figure: `outputs/shared/analysis/cross_model_error_overlap.png`
 
-6. **Length**: Short-query accuracy: TF-IDF + MLP 0.8291, Text CNN 0.8583, BiLSTM 0.8097 (outputs/shared/analysis/error_analysis_summary.json)
+6. **Length**: Short-query accuracy: TF-IDF + MLP 0.8291, Text CNN 0.8641, BiLSTM 0.8019 (outputs/shared/analysis/error_analysis_summary.json)
 Related figure: `outputs/shared/analysis/length_slice_comparison.png`
 
-7. **Efficiency**: Parameter counts: TF-IDF + MLP 5,197,975, Text CNN 1,930,167, BiLSTM 4,284,311. Inference throughput: TF-IDF + MLP 17783 ex/s, Text CNN 32082 ex/s, BiLSTM 8432 ex/s (outputs/shared/efficiency_summary_table.json)
+7. **Efficiency**: Parameter counts: TF-IDF + MLP 5,197,975, Text CNN 1,930,167, BiLSTM 4,284,311. Inference throughput: TF-IDF + MLP 18069 ex/s, Text CNN 28456 ex/s, BiLSTM 7910 ex/s (outputs/shared/efficiency_summary_table.json)
 Related figure: `outputs/shared/figures/model_efficiency_comparison.png`
 
 8. **Recommendation**: Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors. (outputs/shared/analysis/error_analysis_summary.json)
@@ -426,46 +466,46 @@ Related figures: `outputs/mlp/figures/representative_top_confused_pairs.png`, `o
 
 ### Analysis-Level Limitations
 
-- Qualitative analysis uses a single representative run per model, not all seeds.
-- CLINC150 is balanced; real-world class distributions may differ significantly.
-- No interpretability analysis (attention, saliency) was performed.
-- Post-hoc calibration (temperature scaling) was not applied.
-- Length and frequency slicing uses simple whitespace tokenization.
+- Qualitative, calibration and probability-ranking diagnostics use one validation-selected representative run per model, without measuring their variability across seeds.
+- Only the 150 in-scope classes are balanced. The OOS class has 250 training and 1,000 test examples; these supports differ from each in-scope class and from many deployment distributions.
+- Taxonomy labels are heuristics: `near_semantic_confusion` means a same-domain misclassification; `short_query_ambiguity` marks errors with at most 5 whitespace tokens. These rules do not establish semantic similarity or query ambiguity.
+- Post-hoc calibration was not applied. Test-derived ROC points do not establish validation-selected thresholds or a deployable operating point.
+- Length slices use whitespace tokenization; scope slices compare supervised in-scope and OOS classes, not training frequency.
 
 ### Project-Level Limitations
 
-- Single dataset only (CLINC150); results may not generalize to other intent-classification benchmarks.
-- No pretrained word embeddings (GloVe, word2vec) used; embeddings trained from scratch.
-- Whitespace tokenizer rather than subword tokenization (BPE, WordPiece).
-- No transformer-based models compared (BERT, DistilBERT, etc.).
-- 3 repeated runs provide limited statistical power; 5+ runs would strengthen variance estimates.
-- OOS training data is sparse relative to test distribution (250 train vs 1,000 test OOS examples).
-- No cross-dataset validation or domain-transfer evaluation.
+- Single benchmark only (CLINC150), with no cross-dataset or domain-transfer evaluation. Its official normalized splits contain 3 train/validation text overlaps (2 with conflicting labels) and 2 train/test overlaps (both with conflicting labels); splits are preserved.
+- OOS is a supervised 151st class with labeled training examples. These results describe this explicit-class setting and do not establish general open-set detection.
+- Models use different representations and search budgets. Neural models use whitespace tokens and embeddings trained from scratch; no pretrained embeddings or transformers were compared.
+- The BiLSTM processes fixed right-PAD positions and concatenates final hidden states. Recurrent transitions remain active on PAD tokens, making the representation sensitive to padding length.
+- Means and population standard deviations describe the recorded runs. They are descriptive dispersion measures, not confidence intervals or significance tests.
+- Frozen hyperparameters come from limited earlier searches. Advancing tuning-loader RNG state and neural smoke checks made the original trial order part of the search; fair seeded loaders would require new experiments.
+- Batched evaluation timing covers loader traversal, device transfer, forward pass, softmax and CPU result collection; it excludes preprocessing, checkpoint loading, array concatenation, metrics and artifact writes. The per-example figures describe batched throughput, with no controlled warmup or repeated timing trials; single-query deployment latency was not measured.
 - Model checkpoints not committed to repository; reproduction requires retraining.
 
 ## Future Improvements
 
 ### High Priority
 
-- **Collect more OOS training examples to reduce false accepts**: OOS false accepts are the dominant error across all models; more OOS training data directly addresses the distribution mismatch.
-- **Merge or relabel persistently confused intent pairs within the same domain**: Several intent pairs share near-identical semantics and consistently confuse all models.
-- **Apply confidence thresholding in deployment to flag uncertain predictions**: Many errors occur at high confidence; a deployment threshold could redirect uncertain queries to human review.
-- **Evaluate temperature scaling for post-hoc calibration improvement**: Calibration varies significantly across models; temperature scaling could improve reliability without retraining.
+- **Evaluate additional labeled OOS training data in a separate experiment**: Observed false accepts motivate testing broader OOS coverage; document any new data protocol and retain the current official benchmark for comparability.
+- **Manually inspect persistent same-domain confusions**: Domain-based taxonomy tags are heuristics. Inspect examples before drawing semantic conclusions; preserve official benchmark labels in the current comparison.
+- **Select OOS or abstention thresholds on validation data**: Specify a target trade-off on validation data and evaluate the fixed threshold on held-out data. Test ROC operating points alone do not establish deployment behavior.
+- **Evaluate temperature scaling for post-hoc calibration improvement**: Fit temperature scaling on validation data, then compare held-out calibration. Representative-run ECE differences alone do not establish its benefit across seeds.
 
 ### Medium Priority
 
-- **Add pretrained word embeddings (GloVe, word2vec) to Text CNN and BiLSTM**: Pretrained embeddings could improve generalization especially for rare words and OOS queries.
-- **Systematic hyperparameter tuning (dropout, hidden size, learning rate)**: Current configs use limited grid search; broader exploration may improve all models.
-- **Add parameter-count vs accuracy Pareto analysis**: Quantify the efficiency-accuracy trade-off to guide model selection for deployment.
-- **Add threshold analysis for OOS detection with operating-point selection**: Enable tunable precision-recall trade-off for OOS detection in production.
+- **Use fresh seeded loaders for each tuning trial**: Make comparisons independent of advancing loader state and smoke-check shuffles. Changing this search policy requires new tuning and final evaluations.
+- **Evaluate length-aware BiLSTM sequence handling**: Packed sequences or length-aware summaries could avoid processing right-PAD positions. This modeling change requires new training, tuning and comparisons.
+- **Evaluate pretrained word embeddings**: Test their effect on the neural pipelines through new training and tuning rather than assuming improved generalization.
+- **Measure controlled deployment latency separately**: Use a specified device, warmup and repeated single-query measurements before making service-latency claims from batch throughput.
 
 ### Lower Priority / Future Work
 
-- **Compare against transformer-based models (DistilBERT, BERT-base)**: Establish an upper-bound reference for the lightweight models evaluated.
+- **Compare against transformer-based models (DistilBERT, BERT-base)**: Add a separately trained and tuned reference with its own preprocessing and compute budget.
 - **Evaluate on additional intent-classification datasets**: Validate whether findings generalize beyond CLINC150.
 - **Subword tokenization (BPE, WordPiece) for better OOV handling**: Reduce OOV rates and improve generalization to unseen vocabulary.
-- **Multi-task learning combining intent classification and OOS detection**: Joint training may improve OOS discrimination by explicitly modeling the boundary.
-- **Bootstrap confidence intervals for more rigorous statistical comparison**: 3 repeated runs provide limited statistical power; bootstrapping would strengthen claims.
+- **Evaluate a conventional in-scope-only MSP baseline**: Train a separate classifier without the supervised OOS class; its uncertainty score answers a different question from the current 151-class MSP diagnostic.
+- **Expand independently seeded runs and design uncertainty estimates**: Distinguish test-example sampling uncertainty from training-run variation; three seeds and overlapping mean/std ranges alone do not justify significance claims.
 
 (outputs/shared/analysis/error_analysis_summary.json)
 
@@ -474,21 +514,28 @@ Related figures: `outputs/mlp/figures/representative_top_confused_pairs.png`, `o
 ### Environment Setup
 
 - Python version: >=3.11
-- Install: `uv sync` (recommended) or `pip install -r requirements.txt`
+- Install from the repository root: `uv sync --frozen`
+- Secondary route: activate a virtual environment, then `python -m pip install -r requirements.txt`. The portable export includes `-e .` to install the project.
 - Pinned dependency versions available: `uv.lock`
 - PyTorch with MPS support for Apple Silicon (optional; CPU fallback available)
 
 ### Dataset Acquisition
 
-CLINC150 is loaded via the HuggingFace `datasets` library (`clinc/clinc_oos`, `plus` subset). No manual download is required; the dataset is fetched at runtime.
+CLINC150 is loaded via the HuggingFace `datasets` library (`clinc/clinc_oos`, `plus` subset). The configured revision is pinned and future runs record ordered split hashes. The first uncached download requires network access; official split membership is preserved.
 
-### Full Pipeline Execution
+### Frozen Final Evaluations and Report
 
 ```bash
-python scripts/run_model_pipeline.py --model all --run-count 3
+uv run --frozen python scripts/run_repeated_evaluation.py --model all --run-count 3
+uv run --frozen python scripts/run_experiment_tracking.py
+uv run --frozen python scripts/run_report_figures.py
+uv run --frozen python scripts/run_error_analysis.py
+uv run --frozen python scripts/run_report_generation.py
 ```
 
 Seeds: [42, 1337, 2024]
+
+To rebuild preprocessing from source first run `uv run --frozen python scripts/explore_dataset.py` and `uv run --frozen python scripts/run_preprocessing.py`. The evaluation commands reuse existing frozen hyperparameters; they do not retune. See the repository README for explicit tuning-source selection.
 
 ### Expected Output Structure
 
@@ -502,24 +549,37 @@ outputs/
 
 ### Approximate Runtime
 
-- **TF-IDF + MLP** (3 runs): ~3.0 min (training only; 60.62 s/run)
-- **Text CNN** (3 runs): ~6.8 min (training only; 136.48 s/run)
-- **BiLSTM** (3 runs): ~4.6 min (training only; 91.74 s/run)
+- **TF-IDF + MLP** (3 runs): ~4.1 min (training only; 82.69 s/run)
+- **Text CNN** (3 runs): ~8.4 min (training only; 168.54 s/run)
+- **BiLSTM** (3 runs): ~7.2 min (training only; 144.16 s/run)
 
-Hardware context: Apple Silicon (MPS). Runtimes will vary on different hardware.
+Hardware, device, source commit, input hashes and effective settings are recorded per run. These times cover the training loop including validation/checkpoint writes, excluding setup, preprocessing, neural smoke checks, tuning and final training-log serialization. Refreshed runs use `time.perf_counter` and record the exact hardware model, processor and RAM in `run_metadata.json`; historical outputs without these identities remain explicitly unknown.
+
+Batched evaluation timing covers loader traversal, device transfer, forward pass, softmax and CPU result collection; it excludes preprocessing, checkpoint loading, array concatenation, metrics and artifact writes. The per-example figures describe batched throughput, with no controlled warmup or repeated timing trials; single-query deployment latency was not measured.
 
 ### Nondeterminism Notes
 
 - MPS backend nondeterminism on Apple Silicon (PyTorch does not guarantee deterministic MPS operations).
-- DataLoader worker ordering may vary across runs.
+- DataLoaders use num_workers=0 and the recorded per-run shuffle seed.
 - Exact numeric reproduction across different hardware is not guaranteed.
 
 ### Reproduction Checklist
 
-1. Clone the repository: `git clone <repo-url> && cd clinc150-project`
-2. Install dependencies: `uv sync` (or `pip install -r requirements.txt`)
-3. Run the full pipeline: `python scripts/run_model_pipeline.py --model all --run-count 3`
-4. Verify outputs exist under `outputs/` with the expected directory structure
+1. Clone https://github.com/alexiwoh/clinc150-project into a separate checkout; generated outputs are replaced in place.
+2. Install locked dependencies from the repository root with `uv sync --frozen`.
+3. Run frozen final evaluations, then tracking, report figures, error analysis and report generation.
+4. For source reconstruction, rebuild dataset summaries and train-only preprocessing before evaluation.
+5. Run offline tests with `uv run --frozen pytest -q`; generated-artifact checks require trained checkpoints.
+6. Verify outputs exist under `outputs/` with the expected directory structure
+
+### References and Licensing
+
+- [Larson et al. (2019), An Evaluation Dataset for Intent Classification and Out-of-Scope Prediction](https://aclanthology.org/D19-1131/)
+- [Kim (2014), Convolutional Neural Networks for Sentence Classification](https://aclanthology.org/D14-1181/)
+- [CLINC150 dataset card](https://huggingface.co/datasets/clinc/clinc_oos)
+- [GPLv3 source license](../../../LICENSE)
+
+The CLINC150 dataset card metadata lists CC BY 3.0 for the dataset. Dataset licensing is separate from this repository's GPLv3 source license. The sentence-CNN design follows Kim (2014); the benchmark is attributed to Larson et al. (2019).
 
 ## Figure Catalogue
 
@@ -714,7 +774,7 @@ Hardware context: Apple Silicon (MPS). Runtimes will vary on different hardware.
 - **length_slice** (analysis): Cross-model accuracy comparison by utterance length across all evaluated models. Computed from cross-model slice comparison using representative runs. Uses the CLINC150 test split.
   Figure path: `outputs/shared/analysis/length_slice_comparison.png`
   Source artifacts: `outputs/mlp/analysis/length_slice_analysis.json`, `outputs/text_cnn/analysis/length_slice_analysis.json`, `outputs/bilstm/analysis/length_slice_analysis.json`
-- **frequency_slice** (analysis): Cross-model accuracy comparison by class-frequency tier across all evaluated models. Computed from cross-model slice comparison using representative runs. Uses the CLINC150 test split.
+- **frequency_slice** (analysis): Cross-model accuracy comparison for in-scope versus OOS classes across all evaluated models. Computed from cross-model slice comparison using representative runs. Uses the CLINC150 test split.
   Figure path: `outputs/shared/analysis/frequency_slice_comparison.png`
   Source artifacts: `outputs/mlp/analysis/frequency_slice_analysis.json`, `outputs/text_cnn/analysis/frequency_slice_analysis.json`, `outputs/bilstm/analysis/frequency_slice_analysis.json`
 - **cross_model_error_overlap** (analysis): Overlap between shared and model-specific prediction failures across all evaluated models. Computed from cross-model error overlap using one representative run per model. Uses the CLINC150 test split.

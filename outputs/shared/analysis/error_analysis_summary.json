@@ -3,22 +3,22 @@
   "protocol_version": "1.0",
   "headline": {
     "best_model": "mlp",
-    "test_macro_f1_mean": 0.8726528643001762,
-    "test_macro_f1_std": 0.003145021893969668,
+    "test_macro_f1_mean": 0.8715949556844983,
+    "test_macro_f1_std": 0.0028707363133910506,
     "rationale": "Highest aggregate test macro F1 across repeated runs.",
     "source_artifact": "outputs/shared/model_comparison_aggregate.json"
   },
   "calibration": {
     "best_calibrated": "text_cnn",
-    "best_ece": 0.03743301824548027,
+    "best_ece": 0.03903386061706328,
     "worst_calibrated": "bilstm",
-    "worst_ece": 0.11253382217884061,
+    "worst_ece": 0.12316495451331141,
     "source_artifact": "outputs/shared/analysis/calibration_summary.json"
   },
   "oos_detection": {
     "best_model": "text_cnn",
-    "best_auroc": 0.9523406666666667,
-    "best_aupr": 0.8402629177274288,
+    "best_auroc": 0.9490557777777778,
+    "best_aupr": 0.827252152563682,
     "source_artifact": "outputs/shared/analysis/oos_threshold_comparison.json"
   },
   "confusion": {
@@ -30,11 +30,11 @@
     "source_artifact": "outputs/shared/analysis/error_taxonomy_summary.json"
   },
   "architecture_comparison": {
-    "all_wrong_count": 608,
-    "all_wrong_fraction": 0.11054545454545454,
-    "model_specific_count": 464,
-    "model_specific_fraction": 0.08436363636363636,
-    "all_wrong_agreement": 0.3667763157894737,
+    "all_wrong_count": 600,
+    "all_wrong_fraction": 0.10909090909090909,
+    "model_specific_count": 489,
+    "model_specific_fraction": 0.08890909090909091,
+    "all_wrong_agreement": 0.36333333333333334,
     "source_artifact": "outputs/shared/analysis/cross_model_error_comparison.json"
   },
   "length": {
@@ -49,12 +49,12 @@
       "short_error_rate": 0.170873786407767
     },
     "text_cnn": {
-      "short_accuracy": 0.858252427184466,
-      "short_error_rate": 0.141747572815534
+      "short_accuracy": 0.8640776699029126,
+      "short_error_rate": 0.13592233009708737
     },
     "bilstm": {
-      "short_accuracy": 0.8097087378640777,
-      "short_error_rate": 0.19029126213592232
+      "short_accuracy": 0.8019417475728156,
+      "short_error_rate": 0.19805825242718447
     }
   },
   "top_recommendation": "Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors."

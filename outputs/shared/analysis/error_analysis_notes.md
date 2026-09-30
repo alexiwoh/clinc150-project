@@ -2,15 +2,15 @@
 
 ## Overview
 
-The best-performing model overall is **mlp** with aggregate test macro F1 of 0.8727 (±0.0031) across repeated runs. This analysis examines calibration, OOS detection, systematic confusions, and architecture-specific failure modes to understand not just how well each model performs, but why and where it fails.
+The best-performing model overall is **mlp** with aggregate test macro F1 of 0.8716 (±0.0029) across repeated runs. This analysis examines calibration, OOS detection, systematic confusions, and architecture-specific failure modes to understand not just how well each model performs, but why and where it fails.
 
 ## Calibration and Confidence
 
-The best-calibrated model is **text_cnn** (ECE = 0.0374), while the worst-calibrated is **bilstm** (ECE = 0.1125). See `outputs/shared/analysis/calibration_summary.json` for full calibration comparison.
+The best-calibrated model is **text_cnn** (ECE = 0.0390), while the worst-calibrated is **bilstm** (ECE = 0.1232). See `outputs/shared/analysis/calibration_summary.json` for full calibration comparison.
 
 ## OOS Detection Quality
 
-The best OOS detector is **text_cnn** with AUROC = 0.9523 and AUPR = 0.8403. See `outputs/shared/analysis/oos_threshold_comparison.json` for threshold comparison.
+The best OOS detector is **text_cnn** with AUROC = 0.9491 and AUPR = 0.8273. See `outputs/shared/analysis/oos_threshold_comparison.json` for threshold comparison.
 
 ## Systematic Confusions
 
@@ -22,7 +22,7 @@ See `outputs/shared/analysis/error_taxonomy_summary.json` for per-model taxonomy
 
 ## Architecture-Specific vs Shared Errors
 
-Across all models, **608** examples (11.1%) are misclassified by all three models, while **464** examples (8.4%) are unique to a single model. Of universally wrong examples, 36.7% predict the same incorrect class. See `outputs/shared/analysis/cross_model_error_comparison.json` for overlap analysis.
+Across all models, **600** examples (10.9%) are misclassified by all three models, while **489** examples (8.9%) are unique to a single model. Of universally wrong examples, 36.3% predict the same incorrect class. See `outputs/shared/analysis/cross_model_error_comparison.json` for overlap analysis.
 
 ## Limitations
 
@@ -30,7 +30,7 @@ Across all models, **608** examples (11.1%) are misclassified by all three model
 - CLINC150 is balanced; real-world class distributions may differ significantly.
 - No interpretability analysis (attention, saliency) was performed.
 - Post-hoc calibration (e.g., temperature scaling) was not applied.
-- Length and frequency slicing uses simple whitespace tokenization.
+- Length slices use whitespace tokenization; scope slices compare supervised in-scope and OOS classes, not training frequency.
 
 ## Recommendations
 

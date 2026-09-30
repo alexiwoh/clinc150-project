@@ -192,13 +192,6 @@
       "predicted_id": 144
     },
     {
-      "text": "how much does my bank account have",
-      "true_label": "balance",
-      "predicted_label": "account_blocked",
-      "true_id": 35,
-      "predicted_id": 2
-    },
-    {
       "text": "what the numerical number inside my bank accounts",
       "true_label": "balance",
       "predicted_label": "account_blocked",
@@ -213,11 +206,18 @@
       "predicted_id": 93
     },
     {
-      "text": "how much do i owe visa",
+      "text": "how much is due for my water bill",
       "true_label": "bill_balance",
-      "predicted_label": "balance",
+      "predicted_label": "bill_due",
       "true_id": 27,
-      "predicted_id": 35
+      "predicted_id": 56
+    },
+    {
+      "text": "what is the amount due on my visa",
+      "true_label": "bill_balance",
+      "predicted_label": "bill_due",
+      "true_id": 27,
+      "predicted_id": 56
     },
     {
       "text": "what price is my credit card and my water bill at",
@@ -227,18 +227,32 @@
       "predicted_id": 56
     },
     {
+      "text": "whens my insurance due and how much does it cost",
+      "true_label": "bill_balance",
+      "predicted_label": "bill_due",
+      "true_id": 27,
+      "predicted_id": 56
+    },
+    {
+      "text": "how much do i owe visa",
+      "true_label": "bill_balance",
+      "predicted_label": "credit_limit",
+      "true_id": 27,
+      "predicted_id": 41
+    },
+    {
+      "text": "how much is my water and sewer",
+      "true_label": "bill_balance",
+      "predicted_label": "income",
+      "true_id": 27,
+      "predicted_id": 93
+    },
+    {
       "text": "i need to know the price of my car payment and insurance please",
       "true_label": "bill_balance",
       "predicted_label": "insurance_change",
       "true_id": 27,
       "predicted_id": 64
-    },
-    {
-      "text": "is the phone bill the same as last month",
-      "true_label": "bill_balance",
-      "predicted_label": "min_payment",
-      "true_id": 27,
-      "predicted_id": 143
     },
     {
       "text": "how expensive is my internet",
@@ -248,11 +262,11 @@
       "predicted_id": 42
     },
     {
-      "text": "what is the amount due on my visa",
+      "text": "is the phone bill the same as last month",
       "true_label": "bill_balance",
-      "predicted_label": "rewards_balance",
+      "predicted_label": "transactions",
       "true_id": 27,
-      "predicted_id": 50
+      "predicted_id": 68
     },
     {
       "text": "what's the latest i can pay my cellular bill",
@@ -269,32 +283,18 @@
       "predicted_id": 42
     },
     {
+      "text": "book me a place to chicago from atlanta united airlines",
+      "true_label": "book_flight",
+      "predicted_label": "book_hotel",
+      "true_id": 63,
+      "predicted_id": 116
+    },
+    {
       "text": "can i fly from atlanta to san francisco for less than 100 dollars",
       "true_label": "book_flight",
-      "predicted_label": "transfer",
+      "predicted_label": "exchange_rate",
       "true_id": 63,
-      "predicted_id": 133
-    },
-    {
-      "text": "i'm travelling to boston on march 2 until march 4 please make a hotel reservation for me",
-      "true_label": "book_hotel",
-      "predicted_label": "restaurant_reservation",
-      "true_id": 116,
-      "predicted_id": 23
-    },
-    {
-      "text": "i bought 6 shirts at $499 each what was my total expenditure for them",
-      "true_label": "calculator",
-      "predicted_label": "income",
-      "true_id": 138,
-      "predicted_id": 93
-    },
-    {
-      "text": "i spent 34 dollars for 12 gallons of paint what is the average price for each gallon",
-      "true_label": "calculator",
-      "predicted_label": "mpg",
-      "true_id": 138,
-      "predicted_id": 142
+      "predicted_id": 38
     }
   ]
 }

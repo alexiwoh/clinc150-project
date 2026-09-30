@@ -5,180 +5,180 @@
   "model_name": "BiLSTM",
   "representative_run_id": "run_02_seed_1337",
   "false_accepts": {
-    "count": 672,
-    "mean_confidence": 0.6449694037437439,
-    "std_confidence": 0.24916256964206696,
+    "count": 716,
+    "mean_confidence": 0.6626206636428833,
+    "std_confidence": 0.24524517357349396,
     "top_capturing_intents": [
       {
+        "intent": "order",
+        "count": 48,
+        "mean_confidence": 0.688157320022583
+      },
+      {
         "intent": "smart_home",
-        "count": 39,
-        "mean_confidence": 0.628534734249115
+        "count": 32,
+        "mean_confidence": 0.6898937821388245
       },
       {
-        "intent": "income",
-        "count": 30,
-        "mean_confidence": 0.6459516882896423
+        "intent": "whisper_mode",
+        "count": 27,
+        "mean_confidence": 0.604016125202179
       },
       {
-        "intent": "current_location",
-        "count": 28,
-        "mean_confidence": 0.6976905465126038
+        "intent": "shopping_list_update",
+        "count": 25,
+        "mean_confidence": 0.677044153213501
       },
       {
-        "intent": "directions",
-        "count": 24,
-        "mean_confidence": 0.6602993011474609
-      },
-      {
-        "intent": "weather",
-        "count": 20,
-        "mean_confidence": 0.6486479043960571
-      },
-      {
-        "intent": "sync_device",
-        "count": 17,
-        "mean_confidence": 0.7312024831771851
-      },
-      {
-        "intent": "recipe",
-        "count": 17,
-        "mean_confidence": 0.5996425747871399
-      },
-      {
-        "intent": "restaurant_suggestion",
-        "count": 16,
-        "mean_confidence": 0.6918511986732483
+        "intent": "definition",
+        "count": 23,
+        "mean_confidence": 0.5908995270729065
       },
       {
         "intent": "ingredients_list",
-        "count": 15,
-        "mean_confidence": 0.5980021357536316
+        "count": 22,
+        "mean_confidence": 0.5782052874565125
       },
       {
-        "intent": "cancel",
-        "count": 14,
-        "mean_confidence": 0.5626336336135864
+        "intent": "calculator",
+        "count": 19,
+        "mean_confidence": 0.6475446224212646
+      },
+      {
+        "intent": "directions",
+        "count": 19,
+        "mean_confidence": 0.7211893200874329
+      },
+      {
+        "intent": "nutrition_info",
+        "count": 17,
+        "mean_confidence": 0.5701560974121094
+      },
+      {
+        "intent": "tell_joke",
+        "count": 16,
+        "mean_confidence": 0.538151204586029
       }
     ],
     "top_examples": [
       {
-        "text": "what other countries speak the english language",
+        "text": "give me the weather forecast for today",
         "true_label_name": "oos",
-        "predicted_label_name": "change_language",
-        "max_confidence": 0.9999963045120239
+        "predicted_label_name": "weather",
+        "max_confidence": 0.9999994039535522
       },
       {
         "text": "look up the conversion rate for the euro to dollar exchange",
         "true_label_name": "oos",
         "predicted_label_name": "exchange_rate",
-        "max_confidence": 0.9999663829803467
+        "max_confidence": 0.9999990463256836
       },
       {
-        "text": "give me the weather forecast for today",
+        "text": "what other countries speak the english language",
         "true_label_name": "oos",
-        "predicted_label_name": "weather",
-        "max_confidence": 0.9999613761901855
+        "predicted_label_name": "change_language",
+        "max_confidence": 0.9999902248382568
       },
       {
-        "text": "check the status of my amazon orders for me",
+        "text": "can you tell me what the best places are to look for a job online",
         "true_label_name": "oos",
-        "predicted_label_name": "order_status",
-        "max_confidence": 0.9999063014984131
+        "predicted_label_name": "restaurant_suggestion",
+        "max_confidence": 0.9999797344207764
       },
       {
-        "text": "when should i remove my snow tires",
+        "text": "i need you to order a new pair of eyeglasses for me",
         "true_label_name": "oos",
-        "predicted_label_name": "tire_change",
-        "max_confidence": 0.9998812675476074
+        "predicted_label_name": "order",
+        "max_confidence": 0.9999575614929199
       }
     ]
   },
   "false_rejects": {
-    "count": 39,
-    "mean_confidence": 0.6261306405067444,
-    "std_confidence": 0.25417736172676086,
+    "count": 28,
+    "mean_confidence": 0.6749338507652283,
+    "std_confidence": 0.22022458910942078,
     "top_rejected_intents": [
       {
-        "intent": "restaurant_reviews",
-        "count": 4,
-        "mean_confidence": 0.731038510799408
-      },
-      {
-        "intent": "carry_on",
-        "count": 3,
-        "mean_confidence": 0.6374905705451965
-      },
-      {
-        "intent": "play_music",
-        "count": 3,
-        "mean_confidence": 0.4503401219844818
-      },
-      {
-        "intent": "what_song",
+        "intent": "recipe",
         "count": 2,
-        "mean_confidence": 0.5891954302787781
-      },
-      {
-        "intent": "timezone",
-        "count": 2,
-        "mean_confidence": 0.7124890089035034
-      },
-      {
-        "intent": "order_status",
-        "count": 2,
-        "mean_confidence": 0.5650596022605896
+        "mean_confidence": 0.6849843263626099
       },
       {
         "intent": "calculator",
         "count": 2,
-        "mean_confidence": 0.619243860244751
+        "mean_confidence": 0.6871998310089111
       },
       {
-        "intent": "bill_balance",
-        "count": 1,
-        "mean_confidence": 0.8481613397598267
+        "intent": "carry_on",
+        "count": 2,
+        "mean_confidence": 0.5104885101318359
       },
       {
-        "intent": "order",
-        "count": 1,
-        "mean_confidence": 0.9994544386863708
+        "intent": "meaning_of_life",
+        "count": 2,
+        "mean_confidence": 0.6330169439315796
       },
       {
-        "intent": "travel_alert",
+        "intent": "restaurant_suggestion",
+        "count": 2,
+        "mean_confidence": 0.385683536529541
+      },
+      {
+        "intent": "replacement_card_duration",
         "count": 1,
-        "mean_confidence": 0.9209591746330261
+        "mean_confidence": 0.5232166647911072
+      },
+      {
+        "intent": "what_are_your_hobbies",
+        "count": 1,
+        "mean_confidence": 0.6960631012916565
+      },
+      {
+        "intent": "traffic",
+        "count": 1,
+        "mean_confidence": 0.992024302482605
+      },
+      {
+        "intent": "tire_change",
+        "count": 1,
+        "mean_confidence": 0.620458722114563
+      },
+      {
+        "intent": "timezone",
+        "count": 1,
+        "mean_confidence": 0.9321651458740234
       }
     ],
     "top_examples": [
       {
-        "text": "how do i do a 401(k) rollover",
-        "true_label_name": "rollover_401k",
+        "text": "i need the data and price from my state taxes",
+        "true_label_name": "taxes",
         "predicted_label_name": "oos",
-        "max_confidence": 0.17121118307113647
+        "max_confidence": 0.33860325813293457
       },
       {
-        "text": "can you monitor my package's progress",
-        "true_label_name": "order_status",
+        "text": "what's the food can easily get in canada",
+        "true_label_name": "restaurant_suggestion",
         "predicted_label_name": "oos",
-        "max_confidence": 0.2059508115053177
+        "max_confidence": 0.3507847487926483
       },
       {
-        "text": "do i overspend when it comes to fast food",
-        "true_label_name": "spending_history",
+        "text": "what's 15% of 68",
+        "true_label_name": "calculator",
         "predicted_label_name": "oos",
-        "max_confidence": 0.24914060533046722
+        "max_confidence": 0.3944147229194641
       },
       {
-        "text": "ai pick up the dice, then drop it",
-        "true_label_name": "roll_dice",
+        "text": "how do i go about cooking a 10lb turkey",
+        "true_label_name": "recipe",
         "predicted_label_name": "oos",
-        "max_confidence": 0.28707635402679443
+        "max_confidence": 0.4034264087677002
       },
       {
-        "text": "drop some beats",
-        "true_label_name": "play_music",
+        "text": "where can i go to eat",
+        "true_label_name": "restaurant_suggestion",
         "predicted_label_name": "oos",
-        "max_confidence": 0.2882451117038727
+        "max_confidence": 0.42058229446411133
       }
     ]
   },

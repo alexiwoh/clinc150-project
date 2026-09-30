@@ -2,10 +2,11 @@
   "schema_version": "1.0",
   "protocol_version": "1.0",
   "python_version": ">=3.11",
-  "install_command": "uv sync",
+  "install_command": "uv sync --frozen",
   "pinned_versions_available": true,
   "dataset_source": "clinc/clinc_oos (plus subset)",
-  "pipeline_command": "python scripts/run_model_pipeline.py --model all --run-count 3",
+  "pipeline_command": "uv run --frozen python scripts/run_repeated_evaluation.py --model all --run-count 3",
+  "report_command": "uv run --frozen python scripts/run_report_generation.py",
   "seed_list": [
     42,
     1337,
@@ -13,21 +14,41 @@
   ],
   "run_count": 3,
   "approximate_runtime_minutes": {
-    "mlp": 3.0,
-    "text_cnn": 6.8,
-    "bilstm": 4.6
+    "mlp": 4.1,
+    "text_cnn": 8.4,
+    "bilstm": 7.2
   },
-  "hardware_context": "Apple Silicon (MPS)",
+  "hardware_context": "See each current run_metadata.json for the actual machine and device",
   "nondeterminism_notes": [
     "MPS backend nondeterminism on Apple Silicon (PyTorch does not guarantee deterministic MPS operations).",
-    "DataLoader worker ordering may vary across runs.",
+    "DataLoaders use num_workers=0 and the recorded per-run shuffle seed.",
     "Exact numeric reproduction across different hardware is not guaranteed."
   ],
   "reproduction_steps": [
-    "Clone the repository: `git clone <repo-url> && cd clinc150-project`",
-    "Install dependencies: `uv sync` (or `pip install -r requirements.txt`)",
-    "Run the full pipeline: `python scripts/run_model_pipeline.py --model all --run-count 3`",
+    "Clone https://github.com/alexiwoh/clinc150-project into a separate checkout; generated outputs are replaced in place.",
+    "Install locked dependencies from the repository root with `uv sync --frozen`.",
+    "Run frozen final evaluations, then tracking, report figures, error analysis and report generation.",
+    "For source reconstruction, rebuild dataset summaries and train-only preprocessing before evaluation.",
+    "Run offline tests with `uv run --frozen pytest -q`; generated-artifact checks require trained checkpoints.",
     "Verify outputs exist under `outputs/` with the expected directory structure"
+  ],
+  "references": [
+    {
+      "title": "Larson et al. (2019), An Evaluation Dataset for Intent Classification and Out-of-Scope Prediction",
+      "url": "https://aclanthology.org/D19-1131/"
+    },
+    {
+      "title": "Kim (2014), Convolutional Neural Networks for Sentence Classification",
+      "url": "https://aclanthology.org/D14-1181/"
+    },
+    {
+      "title": "CLINC150 dataset card",
+      "url": "https://huggingface.co/datasets/clinc/clinc_oos"
+    },
+    {
+      "title": "GPLv3 source license",
+      "url": "../../../LICENSE"
+    }
   ],
   "source_artifacts": [
     "outputs/shared/evaluation_protocol.json",

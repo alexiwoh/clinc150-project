@@ -157,6 +157,13 @@
   ],
   "errors": [
     {
+      "text": "can i reserve tables at the new york restaurant",
+      "true_label": "accept_reservations",
+      "predicted_label": "new_card",
+      "true_id": 9,
+      "predicted_id": 91
+    },
+    {
       "text": "do you think they'll let me reserve a table at the olive garden",
       "true_label": "accept_reservations",
       "predicted_label": "restaurant_reservation",
@@ -171,25 +178,11 @@
       "predicted_id": 23
     },
     {
-      "text": "can i reserve tables at the new york restaurant",
-      "true_label": "accept_reservations",
-      "predicted_label": "restaurant_suggestion",
-      "true_id": 9,
-      "predicted_id": 145
-    },
-    {
-      "text": "how do i unlock my bank account",
+      "text": "is there a problem with my account, it appears to be blocked",
       "true_label": "account_blocked",
-      "predicted_label": "balance",
+      "predicted_label": "carry_on",
       "true_id": 2,
-      "predicted_id": 35
-    },
-    {
-      "text": "how can i unfreeze my bank account",
-      "true_label": "account_blocked",
-      "predicted_label": "freeze_account",
-      "true_id": 2,
-      "predicted_id": 20
+      "predicted_id": 62
     },
     {
       "text": "reasons that us bank would place a hold on my account",
@@ -206,18 +199,32 @@
       "predicted_id": 20
     },
     {
-      "text": "i need to up by noon",
-      "true_label": "alarm",
-      "predicted_label": "change_user_name",
-      "true_id": 83,
-      "predicted_id": 144
+      "text": "there seems to be an issue with my account",
+      "true_label": "account_blocked",
+      "predicted_label": "oos",
+      "true_id": 2,
+      "predicted_id": 42
     },
     {
-      "text": "could you be human",
-      "true_label": "are_you_a_bot",
-      "predicted_label": "thank_you",
-      "true_id": 117,
-      "predicted_id": 124
+      "text": "how much am i paying for apr on my credit card",
+      "true_label": "apr",
+      "predicted_label": "bill_balance",
+      "true_id": 132,
+      "predicted_id": 27
+    },
+    {
+      "text": "what's the annual percentage rate for my credit card",
+      "true_label": "apr",
+      "predicted_label": "interest_rate",
+      "true_id": 132,
+      "predicted_id": 7
+    },
+    {
+      "text": "how much does my bank account have",
+      "true_label": "balance",
+      "predicted_label": "account_blocked",
+      "true_id": 35,
+      "predicted_id": 2
     },
     {
       "text": "what the numerical number inside my bank accounts",
@@ -241,7 +248,14 @@
       "predicted_id": 11
     },
     {
-      "text": "is the phone bill the same as last month",
+      "text": "i need to know the price of my car payment and insurance please",
+      "true_label": "bill_balance",
+      "predicted_label": "bill_due",
+      "true_id": 27,
+      "predicted_id": 56
+    },
+    {
+      "text": "whens my insurance due and how much does it cost",
       "true_label": "bill_balance",
       "predicted_label": "bill_due",
       "true_id": 27,
@@ -250,30 +264,9 @@
     {
       "text": "i think i owe about 100 left on my bills, am i forgetting anything",
       "true_label": "bill_balance",
-      "predicted_label": "current_location",
+      "predicted_label": "gas",
       "true_id": 27,
-      "predicted_id": 136
-    },
-    {
-      "text": "how much do i have to pay this month",
-      "true_label": "bill_balance",
-      "predicted_label": "income",
-      "true_id": 27,
-      "predicted_id": 93
-    },
-    {
-      "text": "what do i owe to jcp",
-      "true_label": "bill_balance",
-      "predicted_label": "income",
-      "true_id": 27,
-      "predicted_id": 93
-    },
-    {
-      "text": "whens my insurance due and how much does it cost",
-      "true_label": "bill_balance",
-      "predicted_label": "insurance",
-      "true_id": 27,
-      "predicted_id": 74
+      "predicted_id": 110
     },
     {
       "text": "how expensive is my internet",
@@ -283,18 +276,25 @@
       "predicted_id": 142
     },
     {
-      "text": "i need to know the price of my car payment and insurance please",
-      "true_label": "bill_balance",
-      "predicted_label": "oil_change_how",
-      "true_id": 27,
-      "predicted_id": 3
-    },
-    {
       "text": "i think all my bills are paid, but can you double check",
       "true_label": "bill_balance",
       "predicted_label": "oos",
       "true_id": 27,
       "predicted_id": 42
+    },
+    {
+      "text": "i need to know the next billing date of my american express card",
+      "true_label": "bill_due",
+      "predicted_label": "expiration_date",
+      "true_id": 56,
+      "predicted_id": 44
+    },
+    {
+      "text": "what's the ultimate day for me to pay the internet bill",
+      "true_label": "bill_due",
+      "predicted_label": "min_payment",
+      "true_id": 56,
+      "predicted_id": 143
     }
   ]
 }

@@ -157,6 +157,13 @@
   ],
   "errors": [
     {
+      "text": "can i reserve tables at the new york restaurant",
+      "true_label": "accept_reservations",
+      "predicted_label": "how_busy",
+      "true_id": 9,
+      "predicted_id": 102
+    },
+    {
       "text": "do you think they'll let me reserve a table at the olive garden",
       "true_label": "accept_reservations",
       "predicted_label": "restaurant_reservation",
@@ -169,13 +176,6 @@
       "predicted_label": "restaurant_reservation",
       "true_id": 9,
       "predicted_id": 23
-    },
-    {
-      "text": "can i reserve tables at the new york restaurant",
-      "true_label": "accept_reservations",
-      "predicted_label": "restaurant_suggestion",
-      "true_id": 9,
-      "predicted_id": 145
     },
     {
       "text": "reasons that us bank would place a hold on my account",
@@ -199,39 +199,46 @@
       "predicted_id": 2
     },
     {
-      "text": "whats my bank accounts look like",
-      "true_label": "balance",
-      "predicted_label": "account_blocked",
-      "true_id": 35,
-      "predicted_id": 2
-    },
-    {
       "text": "what are my coffers at",
       "true_label": "balance",
-      "predicted_label": "income",
+      "predicted_label": "shopping_list",
       "true_id": 35,
-      "predicted_id": 93
+      "predicted_id": 43
+    },
+    {
+      "text": "what price is my credit card and my water bill at",
+      "true_label": "bill_balance",
+      "predicted_label": "bill_due",
+      "true_id": 27,
+      "predicted_id": 56
     },
     {
       "text": "what is the amount due on my visa",
       "true_label": "bill_balance",
-      "predicted_label": "bill_due",
+      "predicted_label": "credit_limit",
       "true_id": 27,
-      "predicted_id": 56
+      "predicted_id": 41
+    },
+    {
+      "text": "i need to know the price of my car payment and insurance please",
+      "true_label": "bill_balance",
+      "predicted_label": "insurance_change",
+      "true_id": 27,
+      "predicted_id": 64
     },
     {
       "text": "whens my insurance due and how much does it cost",
       "true_label": "bill_balance",
-      "predicted_label": "bill_due",
+      "predicted_label": "insurance_change",
       "true_id": 27,
-      "predicted_id": 56
+      "predicted_id": 64
     },
     {
       "text": "how much do i owe visa",
       "true_label": "bill_balance",
-      "predicted_label": "credit_limit",
+      "predicted_label": "international_visa",
       "true_id": 27,
-      "predicted_id": 41
+      "predicted_id": 59
     },
     {
       "text": "how expensive is my internet",
@@ -241,25 +248,18 @@
       "predicted_id": 42
     },
     {
-      "text": "i need to know the price of my car payment and insurance please",
+      "text": "is the phone bill the same as last month",
       "true_label": "bill_balance",
       "predicted_label": "pay_bill",
       "true_id": 27,
       "predicted_id": 111
     },
     {
-      "text": "is the phone bill the same as last month",
+      "text": "i think i owe about 100 left on my bills, am i forgetting anything",
       "true_label": "bill_balance",
-      "predicted_label": "transactions",
+      "predicted_label": "report_fraud",
       "true_id": 27,
-      "predicted_id": 68
-    },
-    {
-      "text": "what price is my credit card and my water bill at",
-      "true_label": "bill_balance",
-      "predicted_label": "transactions",
-      "true_id": 27,
-      "predicted_id": 68
+      "predicted_id": 70
     },
     {
       "text": "i need to know the next billing date of my american express card",
@@ -269,21 +269,7 @@
       "predicted_id": 44
     },
     {
-      "text": "tell me the last day i can pay my gas bill",
-      "true_label": "bill_due",
-      "predicted_label": "min_payment",
-      "true_id": 56,
-      "predicted_id": 143
-    },
-    {
       "text": "what's the latest i can pay my cellular bill",
-      "true_label": "bill_due",
-      "predicted_label": "min_payment",
-      "true_id": 56,
-      "predicted_id": 143
-    },
-    {
-      "text": "what's the ultimate day for me to pay the internet bill",
       "true_label": "bill_due",
       "predicted_label": "min_payment",
       "true_id": 56,
@@ -295,6 +281,20 @@
       "predicted_label": "oos",
       "true_id": 56,
       "predicted_id": 42
+    },
+    {
+      "text": "tell me the last day i can pay my gas bill",
+      "true_label": "bill_due",
+      "predicted_label": "pay_bill",
+      "true_id": 56,
+      "predicted_id": 111
+    },
+    {
+      "text": "book me a place to chicago from atlanta united airlines",
+      "true_label": "book_flight",
+      "predicted_label": "book_hotel",
+      "true_id": 63,
+      "predicted_id": 116
     }
   ]
 }

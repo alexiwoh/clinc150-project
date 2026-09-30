@@ -4,53 +4,53 @@
   "confusions": [
     {
       "true_label": "oos",
+      "predicted_label": "order",
+      "count": 48
+    },
+    {
+      "true_label": "oos",
       "predicted_label": "smart_home",
-      "count": 39
+      "count": 32
     },
     {
       "true_label": "oos",
-      "predicted_label": "income",
-      "count": 30
+      "predicted_label": "whisper_mode",
+      "count": 27
     },
     {
       "true_label": "oos",
-      "predicted_label": "current_location",
-      "count": 28
+      "predicted_label": "shopping_list_update",
+      "count": 25
     },
     {
       "true_label": "oos",
-      "predicted_label": "directions",
-      "count": 24
-    },
-    {
-      "true_label": "oos",
-      "predicted_label": "weather",
-      "count": 20
-    },
-    {
-      "true_label": "oos",
-      "predicted_label": "recipe",
-      "count": 17
-    },
-    {
-      "true_label": "oos",
-      "predicted_label": "sync_device",
-      "count": 17
-    },
-    {
-      "true_label": "oos",
-      "predicted_label": "restaurant_suggestion",
-      "count": 16
+      "predicted_label": "definition",
+      "count": 23
     },
     {
       "true_label": "oos",
       "predicted_label": "ingredients_list",
-      "count": 15
+      "count": 22
     },
     {
       "true_label": "oos",
-      "predicted_label": "cancel",
-      "count": 14
+      "predicted_label": "calculator",
+      "count": 19
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "directions",
+      "count": 19
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "nutrition_info",
+      "count": 17
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "tell_joke",
+      "count": 16
     }
   ]
 }

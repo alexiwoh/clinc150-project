@@ -8,29 +8,29 @@
     {
       "slice": "short",
       "count": 515,
-      "accuracy": 0.8097087378640777,
-      "error_count": 98,
-      "error_rate": 0.19029126213592232,
-      "mean_confidence_correct": 0.9572311639785767,
-      "mean_confidence_incorrect": 0.7107425332069397
+      "accuracy": 0.8019417475728156,
+      "error_count": 102,
+      "error_rate": 0.19805825242718447,
+      "mean_confidence_correct": 0.9791398644447327,
+      "mean_confidence_incorrect": 0.7362388372421265
     },
     {
       "slice": "medium",
       "count": 2645,
-      "accuracy": 0.7988657844990548,
-      "error_count": 532,
-      "error_rate": 0.20113421550094518,
-      "mean_confidence_correct": 0.9598748087882996,
-      "mean_confidence_incorrect": 0.6713069081306458
+      "accuracy": 0.7901701323251418,
+      "error_count": 555,
+      "error_rate": 0.20982986767485823,
+      "mean_confidence_correct": 0.9656058549880981,
+      "mean_confidence_incorrect": 0.6957337260246277
     },
     {
       "slice": "long",
       "count": 2340,
-      "accuracy": 0.7658119658119659,
-      "error_count": 548,
-      "error_rate": 0.2341880341880342,
-      "mean_confidence_correct": 0.9635890126228333,
-      "mean_confidence_incorrect": 0.6569625735282898
+      "accuracy": 0.7675213675213676,
+      "error_count": 544,
+      "error_rate": 0.23247863247863249,
+      "mean_confidence_correct": 0.9615336060523987,
+      "mean_confidence_incorrect": 0.6723593473434448
     }
   ],
   "source_artifact": "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv"

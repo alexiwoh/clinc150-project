@@ -1103,7 +1103,7 @@
         },
         {
           "figure_path": "outputs/shared/analysis/frequency_slice_comparison.png",
-          "caption": "Cross-model accuracy comparison by class-frequency tier across all evaluated models. Computed from cross-model slice comparison using representative runs. Uses the CLINC150 test split.",
+          "caption": "Cross-model accuracy comparison for in-scope versus OOS classes across all evaluated models. Computed from cross-model slice comparison using representative runs. Uses the CLINC150 test split.",
           "scope": "analysis",
           "model_name": null,
           "figure_type": "frequency_slice",

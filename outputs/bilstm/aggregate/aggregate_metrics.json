@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0",
   "protocol_version": "1.0",
+  "model_name": "BiLSTM",
   "model_id": "bilstm",
   "run_count_requested": 3,
   "run_count_completed": 3,
@@ -15,71 +16,6 @@
     2024
   ],
   "all_runs_succeeded": true,
-  "metrics": {
-    "val_accuracy": {
-      "mean": 0.8713978494623656,
-      "std": 0.0044801433668816525
-    },
-    "val_macro_f1": {
-      "mean": 0.8797613165847921,
-      "std": 0.004358946037364641
-    },
-    "test_accuracy": {
-      "mean": 0.7750909090909092,
-      "std": 0.008833944050825385
-    },
-    "test_macro_f1": {
-      "mean": 0.8284429441737112,
-      "std": 0.0070639768185083995
-    },
-    "test_precision": {
-      "mean": 0.8004634619922374,
-      "std": 0.006166522491437665
-    },
-    "test_recall": {
-      "mean": 0.8779632082413541,
-      "std": 0.006756924582573863
-    },
-    "oos_precision": {
-      "mean": 0.8816609734753472,
-      "std": 0.010404861083706966
-    },
-    "oos_recall": {
-      "mean": 0.2946666666666667,
-      "std": 0.0235843639350783
-    },
-    "oos_f1": {
-      "mean": 0.44130342547790774,
-      "std": 0.027328606352725233
-    },
-    "training_time_seconds": {
-      "mean": 91.74191459019978,
-      "std": 23.2005021494886
-    },
-    "inference_total_seconds": {
-      "mean": 0.662865956624349,
-      "std": 0.0827203684667365
-    },
-    "inference_avg_ms_per_example": {
-      "mean": 0.12052108302260889,
-      "std": 0.01504006699395208
-    },
-    "inference_examples_per_sec": {
-      "mean": 8431.56451389331,
-      "std": 1079.830134317708
-    },
-    "parameter_count": {
-      "mean": 4284311.0,
-      "std": 0.0
-    },
-    "trainable_parameter_count": {
-      "mean": 4284311.0,
-      "std": 0.0
-    }
-  },
-  "model_name": "BiLSTM",
-  "frozen_config_ref": "outputs/bilstm/frozen_final_config.json",
-  "protocol_manifest_ref": "outputs/shared/evaluation_protocol.json",
   "successful_run_ids": [
     "run_01_seed_42",
     "run_02_seed_1337",
@@ -87,64 +23,66 @@
   ],
   "failed_run_ids": [],
   "representative_run_id": "run_02_seed_1337",
+  "frozen_config_ref": "outputs/bilstm/frozen_final_config.json",
+  "protocol_manifest_ref": "outputs/shared/evaluation_protocol.json",
   "validation_summary": {
     "val_accuracy": {
-      "mean": 0.8713978494623656,
-      "std": 0.0044801433668816525
+      "mean": 0.8722580645161292,
+      "std": 0.003037515460607638
     },
     "val_macro_f1": {
-      "mean": 0.8797613165847921,
-      "std": 0.004358946037364641
+      "mean": 0.8803139892085093,
+      "std": 0.0035781020987176093
     }
   },
   "test_summary": {
     "test_accuracy": {
-      "mean": 0.7750909090909092,
-      "std": 0.008833944050825385
+      "mean": 0.7744242424242423,
+      "std": 0.006532534948688078
     },
     "test_macro_f1": {
-      "mean": 0.8284429441737112,
-      "std": 0.0070639768185083995
+      "mean": 0.8283186934848336,
+      "std": 0.00455545981063351
     },
     "test_precision": {
-      "mean": 0.8004634619922374,
-      "std": 0.006166522491437665
+      "mean": 0.7944062388217693,
+      "std": 0.007405616386942612
     },
     "test_recall": {
-      "mean": 0.8779632082413541,
-      "std": 0.006756924582573863
+      "mean": 0.8843627667402503,
+      "std": 0.004041056303863715
     }
   },
   "oos_summary": {
     "oos_precision": {
-      "mean": 0.8816609734753472,
-      "std": 0.010404861083706966
+      "mean": 0.8865233735982554,
+      "std": 0.020257993173998727
     },
     "oos_recall": {
-      "mean": 0.2946666666666667,
-      "std": 0.0235843639350783
+      "mean": 0.26099999999999995,
+      "std": 0.04055449009254914
     },
     "oos_f1": {
-      "mean": 0.44130342547790774,
-      "std": 0.027328606352725233
+      "mean": 0.4019000022164641,
+      "std": 0.051124809398179254
     }
   },
   "efficiency_summary": {
     "training_time_seconds": {
-      "mean": 91.74191459019978,
-      "std": 23.2005021494886
+      "mean": 144.1626449303391,
+      "std": 18.478344916210585
     },
     "inference_total_seconds": {
-      "mean": 0.662865956624349,
-      "std": 0.0827203684667365
+      "mean": 0.7043502357167503,
+      "std": 0.08249804005070616
     },
     "inference_avg_ms_per_example": {
-      "mean": 0.12052108302260889,
-      "std": 0.01504006699395208
+      "mean": 0.12806367922122733,
+      "std": 0.01499964364558294
     },
     "inference_examples_per_sec": {
-      "mean": 8431.56451389331,
-      "std": 1079.830134317708
+      "mean": 7909.58810804209,
+      "std": 862.6436157185185
     }
   },
   "parameter_count_summary": {

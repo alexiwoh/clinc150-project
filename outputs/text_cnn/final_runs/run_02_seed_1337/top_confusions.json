@@ -4,23 +4,18 @@
   "confusions": [
     {
       "true_label": "oos",
-      "predicted_label": "recipe",
+      "predicted_label": "travel_suggestion",
       "count": 27
     },
     {
       "true_label": "oos",
-      "predicted_label": "restaurant_suggestion",
-      "count": 24
+      "predicted_label": "cook_time",
+      "count": 25
     },
     {
       "true_label": "oos",
-      "predicted_label": "travel_suggestion",
-      "count": 24
-    },
-    {
-      "true_label": "oos",
-      "predicted_label": "income",
-      "count": 22
+      "predicted_label": "recipe",
+      "count": 25
     },
     {
       "true_label": "oos",
@@ -29,28 +24,33 @@
     },
     {
       "true_label": "oos",
-      "predicted_label": "find_phone",
+      "predicted_label": "restaurant_reviews",
       "count": 18
     },
     {
       "true_label": "oos",
-      "predicted_label": "todo_list",
-      "count": 16
-    },
-    {
-      "true_label": "oos",
-      "predicted_label": "where_are_you_from",
+      "predicted_label": "tell_joke",
       "count": 14
     },
     {
       "true_label": "oos",
-      "predicted_label": "restaurant_reviews",
+      "predicted_label": "car_rental",
       "count": 13
     },
     {
       "true_label": "oos",
       "predicted_label": "smart_home",
       "count": 13
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "todo_list",
+      "count": 13
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "fun_fact",
+      "count": 12
     }
   ]
 }
