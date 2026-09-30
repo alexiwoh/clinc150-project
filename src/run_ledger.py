@@ -116,6 +116,8 @@ def load_current_run_ledger(
                 raise ValueError(f"{metadata_path}: completed ledger run has status {metadata.get('status')!r}")
         elif run_id in groups["failed_run_ids"] and metadata.get("status") != "failed":
             raise ValueError(f"{metadata_path}: failed ledger run has status {metadata.get('status')!r}")
+        elif run_id in groups["skipped_run_ids"] and metadata.get("status") != "skipped":
+            raise ValueError(f"{metadata_path}: skipped ledger run has status {metadata.get('status')!r}")
         metadata_paths[run_id] = metadata_path
 
     for run_id in groups["completed_run_ids"]:

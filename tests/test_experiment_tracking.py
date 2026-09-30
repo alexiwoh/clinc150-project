@@ -44,6 +44,7 @@ from src.constants import (
     model_output_dir,
 )
 from src.enums import ModelID
+from src.run_ledger import load_current_run_ledger
 from src.experiment_tracking import (
     CANONICAL_MODEL_ORDER,
     LEGACY_DIRS,
@@ -262,6 +263,30 @@ def _minimal_representative_run(model_id: str) -> dict[str, Any]:
     }
 
 
+def _minimal_run_ledger(model_id: str, seeds: tuple[int, ...] = (42, 1337, 2024)) -> dict[str, Any]:
+    run_ids = [f"run_{index:02d}_seed_{seed}" for index, seed in enumerate(seeds, 1)]
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "protocol_version": PROTOCOL_VERSION,
+        "model_name": ModelID(model_id).display_name,
+        "model_id": model_id,
+        "run_count_requested": len(run_ids),
+        "run_count_completed": len(run_ids),
+        "run_count_failed": 0,
+        "run_count_skipped": 0,
+        "requested_run_ids": run_ids,
+        "completed_run_ids": run_ids,
+        "failed_run_ids": [],
+        "skipped_run_ids": [],
+        "seed_list_requested": list(seeds),
+        "seed_list_completed": list(seeds),
+        "failure_reasons": {},
+        "per_run_metadata_refs": {
+            run_id: f"outputs/{model_id}/{FINAL_RUNS_SUBDIR}/{run_id}/run_metadata.json" for run_id in run_ids
+        },
+    }
+
+
 def _build_model_tree(
     root: Path,
     model_id: str,
@@ -342,6 +367,7 @@ def _build_model_tree(
         agg_dir / "representative_run.json",
         _minimal_representative_run(model_id),
     )
+    _write(agg_dir / "run_ledger.json", _minimal_run_ledger(model_id, seeds))
 
     per_run_csv = agg_dir / "per_run_metrics.csv"
     rows = []
@@ -365,7 +391,7 @@ def _build_model_tree(
 
 
 @pytest.fixture()
-def mock_outputs(tmp_path: Path) -> Path:
+def mock_outputs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Build a full mock output tree for all 3 models under *tmp_path*.
 
     Returns the project root (parent of ``outputs/``).
@@ -385,6 +411,11 @@ def mock_outputs(tmp_path: Path) -> Path:
     artifacts.mkdir(parents=True, exist_ok=True)
     _write(artifacts / "preprocessing_summary.json", {"max_seq_length": 20})
     _write(artifacts / "id_to_label.json", {str(i): f"label_{i}" for i in range(151)})
+
+    # Every helper must resolve this fixture's references inside the same root.
+    monkeypatch.setattr("src.experiment_tracking.PROJECT_ROOT", project_root)
+    monkeypatch.setattr("src.experiment_tracking.model_output_dir", lambda mid: outputs / str(mid))
+    monkeypatch.setattr("src.experiment_tracking.SHARED_DIR", shared)
 
     return project_root
 
@@ -531,6 +562,15 @@ class TestRunLedgerCorrectness:
         meta["status"] = "failed"
         meta["failure_reason"] = "OOM"
         _write_json(run_dir / "run_metadata.json", meta)
+        ledger_path = run_dir.parent.parent / AGGREGATE_SUBDIR / "run_ledger.json"
+        ledger = _read_json(ledger_path)
+        ledger["completed_run_ids"] = ledger["completed_run_ids"][:2]
+        ledger["failed_run_ids"] = ["run_03_seed_2024"]
+        ledger["seed_list_completed"] = [42, 1337]
+        ledger["run_count_completed"] = 2
+        ledger["run_count_failed"] = 1
+        ledger["failure_reasons"] = {"run_03_seed_2024": "OOM"}
+        _write_json(ledger_path, ledger)
 
         with (
             patch("src.experiment_tracking.PROJECT_ROOT", mock_outputs),
@@ -584,6 +624,134 @@ class TestRunLedgerCorrectness:
             errors = validate_run_ledger(ModelID.MLP)
         assert errors == []
 
+    def test_tracking_retains_current_one_run_ledger_and_ignores_stale_artifacts(self, mock_outputs: Path) -> None:
+        model_dir = mock_outputs / "outputs" / "mlp"
+        ledger_path = model_dir / AGGREGATE_SUBDIR / "run_ledger.json"
+        _write(ledger_path, _minimal_run_ledger("mlp", (42,)))
+        original_ledger = ledger_path.read_bytes()
+        aggregate_path = model_dir / AGGREGATE_SUBDIR / "aggregate_metrics.json"
+        aggregate = _read_json(aggregate_path)
+        aggregate["successful_run_ids"] = ["run_01_seed_42"]
+        aggregate["run_count_requested"] = aggregate["run_count_completed"] = 1
+        aggregate["seed_list_requested"] = aggregate["seed_list_completed"] = [42]
+        _write(aggregate_path, aggregate)
+        stale_path = model_dir / FINAL_RUNS_SUBDIR / "run_02_seed_1337" / "run_metadata.json"
+        stale = _read_json(stale_path)
+        stale["frozen_config_ref"] = "historical/different.json"
+        stale["model_id"] = "historical"
+        _write(stale_path, stale)
+        stale_before = stale_path.read_bytes()
+
+        assert generate_run_ledger(ModelID.MLP) == ledger_path
+        assert cross_reference_assertions(ModelID.MLP) == []
+        assert ledger_path.read_bytes() == original_ledger
+        assert stale_path.read_bytes() == stale_before
+        assert (model_dir / FINAL_RUNS_SUBDIR / "run_03_seed_2024").is_dir()
+
+    def test_tracking_does_not_create_missing_ledger_from_directories(self, mock_outputs: Path) -> None:
+        ledger_path = mock_outputs / "outputs" / "mlp" / AGGREGATE_SUBDIR / "run_ledger.json"
+        ledger_path.unlink()
+        with pytest.raises(FileNotFoundError, match="Current run ledger not found"):
+            generate_run_ledger(ModelID.MLP)
+        assert not ledger_path.exists()
+
+    def test_tracking_preflight_leaves_invalid_membership_unchanged(self, mock_outputs: Path) -> None:
+        model_dir = mock_outputs / "outputs" / "mlp"
+        ledger_path = model_dir / AGGREGATE_SUBDIR / "run_ledger.json"
+        ledger = _read_json(ledger_path)
+        ledger["completed_run_ids"].append(ledger["completed_run_ids"][0])
+        _write(ledger_path, ledger)
+        before = {path: path.read_bytes() for path in model_dir.rglob("*") if path.is_file()}
+
+        assert run_experiment_tracking([ModelID.MLP]) is False
+
+        assert all(path.read_bytes() == contents for path, contents in before.items())
+
+    @pytest.mark.parametrize(
+        "mutation, message",
+        [
+            ("duplicate_requested", "duplicate run IDs"),
+            ("duplicate_completed", "duplicate run IDs"),
+            ("missing_ref", "missing per_run_metadata_refs"),
+            ("extra_ref", "unrequested run IDs"),
+            ("other_run_ref", "points to a different run"),
+            ("absolute_ref", "must be repository-relative"),
+            ("missing_metadata", "run metadata not found"),
+            ("other_model", "model_id/run_id"),
+            ("other_run_id", "model_id/run_id"),
+            ("wrong_status", "completed ledger run has status"),
+            ("failed_status", "failed ledger run has status"),
+            ("skipped_status", "skipped ledger run has status"),
+            ("wrong_seed", "run_index/seed"),
+            ("wrong_index", "run_index/seed"),
+            ("wrong_count", "run_count_completed"),
+            ("status_overlap", "statuses must partition"),
+            ("wrong_completed_seeds", "seed_list_completed"),
+            ("wrong_ledger_model", "model_id does not match"),
+            ("malformed_refs", "per_run_metadata_refs"),
+            ("metadata_not_object", "expected a JSON object"),
+        ],
+    )
+    def test_identity_mutations_are_rejected(self, mock_outputs: Path, mutation: str, message: str) -> None:
+        model_dir = mock_outputs / "outputs" / "mlp"
+        ledger_path = model_dir / AGGREGATE_SUBDIR / "run_ledger.json"
+        ledger = _read_json(ledger_path)
+        first_run = ledger["completed_run_ids"][0]
+        metadata_path = model_dir / FINAL_RUNS_SUBDIR / first_run / "run_metadata.json"
+        metadata = _read_json(metadata_path)
+
+        if mutation == "duplicate_requested":
+            ledger["requested_run_ids"].append(first_run)
+        elif mutation == "duplicate_completed":
+            ledger["completed_run_ids"].append(first_run)
+        elif mutation == "missing_ref":
+            del ledger["per_run_metadata_refs"][first_run]
+        elif mutation == "extra_ref":
+            ledger["per_run_metadata_refs"]["historical_run"] = ledger["per_run_metadata_refs"][first_run]
+        elif mutation == "other_run_ref":
+            ledger["per_run_metadata_refs"][first_run] = ledger["per_run_metadata_refs"]["run_02_seed_1337"]
+        elif mutation == "absolute_ref":
+            ledger["per_run_metadata_refs"][first_run] = str(metadata_path)
+        elif mutation == "missing_metadata":
+            metadata_path.unlink()
+        elif mutation == "other_model":
+            metadata["model_id"] = "bilstm"
+        elif mutation == "other_run_id":
+            metadata["run_id"] = "run_02_seed_1337"
+        elif mutation == "wrong_status":
+            metadata["status"] = "failed"
+        elif mutation in {"failed_status", "skipped_status"}:
+            group_name = "failed" if mutation == "failed_status" else "skipped"
+            ledger["completed_run_ids"] = ledger["completed_run_ids"][1:]
+            ledger["seed_list_completed"] = ledger["seed_list_completed"][1:]
+            ledger["run_count_completed"] = 2
+            ledger[f"{group_name}_run_ids"] = [first_run]
+            ledger[f"run_count_{group_name}"] = 1
+        elif mutation == "wrong_seed":
+            metadata["seed"] = 1337
+        elif mutation == "wrong_index":
+            metadata["run_index"] = 2
+        elif mutation == "wrong_count":
+            ledger["run_count_completed"] = 1
+        elif mutation == "status_overlap":
+            ledger["failed_run_ids"] = [first_run]
+        elif mutation == "wrong_completed_seeds":
+            ledger["seed_list_completed"] = [42]
+        elif mutation == "wrong_ledger_model":
+            ledger["model_id"] = "bilstm"
+        elif mutation == "malformed_refs":
+            ledger["per_run_metadata_refs"] = []
+        elif mutation == "metadata_not_object":
+            metadata_path.write_text("[]")
+        else:
+            pytest.fail(f"Unhandled mutation: {mutation}")
+
+        if mutation not in {"missing_metadata", "metadata_not_object"}:
+            _write(metadata_path, metadata)
+        _write(ledger_path, ledger)
+        with pytest.raises((FileNotFoundError, ValueError), match=message):
+            load_current_run_ledger(ModelID.MLP, model_dir=model_dir, project_root=mock_outputs)
+
 
 # ── Representative-run metadata correctness ──────────────────────────────
 
@@ -619,6 +787,27 @@ class TestRepresentativeRunValidation:
 
         resolved = mock_outputs / data["artifact_path"]
         assert resolved.exists()
+
+    def test_preserved_completed_run_outside_current_ledger_is_rejected(self, mock_outputs: Path) -> None:
+        model_dir = mock_outputs / "outputs" / "mlp"
+        _write(model_dir / AGGREGATE_SUBDIR / "run_ledger.json", _minimal_run_ledger("mlp", (42,)))
+        rep_path = model_dir / AGGREGATE_SUBDIR / "representative_run.json"
+        rep = _read_json(rep_path)
+        rep.update(
+            run_id="run_02_seed_1337",
+            run_index=2,
+            seed=1337,
+            artifact_path="outputs/mlp/final_runs/run_02_seed_1337",
+        )
+        _write(rep_path, rep)
+        assert any("not a completed member" in error for error in validate_representative_run(ModelID.MLP))
+
+    def test_artifact_path_cannot_select_another_active_run(self, mock_outputs: Path) -> None:
+        rep_path = mock_outputs / "outputs" / "mlp" / AGGREGATE_SUBDIR / "representative_run.json"
+        rep = _read_json(rep_path)
+        rep["artifact_path"] = "outputs/mlp/final_runs/run_02_seed_1337"
+        _write(rep_path, rep)
+        assert any("artifact_path does not match" in error for error in validate_representative_run(ModelID.MLP))
 
 
 # ── Comparison-row validation ────────────────────────────────────────────
@@ -1162,11 +1351,10 @@ class TestIntegrationRealArtifacts:
 
     @pytest.mark.parametrize("model_id", list(ModelID))
     def test_per_run_bundles_valid(self, model_id: ModelID) -> None:
-        runs_dir = model_output_dir(model_id) / FINAL_RUNS_SUBDIR
-        for rd in sorted(runs_dir.iterdir()):
-            if rd.is_dir():
-                errors = validate_per_run_bundle(rd, model_id)
-                assert errors == [], f"Errors in {rd.name}: {errors}"
+        ledger = load_current_run_ledger(model_id)
+        for rd in ledger.completed_run_dirs:
+            errors = validate_per_run_bundle(rd, model_id)
+            assert errors == [], f"Errors in {rd.name}: {errors}"
 
     @pytest.mark.parametrize("model_id", list(ModelID))
     def test_cross_reference_assertions_pass(self, model_id: ModelID) -> None:
@@ -1211,10 +1399,7 @@ class TestIntegrationRealArtifacts:
 
     def test_no_absolute_paths_in_run_metadata(self) -> None:
         for model_id in CANONICAL_MODEL_ORDER:
-            runs_dir = model_output_dir(model_id) / FINAL_RUNS_SUBDIR
-            for rd in sorted(runs_dir.iterdir()):
-                if not rd.is_dir():
-                    continue
+            for rd in load_current_run_ledger(model_id).completed_run_dirs:
                 meta = _read_json(rd / "run_metadata.json")
                 for field in ("checkpoint_path", "log_path"):
                     val = meta.get(field, "")

@@ -31,6 +31,7 @@ from src.constants import (
 )
 from src.enums import ModelID
 from src.report.figure_metadata import FigureCaptionContext
+from src.run_ledger import load_current_run_ledger, resolve_current_run
 from src.utils import ensure_dir
 from src.visualizers import ResultsVisualizer, TrainingVisualizer
 
@@ -107,7 +108,7 @@ class RepresentativeContext:
 # Preflight validation
 # ---------------------------------------------------------------------------
 
-_PER_MODEL_REQUIRED = (f"{AGGREGATE_SUBDIR}/representative_run.json",)
+_PER_MODEL_REQUIRED = (f"{AGGREGATE_SUBDIR}/representative_run.json", f"{AGGREGATE_SUBDIR}/run_ledger.json")
 
 _PER_RUN_REQUIRED = (
     "run_metadata.json",
@@ -148,9 +149,8 @@ def run_preflight_validation(model_ids: list[ModelID]) -> None:
                 missing.append(str(p))
 
         rep_path = model_dir / AGGREGATE_SUBDIR / "representative_run.json"
-        if rep_path.exists():
-            rep = _read_json(rep_path)
-            run_dir = PROJECT_ROOT / rep["artifact_path"]
+        if rep_path.exists() and (model_dir / AGGREGATE_SUBDIR / "run_ledger.json").exists():
+            _, run_dir = _load_current_representative(mid)
             for run_rel in _PER_RUN_REQUIRED:
                 p = run_dir / run_rel
                 if not p.exists():
@@ -170,11 +170,29 @@ def run_preflight_validation(model_ids: list[ModelID]) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _resolve_representative_context(model_id: ModelID) -> RepresentativeContext:
-    """Load all artifacts for one model's representative run."""
+def _load_current_representative(model_id: ModelID) -> tuple[dict[str, Any], Path]:
+    """Resolve representative metadata against the authoritative current ledger."""
     model_dir = model_output_dir(model_id)
     rep_meta = _read_json(model_dir / AGGREGATE_SUBDIR / "representative_run.json")
-    artifact_dir = PROJECT_ROOT / rep_meta["artifact_path"]
+    if rep_meta.get("model_id") != model_id:
+        raise ValueError(f"Representative model_id does not match {model_id}")
+    artifact_dir = resolve_current_run(
+        model_id,
+        rep_meta["run_id"],
+        artifact_path=rep_meta["artifact_path"],
+        model_dir=model_dir,
+        project_root=PROJECT_ROOT,
+    )
+    run_meta = _read_json(artifact_dir / "run_metadata.json")
+    if rep_meta.get("seed") != run_meta["seed"] or rep_meta.get("run_index") != run_meta["run_index"]:
+        raise ValueError(f"Representative run_index/seed does not match current metadata for {model_id}")
+    return rep_meta, artifact_dir
+
+
+def _resolve_representative_context(model_id: ModelID) -> RepresentativeContext:
+    """Load all artifacts for one model's current representative run."""
+    model_dir = model_output_dir(model_id)
+    rep_meta, artifact_dir = _load_current_representative(model_id)
     run_meta = _read_json(artifact_dir / "run_metadata.json")
 
     epoch_raw = _read_json(artifact_dir / "epoch_history.json")
@@ -607,8 +625,7 @@ def generate_representative_misclassifications(model_id: ModelID) -> Path:
     Returns the path to the saved CSV.
     """
     model_dir = model_output_dir(model_id)
-    rep_meta = _read_json(model_dir / AGGREGATE_SUBDIR / "representative_run.json")
-    artifact_dir = PROJECT_ROOT / rep_meta["artifact_path"]
+    _, artifact_dir = _load_current_representative(model_id)
 
     preds_df = pd.read_csv(artifact_dir / "final_predictions.csv")
     misclassified = preds_df[preds_df["true_label_id"] != preds_df["predicted_label_id"]].copy()
@@ -634,9 +651,7 @@ def generate_most_confused_pairs_table(model_ids: list[ModelID]) -> tuple[Path, 
     rows: list[dict[str, Any]] = []
 
     for mid in model_ids:
-        model_dir = model_output_dir(mid)
-        rep_meta = _read_json(model_dir / AGGREGATE_SUBDIR / "representative_run.json")
-        artifact_dir = PROJECT_ROOT / rep_meta["artifact_path"]
+        rep_meta, artifact_dir = _load_current_representative(mid)
         top_conf = _read_json(artifact_dir / "top_confusions.json")
 
         for rank, conf in enumerate(top_conf["confusions"], start=1):
@@ -680,8 +695,7 @@ def generate_representative_examples_index(model_ids: list[ModelID]) -> Path:
     for mid in model_ids:
         model_dir = model_output_dir(mid)
         agg_dir = model_dir / AGGREGATE_SUBDIR
-        rep_meta = _read_json(agg_dir / "representative_run.json")
-        artifact_dir = PROJECT_ROOT / rep_meta["artifact_path"]
+        rep_meta, artifact_dir = _load_current_representative(mid)
 
         entry: dict[str, Any] = {
             "representative_run_id": rep_meta["run_id"],
@@ -737,8 +751,7 @@ def generate_step10_handoff(model_id: ModelID) -> Path:
     model_dir = model_output_dir(model_id)
     agg_dir = model_dir / AGGREGATE_SUBDIR
     fig_dir = model_dir / MODEL_FIGURES_SUBDIR
-    rep_meta = _read_json(agg_dir / "representative_run.json")
-    artifact_dir = PROJECT_ROOT / rep_meta["artifact_path"]
+    rep_meta, artifact_dir = _load_current_representative(model_id)
 
     handoff: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
@@ -747,9 +760,9 @@ def generate_step10_handoff(model_id: ModelID) -> Path:
         "model_name": model_id.display_name,
         "representative_run_id": rep_meta["run_id"],
         "representative_seed": rep_meta["seed"],
-        "total_runs_aggregated": _read_json(
-            SHARED_DIR / "model_comparison_aggregate.json",
-        )["rows"][0].get("run_count", 3),
+        "total_runs_aggregated": len(
+            load_current_run_ledger(model_id, model_dir=model_dir, project_root=PROJECT_ROOT).completed_run_ids
+        ),
         "selection_rule": rep_meta["selection_rule"],
         "note": (
             "Aggregate metrics come from all completed runs. "
