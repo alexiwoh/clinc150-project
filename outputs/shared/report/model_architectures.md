@@ -14,8 +14,10 @@ Input: 10,000 TF-IDF features (10,000-dimensional). Single hidden layer with 512
 
 ### Text CNN
 
-Embedding dimension: 256. Kernel sizes: [3, 4, 5] with 100 filters each. ReLU activation, max-over-time pooling, dropout 0.5. Trainable embeddings.
+Embedding dimension: 256. Kernel sizes: [3, 4, 5] with 100 filters each. ReLU activation, max-over-time pooling, dropout 0.5. Trainable embeddings; sentence-CNN design follows [Kim (2014)](https://aclanthology.org/D14-1181/).
 
 ### BiLSTM
 
 Embedding dimension: 256. Hidden dimension: 256, 2 layers, bidirectional. Summarization: concat_final_hidden. Gradient clipping (max norm 1.0). Dropout 0.3. Trainable embeddings.
+
+The BiLSTM concatenates final forward/backward hidden states after processing the fixed right-PAD sequence. A zero PAD embedding does not mask recurrent transitions, so changing padding length can change logits. This representation is retained in the reported experiment.

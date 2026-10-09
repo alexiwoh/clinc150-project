@@ -5,13 +5,13 @@
   "model_name": "BiLSTM",
   "representative_run_id": "run_02_seed_1337",
   "method": "explicit_oos_class_probability",
-  "auroc": 0.9435813333333335,
-  "aupr": 0.8054806063559163,
-  "fpr_at_95tpr": 0.2308888888888889,
-  "fpr_at_90tpr": 0.14355555555555555,
+  "auroc": 0.94545,
+  "aupr": 0.8050373957786808,
+  "fpr_at_95tpr": 0.23666666666666666,
+  "fpr_at_90tpr": 0.14777777777777779,
   "msp_baseline": {
-    "msp_auroc": 0.8746905555555556,
-    "msp_aupr": 0.5452972402779862
+    "msp_auroc": 0.879908111111111,
+    "msp_aupr": 0.5819069761895698
   },
   "source_artifact": "outputs/bilstm/final_runs/run_02_seed_1337/confidences.npz"
 }

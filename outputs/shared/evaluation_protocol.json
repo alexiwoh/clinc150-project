@@ -16,7 +16,7 @@
       2024
     ],
     "representative_run_rule": "highest_validation_macro_f1",
-    "probability_saving_policy": "representative_only",
+    "probability_saving_policy": "all_runs",
     "confusion_artifact_policy": "all_runs",
     "aggregate_metric_list": [
       "val_accuracy",
@@ -94,9 +94,9 @@
       2024
     ],
     "derivation_rule": "training_seed = seed, dataloader_seed = seed + 1",
-    "report_note": "The repeated-evaluation pipeline derives `training_seed = seed` and `dataloader_seed = seed + 1`. `dataloader_seed` controls train-batch shuffling, but model initialization currently depends on `config.random_seed`, not necessarily the nominal seed.",
+    "report_note": "Each run copies the frozen model configuration with `random_seed = seed` and `dataloader_seed = seed + 1`. The training seed controls initialization and training randomness; the dataloader seed controls train-batch shuffling.",
     "note": "Same seed list reused across all models"
   },
-  "timestamp": "2026-04-08T03:53:44.024407+00:00",
-  "final_model_rule": "best checkpoint from early stopping on monitor metric (same as representative_run_rule)"
+  "final_model_rule": "best checkpoint by the configured validation monitor, with lower validation loss as tie-break; representative run selected separately by validation macro F1",
+  "timestamp": "2026-09-30T09:38:27.388210+00:00"
 }

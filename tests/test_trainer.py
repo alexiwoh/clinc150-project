@@ -1,6 +1,8 @@
 """Tests for Trainer: model-agnostic design, early stopping, checkpointing, finite checks."""
 
 import json
+from pathlib import Path
+from typing import Any
 
 import pytest
 import torch
@@ -8,6 +10,8 @@ from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
 from src.trainers.trainer import Trainer
+from src.training_contracts import MONITOR_METRIC_DIRECTIONS
+from src.utils import load_checkpoint
 
 
 def _make_synthetic_data(
@@ -121,7 +125,7 @@ class TestTrainerEarlyStopping:
 
         history = result["epoch_history"]
         f1_values = [h["val_macro_f1"] for h in history]
-        best_idx = max(range(len(f1_values)), key=lambda i: f1_values[i])
+        best_idx = max(range(len(f1_values)), key=lambda i: (f1_values[i], -history[i]["val_loss"]))
         assert result["best_epoch"] == history[best_idx]["epoch"]
 
 
@@ -207,8 +211,6 @@ class TestTrainerCheckpoint:
             log_dir=tmp_path / "logs",
         )
 
-        from pathlib import Path
-
         ckpt_path = Path(result["checkpoint_path"])
         assert ckpt_path.exists()
 
@@ -234,8 +236,6 @@ class TestTrainerCheckpoint:
             artifact_refs={},
             log_dir=tmp_path / "logs",
         )
-
-        from src.utils import load_checkpoint
 
         new_model = nn.Linear(20, 5)
         meta = load_checkpoint(result["checkpoint_path"], new_model, torch.device("cpu"))
@@ -345,3 +345,265 @@ class TestTrainerFiniteChecks:
 
         with pytest.raises(AssertionError, match="Non-finite"):
             trainer.evaluate(loader)
+
+
+class TestTrainerLossReduction:
+    """Reported losses must match full-dataset cross-entropy, independent of batching."""
+
+    @pytest.mark.parametrize("batch_size", [1, 2, 3])
+    @pytest.mark.parametrize("weights", [None, [1.0, 4.0]])
+    @pytest.mark.parametrize("label_smoothing", [0.0, 0.2])
+    @pytest.mark.parametrize("training", [False, True])
+    def test_matches_dataset_mean(
+        self, batch_size: int, weights: list[float] | None, label_smoothing: float, training: bool
+    ) -> None:
+        logits = torch.tensor([[5.0, 0.0], [5.0, 0.0], [0.0, 5.0]])
+        targets = torch.tensor([0, 1, 0])
+        loader = DataLoader(TensorDataset(logits, targets), batch_size=batch_size)
+        model = nn.Linear(2, 2, bias=False)
+        with torch.no_grad():
+            model.weight.copy_(torch.eye(2))
+        criterion = nn.CrossEntropyLoss(
+            weight=None if weights is None else torch.tensor(weights), label_smoothing=label_smoothing
+        )
+        # Zero learning rate keeps the oracle logits fixed while exercising backward/optimizer steps.
+        trainer = Trainer(model, torch.optim.SGD(model.parameters(), lr=0.0), criterion, torch.device("cpu"))
+
+        expected = criterion(logits, targets).item()
+        metrics = trainer.train_epoch(loader) if training else trainer.evaluate(loader)
+
+        assert metrics["loss"] == pytest.approx(expected, rel=1e-6)
+
+    def test_uneven_batch_audit_example(self) -> None:
+        logits = torch.tensor([[5.0, 0.0], [5.0, 0.0], [0.0, 5.0]])
+        targets = torch.zeros(3, dtype=torch.long)
+        loader = DataLoader(TensorDataset(logits, targets), batch_size=2)
+        model = nn.Linear(2, 2, bias=False)
+        with torch.no_grad():
+            model.weight.copy_(torch.eye(2))
+        trainer = Trainer(
+            model, torch.optim.SGD(model.parameters(), lr=0.0), nn.CrossEntropyLoss(), torch.device("cpu")
+        )
+
+        assert trainer.evaluate(loader)["loss"] == pytest.approx(1.6733819, rel=1e-6)
+
+    def test_ignored_targets_excluded_from_loss_and_metrics(self) -> None:
+        logits = torch.tensor([[5.0, 0.0], [0.0, 5.0], [5.0, 0.0]])
+        targets = torch.tensor([-100, 1, 0])
+        loader = DataLoader(TensorDataset(logits, targets), batch_size=2)
+        model = nn.Linear(2, 2, bias=False)
+        with torch.no_grad():
+            model.weight.copy_(torch.eye(2))
+        criterion = nn.CrossEntropyLoss(weight=torch.tensor([1.0, 4.0]))
+        trainer = Trainer(model, torch.optim.SGD(model.parameters(), lr=0.0), criterion, torch.device("cpu"))
+
+        metrics = trainer.evaluate(loader)
+
+        assert metrics["loss"] == pytest.approx(criterion(logits, targets).item(), rel=1e-6)
+        assert metrics["targets"] == [1, 0]
+        assert metrics["predictions"] == [1, 0]
+        assert metrics["accuracy"] == 1.0
+
+    @pytest.mark.parametrize("reduction", ["sum", "none"])
+    def test_unsupported_reduction_rejected(self, reduction: str) -> None:
+        model = nn.Linear(2, 2)
+        with pytest.raises(ValueError, match="reduction='mean'"):
+            Trainer(
+                model,
+                torch.optim.SGD(model.parameters(), lr=0.0),
+                nn.CrossEntropyLoss(reduction=reduction),
+                torch.device("cpu"),
+            )
+
+    @pytest.mark.parametrize("weights", [[1.0, -1.0], [1.0, float("nan")], [1.0, float("inf")]])
+    def test_invalid_weights_rejected(self, weights: list[float]) -> None:
+        model = nn.Linear(2, 2)
+        with pytest.raises(ValueError, match="weights must be finite and nonnegative"):
+            Trainer(
+                model,
+                torch.optim.SGD(model.parameters(), lr=0.0),
+                nn.CrossEntropyLoss(weight=torch.tensor(weights)),
+                torch.device("cpu"),
+            )
+
+    @pytest.mark.parametrize("training", [False, True])
+    @pytest.mark.parametrize("targets", [torch.tensor([-100, -100]), torch.tensor([0, 0])])
+    def test_zero_denominator_rejected(self, training: bool, targets: torch.Tensor) -> None:
+        model = nn.Linear(2, 2)
+        trainer = Trainer(
+            model,
+            torch.optim.SGD(model.parameters(), lr=0.0),
+            nn.CrossEntropyLoss(weight=torch.tensor([0.0, 1.0])),
+            torch.device("cpu"),
+        )
+        loader = DataLoader(TensorDataset(torch.zeros(2, 2), targets), batch_size=2)
+        with pytest.raises(ValueError, match="positive finite cross-entropy denominator"):
+            if training:
+                trainer.train_epoch(loader)
+            else:
+                trainer.evaluate(loader)
+
+    @pytest.mark.parametrize("training", [False, True])
+    def test_soft_targets_rejected(self, training: bool) -> None:
+        model = nn.Linear(2, 2)
+        trainer = Trainer(
+            model, torch.optim.SGD(model.parameters(), lr=0.0), nn.CrossEntropyLoss(), torch.device("cpu")
+        )
+        loader = DataLoader(TensorDataset(torch.zeros(2, 2), torch.full((2, 2), 0.5)), batch_size=2)
+        with pytest.raises(ValueError, match="integer class targets"):
+            if training:
+                trainer.train_epoch(loader)
+            else:
+                trainer.evaluate(loader)
+
+    @pytest.mark.parametrize("training", [False, True])
+    def test_empty_loader_rejected(self, training: bool) -> None:
+        model = nn.Linear(2, 2)
+        trainer = Trainer(
+            model, torch.optim.SGD(model.parameters(), lr=0.0), nn.CrossEntropyLoss(), torch.device("cpu")
+        )
+        loader = DataLoader(TensorDataset(torch.zeros(0, 2), torch.zeros(0, dtype=torch.long)), batch_size=2)
+        with pytest.raises(ValueError, match="empty dataloader"):
+            if training:
+                trainer.train_epoch(loader)
+            else:
+                trainer.evaluate(loader)
+
+    @pytest.mark.parametrize("training", [False, True])
+    def test_nonfinite_loss_rejected(self, training: bool) -> None:
+        model = nn.Linear(2, 2)
+        with torch.no_grad():
+            model.weight.fill_(float("inf"))
+        trainer = Trainer(
+            model, torch.optim.SGD(model.parameters(), lr=0.0), nn.CrossEntropyLoss(), torch.device("cpu")
+        )
+        loader = DataLoader(TensorDataset(torch.ones(2, 2), torch.zeros(2, dtype=torch.long)), batch_size=2)
+        with pytest.raises(ValueError, match="Non-finite loss"):
+            if training:
+                trainer.train_epoch(loader)
+            else:
+                trainer.evaluate(loader)
+
+
+class _ScriptedTrainer(Trainer):
+    """Exercise real fit/checkpoint behavior with a deterministic validation sequence."""
+
+    def __init__(self, losses: list[float], scores: list[float], monitor_metric: str) -> None:
+        model = nn.Linear(2, 2)
+        super().__init__(model, torch.optim.SGD(model.parameters(), lr=0.0), nn.CrossEntropyLoss(), torch.device("cpu"))
+        self._validation_metrics: list[dict[str, float]] = []
+        self.train_calls: int = 0
+        for loss, score in zip(losses, scores, strict=True):
+            metrics = {name.removeprefix("val_"): 0.5 for name in MONITOR_METRIC_DIRECTIONS}
+            metrics["loss"] = loss
+            if monitor_metric != "val_loss":
+                metrics[monitor_metric.removeprefix("val_")] = score
+            self._validation_metrics.append(metrics)
+
+    def train_epoch(self, dataloader: DataLoader) -> dict[str, float]:
+        self.train_calls += 1
+        return {"loss": 0.0}
+
+    def evaluate(self, dataloader: DataLoader) -> dict[str, Any]:
+        return self._validation_metrics[self.train_calls - 1]
+
+
+def _fit_scripted(trainer: _ScriptedTrainer, tmp_path: Path, monitor_metric: str, patience: int = 10) -> dict[str, Any]:
+    loader = DataLoader(TensorDataset(torch.zeros(1, 2), torch.zeros(1, dtype=torch.long)))
+    return trainer.fit(
+        loader,
+        loader,
+        max_epochs=len(trainer._validation_metrics),
+        patience=patience,
+        checkpoint_dir=tmp_path / "checkpoints",
+        run_name="scripted",
+        config={},
+        artifact_refs={},
+        log_dir=tmp_path / "logs",
+        monitor_metric=monitor_metric,
+    )
+
+
+class TestTrainerMonitorContract:
+    def test_loss_is_minimized(self, tmp_path: Path) -> None:
+        trainer = _ScriptedTrainer([0.4, 0.8, 0.2], [0.0] * 3, "val_loss")
+        result = _fit_scripted(trainer, tmp_path, "val_loss")
+
+        assert result["best_epoch"] == 3
+        assert result["best_val_metric"] == 0.2
+        assert [epoch["checkpoint_updated"] for epoch in result["epoch_history"]] == [True, False, True]
+        checkpoint = torch.load(result["checkpoint_path"], weights_only=False)
+        assert checkpoint["epoch"] == 3
+        assert checkpoint["best_metric"] == 0.2
+
+    @pytest.mark.parametrize("monitor_metric", [name for name in MONITOR_METRIC_DIRECTIONS if name != "val_loss"])
+    def test_each_score_is_maximized_and_logged(self, tmp_path: Path, monitor_metric: str) -> None:
+        trainer = _ScriptedTrainer([0.5] * 3, [0.4, 0.8, 0.6], monitor_metric)
+        result = _fit_scripted(trainer, tmp_path, monitor_metric)
+
+        assert result["best_epoch"] == 2
+        assert result["best_val_metric"] == 0.8
+        assert [epoch[monitor_metric] for epoch in result["epoch_history"]] == [0.4, 0.8, 0.6]
+
+    def test_score_ties_prefer_lower_loss_then_earliest(self, tmp_path: Path) -> None:
+        trainer = _ScriptedTrainer([0.5, 0.3, 0.3, 0.4], [0.8] * 4, "val_macro_f1")
+        result = _fit_scripted(trainer, tmp_path, "val_macro_f1")
+
+        assert result["best_epoch"] == 2
+        assert [epoch["checkpoint_updated"] for epoch in result["epoch_history"]] == [True, True, False, False]
+
+    def test_loss_ties_keep_earliest(self, tmp_path: Path) -> None:
+        trainer = _ScriptedTrainer([0.3, 0.3, 0.4], [0.0] * 3, "val_loss")
+        result = _fit_scripted(trainer, tmp_path, "val_loss")
+        assert result["best_epoch"] == 1
+
+    @pytest.mark.parametrize("monitor_metric", ["val_loss", "val_macro_f1"])
+    def test_patience_counts_nonimproving_epochs(self, tmp_path: Path, monitor_metric: str) -> None:
+        trainer = _ScriptedTrainer([0.5, 0.3, 0.3, 0.4, 0.1], [0.8] * 5, monitor_metric)
+        result = _fit_scripted(trainer, tmp_path, monitor_metric, patience=2)
+
+        assert result["best_epoch"] == 2
+        assert result["stopping_epoch"] == 4
+        assert result["reason_for_stopping"] == "patience_exceeded"
+        assert trainer.train_calls == 4
+
+    def test_tie_break_improvement_resets_patience(self, tmp_path: Path) -> None:
+        trainer = _ScriptedTrainer([0.5, 0.6, 0.3, 0.3, 0.4], [0.8] * 5, "val_macro_f1")
+        result = _fit_scripted(trainer, tmp_path, "val_macro_f1", patience=2)
+
+        assert result["best_epoch"] == 3
+        assert result["stopping_epoch"] == 5
+        assert result["reason_for_stopping"] == "patience_exceeded"
+
+    @pytest.mark.parametrize("monitor_metric", ["val_typo", "loss", "macro_f1", "val_predictions", "val_val_loss"])
+    def test_invalid_name_fails_before_training_or_outputs(self, tmp_path: Path, monitor_metric: str) -> None:
+        trainer = _ScriptedTrainer([0.4], [0.8], "val_macro_f1")
+
+        with pytest.raises(ValueError, match="Unsupported monitor metric"):
+            _fit_scripted(trainer, tmp_path, monitor_metric)
+
+        assert trainer.train_calls == 0
+        assert not (tmp_path / "checkpoints").exists()
+        assert not (tmp_path / "logs").exists()
+
+    @pytest.mark.parametrize("max_epochs, patience", [(0, 1), (-1, 1), (1, 0), (1, -1)])
+    def test_invalid_bounds_fail_before_outputs(self, tmp_path: Path, max_epochs: int, patience: int) -> None:
+        trainer = _ScriptedTrainer([0.4], [0.8], "val_macro_f1")
+        loader = DataLoader(TensorDataset(torch.zeros(1, 2), torch.zeros(1, dtype=torch.long)))
+        with pytest.raises(ValueError, match="must be positive"):
+            trainer.fit(
+                loader, loader, max_epochs, patience, tmp_path / "checkpoints", "bounds", {}, {}, tmp_path / "logs"
+            )
+        assert trainer.train_calls == 0
+        assert not (tmp_path / "checkpoints").exists()
+        assert not (tmp_path / "logs").exists()
+
+    @pytest.mark.parametrize("monitor_metric", ["val_loss", "val_macro_f1"])
+    @pytest.mark.parametrize("invalid_value", [float("nan"), float("inf"), -float("inf")])
+    def test_nonfinite_monitor_fails_before_checkpoint(
+        self, tmp_path: Path, monitor_metric: str, invalid_value: float
+    ) -> None:
+        trainer = _ScriptedTrainer([invalid_value], [invalid_value], monitor_metric)
+        with pytest.raises(ValueError, match="must be finite"):
+            _fit_scripted(trainer, tmp_path, monitor_metric)
+        assert not list((tmp_path / "checkpoints").glob("*.pt"))

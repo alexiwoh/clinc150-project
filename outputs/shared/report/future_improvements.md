@@ -2,24 +2,24 @@
 
 ### High Priority
 
-- **Collect more OOS training examples to reduce false accepts**: OOS false accepts are the dominant error across all models; more OOS training data directly addresses the distribution mismatch.
-- **Merge or relabel persistently confused intent pairs within the same domain**: Several intent pairs share near-identical semantics and consistently confuse all models.
-- **Apply confidence thresholding in deployment to flag uncertain predictions**: Many errors occur at high confidence; a deployment threshold could redirect uncertain queries to human review.
-- **Evaluate temperature scaling for post-hoc calibration improvement**: Calibration varies significantly across models; temperature scaling could improve reliability without retraining.
+- **Evaluate additional labeled OOS training data in a separate experiment**: Observed false accepts motivate testing broader OOS coverage; document any new data protocol and retain the current official benchmark for comparability.
+- **Manually inspect persistent same-domain confusions**: Domain-based taxonomy tags are heuristics. Inspect examples before drawing semantic conclusions; preserve official benchmark labels in the current comparison.
+- **Select OOS or abstention thresholds on validation data**: Specify a target trade-off on validation data and evaluate the fixed threshold on held-out data. Test ROC operating points alone do not establish deployment behavior.
+- **Evaluate temperature scaling for post-hoc calibration improvement**: Fit temperature scaling on validation data, then compare held-out calibration. Representative-run ECE differences alone do not establish its benefit across seeds.
 
 ### Medium Priority
 
-- **Add pretrained word embeddings (GloVe, word2vec) to Text CNN and BiLSTM**: Pretrained embeddings could improve generalization especially for rare words and OOS queries.
-- **Systematic hyperparameter tuning (dropout, hidden size, learning rate)**: Current configs use limited grid search; broader exploration may improve all models.
-- **Add parameter-count vs accuracy Pareto analysis**: Quantify the efficiency-accuracy trade-off to guide model selection for deployment.
-- **Add threshold analysis for OOS detection with operating-point selection**: Enable tunable precision-recall trade-off for OOS detection in production.
+- **Use fresh seeded loaders for each tuning trial**: Make comparisons independent of advancing loader state and smoke-check shuffles. Changing this search policy requires new tuning and final evaluations.
+- **Evaluate length-aware BiLSTM sequence handling**: Packed sequences or length-aware summaries could avoid processing right-PAD positions. This modeling change requires new training, tuning and comparisons.
+- **Evaluate pretrained word embeddings**: Test their effect on the neural pipelines through new training and tuning rather than assuming improved generalization.
+- **Measure controlled deployment latency separately**: Use a specified device, warmup and repeated single-query measurements before making service-latency claims from batch throughput.
 
 ### Lower Priority / Future Work
 
-- **Compare against transformer-based models (DistilBERT, BERT-base)**: Establish an upper-bound reference for the lightweight models evaluated.
+- **Compare against transformer-based models (DistilBERT, BERT-base)**: Add a separately trained and tuned reference with its own preprocessing and compute budget.
 - **Evaluate on additional intent-classification datasets**: Validate whether findings generalize beyond CLINC150.
 - **Subword tokenization (BPE, WordPiece) for better OOV handling**: Reduce OOV rates and improve generalization to unseen vocabulary.
-- **Multi-task learning combining intent classification and OOS detection**: Joint training may improve OOS discrimination by explicitly modeling the boundary.
-- **Bootstrap confidence intervals for more rigorous statistical comparison**: 3 repeated runs provide limited statistical power; bootstrapping would strengthen claims.
+- **Evaluate a conventional in-scope-only MSP baseline**: Train a separate classifier without the supervised OOS class; its uncertainty score answers a different question from the current 151-class MSP diagnostic.
+- **Expand independently seeded runs and design uncertainty estimates**: Distinguish test-example sampling uncertainty from training-run variation; three seeds and overlapping mean/std ranges alone do not justify significance claims.
 
 (outputs/shared/analysis/error_analysis_summary.json)

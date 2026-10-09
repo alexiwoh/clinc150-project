@@ -202,8 +202,11 @@ data/raw/clinc___clinc_oos/
 outputs/checkpoints/*.pt
 outputs_small_archive/checkpoints/*.pt
 
-# Step 7+ run-first layout: per-run checkpoints and probability arrays
+# Step 7+ per-run checkpoints; probability arrays remain committed for auditing.
 **/checkpoint/*.pt
+
+# Local agent workspace checkouts are not repository artifacts.
+.claude/worktrees/
 
 # PyPI configuration file
 .pypirc

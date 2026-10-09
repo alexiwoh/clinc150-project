@@ -23,9 +23,8 @@ class LengthBucket(StrEnum):
     LONG = "long"
 
 
-class FrequencyTier(StrEnum):
-    """Class frequency tiers based on training-set support quartiles."""
+class ScopeSlice(StrEnum):
+    """Supervised class scope, independent of class frequency."""
 
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
+    IN_SCOPE = "in_scope"
+    OOS = "oos"

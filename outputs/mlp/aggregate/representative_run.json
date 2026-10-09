@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0",
   "protocol_version": "1.0",
+  "model_name": "TF-IDF + MLP",
   "model_id": "mlp",
   "run_id": "run_01_seed_42",
   "run_index": 1,
@@ -8,8 +9,7 @@
   "selection_rule": "highest_validation_macro_f1",
   "selection_metric_value": 0.9158723328538046,
   "artifact_path": "outputs/mlp/final_runs/run_01_seed_42",
-  "note": "This run is representative only. Aggregate metrics come from all completed runs.",
-  "model_name": "TF-IDF + MLP",
   "frozen_config_ref": "outputs/mlp/frozen_final_config.json",
-  "protocol_manifest_ref": "outputs/shared/evaluation_protocol.json"
+  "protocol_manifest_ref": "outputs/shared/evaluation_protocol.json",
+  "note": "This run is representative only. Aggregate metrics come from all completed runs."
 }

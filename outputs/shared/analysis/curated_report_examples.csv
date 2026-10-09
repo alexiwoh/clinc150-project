@@ -9,53 +9,53 @@ how many holidays are there and when is the next one here,next_holiday,oos,0.782
 how many minutes are involved in the preparation of curry,cook_time,oos,0.76766437292099,inscope_as_oos,mlp,false rejection
 how many stars does babbo have,restaurant_reviews,oos,0.7348247170448303,inscope_as_oos,mlp,false rejection
 how many stars does brasserie les halles have,restaurant_reviews,oos,0.7348247170448303,inscope_as_oos,mlp,false rejection
-who controls you,who_do_you_work_for,who_made_you,0.969076931476593,near_semantic_confusion,mlp,semantic overlap
-who employs you,who_do_you_work_for,who_made_you,0.969076931476593,near_semantic_confusion,mlp,semantic overlap
-give me a recipe for tacos,ingredients_list,recipe,0.9607388973236084,near_semantic_confusion,mlp,semantic overlap
-"thanks for your help, goodbye!",goodbye,thank_you,0.9539374113082886,near_semantic_confusion,mlp,semantic overlap
-have i told you to add washing dishes to my todo list,todo_list,todo_list_update,0.9494496583938599,near_semantic_confusion,mlp,semantic overlap
+who controls you,who_do_you_work_for,who_made_you,0.969076931476593,near_semantic_confusion,mlp,same-domain confusion
+who employs you,who_do_you_work_for,who_made_you,0.969076931476593,near_semantic_confusion,mlp,same-domain confusion
+give me a recipe for tacos,ingredients_list,recipe,0.9607388973236084,near_semantic_confusion,mlp,same-domain confusion
+"thanks for your help, goodbye!",goodbye,thank_you,0.9539374113082886,near_semantic_confusion,mlp,same-domain confusion
+have i told you to add washing dishes to my todo list,todo_list,todo_list_update,0.9494496583938599,near_semantic_confusion,mlp,same-domain confusion
 what time is it in phoenix,timezone,time,0.9946780204772949,cross_domain_confusion,mlp,cross-domain mix-up
 repeat what the weather will be like,transfer,weather,0.9552571773529053,cross_domain_confusion,mlp,cross-domain mix-up
 what is my current location,share_location,current_location,0.9497719407081604,cross_domain_confusion,mlp,cross-domain mix-up
 what's the apr on my savings account,interest_rate,apr,0.8810341358184814,cross_domain_confusion,mlp,cross-domain mix-up
 i want to be reminded to pay the electric bill,reminder_update,pay_bill,0.8665728569030762,cross_domain_confusion,mlp,cross-domain mix-up
-how many calories does doing 20 situps burn,oos,calories,0.9999847412109375,oos_as_inscope,text_cnn,confident false accept
-give me the weather forecast for today,oos,weather,0.9999822378158569,oos_as_inscope,text_cnn,confident false accept
-how many calories does jumping up and down burn,oos,calories,0.9999232292175293,oos_as_inscope,text_cnn,confident false accept
-call an uber to take me to the closest grocery store,oos,uber,0.9998862743377686,oos_as_inscope,text_cnn,confident false accept
-what's the current prevailing interest rate for mortgages in my area,oos,interest_rate,0.9995094537734985,oos_as_inscope,text_cnn,confident false accept
-how expensive is my internet,bill_balance,oos,0.9773907661437988,inscope_as_oos,text_cnn,false rejection
-when does the current billing cycle end,bill_due,oos,0.8038612604141235,inscope_as_oos,text_cnn,false rejection
-what's the phone number for my credit card company,replacement_card_duration,oos,0.7822321057319641,inscope_as_oos,text_cnn,false rejection
-what is the time frame for sending a customer who lost their credit card a new one,replacement_card_duration,oos,0.781401515007019,inscope_as_oos,text_cnn,false rejection
-is it six o clock yet,time,oos,0.776395857334137,inscope_as_oos,text_cnn,false rejection
-who is responsible for your employment,who_do_you_work_for,who_made_you,0.998573899269104,near_semantic_confusion,text_cnn,semantic overlap
-i'm trying to raise my credit score can you tell me what it is now,credit_score,improve_credit_score,0.9985254406929016,near_semantic_confusion,text_cnn,semantic overlap
-can i get a table for four at 8:00,how_busy,restaurant_reservation,0.9972242116928101,near_semantic_confusion,text_cnn,semantic overlap
-how can i request a new credit card,replacement_card_duration,new_card,0.9951135516166687,near_semantic_confusion,text_cnn,semantic overlap
-what have i spent things on,transactions,spending_history,0.9938406944274902,near_semantic_confusion,text_cnn,semantic overlap
-repeat what the weather will be like,transfer,weather,0.997438907623291,cross_domain_confusion,text_cnn,cross-domain mix-up
-what time is it in phoenix,timezone,time,0.9958788156509399,cross_domain_confusion,text_cnn,cross-domain mix-up
-what is my current location,share_location,current_location,0.995576024055481,cross_domain_confusion,text_cnn,cross-domain mix-up
-i'd like for this person to know my location,share_location,current_location,0.9856311082839966,cross_domain_confusion,text_cnn,cross-domain mix-up
-what's your designation,user_name,what_is_your_name,0.9753966331481934,cross_domain_confusion,text_cnn,cross-domain mix-up
-what other countries speak the english language,oos,change_language,0.9999963045120239,oos_as_inscope,bilstm,confident false accept
-look up the conversion rate for the euro to dollar exchange,oos,exchange_rate,0.9999663829803467,oos_as_inscope,bilstm,confident false accept
-give me the weather forecast for today,oos,weather,0.9999613761901855,oos_as_inscope,bilstm,confident false accept
-check the status of my amazon orders for me,oos,order_status,0.9999063014984131,oos_as_inscope,bilstm,confident false accept
-when should i remove my snow tires,oos,tire_change,0.9998812675476074,oos_as_inscope,bilstm,confident false accept
-what is the price of bluetooth speakers on amazon,order,oos,0.9994544386863708,inscope_as_oos,bilstm,false rejection
-what are the size limits regarding-carry on bags,carry_on,oos,0.9830695390701294,inscope_as_oos,bilstm,false rejection
-how many holidays are there and when is the next one here,next_holiday,oos,0.9765938520431519,inscope_as_oos,bilstm,false rejection
-where is the closest pharmacy,directions,oos,0.975864827632904,inscope_as_oos,bilstm,false rejection
-show me ideas for hamburger,recipe,oos,0.972700834274292,inscope_as_oos,bilstm,false rejection
-have i told you to add washing dishes to my todo list,todo_list,todo_list_update,0.9999451637268066,near_semantic_confusion,bilstm,semantic overlap
-"thanks for your help, goodbye!",goodbye,thank_you,0.999937891960144,near_semantic_confusion,bilstm,semantic overlap
-give me a recipe for tacos,ingredients_list,recipe,0.9999359846115112,near_semantic_confusion,bilstm,semantic overlap
-have i added my doctor's appointment to my calendar,calendar,calendar_update,0.9998944997787476,near_semantic_confusion,bilstm,semantic overlap
-how can i request a new credit card,replacement_card_duration,new_card,0.9998513460159302,near_semantic_confusion,bilstm,semantic overlap
-what time is it in phoenix,timezone,time,0.9999988079071045,cross_domain_confusion,bilstm,cross-domain mix-up
-what is my current location,share_location,current_location,0.9999755620956421,cross_domain_confusion,bilstm,cross-domain mix-up
-repeat what the weather will be like,transfer,weather,0.9999536275863647,cross_domain_confusion,bilstm,cross-domain mix-up
-i want to be reminded to pay the electric bill,reminder_update,pay_bill,0.9998613595962524,cross_domain_confusion,bilstm,cross-domain mix-up
-i don't want to forget to call mom,reminder_update,make_call,0.9998243451118469,cross_domain_confusion,bilstm,cross-domain mix-up
+give me the weather forecast for today,oos,weather,0.9999791383743286,oos_as_inscope,text_cnn,confident false accept
+please read the text message i just received,oos,text,0.9997432827949524,oos_as_inscope,text_cnn,confident false accept
+what other countries speak the english language,oos,change_language,0.999144434928894,oos_as_inscope,text_cnn,confident false accept
+what's the current prevailing interest rate for mortgages in my area,oos,interest_rate,0.9990187883377075,oos_as_inscope,text_cnn,confident false accept
+forward the text i just got from henry to giselle,oos,text,0.9987873435020447,oos_as_inscope,text_cnn,confident false accept
+when does the current billing cycle end,bill_due,oos,0.9915704727172852,inscope_as_oos,text_cnn,false rejection
+how expensive is my internet,bill_balance,oos,0.8825438022613525,inscope_as_oos,text_cnn,false rejection
+what's the phone number for my credit card company,replacement_card_duration,oos,0.8534485101699829,inscope_as_oos,text_cnn,false rejection
+how many minutes are involved in the preparation of curry,cook_time,oos,0.81864333152771,inscope_as_oos,text_cnn,false rejection
+what kind of electrical outlet does that country use,plug_type,oos,0.7949949502944946,inscope_as_oos,text_cnn,false rejection
+give me a recipe for tacos,ingredients_list,recipe,0.9964855909347534,near_semantic_confusion,text_cnn,same-domain confusion
+who controls you,who_do_you_work_for,who_made_you,0.9963486194610596,near_semantic_confusion,text_cnn,same-domain confusion
+who employs you,who_do_you_work_for,who_made_you,0.9963486194610596,near_semantic_confusion,text_cnn,same-domain confusion
+when will my new credit card arrive,expiration_date,replacement_card_duration,0.995201587677002,near_semantic_confusion,text_cnn,same-domain confusion
+what is the next date for which i can get an oil change appointment,schedule_maintenance,oil_change_when,0.995166540145874,near_semantic_confusion,text_cnn,same-domain confusion
+what is my current location,share_location,current_location,0.9987926483154297,cross_domain_confusion,text_cnn,cross-domain mix-up
+what time is it in phoenix,timezone,time,0.9986510872840881,cross_domain_confusion,text_cnn,cross-domain mix-up
+i don't want to forget to call mom,reminder_update,make_call,0.9979006052017212,cross_domain_confusion,text_cnn,cross-domain mix-up
+turn on the microwave for 3 minutes,smart_home,timer,0.988875150680542,cross_domain_confusion,text_cnn,cross-domain mix-up
+"i'd like my checks to be deposited into my account directly, how do i do that",direct_deposit,order_checks,0.9861627221107483,cross_domain_confusion,text_cnn,cross-domain mix-up
+give me the weather forecast for today,oos,weather,0.9999994039535522,oos_as_inscope,bilstm,confident false accept
+look up the conversion rate for the euro to dollar exchange,oos,exchange_rate,0.9999990463256836,oos_as_inscope,bilstm,confident false accept
+what other countries speak the english language,oos,change_language,0.9999902248382568,oos_as_inscope,bilstm,confident false accept
+can you tell me what the best places are to look for a job online,oos,restaurant_suggestion,0.9999797344207764,oos_as_inscope,bilstm,confident false accept
+i need you to order a new pair of eyeglasses for me,oos,order,0.9999575614929199,oos_as_inscope,bilstm,confident false accept
+how many minutes are involved in the preparation of curry,cook_time,oos,0.9999973773956299,inscope_as_oos,bilstm,false rejection
+how expensive is my internet,bill_balance,oos,0.9978415966033936,inscope_as_oos,bilstm,false rejection
+is the breakfast place full in the mornings,how_busy,oos,0.995961606502533,inscope_as_oos,bilstm,false rejection
+"what kind of traffic can i expect driving to newark, new jersey on i-95 from philadelphia at noon",traffic,oos,0.992024302482605,inscope_as_oos,bilstm,false rejection
+"what is the average of 54, 23, 43, 12, and 442",calculator,oos,0.9799848794937134,inscope_as_oos,bilstm,false rejection
+give me a recipe for tacos,ingredients_list,recipe,0.9999964237213135,near_semantic_confusion,bilstm,same-domain confusion
+what's a good recipe foe tacos,ingredients_list,recipe,0.9999785423278809,near_semantic_confusion,bilstm,same-domain confusion
+what is the next date for which i can get an oil change appointment,schedule_maintenance,oil_change_when,0.9999744892120361,near_semantic_confusion,bilstm,same-domain confusion
+what are the steps to get my rewards for my visa card,redeem_rewards,rewards_balance,0.9998942613601685,near_semantic_confusion,bilstm,same-domain confusion
+what have i spent things on,transactions,spending_history,0.9998698234558105,near_semantic_confusion,bilstm,same-domain confusion
+repeat what the weather will be like,transfer,weather,0.999997615814209,cross_domain_confusion,bilstm,cross-domain mix-up
+i'd like for this person to know my location,share_location,current_location,0.9999790191650391,cross_domain_confusion,bilstm,cross-domain mix-up
+what time is it in phoenix,timezone,time,0.9999691247940063,cross_domain_confusion,bilstm,cross-domain mix-up
+when will my payment be deposited,payday,bill_due,0.9999688863754272,cross_domain_confusion,bilstm,cross-domain mix-up
+what is my current location,share_location,current_location,0.9998594522476196,cross_domain_confusion,bilstm,cross-domain mix-up

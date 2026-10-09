@@ -1,16 +1,18 @@
 ## Main Results
 
+Means and population standard deviations describe the recorded runs. They are descriptive dispersion measures, not confidence intervals or significance tests.
+
 ### Table 1: Main Model Comparison
 
 *Aggregate over 3 runs (mean +/- std)*
 
 | Model        | Test Accuracy     | Test Macro F1     | Test Precision    | Test Recall       |
 | ------------ | ----------------- | ----------------- | ----------------- | ----------------- |
-| TF-IDF + MLP | 0.8373 +/- 0.0066 | 0.8727 +/- 0.0031 | 0.8464 +/- 0.0065 | 0.9123 +/- 0.0015 |
-| Text CNN     | 0.8176 +/- 0.0084 | 0.8635 +/- 0.0057 | 0.8278 +/- 0.0094 | 0.9163 +/- 0.0016 |
-| BiLSTM       | 0.7751 +/- 0.0088 | 0.8284 +/- 0.0071 | 0.8005 +/- 0.0062 | 0.8780 +/- 0.0068 |
+| TF-IDF + MLP | 0.8345 +/- 0.0063 | 0.8716 +/- 0.0029 | 0.8439 +/- 0.0059 | 0.9132 +/- 0.0014 |
+| Text CNN     | 0.8210 +/- 0.0067 | 0.8645 +/- 0.0031 | 0.8299 +/- 0.0050 | 0.9153 +/- 0.0012 |
+| BiLSTM       | 0.7744 +/- 0.0065 | 0.8283 +/- 0.0046 | 0.7944 +/- 0.0074 | 0.8844 +/- 0.0040 |
 
-TF-IDF + MLP achieved the highest aggregate test macro F1 (0.8727 +/- 0.0031).
+TF-IDF + MLP achieved the highest aggregate test macro F1 (0.8716 +/- 0.0029).
 
 Related figure: `outputs/shared/figures/model_comparison_test_macro_f1.png`
 
@@ -18,13 +20,15 @@ Related figure: `outputs/shared/figures/model_comparison_test_macro_f1.png`
 
 *Aggregate over 3 runs (mean +/- std)*
 
+OOS precision/recall/F1 score argmax predictions in the supervised 151-class classifier.
+
 | Model        | OOS Precision     | OOS Recall        | OOS F1            |
 | ------------ | ----------------- | ----------------- | ----------------- |
-| TF-IDF + MLP | 0.8840 +/- 0.0132 | 0.4867 +/- 0.0444 | 0.6261 +/- 0.0348 |
-| Text CNN     | 0.9414 +/- 0.0102 | 0.3563 +/- 0.0401 | 0.5154 +/- 0.0416 |
-| BiLSTM       | 0.8817 +/- 0.0104 | 0.2947 +/- 0.0236 | 0.4413 +/- 0.0273 |
+| TF-IDF + MLP | 0.8877 +/- 0.0112 | 0.4667 +/- 0.0425 | 0.6103 +/- 0.0352 |
+| Text CNN     | 0.9326 +/- 0.0145 | 0.3810 +/- 0.0375 | 0.5397 +/- 0.0357 |
+| BiLSTM       | 0.8865 +/- 0.0203 | 0.2610 +/- 0.0406 | 0.4019 +/- 0.0511 |
 
-TF-IDF + MLP achieved the highest aggregate OOS F1 (0.6261 +/- 0.0348).
+TF-IDF + MLP achieved the highest aggregate argmax OOS F1 (0.6103 +/- 0.0352).
 
 Related figure: `outputs/shared/figures/oos_metrics_comparison.png`
 
@@ -35,8 +39,8 @@ Related figure: `outputs/shared/figures/oos_metrics_comparison.png`
 | Model        | Macro F1 | Micro F1 | Weighted F1 | Macro Precision | Macro Recall |
 | ------------ | -------- | -------- | ----------- | --------------- | ------------ |
 | TF-IDF + MLP | 0.8742   | 0.8400   | 0.8326      | 0.8492          | 0.9122       |
-| Text CNN     | 0.8658   | 0.8211   | 0.8072      | 0.8315          | 0.9170       |
-| BiLSTM       | 0.8354   | 0.7858   | 0.7727      | 0.8062          | 0.8838       |
+| Text CNN     | 0.8628   | 0.8167   | 0.8027      | 0.8290          | 0.9137       |
+| BiLSTM       | 0.8347   | 0.7816   | 0.7639      | 0.8037          | 0.8882       |
 
 TF-IDF + MLP has the highest representative-run macro F1 (0.8742) in the extended-metrics table.
 
@@ -47,10 +51,10 @@ TF-IDF + MLP has the highest representative-run macro F1 (0.8742) in the extende
 | Model        | ECE    | MCE    | Brier Score | NLL    |
 | ------------ | ------ | ------ | ----------- | ------ |
 | TF-IDF + MLP | 0.1027 | 0.2580 | 0.2532      | 0.7303 |
-| Text CNN     | 0.0374 | 0.1835 | 0.2567      | 0.8647 |
-| BiLSTM       | 0.1125 | 0.4094 | 0.3235      | 1.2145 |
+| Text CNN     | 0.0390 | 0.1772 | 0.2595      | 0.9015 |
+| BiLSTM       | 0.1232 | 0.4381 | 0.3345      | 1.3284 |
 
-Text CNN is the best calibrated representative run (ECE = 0.0374).
+Text CNN is the best calibrated representative run (ECE = 0.0390).
 
 Related figure: `outputs/shared/analysis/calibration_comparison.png`
 
@@ -60,16 +64,18 @@ Related figure: `outputs/shared/analysis/calibration_comparison.png`
 
 | Model        | Parameters | Training Time (s) | Inference (ms/example) | Throughput (ex/s)    |
 | ------------ | ---------- | ----------------- | ---------------------- | -------------------- |
-| TF-IDF + MLP | 5,197,975  | 60.62 +/- 10.80   | 0.0563 +/- 0.0013      | 17782.89 +/- 390.80  |
-| Text CNN     | 1,930,167  | 136.48 +/- 7.70   | 0.0313 +/- 0.0021      | 32082.23 +/- 2138.80 |
-| BiLSTM       | 4,284,311  | 91.74 +/- 23.20   | 0.1205 +/- 0.0150      | 8431.56 +/- 1079.83  |
+| TF-IDF + MLP | 5,197,975  | 82.69 +/- 6.85    | 0.0557 +/- 0.0048      | 18069.35 +/- 1459.73 |
+| Text CNN     | 1,930,167  | 168.54 +/- 18.36  | 0.0353 +/- 0.0023      | 28455.69 +/- 1795.24 |
+| BiLSTM       | 4,284,311  | 144.16 +/- 18.48  | 0.1281 +/- 0.0150      | 7909.59 +/- 862.64   |
 
-Text CNN has the highest mean inference throughput (32082 ex/s).
+Text CNN has the highest mean inference throughput (28456 ex/s).
+
+Batched evaluation timing covers loader traversal, device transfer, forward pass, softmax and CPU result collection; it excludes preprocessing, checkpoint loading, array concatenation, metrics and artifact writes. The per-example figures describe batched throughput, with no controlled warmup or repeated timing trials; single-query deployment latency was not measured.
 
 Related figure: `outputs/shared/figures/model_efficiency_comparison.png`
 
 ### Key Figures
 
-![Aggregate test macro F1 comparison with error bars across all models. Data: aggregate over 3 repeated runs, CLINC150 test set.](outputs/shared/figures/model_comparison_test_macro_f1.png)
+![Aggregate test macro F1 comparison with error bars across all models. Data: aggregate over 3 repeated runs, CLINC150 test set.](../figures/model_comparison_test_macro_f1.png)
 
-![Validation macro F1 progression during training for TF-IDF + MLP. Data: representative run, CLINC150.](outputs/mlp/figures/representative_val_macro_f1_curve.png)
+![Validation macro F1 progression during training for TF-IDF + MLP. Data: representative run, CLINC150.](../../mlp/figures/representative_val_macro_f1_curve.png)

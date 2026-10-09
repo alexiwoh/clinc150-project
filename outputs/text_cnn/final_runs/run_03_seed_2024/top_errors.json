@@ -178,13 +178,6 @@
       "predicted_id": 145
     },
     {
-      "text": "how can i unfreeze my bank account",
-      "true_label": "account_blocked",
-      "predicted_label": "freeze_account",
-      "true_id": 2,
-      "predicted_id": 20
-    },
-    {
       "text": "i need to up by noon",
       "true_label": "alarm",
       "predicted_label": "change_user_name",
@@ -199,13 +192,6 @@
       "predicted_id": 51
     },
     {
-      "text": "what the numerical number inside my bank accounts",
-      "true_label": "balance",
-      "predicted_label": "account_blocked",
-      "true_id": 35,
-      "predicted_id": 2
-    },
-    {
       "text": "what are my coffers at",
       "true_label": "balance",
       "predicted_label": "income",
@@ -213,11 +199,11 @@
       "predicted_id": 93
     },
     {
-      "text": "is the phone bill the same as last month",
-      "true_label": "bill_balance",
-      "predicted_label": "bill_due",
-      "true_id": 27,
-      "predicted_id": 56
+      "text": "what the numerical number inside my bank accounts",
+      "true_label": "balance",
+      "predicted_label": "oos",
+      "true_id": 35,
+      "predicted_id": 42
     },
     {
       "text": "what price is my credit card and my water bill at",
@@ -227,18 +213,25 @@
       "predicted_id": 56
     },
     {
-      "text": "i need to know the price of my car payment and insurance please",
-      "true_label": "bill_balance",
-      "predicted_label": "insurance_change",
-      "true_id": 27,
-      "predicted_id": 64
-    },
-    {
       "text": "how expensive is my internet",
       "true_label": "bill_balance",
       "predicted_label": "oos",
       "true_id": 27,
       "predicted_id": 42
+    },
+    {
+      "text": "i need to know the price of my car payment and insurance please",
+      "true_label": "bill_balance",
+      "predicted_label": "pay_bill",
+      "true_id": 27,
+      "predicted_id": 111
+    },
+    {
+      "text": "is the phone bill the same as last month",
+      "true_label": "bill_balance",
+      "predicted_label": "transactions",
+      "true_id": 27,
+      "predicted_id": 68
     },
     {
       "text": "i need to know the next billing date of my american express card",
@@ -248,18 +241,18 @@
       "predicted_id": 44
     },
     {
-      "text": "what's the latest i can pay my cellular bill",
-      "true_label": "bill_due",
-      "predicted_label": "min_payment",
-      "true_id": 56,
-      "predicted_id": 143
-    },
-    {
       "text": "when does the current billing cycle end",
       "true_label": "bill_due",
       "predicted_label": "oos",
       "true_id": 56,
       "predicted_id": 42
+    },
+    {
+      "text": "what's the latest i can pay my cellular bill",
+      "true_label": "bill_due",
+      "predicted_label": "pay_bill",
+      "true_id": 56,
+      "predicted_id": 111
     },
     {
       "text": "book me a place to chicago from atlanta united airlines",
@@ -271,30 +264,37 @@
     {
       "text": "can i fly from atlanta to san francisco for less than 100 dollars",
       "true_label": "book_flight",
-      "predicted_label": "exchange_rate",
+      "predicted_label": "transfer",
       "true_id": 63,
-      "predicted_id": 38
+      "predicted_id": 133
     },
     {
       "text": "i spent 34 dollars for 12 gallons of paint what is the average price for each gallon",
       "true_label": "calculator",
-      "predicted_label": "calories",
+      "predicted_label": "exchange_rate",
       "true_id": 138,
-      "predicted_id": 135
+      "predicted_id": 38
     },
     {
       "text": "i bought 6 shirts at $499 each what was my total expenditure for them",
       "true_label": "calculator",
-      "predicted_label": "spending_history",
+      "predicted_label": "income",
       "true_id": 138,
-      "predicted_id": 71
+      "predicted_id": 93
     },
     {
-      "text": "have i added my doctor's appointment to my calendar",
-      "true_label": "calendar",
-      "predicted_label": "calendar_update",
-      "true_id": 60,
-      "predicted_id": 105
+      "text": "what is the average of 54, 23, 43, 12, and 442",
+      "true_label": "calculator",
+      "predicted_label": "oos",
+      "true_id": 138,
+      "predicted_id": 42
+    },
+    {
+      "text": "what's 15% of 68",
+      "true_label": "calculator",
+      "predicted_label": "oos",
+      "true_id": 138,
+      "predicted_id": 42
     }
   ]
 }

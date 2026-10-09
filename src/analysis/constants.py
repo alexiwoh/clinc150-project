@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from src.constants import SHORT_QUERY_TOKEN_THRESHOLD as SHORT_QUERY_TOKEN_THRESHOLD
+
 # ---------------------------------------------------------------------------
 # CLINC150 intent domain mapping (10 domains x 15 intents)
 # Source: https://github.com/clinc/oos-eval/blob/master/data/domains.json
@@ -201,7 +203,6 @@ CONFIDENCE_STRATA_LABELS: list[str] = [
 # Thresholds
 # ---------------------------------------------------------------------------
 
-SHORT_QUERY_TOKEN_THRESHOLD: int = 5
 HIGH_CONFIDENCE_THRESHOLD: float = 0.8
 HIGH_CONFIDENCE_ERRORS_TOP_K: int = 20
 WORST_CLASSES_K: int = 15

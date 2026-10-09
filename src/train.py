@@ -12,6 +12,7 @@ from typing import Any, TypedDict
 
 import numpy as np
 import pandas as pd
+from scipy.sparse import csr_matrix
 from sklearn.feature_extraction.text import TfidfVectorizer
 import torch
 from torch.utils.data import DataLoader
@@ -45,6 +46,7 @@ from src.preprocessing import (
     pad_or_truncate,
     tokenize_text,
 )
+from src.provenance import DatasetIdentity, hash_tensor, hash_tfidf_inputs, identify_dataset
 from src.trainers.trainer import Trainer
 from src.utils import count_parameters, ensure_dir, load_checkpoint, set_seed
 
@@ -75,6 +77,8 @@ class TFIDFMetadata(TypedDict):
     label_to_id: dict[str, int]
     id_to_label: dict[int, str]
     texts_by_split: dict[str, list[str]]
+    dataset_identity: DatasetIdentity
+    model_input_hashes: dict[str, str]
 
 
 class NeuralMetadata(TypedDict):
@@ -90,6 +94,21 @@ class NeuralMetadata(TypedDict):
     truncation_stats: dict[str, dict[str, int | float]]
     preprocessing_policy: dict[str, bool | str]
     manifest_timestamp: str | None
+    texts_by_split: dict[str, list[str]]
+    dataset_identity: DatasetIdentity
+    model_input_hashes: dict[str, str]
+
+
+def _validate_split_labels(labels: torch.Tensor, num_classes: int, split: str, expected_rows: int) -> None:
+    """Reject malformed labels before a dataset wrapper or integer cast can hide them."""
+    if labels.ndim != 1 or labels.shape[0] != expected_rows:
+        raise ValueError(f"Expected {expected_rows} one-dimensional labels in {split}, got shape {tuple(labels.shape)}")
+    if labels.numel() == 0:
+        raise ValueError(f"Empty labels in {split}")
+    if labels.dtype != torch.long:
+        raise TypeError(f"Label dtype is {labels.dtype} in {split}, expected torch.long")
+    if not ((labels >= 0) & (labels < num_classes)).all():
+        raise ValueError(f"Label ids out of range [0, {num_classes}) in {split}")
 
 
 def load_tfidf_data(
@@ -128,7 +147,7 @@ def load_tfidf_data(
         texts_by_split[split] = [clean_text(t) for t in raw["text"]]
         labels_by_split[split] = raw["intent"]
 
-    tfidf_matrices = {}
+    tfidf_matrices: dict[str, csr_matrix] = {}
     for split in _SPLIT_NAMES:
         tfidf_matrices[split] = vectorizer.transform(texts_by_split[split])
 
@@ -146,17 +165,15 @@ def load_tfidf_data(
     assert dense_mb < 2048, f"Dense TF-IDF memory ({dense_mb:.0f} MB) exceeds 2 GB safety limit"
 
     datasets_dict: dict[str, TFIDFDataset] = {}
+    model_input_hashes: dict[str, str] = {}
     for split in _SPLIT_NAMES:
-        label_tensor = torch.tensor(labels_by_split[split], dtype=torch.long)
+        label_tensor = torch.tensor(labels_by_split[split])
 
         mat = tfidf_matrices[split]
-        arr = mat.toarray() if hasattr(mat, "toarray") else np.asarray(mat)
-        assert not np.isnan(arr).any(), f"NaN in TF-IDF features for {split}"
-        assert not np.isinf(arr).any(), f"Inf in TF-IDF features for {split}"
-        assert label_tensor.dtype == torch.long, f"Label dtype is {label_tensor.dtype}, expected torch.long"
-        assert (label_tensor >= 0).all() and (label_tensor < num_classes).all(), (
-            f"Label ids out of range [0, {num_classes}) in {split}"
-        )
+        if not np.isfinite(mat.data).all():
+            raise ValueError(f"Non-finite TF-IDF features in {split}")
+        _validate_split_labels(label_tensor, num_classes, split, mat.shape[0])
+        model_input_hashes[split] = hash_tfidf_inputs(mat)
 
         datasets_dict[split] = TFIDFDataset(tfidf_matrices[split], label_tensor)
 
@@ -189,6 +206,8 @@ def load_tfidf_data(
         "label_to_id": str(label_to_id_path.relative_to(PROJECT_ROOT)),
         "id_to_label": str(id_to_label_path.relative_to(PROJECT_ROOT)),
         "preprocessing_summary": str((ARTIFACTS_DIR / "preprocessing_summary.json").relative_to(PROJECT_ROOT)),
+        "vocab": str((ARTIFACTS_DIR / "vocab.json").relative_to(PROJECT_ROOT)),
+        "sequence_length_stats": str((ARTIFACTS_DIR / "sequence_length_stats.json").relative_to(PROJECT_ROOT)),
     }
 
     metadata: TFIDFMetadata = {
@@ -197,6 +216,8 @@ def load_tfidf_data(
         "label_to_id": label_to_id,
         "id_to_label": id_to_label,
         "texts_by_split": texts_by_split,
+        "dataset_identity": identify_dataset(dataset, DATASET_CONFIG),
+        "model_input_hashes": model_input_hashes,
     }
 
     return loaders, input_dim, num_classes, metadata
@@ -589,10 +610,13 @@ def load_neural_data(
     oov_stats: dict[str, dict[str, int | float]] = {}
     truncation_stats: dict[str, dict[str, int | float]] = {}
     datasets_dict: dict[str, IntentDataset] = {}
+    texts_by_split: dict[str, list[str]] = {}
+    model_input_hashes: dict[str, str] = {}
 
     for split in _SPLIT_NAMES:
         raw = dataset[split]
         texts = [clean_text(t) for t in raw["text"]]
+        texts_by_split[split] = texts
         tokenized = [tokenize_text(t) for t in texts]
 
         oov_stats[split] = compute_oov_stats(tokenized, vocab)
@@ -604,11 +628,9 @@ def load_neural_data(
         padded = [pad_or_truncate(seq, config.max_seq_length) for seq in numericalized]
         seq_tensor = torch.tensor(padded, dtype=torch.long)
         label_list: list[int] = raw["intent"]
-        label_tensor = torch.tensor(label_list, dtype=torch.long)
-
-        assert (label_tensor >= 0).all() and (label_tensor < num_classes).all(), (
-            f"Label ids out of range [0, {num_classes}) in {split}"
-        )
+        label_tensor = torch.tensor(label_list)
+        _validate_split_labels(label_tensor, num_classes, split, seq_tensor.shape[0])
+        model_input_hashes[split] = hash_tensor(seq_tensor)
 
         datasets_dict[split] = IntentDataset(seq_tensor, label_tensor)
 
@@ -683,6 +705,9 @@ def load_neural_data(
         "truncation_stats": truncation_stats,
         "preprocessing_policy": preprocessing_policy,
         "manifest_timestamp": summary.get("timestamp"),
+        "texts_by_split": texts_by_split,
+        "dataset_identity": identify_dataset(dataset, DATASET_CONFIG),
+        "model_input_hashes": model_input_hashes,
     }
 
     return loaders, metadata

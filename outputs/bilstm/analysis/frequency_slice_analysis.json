@@ -4,30 +4,27 @@
   "model_id": "bilstm",
   "model_name": "BiLSTM",
   "representative_run_id": "run_02_seed_1337",
-  "note": "Frequency tiers use test-set support quartiles as proxy for training-set frequency (CLINC150 is balanced, so this is a reasonable approximation).",
-  "quartile_thresholds": {
-    "q25": 30.0,
-    "q75": 30.0
-  },
+  "analysis_basis": "in_scope_vs_oos",
+  "note": "Supervised in-scope versus OOS class accuracy, not a training-frequency analysis. The frequency_slice filename is retained for compatibility with historical artifacts.",
   "slices": [
     {
-      "slice": "low",
+      "slice": "in_scope",
       "count": 4500,
-      "accuracy": 0.8875555555555555,
-      "error_count": 506,
-      "error_rate": 0.11244444444444444,
-      "mean_confidence_correct": 0.9743672013282776,
-      "mean_confidence_incorrect": 0.698387622833252
+      "accuracy": 0.8922222222222222,
+      "error_count": 485,
+      "error_rate": 0.10777777777777778,
+      "mean_confidence_correct": 0.9766215682029724,
+      "mean_confidence_incorrect": 0.7269188761711121
     },
     {
-      "slice": "high",
+      "slice": "oos",
       "count": 1000,
-      "accuracy": 0.328,
-      "error_count": 672,
-      "error_rate": 0.672,
-      "mean_confidence_correct": 0.800334632396698,
-      "mean_confidence_incorrect": 0.6449694037437439
+      "accuracy": 0.284,
+      "error_count": 716,
+      "error_rate": 0.716,
+      "mean_confidence_correct": 0.8038022518157959,
+      "mean_confidence_incorrect": 0.6626206636428833
     }
   ],
-  "source_artifact": "outputs/bilstm/final_runs/run_02_seed_1337/per_class_metrics.json"
+  "source_artifact": "outputs/bilstm/final_runs/run_02_seed_1337/final_predictions.csv"
 }

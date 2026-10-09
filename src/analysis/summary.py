@@ -120,9 +120,9 @@ def generate_error_analysis_summary(model_ids: list[ModelID]) -> dict[str, Any]:
                 }
 
     recommendation = (
-        "Focus on improving OOS detection and addressing semantically ambiguous intent pairs "
-        "within the same domain. Consider intent merging for persistently confused pairs and "
-        "confidence thresholding for high-confidence errors."
+        "Inspect representative OOS false accepts and same-domain confusions as heuristic error groups. "
+        "Preserve official benchmark labels and splits. Select any proposed calibration or rejection "
+        "threshold on validation data before final test evaluation."
     )
 
     artifact = artifact_envelope(
@@ -161,24 +161,26 @@ def generate_error_analysis_notes(model_ids: list[ModelID]) -> None:
         "",
         "## Overview",
         "",
-        f"The best-performing model overall is **{headline.get('best_model', 'N/A')}** "
-        f"with aggregate test macro F1 of {_fmt(headline.get('test_macro_f1_mean'))} "
+        f"Among the configured pipelines, **{headline.get('best_model', 'N/A')}** has the highest "
+        f"mean test macro F1 of {_fmt(headline.get('test_macro_f1_mean'))} "
         f"(±{_fmt(headline.get('test_macro_f1_std'))}) across repeated runs. "
-        "This analysis examines calibration, OOS detection, systematic confusions, "
-        "and architecture-specific failure modes to understand not just how well each model "
-        "performs, but why and where it fails.",
+        "The following calibration, OOS probability, confusion and overlap diagnostics use one "
+        "validation-selected representative run per model. They describe observed errors without "
+        "establishing architecture causality or variability across seeds.",
         "",
         "## Calibration and Confidence",
         "",
-        f"The best-calibrated model is **{cal.get('best_calibrated', 'N/A')}** "
-        f"(ECE = {_fmt(cal.get('best_ece'))}), while the worst-calibrated is "
+        f"The lowest representative-run ECE is from **{cal.get('best_calibrated', 'N/A')}** "
+        f"(ECE = {_fmt(cal.get('best_ece'))}); the highest is from "
         f"**{cal.get('worst_calibrated', 'N/A')}** (ECE = {_fmt(cal.get('worst_ece'))}). "
         f"See `{cal.get('source_artifact', '')}` for full calibration comparison.",
         "",
         "## OOS Detection Quality",
         "",
-        f"The best OOS detector is **{oos.get('best_model', 'N/A')}** "
-        f"with AUROC = {_fmt(oos.get('best_auroc'))} and AUPR = {_fmt(oos.get('best_aupr'))}. "
+        f"The highest representative-run OOS probability AUROC is from **{oos.get('best_model', 'N/A')}** "
+        f"(AUROC = {_fmt(oos.get('best_auroc'))}, AUPR = {_fmt(oos.get('best_aupr'))}). "
+        "OOS is a supervised 151st class. These test-set ROC points are diagnostics, "
+        "not deployable rejection thresholds or general open-set evidence. "
         f"See `{oos.get('source_artifact', '')}` for threshold comparison.",
         "",
         "## Systematic Confusions",
@@ -187,14 +189,15 @@ def generate_error_analysis_notes(model_ids: list[ModelID]) -> None:
 
     dom_cats = confusion.get("dominant_error_categories", {})
     for mid_str, cat in dom_cats.items():
-        lines.append(f"- **{mid_str}**: dominant error category is `{cat}`")
+        lines.append(f"- **{mid_str}**: dominant heuristic error category is `{cat}`")
     lines.append("")
     lines.append(f"See `{confusion.get('source_artifact', '')}` for per-model taxonomy.")
+    lines.append("Same-domain and short-query tags do not establish semantic similarity or query ambiguity.")
     lines.append("")
 
     lines.extend(
         [
-            "## Architecture-Specific vs Shared Errors",
+            "## Model-Specific and Shared Errors",
             "",
             f"Across all models, **{arch.get('all_wrong_count', 'N/A')}** examples "
             f"({_fmt_pct(arch.get('all_wrong_fraction'))}) are misclassified by all three models, "
@@ -207,18 +210,19 @@ def generate_error_analysis_notes(model_ids: list[ModelID]) -> None:
             "## Limitations",
             "",
             "- Qualitative analysis uses a single representative run per model, not all seeds.",
-            "- CLINC150 is balanced; real-world class distributions may differ significantly.",
+            "- Only in-scope intent classes are balanced; supervised OOS has different train/test supports.",
             "- No interpretability analysis (attention, saliency) was performed.",
             "- Post-hoc calibration (e.g., temperature scaling) was not applied.",
-            "- Length and frequency slicing uses simple whitespace tokenization.",
+            "- Length slices use whitespace tokenization; scope slices compare supervised in-scope and OOS classes, "
+            "not training frequency.",
             "",
             "## Recommendations",
             "",
             f"- **Top recommendation**: {recommendation}",
-            "- Collect more OOS training examples to reduce false accepts.",
-            "- Consider merging or relabeling persistently confused intent pairs within the same domain.",
-            "- Apply confidence thresholding in deployment to flag uncertain predictions for human review.",
-            "- Evaluate temperature scaling to improve calibration without retraining.",
+            "- Investigate representative OOS false accepts and same-domain groups without changing benchmark labels.",
+            "- Evaluate any additional OOS collection as a separate experiment with explicit provenance.",
+            "- Choose calibration and threshold settings on validation data, then freeze them before test evaluation.",
+            "- Compare additional independent runs before claiming improved calibration or rejection performance.",
             "",
         ]
     )

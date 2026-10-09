@@ -6,8 +6,8 @@ figure generation across all three models.
 
 Usage:
     python scripts/run_model_pipeline.py --model all --run-count 3
-    python scripts/run_model_pipeline.py --model mlp --run-count 5
-    python scripts/run_model_pipeline.py --model text_cnn --retune
+    python scripts/run_model_pipeline.py --model mlp --run-count 2
+    python scripts/run_model_pipeline.py --model text_cnn --tuning-source legacy
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ from src.enums import ModelID
 from src.experiment_tracking import run_experiment_tracking
 from src.repeated_evaluation import (
     ModelEvaluationResult,
+    TuningSource,
     extract_and_freeze_configs,
     run_all_repeated_evaluations,
 )
@@ -44,13 +45,16 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--run-count",
         type=int,
+        choices=range(1, len(DEFAULT_SEED_LIST) + 1),
         default=3,
         help="Number of repeated final runs per model (default: 3).",
     )
     parser.add_argument(
-        "--retune",
-        action="store_true",
-        help="Force re-run hyperparameter tuning even if valid tuning artifacts exist.",
+        "--tuning-source",
+        type=TuningSource,
+        choices=list(TuningSource),
+        default=TuningSource.AUTO,
+        help="Choose existing tuning artifacts. 'auto' rejects differing canonical/legacy CSVs. Tuning is not run.",
     )
     return parser.parse_args(argv)
 
@@ -103,11 +107,6 @@ def main(argv: list[str] | None = None) -> None:
     models = _resolve_models(args.model)
     run_count: int = args.run_count
 
-    assert run_count <= len(DEFAULT_SEED_LIST), (
-        f"run_count={run_count} exceeds available seeds ({len(DEFAULT_SEED_LIST)}). "
-        f"Add more seeds to DEFAULT_SEED_LIST in src/constants.py."
-    )
-
     protocol = RepeatedRunProtocol(run_count=run_count)
 
     print("=" * 60)
@@ -116,17 +115,11 @@ def main(argv: list[str] | None = None) -> None:
     print(f"  Models:    {[str(m) for m in models]}")
     print(f"  Run count: {run_count}")
     print(f"  Seeds:     {protocol.effective_seed_list()}")
-    print(f"  Retune:    {args.retune}")
+    print(f"  Tuning source: {args.tuning_source}")
     print()
 
-    if args.retune:
-        print("  [--retune] Retuning is not yet supported in this pipeline.")
-        print("  Use the per-model scripts (run_mlp_baseline.py, etc.) to retune,")
-        print("  then rerun this pipeline without --retune.")
-        sys.exit(1)
-
     # Frozen-config extraction (tuning normalization, protocol, winning-row selection)
-    frozen_configs = extract_and_freeze_configs(models, protocol)
+    frozen_configs = extract_and_freeze_configs(models, protocol, tuning_source=args.tuning_source)
 
     # Repeated-run evaluation across shared seed list
     results = run_all_repeated_evaluations(models, frozen_configs, protocol)

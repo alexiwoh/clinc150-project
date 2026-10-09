@@ -9,6 +9,7 @@ means all checks passed.
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -64,6 +65,8 @@ _REPRESENTATIVE_SOURCES: frozenset[str] = frozenset(
         "outputs/shared/analysis/oos_threshold_comparison.json",
     }
 )
+
+_MARKDOWN_IMAGE_PATTERN = re.compile(r"!\[[^\]]*\]\(([^)]+)\)")
 
 
 def _collect_sources(data: dict[str, Any]) -> list[str]:
@@ -159,16 +162,26 @@ def validate_report_outputs(report_dir: Path | None = None) -> list[str]:
             src_full = resolve_repo_path(src)
             if not src_full.exists():
                 continue
-            upstream_by = {r["model_id"]: r for r in load_json(src_full).get("rows", [])}
-            for row in table.get("rows", []):
-                mid = row.get("model_id", "")
-                if mid and mid not in upstream_by:
-                    failures.append(f"[R5] main_results table '{table['table_id']}': model {mid} not in upstream {src}")
+            upstream_rows = load_json(src_full).get("rows", [])
+            rows = table.get("rows", [])
+            # Generators copy complete source rows, including full-precision
+            # numeric values. Equality catches missing/extra rows and fields,
+            # duplicates, and nested metric drift without rounding tolerance.
+            if rows != upstream_rows:
+                failures.append(f"[R5] main_results table '{table['table_id']}': values differ from upstream {src}")
 
     # Check 6: full_report_draft.md exists and is non-empty
     report_path = out / "full_report_draft.md"
     if report_path.exists() and report_path.stat().st_size == 0:
         failures.append("[R6] full_report_draft.md is empty")
+
+    # Check links from each Markdown document, not the repository root.
+    for markdown_path in out.glob("*.md"):
+        for target in _MARKDOWN_IMAGE_PATTERN.findall(markdown_path.read_text()):
+            if "://" in target:
+                continue
+            if not (markdown_path.parent / target).is_file():
+                failures.append(f"[R16] {markdown_path.name}: embedded figure missing: {target}")
 
     # Check 7: report_structure.json references every section file
     manifest_path = out / "report_structure.json"
