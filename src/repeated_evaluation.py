@@ -16,6 +16,7 @@ import time
 import traceback
 from dataclasses import dataclass, field, replace
 from datetime import datetime, timezone
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
@@ -42,7 +43,6 @@ from src.constants import (
     MODEL_FIGURES_SUBDIR,
     OOS_LABEL_ID,
     OOS_LABEL_NAME,
-    OUTPUTS_DIR,
     PREPROCESSING_MANIFEST_REF,
     PROJECT_ROOT,
     PROTOCOL_MANIFEST_REF,
@@ -65,6 +65,7 @@ from src.metrics import (
     find_top_confusions,
     find_top_errors,
 )
+from src.provenance import provenance_dict, validate_generation_identity
 from src.utils import count_parameters, set_seed
 
 logger = logging.getLogger(__name__)
@@ -136,6 +137,7 @@ class RunResult:
     # Artifacts
     run_dir: str = ""
     epoch_history: list[dict[str, Any]] = field(default_factory=list)
+    provenance: dict[str, Any] | None = None
 
     # Failure info (for failed runs)
     failure_reason: str = ""
@@ -181,6 +183,14 @@ class ModelEvaluationResult:
 # ---------------------------------------------------------------------------
 # Frozen-config extraction
 # ---------------------------------------------------------------------------
+
+
+class TuningSource(StrEnum):
+    """Explicit source selection when canonical and legacy tuning artifacts differ."""
+
+    AUTO = "auto"
+    CANONICAL = "canonical"
+    LEGACY = "legacy"
 
 
 def _select_winning_row(df: pd.DataFrame, model_id: str) -> pd.Series:
@@ -349,6 +359,8 @@ def extract_frozen_config(
     # For neural models, set the resolved vocab_size in hyperparameters
     if vocab_size is not None:
         hyperparameters["vocab_size"] = vocab_size
+    if max_seq_length is not None:
+        hyperparameters["max_seq_length"] = max_seq_length
 
     # Compute repo-relative path for the source tuning artifact
     try:
@@ -374,6 +386,7 @@ def extract_frozen_config(
         oos_strategy=hyperparameters.get("oos_strategy", "explicit_class"),
         oos_class_id=OOS_LABEL_ID,
     )
+    frozen.to_model_config()
 
     logger.info(
         "Frozen config for %s: winning_row=%s, selection_value=%.6f",
@@ -387,12 +400,11 @@ def extract_frozen_config(
 
 def save_frozen_config(frozen: FrozenModelConfig) -> Path:
     """Save a FrozenModelConfig to ``outputs/{model_id}/frozen_final_config.json``."""
+    serialized = json.dumps(frozen.to_dict(), indent=2, allow_nan=False) + "\n"
     out_dir = model_output_dir(frozen.model_id)
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / "frozen_final_config.json"
-    data = frozen.to_dict()
-    data["protocol_manifest_ref"] = PROTOCOL_MANIFEST_REF
-    out_path.write_text(json.dumps(data, indent=2) + "\n")
+    out_path.write_text(serialized)
     logger.info("Saved frozen config: %s", out_path)
     return out_path
 
@@ -402,53 +414,42 @@ def save_frozen_config(frozen: FrozenModelConfig) -> Path:
 # ---------------------------------------------------------------------------
 
 
-def _find_tuning_csv(model_id: ModelID) -> Path:
-    """Locate the tuning CSV, checking canonical then legacy locations."""
+def _find_tuning_csv(model_id: ModelID, source: TuningSource = TuningSource.AUTO) -> Path:
+    """Resolve a tuning CSV without silently preferring conflicting artifacts."""
     canonical = model_output_dir(model_id) / TUNING_SUBDIR / "tuning_results.csv"
-    if canonical.exists():
-        return canonical
-
     legacy = REPORTS_DIR / model_id.legacy_tuning_filename
-    assert legacy.exists(), (
-        f"Tuning CSV not found for '{model_id}' at canonical ({canonical}) or legacy ({legacy}) locations"
-    )
-    return legacy
-
-
-def normalize_tuning_artifacts(model_id: ModelID) -> Path:
-    """Copy legacy tuning CSV to canonical location and write selection_summary.json.
-
-    Returns the path to the canonical tuning CSV.
-    """
-    tuning_dir = model_output_dir(model_id) / TUNING_SUBDIR
-    tuning_dir.mkdir(parents=True, exist_ok=True)
-    canonical_csv = tuning_dir / "tuning_results.csv"
-
-    legacy_csv = REPORTS_DIR / model_id.legacy_tuning_filename
-
-    if not canonical_csv.exists() and legacy_csv.exists():
-        shutil.copy2(legacy_csv, canonical_csv)
-        logger.info("Copied tuning CSV: %s -> %s", legacy_csv, canonical_csv)
-    elif canonical_csv.exists():
-        logger.info("Canonical tuning CSV already exists: %s", canonical_csv)
+    if source is TuningSource.CANONICAL:
+        selected = canonical
+    elif source is TuningSource.LEGACY:
+        selected = legacy
+    elif source is TuningSource.AUTO:
+        if canonical.exists() and legacy.exists() and canonical.read_bytes() != legacy.read_bytes():
+            raise ValueError(
+                f"Conflicting tuning CSVs for {model_id}: {canonical} and {legacy}. "
+                "Choose --tuning-source canonical or --tuning-source legacy explicitly; both files are preserved."
+            )
+        selected = canonical if canonical.exists() else legacy
     else:
-        raise FileNotFoundError(
-            f"No tuning CSV found for '{model_id}' at legacy ({legacy_csv}) or canonical ({canonical_csv})"
-        )
+        raise ValueError(f"Unsupported tuning source: {source!r}")
+    if not selected.is_file():
+        raise FileNotFoundError(f"Tuning CSV not found for {model_id} using source={source}: {selected}")
+    return selected
 
-    # Extract winning row and write selection summary
-    df = pd.read_csv(canonical_csv)
+
+def _build_selection_summary(model_id: ModelID, tuning_csv: Path) -> dict[str, Any]:
+    """Validate tuning selection metadata without creating or replacing artifacts."""
+    df = pd.read_csv(tuning_csv)
     winning_row = _select_winning_row(df, model_id)
 
     has_val_loss = "best_val_loss" in df.columns
     tie_break_fields = ["best_val_loss", "run_name"] if has_val_loss else ["run_name"]
 
-    selection_summary: dict[str, Any] = {
+    return {
         "schema_version": SCHEMA_VERSION,
         "protocol_version": PROTOCOL_VERSION,
         "model_id": model_id,
         "model_name": model_id.display_name,
-        "source_tuning_artifact": str(canonical_csv.relative_to(OUTPUTS_DIR)),
+        "source_tuning_artifact": _to_repo_relative(tuning_csv),
         "total_configurations_evaluated": len(df),
         "selection_metric": "best_val_metric",
         "selection_rule": "max best_val_metric",
@@ -460,11 +461,28 @@ def normalize_tuning_artifacts(model_id: ModelID) -> Path:
         "timestamp": datetime.now(tz=timezone.utc).isoformat(),
     }
 
+
+def normalize_tuning_artifacts(model_id: ModelID, source: TuningSource = TuningSource.AUTO) -> Path:
+    """Materialize tuning metadata; preserve existing raw CSVs when sources differ.
+
+    Missing canonical CSVs are copied from legacy. Explicitly selected legacy
+    CSVs are consumed in place if a canonical CSV already exists.
+    """
+    selected_csv = _find_tuning_csv(model_id, source)
+    selection_summary = _build_selection_summary(model_id, selected_csv)
+    serialized = json.dumps(selection_summary, indent=2, allow_nan=False) + "\n"
+    tuning_dir = model_output_dir(model_id) / TUNING_SUBDIR
+    canonical_csv = tuning_dir / "tuning_results.csv"
+    tuning_dir.mkdir(parents=True, exist_ok=True)
+    if not canonical_csv.exists():
+        shutil.copy2(selected_csv, canonical_csv)
+        logger.info("Copied tuning CSV: %s -> %s", selected_csv, canonical_csv)
+        selected_csv = canonical_csv
     summary_path = tuning_dir / "selection_summary.json"
-    summary_path.write_text(json.dumps(selection_summary, indent=2) + "\n")
+    summary_path.write_text(serialized)
     logger.info("Saved selection summary: %s", summary_path)
 
-    return canonical_csv
+    return selected_csv
 
 
 # ---------------------------------------------------------------------------
@@ -566,6 +584,7 @@ def ensure_model_output_dirs(model_id: ModelID) -> dict[str, Path]:
 def extract_and_freeze_configs(
     model_ids: list[ModelID],
     protocol: RepeatedRunProtocol,
+    tuning_source: TuningSource = TuningSource.AUTO,
 ) -> dict[ModelID, FrozenModelConfig]:
     """Extract frozen configs from tuning artifacts for all requested models.
 
@@ -576,8 +595,12 @@ def extract_and_freeze_configs(
     Returns a dict mapping ModelID -> FrozenModelConfig.
     """
     effective_seeds = protocol.effective_seed_list()
-    assert len(effective_seeds) > 0, "Seed list must be non-empty"
-    assert len(effective_seeds) == len(set(effective_seeds)), f"Seed list contains duplicates: {effective_seeds}"
+    # Resolve and validate every input before replacing shared or per-model outputs.
+    tuning_paths = {model_id: _find_tuning_csv(model_id, tuning_source) for model_id in model_ids}
+    frozen_configs = {model_id: extract_frozen_config(model_id, tuning_paths[model_id]) for model_id in model_ids}
+    for model_id, frozen in frozen_configs.items():
+        json.dumps(frozen.to_dict(), allow_nan=False)
+        json.dumps(_build_selection_summary(model_id, tuning_paths[model_id]), allow_nan=False)
 
     print("=" * 60)
     print("  Frozen-Config Extraction")
@@ -590,24 +613,23 @@ def extract_and_freeze_configs(
     protocol_path = save_evaluation_protocol(protocol, model_ids)
     print(f"  Evaluation protocol: {protocol_path}")
 
-    frozen_configs: dict[ModelID, FrozenModelConfig] = {}
-
     for model_id in model_ids:
         print(f"\n--- {model_id.display_name} ({model_id}) ---")
 
         dirs = ensure_model_output_dirs(model_id)
         print(f"  Output root:   {dirs['root']}")
 
-        canonical_csv = normalize_tuning_artifacts(model_id)
-        print(f"  Tuning CSV:    {canonical_csv}")
+        selected_csv = normalize_tuning_artifacts(model_id, tuning_source)
+        print(f"  Tuning CSV:    {selected_csv}")
 
-        frozen = extract_frozen_config(model_id, canonical_csv)
+        frozen = frozen_configs[model_id]
+        if selected_csv != tuning_paths[model_id]:
+            frozen = replace(frozen, source_tuning_artifact=_to_repo_relative(selected_csv))
+            frozen_configs[model_id] = frozen
         frozen_path = save_frozen_config(frozen)
         print(f"  Frozen config: {frozen_path}")
         print(f"  Winning row:   {frozen.winning_row_id}")
         print(f"  Val metric:    {frozen.selection_value:.6f}")
-
-        frozen_configs[model_id] = frozen
 
     print("\n" + "=" * 60)
     print("  Frozen-config extraction complete.")
@@ -624,7 +646,7 @@ def extract_and_freeze_configs(
 def _frozen_config_hash(frozen: FrozenModelConfig) -> str:
     """Deterministic hash of the frozen config for provenance tracking."""
     raw = json.dumps(frozen.to_dict(), sort_keys=True)
-    return hashlib.sha256(raw.encode()).hexdigest()[:16]
+    return hashlib.sha256(raw.encode()).hexdigest()
 
 
 def _derive_seeds(base_seed: int) -> tuple[int, int]:
@@ -662,14 +684,7 @@ def _load_data_for_model(
         assert isinstance(config, (TextCNNConfig, BiLSTMConfig))
         loaders, metadata = load_neural_data(config)
 
-        from src.config import DATASET_CONFIG
-        from src.dataset import CLINCDataset
-        from src.preprocessing import clean_text
-
-        dataset = CLINCDataset.load(DATASET_CONFIG)
-        for split in ("train", "validation", "test"):
-            raw = dataset[split]
-            texts_by_split[split] = [clean_text(t) for t in raw["text"]]
+        texts_by_split = metadata["texts_by_split"]
 
         return {
             "loaders": loaders,
@@ -710,7 +725,7 @@ def _run_inference(
     all_targets: list[int] = []
     all_probs: list[np.ndarray] = []
 
-    start_time = time.time()
+    start_time = time.perf_counter()
     with torch.no_grad():
         for inputs, targets in loader:
             inputs = inputs.to(device)
@@ -720,7 +735,7 @@ def _run_inference(
             preds = logits.argmax(dim=1).cpu().tolist()
             all_preds.extend(preds)
             all_targets.extend(targets.tolist())
-    inference_time = time.time() - start_time
+    inference_time = time.perf_counter() - start_time
 
     probs_array = np.concatenate(all_probs, axis=0)
 
@@ -795,6 +810,7 @@ def _save_run_metadata(
         "python_version": platform.python_version(),
         "pytorch_version": torch.__version__,
         "frozen_config_hash": _frozen_config_hash(frozen),
+        "provenance": run_result.provenance,
     }
     if run_result.status == "failed":
         metadata["failure_reason"] = run_result.failure_reason
@@ -1101,11 +1117,37 @@ def execute_single_run(
         set_seed(training_seed)
 
         loaders = _rebuild_dataloaders(data_bundle, model_id, model_config, dataloader_seed)
+        metadata = data_bundle["metadata"]
+        effective_settings = {
+            "model_config": model_config.to_dict(),
+            "device": str(get_device()),
+            "num_classes": data_bundle["num_classes"],
+            "input_dim": data_bundle.get("input_dim"),
+            "dataloader": {
+                "batch_size": model_config.batch_size,
+                "num_workers": 0,
+                "pin_memory": False,
+                "train_shuffle": True,
+                "validation_shuffle": False,
+                "test_shuffle": False,
+                "drop_last": False,
+            },
+            "deterministic_algorithms": torch.are_deterministic_algorithms_enabled(),
+            "cudnn_deterministic": torch.backends.cudnn.deterministic,
+            "cudnn_benchmark": torch.backends.cudnn.benchmark,
+            "protocol": protocol.to_dict(),
+        }
+        result.provenance = provenance_dict(
+            metadata["dataset_identity"],
+            metadata["artifact_refs"],
+            metadata["model_input_hashes"],
+            effective_settings=effective_settings,
+        )
+        result.provenance["frozen_config_hash"] = _frozen_config_hash(frozen)
 
         result.stage_reached = "data_loaded"
 
         # --- Stage 2: Train ---
-        metadata = data_bundle["metadata"]
         num_classes: int = data_bundle["num_classes"]
 
         checkpoint_filename = f"best_{run_id}.pt"
@@ -1321,12 +1363,29 @@ def save_aggregate_artifacts(
     frozen_config_ref: str = "",
 ) -> Path:
     """Save aggregate artifacts to ``outputs/{model}/aggregate/``."""
-    agg_dir = model_output_dir(model_id) / AGGREGATE_SUBDIR
-    agg_dir.mkdir(parents=True, exist_ok=True)
-
     mid = ModelID(model_id)
     completed = [r for r in run_results if r.status == "completed"]
     failed = [r for r in run_results if r.status == "failed"]
+    expected_ids = [run_dir_name(index, seed) for index, seed in enumerate(aggregate.seed_list_requested, 1)]
+    if (
+        aggregate.model_id != model_id
+        or len(run_results) != aggregate.run_count_requested
+        or [run.run_id for run in run_results] != expected_ids
+        or any(run.model_id != model_id or run.status not in {"completed", "failed"} for run in run_results)
+        or any(
+            run.run_index != index or run.seed != aggregate.seed_list_requested[index - 1]
+            for index, run in enumerate(run_results, 1)
+        )
+        or aggregate.run_count_completed != len(completed)
+        or aggregate.seed_list_completed != [run.seed for run in completed]
+    ):
+        raise ValueError("Run results do not match the requested aggregate membership")
+    if representative_run_id and representative_run_id not in {run.run_id for run in completed}:
+        raise ValueError("Representative run is not a completed member of this evaluation")
+    validate_generation_identity([{"provenance": run.provenance} for run in completed])
+
+    agg_dir = model_output_dir(model_id) / AGGREGATE_SUBDIR
+    agg_dir.mkdir(parents=True, exist_ok=True)
 
     if not frozen_config_ref:
         frozen_config_ref = _to_repo_relative(model_output_dir(model_id) / "frozen_final_config.json")
@@ -1417,6 +1476,32 @@ def save_aggregate_artifacts(
     comparison_row["representative_run_id"] = representative_run_id
     comparison_row["frozen_config_ref"] = frozen_config_ref
     (agg_dir / "aggregate_comparison_row.json").write_text(json.dumps(comparison_row, indent=2) + "\n")
+
+    # Evaluation owns current membership. Tracking/analysis must never infer it
+    # from old directories left behind by a smaller subsequent run count.
+    ledger = {
+        "schema_version": SCHEMA_VERSION,
+        "protocol_version": PROTOCOL_VERSION,
+        "model_name": mid.display_name,
+        "model_id": model_id,
+        "run_count_requested": aggregate.run_count_requested,
+        "run_count_completed": len(completed),
+        "run_count_failed": len(failed),
+        "run_count_skipped": 0,
+        "requested_run_ids": expected_ids,
+        "completed_run_ids": [run.run_id for run in completed],
+        "failed_run_ids": [run.run_id for run in failed],
+        "skipped_run_ids": [],
+        "seed_list_requested": aggregate.seed_list_requested,
+        "seed_list_completed": aggregate.seed_list_completed,
+        "failure_reasons": {run.run_id: run.failure_reason for run in failed},
+        "per_run_metadata_refs": {
+            run.run_id: f"outputs/{model_id}/{FINAL_RUNS_SUBDIR}/{run.run_id}/run_metadata.json" for run in run_results
+        },
+    }
+    temporary_ledger = agg_dir / "run_ledger.json.tmp"
+    temporary_ledger.write_text(json.dumps(ledger, indent=2) + "\n")
+    temporary_ledger.replace(agg_dir / "run_ledger.json")
 
     return agg_dir
 

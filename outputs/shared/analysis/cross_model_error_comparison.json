@@ -14,26 +14,26 @@
   "total_test_examples": 5500,
   "categories": {
     "all_correct": {
-      "count": 4051,
-      "fraction": 0.7365454545454545
+      "count": 4011,
+      "fraction": 0.7292727272727273
     },
     "all_wrong": {
-      "count": 608,
-      "fraction": 0.11054545454545454
+      "count": 600,
+      "fraction": 0.10909090909090909
     },
     "model_specific_error": {
-      "count": 464,
-      "fraction": 0.08436363636363636
+      "count": 489,
+      "fraction": 0.08890909090909091
     },
     "partial_error": {
-      "count": 377,
-      "fraction": 0.06854545454545455
+      "count": 400,
+      "fraction": 0.07272727272727272
     }
   },
   "model_specific_errors": {
-    "mlp": 96,
-    "text_cnn": 106,
-    "bilstm": 262
+    "mlp": 97,
+    "text_cnn": 112,
+    "bilstm": 280
   },
-  "all_wrong_agreement": 0.3667763157894737
+  "all_wrong_agreement": 0.36333333333333334
 }

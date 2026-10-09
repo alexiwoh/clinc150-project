@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "protocol_version": "1.0",
-  "project_goal": "Evaluate lightweight deep learning models for intent classification and out-of-scope (OOS) detection on the CLINC150 dataset.",
+  "project_goal": "Evaluate lightweight deep learning models for intent classification and supervised out-of-scope (OOS) classification on the CLINC150 dataset.",
   "project_framing": "Comparison of a sparse-feature baseline (TF-IDF + MLP), a convolutional sequence model (Text CNN), and a recurrent sequence model (BiLSTM).",
   "models": [
     "TF-IDF + MLP",
@@ -11,16 +11,16 @@
   "headline_result": {
     "best_model": "mlp",
     "metric": "test_macro_f1",
-    "mean": 0.8726528643001762,
-    "std": 0.003145021893969668
+    "mean": 0.8715949556844983,
+    "std": 0.0028707363133910506
   },
   "oos_headline": {
     "best_model": "mlp",
     "metric": "oos_f1",
-    "mean": 0.6261331525117453,
-    "std": 0.03475278637704877
+    "mean": 0.6102604509289896,
+    "std": 0.03521030623216893
   },
-  "key_finding": "Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors.",
+  "key_finding": "Inspect representative OOS false accepts and same-domain confusions as heuristic error groups. Preserve official benchmark labels and splits. Select any proposed calibration or rejection threshold on validation data before final test evaluation.",
   "source_artifacts": [
     "outputs/shared/model_comparison_aggregate.json",
     "outputs/shared/oos_summary_table.json",

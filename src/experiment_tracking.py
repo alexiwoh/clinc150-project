@@ -30,6 +30,7 @@ from src.constants import (
     model_output_dir,
 )
 from src.enums import ModelID
+from src.run_ledger import CurrentRunLedger, load_current_generation, load_current_run_ledger, resolve_current_run
 
 logger = logging.getLogger(__name__)
 
@@ -75,6 +76,11 @@ def _resolve(ref: str) -> Path:
 
 def _path_is_repo_relative(path_str: str) -> bool:
     return bool(path_str) and not Path(path_str).is_absolute()
+
+
+def _current_ledger(model_id: ModelID) -> CurrentRunLedger:
+    """Load current membership using this module's explicitly resolved root."""
+    return load_current_run_ledger(model_id, model_dir=model_output_dir(model_id), project_root=PROJECT_ROOT)
 
 
 # ---------------------------------------------------------------------------
@@ -214,6 +220,8 @@ def validate_run_metadata(run_dir: Path, model_id: ModelID) -> list[str]:
     for field in required_fields:
         if field not in data:
             errors.append(f"run_metadata ({run_dir.name}) missing field: {field}")
+    if data.get("model_id") != model_id or data.get("run_id") != run_dir.name:
+        errors.append(f"run_metadata ({run_dir.name}): model_id/run_id does not match its artifact directory")
 
     path_ref_fields = (
         "checkpoint_path",
@@ -334,10 +342,11 @@ def validate_run_ledger(model_id: ModelID) -> list[str]:
         if field not in data:
             errors.append(f"run_ledger ({model_id}) missing field: {field}")
 
-    # Validate per_run_metadata_refs resolve to real files
-    refs = data.get("per_run_metadata_refs", {})
-    for run_id, ref_path in refs.items():
-        errors.extend(_validate_path_ref(ref_path, f"run_ledger({model_id}).per_run_metadata_refs.{run_id}"))
+    # Validate both referenced files and their membership/identity contract.
+    try:
+        _current_ledger(model_id)
+    except (FileNotFoundError, ValueError) as exc:
+        errors.append(str(exc))
 
     return errors
 
@@ -370,6 +379,21 @@ def validate_representative_run(model_id: ModelID) -> list[str]:
     artifact_path = data.get("artifact_path", "")
     if artifact_path:
         errors.extend(_validate_path_ref(artifact_path, f"representative_run({model_id}).artifact_path"))
+    if data.get("model_id") != model_id:
+        errors.append(f"representative_run ({model_id}): model_id does not match")
+    try:
+        run_dir = resolve_current_run(
+            model_id,
+            data.get("run_id", ""),
+            artifact_path=artifact_path,
+            model_dir=model_output_dir(model_id),
+            project_root=PROJECT_ROOT,
+        )
+        metadata = _read_json(run_dir / "run_metadata.json")
+        if data.get("seed") != metadata["seed"] or data.get("run_index") != metadata["run_index"]:
+            errors.append(f"representative_run ({model_id}): run_index/seed does not match active metadata")
+    except (FileNotFoundError, ValueError) as exc:
+        errors.append(str(exc))
 
     return errors
 
@@ -418,13 +442,13 @@ def _validate_metric_ranges(data: dict[str, Any], context: str) -> list[str]:
 def cross_reference_assertions(model_id: ModelID) -> list[str]:
     """Run cross-referencing assertions for one model."""
     errors: list[str] = []
-    runs_dir = model_output_dir(model_id) / FINAL_RUNS_SUBDIR
-    if not runs_dir.exists():
-        return [f"final_runs directory not found for {model_id}"]
-
-    run_dirs = sorted(d for d in runs_dir.iterdir() if d.is_dir())
+    try:
+        ledger = _current_ledger(model_id)
+    except (FileNotFoundError, ValueError) as exc:
+        return [str(exc)]
+    run_dirs = ledger.completed_run_dirs
     if not run_dirs:
-        return [f"No run directories found for {model_id}"]
+        return [f"No completed runs in current ledger for {model_id}"]
 
     # 1. Frozen config consistency: every run references the same frozen config
     frozen_refs: set[str] = set()
@@ -445,10 +469,10 @@ def cross_reference_assertions(model_id: ModelID) -> list[str]:
     if agg_path.exists():
         agg = _read_json(agg_path)
         completed_ids = agg.get("successful_run_ids", [])
-        for run_id in completed_ids:
-            rd = runs_dir / run_id
-            if not rd.exists():
-                errors.append(f"Aggregate references run '{run_id}' but directory not found for {model_id}")
+        if tuple(completed_ids) != ledger.completed_run_ids:
+            errors.append(f"Aggregate successful_run_ids does not match current ledger for {model_id}")
+        if agg.get("run_count_completed") != len(ledger.completed_run_ids):
+            errors.append(f"Aggregate run_count_completed does not match current ledger for {model_id}")
 
     # 3. Label-order consistency across runs
     label_orders: list[list[str]] = []
@@ -467,19 +491,7 @@ def cross_reference_assertions(model_id: ModelID) -> list[str]:
     # 4. Representative run points to a real completed run
     rep_path = model_output_dir(model_id) / AGGREGATE_SUBDIR / "representative_run.json"
     if rep_path.exists():
-        rep = _read_json(rep_path)
-        rep_run_id = rep.get("run_id", "")
-        rep_artifact = rep.get("artifact_path", "")
-        if rep_artifact and not _resolve(rep_artifact).exists():
-            errors.append(f"Representative run artifact_path does not resolve for {model_id}: {rep_artifact}")
-        if rep_run_id:
-            rep_dir = runs_dir / rep_run_id
-            if rep_dir.exists():
-                meta_path = rep_dir / "run_metadata.json"
-                if meta_path.exists():
-                    meta = _read_json(meta_path)
-                    if meta.get("status") != "completed":
-                        errors.append(f"Representative run {rep_run_id} status is not 'completed' for {model_id}")
+        errors.extend(validate_representative_run(model_id))
 
     # 5. Metric value range assertions
     for rd in run_dirs:
@@ -627,24 +639,13 @@ def enrich_aggregate_metrics(model_id: ModelID) -> list[str]:
 
     # Derive successful_run_ids and failed_run_ids from per-run metadata if absent
     if "successful_run_ids" not in data or "failed_run_ids" not in data:
-        runs_dir = model_output_dir(model_id) / FINAL_RUNS_SUBDIR
-        successful: list[str] = []
-        failed: list[str] = []
-        if runs_dir.exists():
-            for rd in sorted(runs_dir.iterdir()):
-                meta_path = rd / "run_metadata.json"
-                if meta_path.exists():
-                    meta = _read_json(meta_path)
-                    if meta.get("status") == "completed":
-                        successful.append(meta.get("run_id", rd.name))
-                    else:
-                        failed.append(meta.get("run_id", rd.name))
+        ledger = _current_ledger(model_id)
         if "successful_run_ids" not in data:
-            data["successful_run_ids"] = successful
+            data["successful_run_ids"] = list(ledger.completed_run_ids)
             changes.append(f"  aggregate_metrics({model_id}): added successful_run_ids")
             modified = True
         if "failed_run_ids" not in data:
-            data["failed_run_ids"] = failed
+            data["failed_run_ids"] = list(ledger.failed_run_ids)
             changes.append(f"  aggregate_metrics({model_id}): added failed_run_ids")
             modified = True
 
@@ -772,75 +773,13 @@ def enrich_comparison_row(model_id: ModelID) -> list[str]:
 
 
 def generate_run_ledger(model_id: ModelID) -> Path:
-    """Build ``run_ledger.json`` from per-run ``run_metadata.json`` files."""
-    runs_dir = model_output_dir(model_id) / FINAL_RUNS_SUBDIR
-    agg_dir = model_output_dir(model_id) / AGGREGATE_SUBDIR
-    agg_dir.mkdir(parents=True, exist_ok=True)
+    """Validate and retain the ledger saved by the current evaluation execution.
 
-    mid = ModelID(model_id)
-
-    # Read protocol for requested seeds
-    protocol_path = SHARED_DIR / "evaluation_protocol.json"
-    protocol_data = _read_json(protocol_path) if protocol_path.exists() else {}
-    config = protocol_data.get("protocol_config", {})
-    seed_list_requested: list[int] = config.get("effective_seed_list", config.get("seed_list", []))
-    run_count_requested: int = config.get("run_count", len(seed_list_requested))
-
-    # Scan per-run directories
-    requested_run_ids: list[str] = []
-    completed_run_ids: list[str] = []
-    failed_run_ids: list[str] = []
-    skipped_run_ids: list[str] = []
-    seed_list_completed: list[int] = []
-    failure_reasons: dict[str, str] = {}
-    per_run_metadata_refs: dict[str, str] = {}
-
-    if runs_dir.exists():
-        for rd in sorted(runs_dir.iterdir()):
-            if not rd.is_dir():
-                continue
-            meta_path = rd / "run_metadata.json"
-            run_id = rd.name
-            requested_run_ids.append(run_id)
-
-            if meta_path.exists():
-                meta = _read_json(meta_path)
-                status = meta.get("status", "unknown")
-                per_run_metadata_refs[run_id] = _to_repo_relative(meta_path)
-
-                if status == "completed":
-                    completed_run_ids.append(run_id)
-                    seed_list_completed.append(meta.get("seed", 0))
-                elif status == "failed":
-                    failed_run_ids.append(run_id)
-                    failure_reasons[run_id] = meta.get("failure_reason", "unknown")
-                else:
-                    skipped_run_ids.append(run_id)
-            else:
-                skipped_run_ids.append(run_id)
-
-    ledger: dict[str, Any] = {
-        "schema_version": SCHEMA_VERSION,
-        "protocol_version": PROTOCOL_VERSION,
-        "model_name": mid.display_name,
-        "model_id": str(model_id),
-        "run_count_requested": run_count_requested,
-        "run_count_completed": len(completed_run_ids),
-        "run_count_failed": len(failed_run_ids),
-        "run_count_skipped": len(skipped_run_ids),
-        "requested_run_ids": requested_run_ids,
-        "completed_run_ids": completed_run_ids,
-        "failed_run_ids": failed_run_ids,
-        "skipped_run_ids": skipped_run_ids,
-        "seed_list_requested": seed_list_requested,
-        "seed_list_completed": seed_list_completed,
-        "failure_reasons": failure_reasons,
-        "per_run_metadata_refs": per_run_metadata_refs,
-    }
-
-    ledger_path = agg_dir / "run_ledger.json"
-    _write_json(ledger_path, ledger)
-    return ledger_path
+    The legacy function name is kept for callers. Tracking never reconstructs
+    current membership from directories or replaces an evaluation's ledger.
+    """
+    _current_ledger(model_id)
+    return model_output_dir(model_id) / AGGREGATE_SUBDIR / "run_ledger.json"
 
 
 # ---------------------------------------------------------------------------
@@ -974,13 +913,12 @@ def run_parity_audit() -> list[str]:
     # 2. Per-run artifact file parity
     run_file_sets: dict[str, set[str]] = {}
     for mid in CANONICAL_MODEL_ORDER:
-        runs_dir = model_output_dir(mid) / FINAL_RUNS_SUBDIR
-        if not runs_dir.exists():
-            errors.append(f"Parity: {mid} missing final_runs directory")
+        try:
+            run_dirs = _current_ledger(mid).completed_run_dirs
+        except (FileNotFoundError, ValueError) as exc:
+            errors.append(f"Parity: {exc}")
             continue
-        for rd in sorted(runs_dir.iterdir()):
-            if not rd.is_dir():
-                continue
+        for rd in run_dirs:
             files = {f.name for f in rd.iterdir() if f.is_file()}
             run_file_sets.setdefault(str(mid), set()).update(files)
 
@@ -1135,10 +1073,9 @@ def print_self_check() -> None:
             all(
                 (rd / "checkpoint").exists() and (rd / "logs").exists()
                 for m in CANONICAL_MODEL_ORDER
-                for rd in sorted((model_output_dir(m) / FINAL_RUNS_SUBDIR).iterdir())
-                if rd.is_dir()
+                for rd in _current_ledger(m).completed_run_dirs
             )
-            if all((model_output_dir(m) / FINAL_RUNS_SUBDIR).exists() for m in CANONICAL_MODEL_ORDER)
+            if all(not validate_run_ledger(m) for m in CANONICAL_MODEL_ORDER)
             else False,
             "outputs/<model>/final_runs/run_XX_seed_YY/{checkpoint,logs}",
         ),
@@ -1197,6 +1134,16 @@ def run_experiment_tracking(
 
     all_errors: list[str] = []
     all_changes: list[str] = []
+    # Shared tables always contain all canonical models, including for --model.
+    try:
+        current_ledgers = load_current_generation(
+            CANONICAL_MODEL_ORDER,
+            model_dirs={mid: model_output_dir(mid) for mid in CANONICAL_MODEL_ORDER},
+            project_root=PROJECT_ROOT,
+        )
+    except (FileNotFoundError, ValueError) as exc:
+        print(f"ERROR: {exc}")
+        return False
 
     print("=" * 70)
     print("  Experiment Tracking")
@@ -1214,12 +1161,9 @@ def run_experiment_tracking(
         changes = enrich_frozen_config(mid)
         all_changes.extend(changes)
 
-        runs_dir = model_output_dir(mid) / FINAL_RUNS_SUBDIR
-        if runs_dir.exists():
-            for rd in sorted(runs_dir.iterdir()):
-                if rd.is_dir():
-                    changes = enrich_run_metadata(rd, mid)
-                    all_changes.extend(changes)
+        for rd in current_ledgers[mid].completed_run_dirs:
+            changes = enrich_run_metadata(rd, mid)
+            all_changes.extend(changes)
 
         changes = enrich_representative_run(mid)
         all_changes.extend(changes)
@@ -1251,12 +1195,9 @@ def run_experiment_tracking(
         errors = validate_tuning_artifacts(mid)
         all_errors.extend(errors)
 
-        runs_dir = model_output_dir(mid) / FINAL_RUNS_SUBDIR
-        if runs_dir.exists():
-            for rd in sorted(runs_dir.iterdir()):
-                if rd.is_dir():
-                    errors = validate_per_run_bundle(rd, mid)
-                    all_errors.extend(errors)
+        for rd in current_ledgers[mid].completed_run_dirs:
+            errors = validate_per_run_bundle(rd, mid)
+            all_errors.extend(errors)
 
         errors = validate_aggregate_metrics(mid)
         all_errors.extend(errors)
@@ -1275,8 +1216,8 @@ def run_experiment_tracking(
         print("  All schemas validated successfully.")
     print()
 
-    # --- Phase 3: Generate run ledgers ---
-    print("--- Generating run ledgers ---")
+    # --- Phase 3: Validate the current evaluation's run ledgers ---
+    print("--- Validating current run ledgers ---")
     for mid in model_ids:
         ledger_path = generate_run_ledger(mid)
         print(f"  {mid}: {ledger_path}")

@@ -6,7 +6,7 @@ a previous run). Runs the repeated-evaluation phase for selected models.
 Usage:
     python scripts/run_repeated_evaluation.py --model all --run-count 3
     python scripts/run_repeated_evaluation.py --model mlp
-    python scripts/run_repeated_evaluation.py --model bilstm --run-count 5
+    python scripts/run_repeated_evaluation.py --model bilstm --run-count 2
 """
 
 from __future__ import annotations
@@ -41,6 +41,7 @@ def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--run-count",
         type=int,
+        choices=range(1, len(DEFAULT_SEED_LIST) + 1),
         default=3,
         help="Number of repeated final runs per model (default: 3).",
     )
@@ -58,12 +59,15 @@ def _load_frozen_config(model_id: ModelID) -> FrozenModelConfig:
     from src.constants import model_output_dir
 
     config_path: Path = model_output_dir(model_id) / "frozen_final_config.json"
-    assert config_path.exists(), (
-        f"Frozen config not found for '{model_id}' at {config_path}. "
-        f"Run the full pipeline first (scripts/run_model_pipeline.py) to generate it."
-    )
-    data: dict = json.loads(config_path.read_text())
-    return FrozenModelConfig(**data)
+    if not config_path.is_file():
+        raise FileNotFoundError(
+            f"Frozen config not found for '{model_id}' at {config_path}. "
+            "Run scripts/run_model_pipeline.py to generate it from existing tuning artifacts."
+        )
+    frozen = FrozenModelConfig.from_dict(json.loads(config_path.read_text()))
+    if frozen.model_id != model_id:
+        raise ValueError(f"Frozen config for {model_id} contains model_id={frozen.model_id!r}")
+    return frozen
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -72,11 +76,6 @@ def main(argv: list[str] | None = None) -> None:
     args = _parse_args(argv)
     models = _resolve_models(args.model)
     run_count: int = args.run_count
-
-    assert run_count <= len(DEFAULT_SEED_LIST), (
-        f"run_count={run_count} exceeds available seeds ({len(DEFAULT_SEED_LIST)}). "
-        f"Add more seeds to DEFAULT_SEED_LIST in src/constants.py."
-    )
 
     protocol = RepeatedRunProtocol(run_count=run_count)
 
@@ -88,11 +87,12 @@ def main(argv: list[str] | None = None) -> None:
     print(f"  Seeds:     {protocol.effective_seed_list()}")
     print()
 
+    frozen_configs = {model_id: _load_frozen_config(model_id) for model_id in models}
     save_evaluation_protocol(protocol, models)
 
     results: dict[ModelID, ModelEvaluationResult] = {}
     for model_id in models:
-        frozen = _load_frozen_config(model_id)
+        frozen = frozen_configs[model_id]
         result = run_repeated_evaluation(model_id, frozen, protocol)
         results[model_id] = result
 

@@ -32,6 +32,7 @@ from src.constants import (
 )
 from src.dataset import create_dataloaders
 from src.enums import ModelID
+from src.provenance import DatasetIdentity, SplitIdentity, hash_examples, hash_labels, hash_tensor, hash_texts
 from src.repeated_evaluation import execute_single_run, run_repeated_evaluation, save_evaluation_protocol
 from src.trainers.trainer import Trainer
 
@@ -91,13 +92,28 @@ def test_real_training_uses_run_seeds_and_repeats_on_cpu(model_id: ModelID, tmp_
     dataset = TensorDataset(inputs, targets)
     label_names = [f"intent_{index}" for index in range(NUM_CLASSES)]
     label_names[OOS_LABEL_ID] = "oos"
+    texts = [f"example {row}" for row in range(len(targets))]
+    split_identity = SplitIdentity(
+        len(targets), hash_texts(texts), hash_labels(targets.tolist()), hash_examples(texts, targets.tolist())
+    )
     data_bundle: dict[str, Any] = {
         "loaders": create_dataloaders(
             {split: dataset for split in ("train", "validation", "test")}, batch_size=4, num_workers=0, pin_memory=False
         ),
         "num_classes": len(label_names),
         "input_dim": 6,
-        "metadata": {"artifact_refs": {}, "label_names": label_names},
+        "metadata": {
+            "artifact_refs": {},
+            "label_names": label_names,
+            "dataset_identity": DatasetIdentity(
+                "synthetic",
+                "tiny",
+                "fixture",
+                hash_texts(label_names),
+                {split: split_identity for split in ("train", "validation", "test")},
+            ),
+            "model_input_hashes": {split: hash_tensor(inputs) for split in ("train", "validation", "test")},
+        },
     }
     signatures: list[InitializationSignature] = []
     probabilities: list[np.ndarray] = []
@@ -146,6 +162,20 @@ def test_real_training_uses_run_seeds_and_repeats_on_cpu(model_id: ModelID, tmp_
                 assert metadata["training_seed"] == seed
                 assert metadata["dataloader_seed"] == seed + 1
                 assert metadata["probability_saving_policy"] == "all_runs"
+                provenance = metadata["provenance"]
+                settings = provenance["effective_settings"]
+                assert settings["model_config"]["random_seed"] == seed
+                assert settings["model_config"]["dataloader_seed"] == seed + 1
+                assert settings["device"] == "cpu"
+                assert settings["dataloader"]["num_workers"] == 0
+                assert settings["dataloader"]["train_shuffle"] is True
+                assert settings["dataloader"]["test_shuffle"] is False
+                assert provenance["dataset"]["splits"]["test"]["count"] == len(targets)
+                assert provenance["model_input_hashes"]["test"] == hash_tensor(inputs)
+                assert len(provenance["frozen_config_hash"]) == 64
+                assert provenance["frozen_config_hash"] == metadata["frozen_config_hash"]
+                assert "src/repeated_evaluation.py" in provenance["source"]["files_sha256"]
+                assert provenance["timer_boundaries"]["evaluation_clock"] == "time.perf_counter"
                 assert (run_dir / "confusion_matrix.csv").exists()
                 with np.load(run_dir / "confidences.npz", allow_pickle=False) as saved:
                     probabilities.append(saved["probabilities"].copy())

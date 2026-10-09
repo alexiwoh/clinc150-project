@@ -8,10 +8,10 @@
   "oos_precision": 0.8732638888888888,
   "oos_recall": 0.503,
   "oos_f1": 0.6383248730964467,
-  "training_time_seconds": 68.50523686408997,
-  "inference_total_seconds": 0.3061230182647705,
-  "inference_avg_ms_per_example": 0.055658730593594635,
-  "inference_examples_per_sec": 17966.633254749126,
+  "training_time_seconds": 76.43887466704473,
+  "inference_total_seconds": 0.34361650003120303,
+  "inference_avg_ms_per_example": 0.06247572727840055,
+  "inference_examples_per_sec": 16006.216230886926,
   "parameter_count": 5197975,
   "trainable_parameter_count": 5197975
 }

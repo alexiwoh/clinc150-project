@@ -5,15 +5,15 @@
     {
       "finding_id": "headline",
       "category": "headline",
-      "claim": "TF-IDF + MLP achieved the best aggregate test macro F1 of 0.8727 +/- 0.0031",
-      "metric_value": 0.8726528643001762,
-      "metric_std": 0.003145021893969668,
+      "claim": "TF-IDF + MLP achieved the best aggregate test macro F1 of 0.8716 +/- 0.0029",
+      "metric_value": 0.8715949556844983,
+      "metric_std": 0.0028707363133910506,
       "source_artifact": "outputs/shared/model_comparison_aggregate.json",
       "source_artifacts": [
         "outputs/shared/model_comparison_aggregate.json"
       ],
       "claim_id": "headline",
-      "claim_text": "TF-IDF + MLP achieved the best aggregate test macro F1 of 0.8727 +/- 0.0031",
+      "claim_text": "TF-IDF + MLP achieved the best aggregate test macro F1 of 0.8716 +/- 0.0029",
       "related_figure_types": [
         "model_comparison_test_macro_f1"
       ],
@@ -24,15 +24,15 @@
     {
       "finding_id": "calibration",
       "category": "calibration",
-      "claim": "Best calibrated: text_cnn (ECE = 0.0374). Worst: bilstm (ECE = 0.1125)",
-      "metric_value": 0.03743301824548027,
+      "claim": "Lowest representative-run ECE: text_cnn (0.0390). Highest: bilstm (0.1232)",
+      "metric_value": 0.03903386061706328,
       "metric_std": null,
       "source_artifact": "outputs/shared/analysis/calibration_summary.json",
       "source_artifacts": [
         "outputs/shared/analysis/calibration_summary.json"
       ],
       "claim_id": "calibration",
-      "claim_text": "Best calibrated: text_cnn (ECE = 0.0374). Worst: bilstm (ECE = 0.1125)",
+      "claim_text": "Lowest representative-run ECE: text_cnn (0.0390). Highest: bilstm (0.1232)",
       "related_figure_types": [
         "calibration_comparison"
       ],
@@ -43,15 +43,15 @@
     {
       "finding_id": "oos_detection",
       "category": "oos_detection",
-      "claim": "Text CNN achieved the best OOS detection with AUROC = 0.9523 and AUPR = 0.8403",
-      "metric_value": 0.9523406666666667,
+      "claim": "Text CNN has the highest representative-run OOS-probability AUROC (0.9491), with AUPR = 0.8273",
+      "metric_value": 0.9490557777777778,
       "metric_std": null,
       "source_artifact": "outputs/shared/analysis/oos_threshold_comparison.json",
       "source_artifacts": [
         "outputs/shared/analysis/oos_threshold_comparison.json"
       ],
       "claim_id": "oos_detection",
-      "claim_text": "Text CNN achieved the best OOS detection with AUROC = 0.9523 and AUPR = 0.8403",
+      "claim_text": "Text CNN has the highest representative-run OOS-probability AUROC (0.9491), with AUPR = 0.8273",
       "related_figure_types": [
         "oos_roc_comparison",
         "oos_pr_comparison"
@@ -64,7 +64,7 @@
     {
       "finding_id": "confusion",
       "category": "confusion",
-      "claim": "Dominant error category across all models: `oos_as_inscope`. Dominant per model: TF-IDF + MLP: oos_as_inscope, Text CNN: oos_as_inscope, BiLSTM: oos_as_inscope",
+      "claim": "Representative-run dominant heuristic category per model: TF-IDF + MLP: oos_as_inscope, Text CNN: oos_as_inscope, BiLSTM: oos_as_inscope",
       "metric_value": null,
       "metric_std": null,
       "source_artifact": "outputs/shared/analysis/error_taxonomy_summary.json",
@@ -72,7 +72,7 @@
         "outputs/shared/analysis/error_taxonomy_summary.json"
       ],
       "claim_id": "confusion",
-      "claim_text": "Dominant error category across all models: `oos_as_inscope`. Dominant per model: TF-IDF + MLP: oos_as_inscope, Text CNN: oos_as_inscope, BiLSTM: oos_as_inscope",
+      "claim_text": "Representative-run dominant heuristic category per model: TF-IDF + MLP: oos_as_inscope, Text CNN: oos_as_inscope, BiLSTM: oos_as_inscope",
       "related_figure_types": [
         "error_taxonomy",
         "top_confused_pairs"
@@ -87,15 +87,15 @@
     {
       "finding_id": "architecture",
       "category": "architecture",
-      "claim": "608 examples (0.1105) misclassified by all models; 464 (0.0844) unique to one model. Agreement on wrong class: 0.3668",
-      "metric_value": 0.11054545454545454,
+      "claim": "600 examples (0.1091) misclassified by all models; 489 (0.0889) unique to one model. Agreement on wrong class: 0.3633",
+      "metric_value": 0.10909090909090909,
       "metric_std": null,
       "source_artifact": "outputs/shared/analysis/cross_model_error_comparison.json",
       "source_artifacts": [
         "outputs/shared/analysis/cross_model_error_comparison.json"
       ],
       "claim_id": "architecture",
-      "claim_text": "608 examples (0.1105) misclassified by all models; 464 (0.0844) unique to one model. Agreement on wrong class: 0.3668",
+      "claim_text": "600 examples (0.1091) misclassified by all models; 489 (0.0889) unique to one model. Agreement on wrong class: 0.3633",
       "related_figure_types": [
         "cross_model_error_overlap"
       ],
@@ -106,7 +106,7 @@
     {
       "finding_id": "length",
       "category": "length",
-      "claim": "Short-query accuracy: TF-IDF + MLP 0.8291, Text CNN 0.8583, BiLSTM 0.8097",
+      "claim": "Short-query accuracy: TF-IDF + MLP 0.8291, Text CNN 0.8641, BiLSTM 0.8019",
       "metric_value": null,
       "metric_std": null,
       "source_artifact": "outputs/shared/analysis/error_analysis_summary.json",
@@ -116,7 +116,7 @@
         "outputs/bilstm/analysis/length_slice_analysis.json"
       ],
       "claim_id": "length",
-      "claim_text": "Short-query accuracy: TF-IDF + MLP 0.8291, Text CNN 0.8583, BiLSTM 0.8097",
+      "claim_text": "Short-query accuracy: TF-IDF + MLP 0.8291, Text CNN 0.8641, BiLSTM 0.8019",
       "related_figure_types": [
         "length_slice"
       ],
@@ -127,7 +127,7 @@
     {
       "finding_id": "efficiency",
       "category": "efficiency",
-      "claim": "Parameter counts: TF-IDF + MLP 5,197,975, Text CNN 1,930,167, BiLSTM 4,284,311. Inference throughput: TF-IDF + MLP 17783 ex/s, Text CNN 32082 ex/s, BiLSTM 8432 ex/s",
+      "claim": "Parameter counts: TF-IDF + MLP 5,197,975, Text CNN 1,930,167, BiLSTM 4,284,311. Inference throughput: TF-IDF + MLP 18069 ex/s, Text CNN 28456 ex/s, BiLSTM 7910 ex/s",
       "metric_value": null,
       "metric_std": null,
       "source_artifact": "outputs/shared/efficiency_summary_table.json",
@@ -135,7 +135,7 @@
         "outputs/shared/efficiency_summary_table.json"
       ],
       "claim_id": "efficiency",
-      "claim_text": "Parameter counts: TF-IDF + MLP 5,197,975, Text CNN 1,930,167, BiLSTM 4,284,311. Inference throughput: TF-IDF + MLP 17783 ex/s, Text CNN 32082 ex/s, BiLSTM 8432 ex/s",
+      "claim_text": "Parameter counts: TF-IDF + MLP 5,197,975, Text CNN 1,930,167, BiLSTM 4,284,311. Inference throughput: TF-IDF + MLP 18069 ex/s, Text CNN 28456 ex/s, BiLSTM 7910 ex/s",
       "related_figure_types": [
         "model_efficiency_comparison"
       ],
@@ -146,7 +146,7 @@
     {
       "finding_id": "recommendation",
       "category": "recommendation",
-      "claim": "Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors.",
+      "claim": "Inspect representative OOS false accepts and same-domain confusions as heuristic error groups. Preserve official benchmark labels and splits. Select any proposed calibration or rejection threshold on validation data before final test evaluation.",
       "metric_value": null,
       "metric_std": null,
       "source_artifact": "outputs/shared/analysis/error_analysis_summary.json",
@@ -154,7 +154,7 @@
         "outputs/shared/analysis/error_analysis_summary.json"
       ],
       "claim_id": "recommendation",
-      "claim_text": "Focus on improving OOS detection and addressing semantically ambiguous intent pairs within the same domain. Consider intent merging for persistently confused pairs and confidence thresholding for high-confidence errors.",
+      "claim_text": "Inspect representative OOS false accepts and same-domain confusions as heuristic error groups. Preserve official benchmark labels and splits. Select any proposed calibration or rejection threshold on validation data before final test evaluation.",
       "related_figure_types": [
         "oos_error_comparison",
         "top_confused_pairs"

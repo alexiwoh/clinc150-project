@@ -93,11 +93,11 @@ fi
 
 # 7. Sync environment from pyproject
 echo "==> Syncing environment with uv"
-uv sync
+uv sync --frozen
 
-# 8. Export requirements.txt from the active environment
+# 8. Export the portable locked dependencies and local project reference
 echo "==> Generating requirements.txt"
-python -m pip freeze > requirements.txt
+uv export --frozen --no-hashes --output-file requirements.txt
 
 echo
 echo "==> Done."
