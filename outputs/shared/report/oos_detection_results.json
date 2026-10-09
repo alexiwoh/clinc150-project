@@ -3,28 +3,28 @@
   "protocol_version": "1.0",
   "aggregate_oos_metrics": {
     "mlp": {
-      "oos_precision_mean": 0.8840146285108736,
-      "oos_precision_std": 0.013157222563238853,
-      "oos_recall_mean": 0.48666666666666664,
-      "oos_recall_std": 0.044394694377694395,
-      "oos_f1_mean": 0.6261331525117453,
-      "oos_f1_std": 0.03475278637704877
+      "oos_precision_mean": 0.8876661875907516,
+      "oos_precision_std": 0.011155024349650383,
+      "oos_recall_mean": 0.4666666666666666,
+      "oos_recall_std": 0.042523196284172046,
+      "oos_f1_mean": 0.6102604509289896,
+      "oos_f1_std": 0.03521030623216893
     },
     "text_cnn": {
-      "oos_precision_mean": 0.9414484195962342,
-      "oos_precision_std": 0.010232255545086942,
-      "oos_recall_mean": 0.35633333333333334,
-      "oos_recall_std": 0.04014418457953227,
-      "oos_f1_mean": 0.5153964713570659,
-      "oos_f1_std": 0.041636260475168545
+      "oos_precision_mean": 0.9326426565284062,
+      "oos_precision_std": 0.014530655621355998,
+      "oos_recall_mean": 0.38099999999999995,
+      "oos_recall_std": 0.03749666651850536,
+      "oos_f1_mean": 0.5396946907688042,
+      "oos_f1_std": 0.03570061302855597
     },
     "bilstm": {
-      "oos_precision_mean": 0.8816609734753472,
-      "oos_precision_std": 0.010404861083706966,
-      "oos_recall_mean": 0.2946666666666667,
-      "oos_recall_std": 0.0235843639350783,
-      "oos_f1_mean": 0.44130342547790774,
-      "oos_f1_std": 0.027328606352725233
+      "oos_precision_mean": 0.8865233735982554,
+      "oos_precision_std": 0.020257993173998727,
+      "oos_recall_mean": 0.26099999999999995,
+      "oos_recall_std": 0.04055449009254914,
+      "oos_f1_mean": 0.4019000022164641,
+      "oos_f1_std": 0.051124809398179254
     }
   },
   "threshold_metrics": {
@@ -35,16 +35,16 @@
       "fpr_at_90tpr": 0.15311111111111111
     },
     "text_cnn": {
-      "auroc": 0.9523406666666667,
-      "aupr": 0.8402629177274288,
-      "fpr_at_95tpr": 0.20822222222222223,
-      "fpr_at_90tpr": 0.13866666666666666
+      "auroc": 0.9490557777777778,
+      "aupr": 0.827252152563682,
+      "fpr_at_95tpr": 0.23222222222222222,
+      "fpr_at_90tpr": 0.14577777777777778
     },
     "bilstm": {
-      "auroc": 0.9435813333333335,
-      "aupr": 0.8054806063559163,
-      "fpr_at_95tpr": 0.2308888888888889,
-      "fpr_at_90tpr": 0.14355555555555555
+      "auroc": 0.94545,
+      "aupr": 0.8050373957786808,
+      "fpr_at_95tpr": 0.23666666666666666,
+      "fpr_at_90tpr": 0.14777777777777779
     }
   },
   "msp_baseline": {
@@ -53,22 +53,22 @@
       "msp_aupr": 0.6180150617979561
     },
     "text_cnn": {
-      "msp_auroc": 0.9059482222222222,
-      "msp_aupr": 0.6559906666517132
+      "msp_auroc": 0.9028923333333333,
+      "msp_aupr": 0.6422994628035283
     },
     "bilstm": {
-      "msp_auroc": 0.8746905555555556,
-      "msp_aupr": 0.5452972402779862
+      "msp_auroc": 0.879908111111111,
+      "msp_aupr": 0.5819069761895698
     }
   },
   "best_oos_model": {
     "model_id": "text_cnn",
-    "rationale": "Highest AUROC (0.9523)"
+    "rationale": "Highest representative-run OOS-probability AUROC (0.9491)"
   },
   "claims": [
     {
       "claim_id": "aggregate_oos_metrics",
-      "claim_text": "TF-IDF + MLP achieved the highest aggregate OOS F1 (0.6261 +/- 0.0348).",
+      "claim_text": "TF-IDF + MLP achieved the highest aggregate argmax OOS F1 (0.6103 +/- 0.0352).",
       "source_artifacts": [
         "outputs/shared/oos_summary_table.json"
       ],
@@ -83,7 +83,7 @@
     },
     {
       "claim_id": "threshold_analysis",
-      "claim_text": "Text CNN achieved the highest AUROC (0.9523), indicating the strongest threshold-independent OOS discrimination.",
+      "claim_text": "Text CNN has the highest representative-run OOS-probability AUROC (0.9491) among the compared runs.",
       "source_artifacts": [
         "outputs/shared/analysis/oos_threshold_comparison.json"
       ],
@@ -99,7 +99,7 @@
     },
     {
       "claim_id": "false_accept_patterns",
-      "claim_text": "False accepts remain the dominant OOS failure pattern, with a small set of intents repeatedly capturing OOS examples.",
+      "claim_text": "The representative-run false-accept counts identify in-scope intents that capture labeled OOS examples.",
       "source_artifacts": [
         "outputs/shared/analysis/oos_false_accept_comparison.json"
       ],
@@ -142,56 +142,56 @@
     ],
     "text_cnn": [
       {
-        "intent": "travel_suggestion",
-        "count": 27,
-        "mean_confidence": 0.38848358392715454
-      },
-      {
         "intent": "directions",
-        "count": 23,
-        "mean_confidence": 0.4587792456150055
-      },
-      {
-        "intent": "todo_list",
-        "count": 21,
-        "mean_confidence": 0.37126392126083374
+        "count": 33,
+        "mean_confidence": 0.44937771558761597
       },
       {
         "intent": "recipe",
-        "count": 19,
-        "mean_confidence": 0.3686259984970093
+        "count": 25,
+        "mean_confidence": 0.4177340269088745
       },
       {
-        "intent": "restaurant_suggestion",
-        "count": 15,
-        "mean_confidence": 0.39416104555130005
+        "intent": "todo_list",
+        "count": 24,
+        "mean_confidence": 0.36111459136009216
+      },
+      {
+        "intent": "travel_suggestion",
+        "count": 20,
+        "mean_confidence": 0.4658612608909607
+      },
+      {
+        "intent": "order",
+        "count": 18,
+        "mean_confidence": 0.4948040246963501
       }
     ],
     "bilstm": [
       {
+        "intent": "order",
+        "count": 48,
+        "mean_confidence": 0.688157320022583
+      },
+      {
         "intent": "smart_home",
-        "count": 39,
-        "mean_confidence": 0.628534734249115
+        "count": 32,
+        "mean_confidence": 0.6898937821388245
       },
       {
-        "intent": "income",
-        "count": 30,
-        "mean_confidence": 0.6459516882896423
+        "intent": "whisper_mode",
+        "count": 27,
+        "mean_confidence": 0.604016125202179
       },
       {
-        "intent": "current_location",
-        "count": 28,
-        "mean_confidence": 0.6976905465126038
+        "intent": "shopping_list_update",
+        "count": 25,
+        "mean_confidence": 0.677044153213501
       },
       {
-        "intent": "directions",
-        "count": 24,
-        "mean_confidence": 0.6602993011474609
-      },
-      {
-        "intent": "weather",
-        "count": 20,
-        "mean_confidence": 0.6486479043960571
+        "intent": "definition",
+        "count": 23,
+        "mean_confidence": 0.5908995270729065
       }
     ]
   },

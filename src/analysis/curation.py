@@ -125,7 +125,7 @@ def _annotation_tag(cat: ErrorCategory) -> str:
     return {
         ErrorCategory.OOS_AS_INSCOPE: "confident false accept",
         ErrorCategory.INSCOPE_AS_OOS: "false rejection",
-        ErrorCategory.NEAR_SEMANTIC_CONFUSION: "semantic overlap",
+        ErrorCategory.NEAR_SEMANTIC_CONFUSION: "same-domain confusion",
         ErrorCategory.CROSS_DOMAIN_CONFUSION: "cross-domain mix-up",
         ErrorCategory.SHORT_QUERY_AMBIGUITY: "short query",
     }[cat]
@@ -190,7 +190,7 @@ def _ensure_minimums(
             if fa_count >= _MIN_OOS_FA_PER_MODEL:
                 break
 
-    # Semantic confusions
+    # Same-domain confusions
     sem_count = sum(
         1
         for e in curated
@@ -210,7 +210,7 @@ def _ensure_minimums(
                     "max_confidence": ex["max_confidence"],
                     "primary_category": str(ErrorCategory.NEAR_SEMANTIC_CONFUSION),
                     "model_id": model_id,
-                    "annotation_tag": "semantic overlap",
+                    "annotation_tag": _annotation_tag(ErrorCategory.NEAR_SEMANTIC_CONFUSION),
                 }
             )
             seen_texts.add(ex["text"])

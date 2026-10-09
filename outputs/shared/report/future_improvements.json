@@ -3,44 +3,44 @@
   "protocol_version": "1.0",
   "high_priority": [
     {
-      "improvement": "Collect more OOS training examples to reduce false accepts",
-      "rationale": "OOS false accepts are the dominant error across all models; more OOS training data directly addresses the distribution mismatch."
+      "improvement": "Evaluate additional labeled OOS training data in a separate experiment",
+      "rationale": "Observed false accepts motivate testing broader OOS coverage; document any new data protocol and retain the current official benchmark for comparability."
     },
     {
-      "improvement": "Merge or relabel persistently confused intent pairs within the same domain",
-      "rationale": "Several intent pairs share near-identical semantics and consistently confuse all models."
+      "improvement": "Manually inspect persistent same-domain confusions",
+      "rationale": "Domain-based taxonomy tags are heuristics. Inspect examples before drawing semantic conclusions; preserve official benchmark labels in the current comparison."
     },
     {
-      "improvement": "Apply confidence thresholding in deployment to flag uncertain predictions",
-      "rationale": "Many errors occur at high confidence; a deployment threshold could redirect uncertain queries to human review."
+      "improvement": "Select OOS or abstention thresholds on validation data",
+      "rationale": "Specify a target trade-off on validation data and evaluate the fixed threshold on held-out data. Test ROC operating points alone do not establish deployment behavior."
     },
     {
       "improvement": "Evaluate temperature scaling for post-hoc calibration improvement",
-      "rationale": "Calibration varies significantly across models; temperature scaling could improve reliability without retraining."
+      "rationale": "Fit temperature scaling on validation data, then compare held-out calibration. Representative-run ECE differences alone do not establish its benefit across seeds."
     }
   ],
   "medium_priority": [
     {
-      "improvement": "Add pretrained word embeddings (GloVe, word2vec) to Text CNN and BiLSTM",
-      "rationale": "Pretrained embeddings could improve generalization especially for rare words and OOS queries."
+      "improvement": "Use fresh seeded loaders for each tuning trial",
+      "rationale": "Make comparisons independent of advancing loader state and smoke-check shuffles. Changing this search policy requires new tuning and final evaluations."
     },
     {
-      "improvement": "Systematic hyperparameter tuning (dropout, hidden size, learning rate)",
-      "rationale": "Current configs use limited grid search; broader exploration may improve all models."
+      "improvement": "Evaluate length-aware BiLSTM sequence handling",
+      "rationale": "Packed sequences or length-aware summaries could avoid processing right-PAD positions. This modeling change requires new training, tuning and comparisons."
     },
     {
-      "improvement": "Add parameter-count vs accuracy Pareto analysis",
-      "rationale": "Quantify the efficiency-accuracy trade-off to guide model selection for deployment."
+      "improvement": "Evaluate pretrained word embeddings",
+      "rationale": "Test their effect on the neural pipelines through new training and tuning rather than assuming improved generalization."
     },
     {
-      "improvement": "Add threshold analysis for OOS detection with operating-point selection",
-      "rationale": "Enable tunable precision-recall trade-off for OOS detection in production."
+      "improvement": "Measure controlled deployment latency separately",
+      "rationale": "Use a specified device, warmup and repeated single-query measurements before making service-latency claims from batch throughput."
     }
   ],
   "lower_priority": [
     {
       "improvement": "Compare against transformer-based models (DistilBERT, BERT-base)",
-      "rationale": "Establish an upper-bound reference for the lightweight models evaluated."
+      "rationale": "Add a separately trained and tuned reference with its own preprocessing and compute budget."
     },
     {
       "improvement": "Evaluate on additional intent-classification datasets",
@@ -51,12 +51,12 @@
       "rationale": "Reduce OOV rates and improve generalization to unseen vocabulary."
     },
     {
-      "improvement": "Multi-task learning combining intent classification and OOS detection",
-      "rationale": "Joint training may improve OOS discrimination by explicitly modeling the boundary."
+      "improvement": "Evaluate a conventional in-scope-only MSP baseline",
+      "rationale": "Train a separate classifier without the supervised OOS class; its uncertainty score answers a different question from the current 151-class MSP diagnostic."
     },
     {
-      "improvement": "Bootstrap confidence intervals for more rigorous statistical comparison",
-      "rationale": "3 repeated runs provide limited statistical power; bootstrapping would strengthen claims."
+      "improvement": "Expand independently seeded runs and design uncertainty estimates",
+      "rationale": "Distinguish test-example sampling uncertainty from training-run variation; three seeds and overlapping mean/std ranges alone do not justify significance claims."
     }
   ],
   "source_artifacts": [

@@ -4,53 +4,53 @@
   "confusions": [
     {
       "true_label": "oos",
-      "predicted_label": "travel_suggestion",
-      "count": 27
-    },
-    {
-      "true_label": "oos",
       "predicted_label": "directions",
-      "count": 23
-    },
-    {
-      "true_label": "oos",
-      "predicted_label": "todo_list",
-      "count": 21
+      "count": 33
     },
     {
       "true_label": "oos",
       "predicted_label": "recipe",
-      "count": 19
+      "count": 25
     },
     {
       "true_label": "oos",
-      "predicted_label": "restaurant_suggestion",
-      "count": 15
+      "predicted_label": "todo_list",
+      "count": 24
     },
     {
       "true_label": "oos",
-      "predicted_label": "weather",
-      "count": 15
+      "predicted_label": "travel_suggestion",
+      "count": 20
     },
     {
       "true_label": "oos",
-      "predicted_label": "income",
-      "count": 13
-    },
-    {
-      "true_label": "oos",
-      "predicted_label": "restaurant_reviews",
-      "count": 13
-    },
-    {
-      "true_label": "oos",
-      "predicted_label": "bill_balance",
-      "count": 12
+      "predicted_label": "order",
+      "count": 18
     },
     {
       "true_label": "oos",
       "predicted_label": "car_rental",
-      "count": 12
+      "count": 16
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "smart_home",
+      "count": 15
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "sync_device",
+      "count": 15
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "find_phone",
+      "count": 14
+    },
+    {
+      "true_label": "oos",
+      "predicted_label": "restaurant_suggestion",
+      "count": 13
     }
   ]
 }

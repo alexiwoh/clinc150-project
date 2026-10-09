@@ -17,6 +17,7 @@ from src.analysis.constants import (
     CROSS_MODEL_ERROR_COMPARISON_FILENAME,
     ERROR_ANALYSIS_NOTES_FILENAME,
     ERROR_ANALYSIS_SUMMARY_FILENAME,
+    ERROR_TAXONOMY_FILENAME,
     ERROR_TAXONOMY_SUMMARY_FILENAME,
     EXTENDED_METRICS_COMPARISON_FILENAME,
     OOS_THRESHOLD_COMPARISON_FILENAME,
@@ -694,6 +695,84 @@ class TestHandoffValidation:
 # ---------------------------------------------------------------------------
 # TestFullPipelineIntegration
 # ---------------------------------------------------------------------------
+
+
+def test_summary_recommendations_respect_heuristic_and_representative_scope(mock_analysis_env: Path) -> None:
+    """Even dominant same-domain errors cannot establish ambiguity or merging advice."""
+    from src.analysis.summary import generate_error_analysis_notes, generate_error_analysis_summary
+
+    shared_analysis = mock_analysis_env / "outputs/shared/analysis"
+    for filename, payload in (
+        (CALIBRATION_SUMMARY_FILENAME, {"rows": [{"model_id": "text_cnn", "ece": 0.03}]}),
+        (OOS_THRESHOLD_COMPARISON_FILENAME, {"rows": [{"model_id": "text_cnn", "auroc": 0.95, "aupr": 0.8}]}),
+        (
+            ERROR_TAXONOMY_SUMMARY_FILENAME,
+            {"rows": [{"model_id": "mlp", "near_semantic_confusion_fraction": 0.99}]},
+        ),
+        (CROSS_MODEL_ERROR_COMPARISON_FILENAME, {"categories": {}, "all_wrong_agreement": 0.5}),
+    ):
+        _write_json(shared_analysis / filename, payload)
+    with ExitStack() as stack:
+        for context in _patch_for_analysis(mock_analysis_env):
+            stack.enter_context(context)
+        stack.enter_context(patch("src.analysis.summary.SHARED_DIR", mock_analysis_env / "outputs/shared"))
+        summary = generate_error_analysis_summary(list(ModelID))
+        generate_error_analysis_notes(list(ModelID))
+
+    notes = (shared_analysis / ERROR_ANALYSIS_NOTES_FILENAME).read_text()
+    recommendation = summary["top_recommendation"]
+    assert "heuristic" in recommendation
+    assert "official benchmark labels and splits" in recommendation
+    assert "validation" in recommendation
+    assert "semantically ambiguous" not in recommendation
+    assert "merging" not in notes
+    assert "highest representative-run OOS probability AUROC" in notes
+    assert "Only in-scope intent classes are balanced" in notes
+    assert "Apply confidence thresholding in deployment" not in notes
+    assert "test-set ROC points" in notes
+    assert summary["calibration"]["best_ece"] == 0.03
+    assert summary["oos_detection"]["best_auroc"] == 0.95
+
+
+def test_same_domain_annotation_does_not_claim_semantic_overlap() -> None:
+    from src.analysis.curation import _annotation_tag
+
+    assert _annotation_tag(ErrorCategory.NEAR_SEMANTIC_CONFUSION) == "same-domain confusion"
+
+
+@pytest.mark.parametrize("existing_count", [0, 1])
+@pytest.mark.parametrize("padding_scope", ["per_model", "total"])
+def test_sparse_same_domain_padding_keeps_heuristic_annotation(
+    tmp_path: Path, existing_count: int, padding_scope: str
+) -> None:
+    from src.analysis.curation import _ensure_minimums, _pad_to_minimum
+
+    taxonomy_examples = [
+        {
+            "text": text,
+            "true_label_name": "freeze_account",
+            "predicted_label_name": "routing",
+            "max_confidence": 0.6,
+            "primary_category": ErrorCategory.NEAR_SEMANTIC_CONFUSION,
+        }
+        for text in ("freeze my account", "place a hold on my account")
+    ]
+    curated = [
+        {**example, "model_id": "mlp", "annotation_tag": "same-domain confusion"}
+        for example in taxonomy_examples[:existing_count]
+    ]
+    if padding_scope == "per_model":
+        _ensure_minimums(curated, {example["text"] for example in curated}, "mlp", {}, {}, taxonomy_examples)
+    else:
+        _write_json(tmp_path / ERROR_TAXONOMY_FILENAME, {"examples": taxonomy_examples})
+        with patch("src.analysis.curation.analysis_output_dir", return_value=tmp_path):
+            curated = _pad_to_minimum(curated, [ModelID.MLP])
+
+    assert len(curated) == 2
+    assert len({example["text"] for example in curated}) == 2
+    assert {example["annotation_tag"] for example in curated} == {"same-domain confusion"}
+    assert all(example["true_label_name"] == "freeze_account" for example in curated)
+    assert all(example["predicted_label_name"] == "routing" for example in curated)
 
 
 class TestFullPipelineIntegration:

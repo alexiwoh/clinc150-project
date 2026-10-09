@@ -4,7 +4,7 @@
   "claims": [
     {
       "claim_id": "error_taxonomy",
-      "claim_text": "All models share `oos_as_inscope` as the dominant error category.",
+      "claim_text": "Representative-run dominant taxonomy categories: TF-IDF + MLP: `oos_as_inscope`, Text CNN: `oos_as_inscope`, BiLSTM: `oos_as_inscope`.",
       "source_artifacts": [
         "outputs/shared/analysis/error_taxonomy_summary.json"
       ],
@@ -18,7 +18,7 @@
     },
     {
       "claim_id": "calibration_confidence",
-      "claim_text": "Best-calibrated model: Text CNN (ECE = 0.0374); worst-calibrated: BiLSTM (ECE = 0.1125).",
+      "claim_text": "Lowest representative-run ECE: Text CNN (0.0390); highest: BiLSTM (0.1232).",
       "source_artifacts": [
         "outputs/shared/analysis/calibration_summary.json"
       ],
@@ -40,7 +40,7 @@
     },
     {
       "claim_id": "oos_deep_dive",
-      "claim_text": "Best OOS detector by AUROC: Text CNN (0.9523); the main failure mode remains `oos_as_inscope`.",
+      "claim_text": "Highest representative-run OOS-probability AUROC: Text CNN (0.9491).",
       "source_artifacts": [
         "outputs/shared/analysis/oos_threshold_comparison.json",
         "outputs/shared/analysis/oos_false_accept_comparison.json"
@@ -61,7 +61,7 @@
     },
     {
       "claim_id": "cross_model_overlap",
-      "claim_text": "608 examples (0.1105) are wrong for all models, while 464 (0.0844) are model-specific.",
+      "claim_text": "600 examples (0.1091) are wrong for all models, while 489 (0.0889) are model-specific.",
       "source_artifacts": [
         "outputs/shared/analysis/cross_model_error_comparison.json"
       ],
@@ -75,7 +75,7 @@
     },
     {
       "claim_id": "worst_classes",
-      "claim_text": "Shared worst classes across models: `income`, `oos`, `order`, `recipe`, `smart_home`, `yes`.",
+      "claim_text": "Shared worst classes across models: `oos`, `order`, `recipe`, `smart_home`, `yes`.",
       "source_artifacts": [
         "outputs/shared/analysis/worst_classes_comparison.json"
       ],
@@ -91,7 +91,7 @@
     },
     {
       "claim_id": "persistent_confused_pairs",
-      "claim_text": "Persistent OOS-capturing intents across multiple models: `recipe`, `directions`, `income`, `smart_home`, `travel_suggestion`, `restaurant_suggestion`.",
+      "claim_text": "Persistent OOS-capturing intents across multiple models: `smart_home`, `directions`, `order`, `calculator`, `recipe`, `travel_suggestion`.",
       "source_artifacts": [
         "outputs/shared/most_confused_pairs_table.json"
       ],
@@ -106,8 +106,8 @@
       "scope_hint": "representative"
     },
     {
-      "claim_id": "length_frequency_slices",
-      "claim_text": "Short-query accuracy remains lower than desired across models, reinforcing the short-query ambiguity pattern.",
+      "claim_id": "length_scope_slices",
+      "claim_text": "Short-query accuracy is a representative-run length slice; query length alone does not prove ambiguity.",
       "source_artifacts": [
         "outputs/mlp/analysis/length_slice_analysis.json",
         "outputs/text_cnn/analysis/length_slice_analysis.json",
@@ -130,41 +130,40 @@
     },
     "text_cnn": {
       "dominant_category": "oos_as_inscope",
-      "oos_as_inscope_count": 627
+      "oos_as_inscope_count": 636
     },
     "bilstm": {
       "dominant_category": "oos_as_inscope",
-      "oos_as_inscope_count": 672
+      "oos_as_inscope_count": 716
     }
   },
   "calibration_finding": {
     "best_model": "text_cnn",
-    "best_ece": 0.03743301824548027,
+    "best_ece": 0.03903386061706328,
     "worst_model": "bilstm",
-    "worst_ece": 0.11253382217884061
+    "worst_ece": 0.12316495451331141
   },
   "oos_finding": {
     "best_model": "text_cnn",
-    "best_auroc": 0.9523406666666667,
+    "best_auroc": 0.9490557777777778,
     "main_failure_mode": "oos_as_inscope"
   },
   "cross_model_overlap": {
     "all_correct": {
-      "count": 4051,
-      "fraction": 0.7365454545454545
+      "count": 4011,
+      "fraction": 0.7292727272727273
     },
     "all_wrong": {
-      "count": 608,
-      "fraction": 0.11054545454545454
+      "count": 600,
+      "fraction": 0.10909090909090909
     },
     "model_specific": {
-      "count": 464,
-      "fraction": 0.08436363636363636
+      "count": 489,
+      "fraction": 0.08890909090909091
     }
   },
   "worst_classes_finding": {
     "shared": [
-      "income",
       "oos",
       "order",
       "recipe",
@@ -173,40 +172,41 @@
     ],
     "model_specific": {
       "mlp": [
-        "calculator",
         "calendar",
         "how_busy",
+        "income",
+        "meal_suggestion",
         "shopping_list",
         "w2"
       ],
       "text_cnn": [
-        "bill_balance",
-        "order_status",
-        "translate",
-        "travel_suggestion",
-        "who_do_you_work_for"
+        "spending_history",
+        "todo_list_update",
+        "travel_suggestion"
       ],
       "bilstm": [
-        "current_location",
-        "goodbye",
-        "weather"
+        "cancel",
+        "definition",
+        "play_music",
+        "shopping_list_update",
+        "whisper_mode"
       ]
     }
   },
   "confused_pairs_finding": {
     "persistent_intents": [
-      "recipe",
-      "directions",
-      "income",
       "smart_home",
-      "travel_suggestion",
-      "restaurant_suggestion"
+      "directions",
+      "order",
+      "calculator",
+      "recipe",
+      "travel_suggestion"
     ]
   },
   "length_finding": {
     "mlp": 0.829126213592233,
-    "text_cnn": 0.858252427184466,
-    "bilstm": 0.8097087378640777
+    "text_cnn": 0.8640776699029126,
+    "bilstm": 0.8019417475728156
   },
   "source_artifacts": [
     "outputs/shared/analysis/error_taxonomy_summary.json",

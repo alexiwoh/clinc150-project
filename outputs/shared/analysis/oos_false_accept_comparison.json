@@ -60,113 +60,113 @@
     },
     "text_cnn": {
       "model_name": "Text CNN",
-      "false_accept_count": 627,
+      "false_accept_count": 636,
       "top_capturing_intents": [
         {
-          "intent": "travel_suggestion",
-          "count": 27,
-          "mean_confidence": 0.38848358392715454
-        },
-        {
           "intent": "directions",
-          "count": 23,
-          "mean_confidence": 0.4587792456150055
-        },
-        {
-          "intent": "todo_list",
-          "count": 21,
-          "mean_confidence": 0.37126392126083374
+          "count": 33,
+          "mean_confidence": 0.44937771558761597
         },
         {
           "intent": "recipe",
-          "count": 19,
-          "mean_confidence": 0.3686259984970093
+          "count": 25,
+          "mean_confidence": 0.4177340269088745
         },
         {
-          "intent": "restaurant_suggestion",
-          "count": 15,
-          "mean_confidence": 0.39416104555130005
+          "intent": "todo_list",
+          "count": 24,
+          "mean_confidence": 0.36111459136009216
         },
         {
-          "intent": "weather",
-          "count": 15,
-          "mean_confidence": 0.4170951843261719
+          "intent": "travel_suggestion",
+          "count": 20,
+          "mean_confidence": 0.4658612608909607
         },
         {
-          "intent": "income",
-          "count": 13,
-          "mean_confidence": 0.25172337889671326
-        },
-        {
-          "intent": "restaurant_reviews",
-          "count": 13,
-          "mean_confidence": 0.4550331234931946
+          "intent": "order",
+          "count": 18,
+          "mean_confidence": 0.4948040246963501
         },
         {
           "intent": "car_rental",
-          "count": 12,
-          "mean_confidence": 0.3598450720310211
+          "count": 16,
+          "mean_confidence": 0.38968729972839355
         },
         {
-          "intent": "translate",
-          "count": 12,
-          "mean_confidence": 0.24561910331249237
+          "intent": "smart_home",
+          "count": 15,
+          "mean_confidence": 0.49206268787384033
+        },
+        {
+          "intent": "sync_device",
+          "count": 15,
+          "mean_confidence": 0.5881633162498474
+        },
+        {
+          "intent": "find_phone",
+          "count": 14,
+          "mean_confidence": 0.2960110306739807
+        },
+        {
+          "intent": "restaurant_suggestion",
+          "count": 13,
+          "mean_confidence": 0.46486204862594604
         }
       ]
     },
     "bilstm": {
       "model_name": "BiLSTM",
-      "false_accept_count": 672,
+      "false_accept_count": 716,
       "top_capturing_intents": [
         {
+          "intent": "order",
+          "count": 48,
+          "mean_confidence": 0.688157320022583
+        },
+        {
           "intent": "smart_home",
-          "count": 39,
-          "mean_confidence": 0.628534734249115
+          "count": 32,
+          "mean_confidence": 0.6898937821388245
         },
         {
-          "intent": "income",
-          "count": 30,
-          "mean_confidence": 0.6459516882896423
+          "intent": "whisper_mode",
+          "count": 27,
+          "mean_confidence": 0.604016125202179
         },
         {
-          "intent": "current_location",
-          "count": 28,
-          "mean_confidence": 0.6976905465126038
+          "intent": "shopping_list_update",
+          "count": 25,
+          "mean_confidence": 0.677044153213501
         },
         {
-          "intent": "directions",
-          "count": 24,
-          "mean_confidence": 0.6602993011474609
-        },
-        {
-          "intent": "weather",
-          "count": 20,
-          "mean_confidence": 0.6486479043960571
-        },
-        {
-          "intent": "sync_device",
-          "count": 17,
-          "mean_confidence": 0.7312024831771851
-        },
-        {
-          "intent": "recipe",
-          "count": 17,
-          "mean_confidence": 0.5996425747871399
-        },
-        {
-          "intent": "restaurant_suggestion",
-          "count": 16,
-          "mean_confidence": 0.6918511986732483
+          "intent": "definition",
+          "count": 23,
+          "mean_confidence": 0.5908995270729065
         },
         {
           "intent": "ingredients_list",
-          "count": 15,
-          "mean_confidence": 0.5980021357536316
+          "count": 22,
+          "mean_confidence": 0.5782052874565125
         },
         {
-          "intent": "cancel",
-          "count": 14,
-          "mean_confidence": 0.5626336336135864
+          "intent": "calculator",
+          "count": 19,
+          "mean_confidence": 0.6475446224212646
+        },
+        {
+          "intent": "directions",
+          "count": 19,
+          "mean_confidence": 0.7211893200874329
+        },
+        {
+          "intent": "nutrition_info",
+          "count": 17,
+          "mean_confidence": 0.5701560974121094
+        },
+        {
+          "intent": "tell_joke",
+          "count": 16,
+          "mean_confidence": 0.538151204586029
         }
       ]
     }

@@ -105,7 +105,7 @@
       "max_confidence": 0.969076931476593,
       "primary_category": "near_semantic_confusion",
       "model_id": "mlp",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "who employs you",
@@ -114,7 +114,7 @@
       "max_confidence": 0.969076931476593,
       "primary_category": "near_semantic_confusion",
       "model_id": "mlp",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "give me a recipe for tacos",
@@ -123,7 +123,7 @@
       "max_confidence": 0.9607388973236084,
       "primary_category": "near_semantic_confusion",
       "model_id": "mlp",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "thanks for your help, goodbye!",
@@ -132,7 +132,7 @@
       "max_confidence": 0.9539374113082886,
       "primary_category": "near_semantic_confusion",
       "model_id": "mlp",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "have i told you to add washing dishes to my todo list",
@@ -141,7 +141,7 @@
       "max_confidence": 0.9494496583938599,
       "primary_category": "near_semantic_confusion",
       "model_id": "mlp",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
       "text": "what time is it in phoenix",
@@ -189,37 +189,28 @@
       "annotation_tag": "cross-domain mix-up"
     },
     {
-      "text": "how many calories does doing 20 situps burn",
-      "true_label_name": "oos",
-      "predicted_label_name": "calories",
-      "max_confidence": 0.9999847412109375,
-      "primary_category": "oos_as_inscope",
-      "model_id": "text_cnn",
-      "annotation_tag": "confident false accept"
-    },
-    {
       "text": "give me the weather forecast for today",
       "true_label_name": "oos",
       "predicted_label_name": "weather",
-      "max_confidence": 0.9999822378158569,
+      "max_confidence": 0.9999791383743286,
       "primary_category": "oos_as_inscope",
       "model_id": "text_cnn",
       "annotation_tag": "confident false accept"
     },
     {
-      "text": "how many calories does jumping up and down burn",
+      "text": "please read the text message i just received",
       "true_label_name": "oos",
-      "predicted_label_name": "calories",
-      "max_confidence": 0.9999232292175293,
+      "predicted_label_name": "text",
+      "max_confidence": 0.9997432827949524,
       "primary_category": "oos_as_inscope",
       "model_id": "text_cnn",
       "annotation_tag": "confident false accept"
     },
     {
-      "text": "call an uber to take me to the closest grocery store",
+      "text": "what other countries speak the english language",
       "true_label_name": "oos",
-      "predicted_label_name": "uber",
-      "max_confidence": 0.9998862743377686,
+      "predicted_label_name": "change_language",
+      "max_confidence": 0.999144434928894,
       "primary_category": "oos_as_inscope",
       "model_id": "text_cnn",
       "annotation_tag": "confident false accept"
@@ -228,25 +219,34 @@
       "text": "what's the current prevailing interest rate for mortgages in my area",
       "true_label_name": "oos",
       "predicted_label_name": "interest_rate",
-      "max_confidence": 0.9995094537734985,
+      "max_confidence": 0.9990187883377075,
       "primary_category": "oos_as_inscope",
       "model_id": "text_cnn",
       "annotation_tag": "confident false accept"
     },
     {
-      "text": "how expensive is my internet",
-      "true_label_name": "bill_balance",
-      "predicted_label_name": "oos",
-      "max_confidence": 0.9773907661437988,
-      "primary_category": "inscope_as_oos",
+      "text": "forward the text i just got from henry to giselle",
+      "true_label_name": "oos",
+      "predicted_label_name": "text",
+      "max_confidence": 0.9987873435020447,
+      "primary_category": "oos_as_inscope",
       "model_id": "text_cnn",
-      "annotation_tag": "false rejection"
+      "annotation_tag": "confident false accept"
     },
     {
       "text": "when does the current billing cycle end",
       "true_label_name": "bill_due",
       "predicted_label_name": "oos",
-      "max_confidence": 0.8038612604141235,
+      "max_confidence": 0.9915704727172852,
+      "primary_category": "inscope_as_oos",
+      "model_id": "text_cnn",
+      "annotation_tag": "false rejection"
+    },
+    {
+      "text": "how expensive is my internet",
+      "true_label_name": "bill_balance",
+      "predicted_label_name": "oos",
+      "max_confidence": 0.8825438022613525,
       "primary_category": "inscope_as_oos",
       "model_id": "text_cnn",
       "annotation_tag": "false rejection"
@@ -255,79 +255,79 @@
       "text": "what's the phone number for my credit card company",
       "true_label_name": "replacement_card_duration",
       "predicted_label_name": "oos",
-      "max_confidence": 0.7822321057319641,
+      "max_confidence": 0.8534485101699829,
       "primary_category": "inscope_as_oos",
       "model_id": "text_cnn",
       "annotation_tag": "false rejection"
     },
     {
-      "text": "what is the time frame for sending a customer who lost their credit card a new one",
-      "true_label_name": "replacement_card_duration",
+      "text": "how many minutes are involved in the preparation of curry",
+      "true_label_name": "cook_time",
       "predicted_label_name": "oos",
-      "max_confidence": 0.781401515007019,
+      "max_confidence": 0.81864333152771,
       "primary_category": "inscope_as_oos",
       "model_id": "text_cnn",
       "annotation_tag": "false rejection"
     },
     {
-      "text": "is it six o clock yet",
-      "true_label_name": "time",
+      "text": "what kind of electrical outlet does that country use",
+      "true_label_name": "plug_type",
       "predicted_label_name": "oos",
-      "max_confidence": 0.776395857334137,
+      "max_confidence": 0.7949949502944946,
       "primary_category": "inscope_as_oos",
       "model_id": "text_cnn",
       "annotation_tag": "false rejection"
     },
     {
-      "text": "who is responsible for your employment",
+      "text": "give me a recipe for tacos",
+      "true_label_name": "ingredients_list",
+      "predicted_label_name": "recipe",
+      "max_confidence": 0.9964855909347534,
+      "primary_category": "near_semantic_confusion",
+      "model_id": "text_cnn",
+      "annotation_tag": "same-domain confusion"
+    },
+    {
+      "text": "who controls you",
       "true_label_name": "who_do_you_work_for",
       "predicted_label_name": "who_made_you",
-      "max_confidence": 0.998573899269104,
+      "max_confidence": 0.9963486194610596,
       "primary_category": "near_semantic_confusion",
       "model_id": "text_cnn",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
-      "text": "i'm trying to raise my credit score can you tell me what it is now",
-      "true_label_name": "credit_score",
-      "predicted_label_name": "improve_credit_score",
-      "max_confidence": 0.9985254406929016,
+      "text": "who employs you",
+      "true_label_name": "who_do_you_work_for",
+      "predicted_label_name": "who_made_you",
+      "max_confidence": 0.9963486194610596,
       "primary_category": "near_semantic_confusion",
       "model_id": "text_cnn",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
-      "text": "can i get a table for four at 8:00",
-      "true_label_name": "how_busy",
-      "predicted_label_name": "restaurant_reservation",
-      "max_confidence": 0.9972242116928101,
+      "text": "when will my new credit card arrive",
+      "true_label_name": "expiration_date",
+      "predicted_label_name": "replacement_card_duration",
+      "max_confidence": 0.995201587677002,
       "primary_category": "near_semantic_confusion",
       "model_id": "text_cnn",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
-      "text": "how can i request a new credit card",
-      "true_label_name": "replacement_card_duration",
-      "predicted_label_name": "new_card",
-      "max_confidence": 0.9951135516166687,
+      "text": "what is the next date for which i can get an oil change appointment",
+      "true_label_name": "schedule_maintenance",
+      "predicted_label_name": "oil_change_when",
+      "max_confidence": 0.995166540145874,
       "primary_category": "near_semantic_confusion",
       "model_id": "text_cnn",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
-      "text": "what have i spent things on",
-      "true_label_name": "transactions",
-      "predicted_label_name": "spending_history",
-      "max_confidence": 0.9938406944274902,
-      "primary_category": "near_semantic_confusion",
-      "model_id": "text_cnn",
-      "annotation_tag": "semantic overlap"
-    },
-    {
-      "text": "repeat what the weather will be like",
-      "true_label_name": "transfer",
-      "predicted_label_name": "weather",
-      "max_confidence": 0.997438907623291,
+      "text": "what is my current location",
+      "true_label_name": "share_location",
+      "predicted_label_name": "current_location",
+      "max_confidence": 0.9987926483154297,
       "primary_category": "cross_domain_confusion",
       "model_id": "text_cnn",
       "annotation_tag": "cross-domain mix-up"
@@ -336,43 +336,43 @@
       "text": "what time is it in phoenix",
       "true_label_name": "timezone",
       "predicted_label_name": "time",
-      "max_confidence": 0.9958788156509399,
+      "max_confidence": 0.9986510872840881,
       "primary_category": "cross_domain_confusion",
       "model_id": "text_cnn",
       "annotation_tag": "cross-domain mix-up"
     },
     {
-      "text": "what is my current location",
-      "true_label_name": "share_location",
-      "predicted_label_name": "current_location",
-      "max_confidence": 0.995576024055481,
+      "text": "i don't want to forget to call mom",
+      "true_label_name": "reminder_update",
+      "predicted_label_name": "make_call",
+      "max_confidence": 0.9979006052017212,
       "primary_category": "cross_domain_confusion",
       "model_id": "text_cnn",
       "annotation_tag": "cross-domain mix-up"
     },
     {
-      "text": "i'd like for this person to know my location",
-      "true_label_name": "share_location",
-      "predicted_label_name": "current_location",
-      "max_confidence": 0.9856311082839966,
+      "text": "turn on the microwave for 3 minutes",
+      "true_label_name": "smart_home",
+      "predicted_label_name": "timer",
+      "max_confidence": 0.988875150680542,
       "primary_category": "cross_domain_confusion",
       "model_id": "text_cnn",
       "annotation_tag": "cross-domain mix-up"
     },
     {
-      "text": "what's your designation",
-      "true_label_name": "user_name",
-      "predicted_label_name": "what_is_your_name",
-      "max_confidence": 0.9753966331481934,
+      "text": "i'd like my checks to be deposited into my account directly, how do i do that",
+      "true_label_name": "direct_deposit",
+      "predicted_label_name": "order_checks",
+      "max_confidence": 0.9861627221107483,
       "primary_category": "cross_domain_confusion",
       "model_id": "text_cnn",
       "annotation_tag": "cross-domain mix-up"
     },
     {
-      "text": "what other countries speak the english language",
+      "text": "give me the weather forecast for today",
       "true_label_name": "oos",
-      "predicted_label_name": "change_language",
-      "max_confidence": 0.9999963045120239,
+      "predicted_label_name": "weather",
+      "max_confidence": 0.9999994039535522,
       "primary_category": "oos_as_inscope",
       "model_id": "bilstm",
       "annotation_tag": "confident false accept"
@@ -381,133 +381,160 @@
       "text": "look up the conversion rate for the euro to dollar exchange",
       "true_label_name": "oos",
       "predicted_label_name": "exchange_rate",
-      "max_confidence": 0.9999663829803467,
+      "max_confidence": 0.9999990463256836,
       "primary_category": "oos_as_inscope",
       "model_id": "bilstm",
       "annotation_tag": "confident false accept"
     },
     {
-      "text": "give me the weather forecast for today",
+      "text": "what other countries speak the english language",
       "true_label_name": "oos",
-      "predicted_label_name": "weather",
-      "max_confidence": 0.9999613761901855,
+      "predicted_label_name": "change_language",
+      "max_confidence": 0.9999902248382568,
       "primary_category": "oos_as_inscope",
       "model_id": "bilstm",
       "annotation_tag": "confident false accept"
     },
     {
-      "text": "check the status of my amazon orders for me",
+      "text": "can you tell me what the best places are to look for a job online",
       "true_label_name": "oos",
-      "predicted_label_name": "order_status",
-      "max_confidence": 0.9999063014984131,
+      "predicted_label_name": "restaurant_suggestion",
+      "max_confidence": 0.9999797344207764,
       "primary_category": "oos_as_inscope",
       "model_id": "bilstm",
       "annotation_tag": "confident false accept"
     },
     {
-      "text": "when should i remove my snow tires",
+      "text": "i need you to order a new pair of eyeglasses for me",
       "true_label_name": "oos",
-      "predicted_label_name": "tire_change",
-      "max_confidence": 0.9998812675476074,
+      "predicted_label_name": "order",
+      "max_confidence": 0.9999575614929199,
       "primary_category": "oos_as_inscope",
       "model_id": "bilstm",
       "annotation_tag": "confident false accept"
     },
     {
-      "text": "what is the price of bluetooth speakers on amazon",
-      "true_label_name": "order",
+      "text": "how many minutes are involved in the preparation of curry",
+      "true_label_name": "cook_time",
       "predicted_label_name": "oos",
-      "max_confidence": 0.9994544386863708,
+      "max_confidence": 0.9999973773956299,
       "primary_category": "inscope_as_oos",
       "model_id": "bilstm",
       "annotation_tag": "false rejection"
     },
     {
-      "text": "what are the size limits regarding-carry on bags",
-      "true_label_name": "carry_on",
+      "text": "how expensive is my internet",
+      "true_label_name": "bill_balance",
       "predicted_label_name": "oos",
-      "max_confidence": 0.9830695390701294,
+      "max_confidence": 0.9978415966033936,
       "primary_category": "inscope_as_oos",
       "model_id": "bilstm",
       "annotation_tag": "false rejection"
     },
     {
-      "text": "how many holidays are there and when is the next one here",
-      "true_label_name": "next_holiday",
+      "text": "is the breakfast place full in the mornings",
+      "true_label_name": "how_busy",
       "predicted_label_name": "oos",
-      "max_confidence": 0.9765938520431519,
+      "max_confidence": 0.995961606502533,
       "primary_category": "inscope_as_oos",
       "model_id": "bilstm",
       "annotation_tag": "false rejection"
     },
     {
-      "text": "where is the closest pharmacy",
-      "true_label_name": "directions",
+      "text": "what kind of traffic can i expect driving to newark, new jersey on i-95 from philadelphia at noon",
+      "true_label_name": "traffic",
       "predicted_label_name": "oos",
-      "max_confidence": 0.975864827632904,
+      "max_confidence": 0.992024302482605,
       "primary_category": "inscope_as_oos",
       "model_id": "bilstm",
       "annotation_tag": "false rejection"
     },
     {
-      "text": "show me ideas for hamburger",
-      "true_label_name": "recipe",
+      "text": "what is the average of 54, 23, 43, 12, and 442",
+      "true_label_name": "calculator",
       "predicted_label_name": "oos",
-      "max_confidence": 0.972700834274292,
+      "max_confidence": 0.9799848794937134,
       "primary_category": "inscope_as_oos",
       "model_id": "bilstm",
       "annotation_tag": "false rejection"
-    },
-    {
-      "text": "have i told you to add washing dishes to my todo list",
-      "true_label_name": "todo_list",
-      "predicted_label_name": "todo_list_update",
-      "max_confidence": 0.9999451637268066,
-      "primary_category": "near_semantic_confusion",
-      "model_id": "bilstm",
-      "annotation_tag": "semantic overlap"
-    },
-    {
-      "text": "thanks for your help, goodbye!",
-      "true_label_name": "goodbye",
-      "predicted_label_name": "thank_you",
-      "max_confidence": 0.999937891960144,
-      "primary_category": "near_semantic_confusion",
-      "model_id": "bilstm",
-      "annotation_tag": "semantic overlap"
     },
     {
       "text": "give me a recipe for tacos",
       "true_label_name": "ingredients_list",
       "predicted_label_name": "recipe",
-      "max_confidence": 0.9999359846115112,
+      "max_confidence": 0.9999964237213135,
       "primary_category": "near_semantic_confusion",
       "model_id": "bilstm",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
-      "text": "have i added my doctor's appointment to my calendar",
-      "true_label_name": "calendar",
-      "predicted_label_name": "calendar_update",
-      "max_confidence": 0.9998944997787476,
+      "text": "what's a good recipe foe tacos",
+      "true_label_name": "ingredients_list",
+      "predicted_label_name": "recipe",
+      "max_confidence": 0.9999785423278809,
       "primary_category": "near_semantic_confusion",
       "model_id": "bilstm",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
     },
     {
-      "text": "how can i request a new credit card",
-      "true_label_name": "replacement_card_duration",
-      "predicted_label_name": "new_card",
-      "max_confidence": 0.9998513460159302,
+      "text": "what is the next date for which i can get an oil change appointment",
+      "true_label_name": "schedule_maintenance",
+      "predicted_label_name": "oil_change_when",
+      "max_confidence": 0.9999744892120361,
       "primary_category": "near_semantic_confusion",
       "model_id": "bilstm",
-      "annotation_tag": "semantic overlap"
+      "annotation_tag": "same-domain confusion"
+    },
+    {
+      "text": "what are the steps to get my rewards for my visa card",
+      "true_label_name": "redeem_rewards",
+      "predicted_label_name": "rewards_balance",
+      "max_confidence": 0.9998942613601685,
+      "primary_category": "near_semantic_confusion",
+      "model_id": "bilstm",
+      "annotation_tag": "same-domain confusion"
+    },
+    {
+      "text": "what have i spent things on",
+      "true_label_name": "transactions",
+      "predicted_label_name": "spending_history",
+      "max_confidence": 0.9998698234558105,
+      "primary_category": "near_semantic_confusion",
+      "model_id": "bilstm",
+      "annotation_tag": "same-domain confusion"
+    },
+    {
+      "text": "repeat what the weather will be like",
+      "true_label_name": "transfer",
+      "predicted_label_name": "weather",
+      "max_confidence": 0.999997615814209,
+      "primary_category": "cross_domain_confusion",
+      "model_id": "bilstm",
+      "annotation_tag": "cross-domain mix-up"
+    },
+    {
+      "text": "i'd like for this person to know my location",
+      "true_label_name": "share_location",
+      "predicted_label_name": "current_location",
+      "max_confidence": 0.9999790191650391,
+      "primary_category": "cross_domain_confusion",
+      "model_id": "bilstm",
+      "annotation_tag": "cross-domain mix-up"
     },
     {
       "text": "what time is it in phoenix",
       "true_label_name": "timezone",
       "predicted_label_name": "time",
-      "max_confidence": 0.9999988079071045,
+      "max_confidence": 0.9999691247940063,
+      "primary_category": "cross_domain_confusion",
+      "model_id": "bilstm",
+      "annotation_tag": "cross-domain mix-up"
+    },
+    {
+      "text": "when will my payment be deposited",
+      "true_label_name": "payday",
+      "predicted_label_name": "bill_due",
+      "max_confidence": 0.9999688863754272,
       "primary_category": "cross_domain_confusion",
       "model_id": "bilstm",
       "annotation_tag": "cross-domain mix-up"
@@ -516,34 +543,7 @@
       "text": "what is my current location",
       "true_label_name": "share_location",
       "predicted_label_name": "current_location",
-      "max_confidence": 0.9999755620956421,
-      "primary_category": "cross_domain_confusion",
-      "model_id": "bilstm",
-      "annotation_tag": "cross-domain mix-up"
-    },
-    {
-      "text": "repeat what the weather will be like",
-      "true_label_name": "transfer",
-      "predicted_label_name": "weather",
-      "max_confidence": 0.9999536275863647,
-      "primary_category": "cross_domain_confusion",
-      "model_id": "bilstm",
-      "annotation_tag": "cross-domain mix-up"
-    },
-    {
-      "text": "i want to be reminded to pay the electric bill",
-      "true_label_name": "reminder_update",
-      "predicted_label_name": "pay_bill",
-      "max_confidence": 0.9998613595962524,
-      "primary_category": "cross_domain_confusion",
-      "model_id": "bilstm",
-      "annotation_tag": "cross-domain mix-up"
-    },
-    {
-      "text": "i don't want to forget to call mom",
-      "true_label_name": "reminder_update",
-      "predicted_label_name": "make_call",
-      "max_confidence": 0.9998243451118469,
+      "max_confidence": 0.9998594522476196,
       "primary_category": "cross_domain_confusion",
       "model_id": "bilstm",
       "annotation_tag": "cross-domain mix-up"

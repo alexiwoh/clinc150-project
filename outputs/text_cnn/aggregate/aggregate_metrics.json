@@ -1,6 +1,7 @@
 {
   "schema_version": "1.0",
   "protocol_version": "1.0",
+  "model_name": "Text CNN",
   "model_id": "text_cnn",
   "run_count_requested": 3,
   "run_count_completed": 3,
@@ -15,71 +16,6 @@
     2024
   ],
   "all_runs_succeeded": true,
-  "metrics": {
-    "val_accuracy": {
-      "mean": 0.9031182795698923,
-      "std": 0.0019768576678333744
-    },
-    "val_macro_f1": {
-      "mean": 0.9098249697980574,
-      "std": 0.0016809545351468658
-    },
-    "test_accuracy": {
-      "mean": 0.8175757575757575,
-      "std": 0.008393009466046899
-    },
-    "test_macro_f1": {
-      "mean": 0.8634849725331826,
-      "std": 0.005665101741182052
-    },
-    "test_precision": {
-      "mean": 0.8278067292969696,
-      "std": 0.009356518866706645
-    },
-    "test_recall": {
-      "mean": 0.9163406916850626,
-      "std": 0.0015943930092677612
-    },
-    "oos_precision": {
-      "mean": 0.9414484195962342,
-      "std": 0.010232255545086942
-    },
-    "oos_recall": {
-      "mean": 0.35633333333333334,
-      "std": 0.04014418457953227
-    },
-    "oos_f1": {
-      "mean": 0.5153964713570659,
-      "std": 0.041636260475168545
-    },
-    "training_time_seconds": {
-      "mean": 136.48480931917825,
-      "std": 7.7044934372758425
-    },
-    "inference_total_seconds": {
-      "mean": 0.17221697171529135,
-      "std": 0.011747995532814427
-    },
-    "inference_avg_ms_per_example": {
-      "mean": 0.031312176675507515,
-      "std": 0.002135999187784442
-    },
-    "inference_examples_per_sec": {
-      "mean": 32082.231368090364,
-      "std": 2138.804265580692
-    },
-    "parameter_count": {
-      "mean": 1930167.0,
-      "std": 0.0
-    },
-    "trainable_parameter_count": {
-      "mean": 1930167.0,
-      "std": 0.0
-    }
-  },
-  "model_name": "Text CNN",
-  "frozen_config_ref": "outputs/text_cnn/frozen_final_config.json",
-  "protocol_manifest_ref": "outputs/shared/evaluation_protocol.json",
   "successful_run_ids": [
     "run_01_seed_42",
     "run_02_seed_1337",
@@ -87,64 +23,66 @@
   ],
   "failed_run_ids": [],
   "representative_run_id": "run_03_seed_2024",
+  "frozen_config_ref": "outputs/text_cnn/frozen_final_config.json",
+  "protocol_manifest_ref": "outputs/shared/evaluation_protocol.json",
   "validation_summary": {
     "val_accuracy": {
-      "mean": 0.9031182795698923,
-      "std": 0.0019768576678333744
+      "mean": 0.9033333333333333,
+      "std": 0.0025033218767361257
     },
     "val_macro_f1": {
-      "mean": 0.9098249697980574,
-      "std": 0.0016809545351468658
+      "mean": 0.9098528885732643,
+      "std": 0.002146162615820762
     }
   },
   "test_summary": {
     "test_accuracy": {
-      "mean": 0.8175757575757575,
-      "std": 0.008393009466046899
+      "mean": 0.8210303030303031,
+      "std": 0.006738456442315065
     },
     "test_macro_f1": {
-      "mean": 0.8634849725331826,
-      "std": 0.005665101741182052
+      "mean": 0.8645104194513076,
+      "std": 0.003109497895018035
     },
     "test_precision": {
-      "mean": 0.8278067292969696,
-      "std": 0.009356518866706645
+      "mean": 0.829918164317727,
+      "std": 0.004965756542229767
     },
     "test_recall": {
-      "mean": 0.9163406916850626,
-      "std": 0.0015943930092677612
+      "mean": 0.915253127299485,
+      "std": 0.0011611483691783401
     }
   },
   "oos_summary": {
     "oos_precision": {
-      "mean": 0.9414484195962342,
-      "std": 0.010232255545086942
+      "mean": 0.9326426565284062,
+      "std": 0.014530655621355998
     },
     "oos_recall": {
-      "mean": 0.35633333333333334,
-      "std": 0.04014418457953227
+      "mean": 0.38099999999999995,
+      "std": 0.03749666651850536
     },
     "oos_f1": {
-      "mean": 0.5153964713570659,
-      "std": 0.041636260475168545
+      "mean": 0.5396946907688042,
+      "std": 0.03570061302855597
     }
   },
   "efficiency_summary": {
     "training_time_seconds": {
-      "mean": 136.48480931917825,
-      "std": 7.7044934372758425
+      "mean": 168.53839527769014,
+      "std": 18.359908848304105
     },
     "inference_total_seconds": {
-      "mean": 0.17221697171529135,
-      "std": 0.011747995532814427
+      "mean": 0.19408211104261378,
+      "std": 0.01267259040125501
     },
     "inference_avg_ms_per_example": {
-      "mean": 0.031312176675507515,
-      "std": 0.002135999187784442
+      "mean": 0.03528765655320251,
+      "std": 0.0023041073456827295
     },
     "inference_examples_per_sec": {
-      "mean": 32082.231368090364,
-      "std": 2138.804265580692
+      "mean": 28455.689719216938,
+      "std": 1795.2385015917453
     }
   },
   "parameter_count_summary": {

@@ -9,208 +9,208 @@
       "bin_label": "[0.0, 0.2)",
       "bin_lower": 0.0,
       "bin_upper": 0.2,
-      "count": 294,
-      "accuracy": 0.24489795918367346,
-      "error_count": 222,
-      "error_fraction_of_total": 0.22560975609756098
+      "count": 284,
+      "accuracy": 0.2535211267605634,
+      "error_count": 212,
+      "error_fraction_of_total": 0.21031746031746032
     },
     {
       "bin_label": "[0.2, 0.4)",
       "bin_lower": 0.2,
       "bin_upper": 0.4,
-      "count": 379,
-      "accuracy": 0.33773087071240104,
-      "error_count": 251,
-      "error_fraction_of_total": 0.2550813008130081
+      "count": 395,
+      "accuracy": 0.3189873417721519,
+      "error_count": 269,
+      "error_fraction_of_total": 0.26686507936507936
     },
     {
       "bin_label": "[0.4, 0.6)",
       "bin_lower": 0.4,
       "bin_upper": 0.6,
-      "count": 344,
-      "accuracy": 0.4738372093023256,
-      "error_count": 181,
-      "error_fraction_of_total": 0.1839430894308943
+      "count": 345,
+      "accuracy": 0.4318840579710145,
+      "error_count": 196,
+      "error_fraction_of_total": 0.19444444444444445
     },
     {
       "bin_label": "[0.6, 0.8)",
       "bin_lower": 0.6,
       "bin_upper": 0.8,
-      "count": 384,
-      "accuracy": 0.6302083333333334,
-      "error_count": 142,
-      "error_fraction_of_total": 0.1443089430894309
+      "count": 370,
+      "accuracy": 0.6378378378378379,
+      "error_count": 134,
+      "error_fraction_of_total": 0.13293650793650794
     },
     {
       "bin_label": "[0.8, 1.0]",
       "bin_lower": 0.8,
       "bin_upper": 1.0,
-      "count": 4099,
-      "accuracy": 0.9541351549158331,
-      "error_count": 188,
-      "error_fraction_of_total": 0.1910569105691057
+      "count": 4106,
+      "accuracy": 0.9520214320506576,
+      "error_count": 197,
+      "error_fraction_of_total": 0.19543650793650794
     }
   ],
   "high_confidence_errors": [
     {
-      "text": "how many calories does doing 20 situps burn",
-      "true_label_name": "oos",
-      "predicted_label_name": "calories",
-      "max_confidence": 0.9999847412109375,
-      "prediction_entropy": 0.00021646889217663556,
-      "confidence_margin": 0.9999789595603943
-    },
-    {
       "text": "give me the weather forecast for today",
       "true_label_name": "oos",
       "predicted_label_name": "weather",
-      "max_confidence": 0.9999822378158569,
-      "prediction_entropy": 0.00026078528026118875,
-      "confidence_margin": 0.9999761581420898
-    },
-    {
-      "text": "how many calories does jumping up and down burn",
-      "true_label_name": "oos",
-      "predicted_label_name": "calories",
-      "max_confidence": 0.9999232292175293,
-      "prediction_entropy": 0.0009218725608661771,
-      "confidence_margin": 0.9998743534088135
-    },
-    {
-      "text": "call an uber to take me to the closest grocery store",
-      "true_label_name": "oos",
-      "predicted_label_name": "uber",
-      "max_confidence": 0.9998862743377686,
-      "prediction_entropy": 0.0014285387005656958,
-      "confidence_margin": 0.9998416900634766
-    },
-    {
-      "text": "what's the current prevailing interest rate for mortgages in my area",
-      "true_label_name": "oos",
-      "predicted_label_name": "interest_rate",
-      "max_confidence": 0.9995094537734985,
-      "prediction_entropy": 0.005617657210677862,
-      "confidence_margin": 0.9993981719017029
-    },
-    {
-      "text": "accept incoming phone call",
-      "true_label_name": "oos",
-      "predicted_label_name": "make_call",
-      "max_confidence": 0.9989433884620667,
-      "prediction_entropy": 0.009747512638568878,
-      "confidence_margin": 0.9982171654701233
-    },
-    {
-      "text": "add mary to my phone plan, please",
-      "true_label_name": "oos",
-      "predicted_label_name": "sync_device",
-      "max_confidence": 0.9987106323242188,
-      "prediction_entropy": 0.013182255439460278,
-      "confidence_margin": 0.9984562993049622
+      "max_confidence": 0.9999791383743286,
+      "prediction_entropy": 0.00031162716913968325,
+      "confidence_margin": 0.9999746084213257
     },
     {
       "text": "please read the text message i just received",
       "true_label_name": "oos",
       "predicted_label_name": "text",
-      "max_confidence": 0.9986090064048767,
-      "prediction_entropy": 0.012298520654439926,
-      "confidence_margin": 0.9976258277893066
+      "max_confidence": 0.9997432827949524,
+      "prediction_entropy": 0.00301244854927063,
+      "confidence_margin": 0.9996567368507385
     },
     {
-      "text": "deny incoming phone call",
+      "text": "what other countries speak the english language",
       "true_label_name": "oos",
-      "predicted_label_name": "make_call",
-      "max_confidence": 0.9985815286636353,
-      "prediction_entropy": 0.012632867321372032,
-      "confidence_margin": 0.9976012706756592
+      "predicted_label_name": "change_language",
+      "max_confidence": 0.999144434928894,
+      "prediction_entropy": 0.008327488787472248,
+      "confidence_margin": 0.998698890209198
     },
     {
-      "text": "who is responsible for your employment",
-      "true_label_name": "who_do_you_work_for",
-      "predicted_label_name": "who_made_you",
-      "max_confidence": 0.998573899269104,
-      "prediction_entropy": 0.01312840823084116,
-      "confidence_margin": 0.997613787651062
-    },
-    {
-      "text": "i'm trying to raise my credit score can you tell me what it is now",
-      "true_label_name": "credit_score",
-      "predicted_label_name": "improve_credit_score",
-      "max_confidence": 0.9985254406929016,
-      "prediction_entropy": 0.0132999736815691,
-      "confidence_margin": 0.9976893663406372
-    },
-    {
-      "text": "when should i remove my snow tires",
+      "text": "what's the current prevailing interest rate for mortgages in my area",
       "true_label_name": "oos",
-      "predicted_label_name": "tire_change",
-      "max_confidence": 0.9981032609939575,
-      "prediction_entropy": 0.01874607428908348,
-      "confidence_margin": 0.9975625276565552
-    },
-    {
-      "text": "repeat what the weather will be like",
-      "true_label_name": "transfer",
-      "predicted_label_name": "weather",
-      "max_confidence": 0.997438907623291,
-      "prediction_entropy": 0.02483191341161728,
-      "confidence_margin": 0.9966238141059875
-    },
-    {
-      "text": "can i get a table for four at 8:00",
-      "true_label_name": "how_busy",
-      "predicted_label_name": "restaurant_reservation",
-      "max_confidence": 0.9972242116928101,
-      "prediction_entropy": 0.023745743557810783,
-      "confidence_margin": 0.99598628282547
-    },
-    {
-      "text": "can you order some ointment for me",
-      "true_label_name": "oos",
-      "predicted_label_name": "order",
-      "max_confidence": 0.9960309863090515,
-      "prediction_entropy": 0.030265308916568756,
-      "confidence_margin": 0.9938783049583435
-    },
-    {
-      "text": "what time is it in phoenix",
-      "true_label_name": "timezone",
-      "predicted_label_name": "time",
-      "max_confidence": 0.9958788156509399,
-      "prediction_entropy": 0.03316910192370415,
-      "confidence_margin": 0.9933091402053833
-    },
-    {
-      "text": "look up the conversion rate for the euro to dollar exchange",
-      "true_label_name": "oos",
-      "predicted_label_name": "exchange_rate",
-      "max_confidence": 0.9958720803260803,
-      "prediction_entropy": 0.04151871055364609,
-      "confidence_margin": 0.9952273964881897
+      "predicted_label_name": "interest_rate",
+      "max_confidence": 0.9990187883377075,
+      "prediction_entropy": 0.010319619439542294,
+      "confidence_margin": 0.9987576007843018
     },
     {
       "text": "what is my current location",
       "true_label_name": "share_location",
       "predicted_label_name": "current_location",
-      "max_confidence": 0.995576024055481,
-      "prediction_entropy": 0.03254900500178337,
-      "confidence_margin": 0.9918844103813171
-    },
-    {
-      "text": "how can i request a new credit card",
-      "true_label_name": "replacement_card_duration",
-      "predicted_label_name": "new_card",
-      "max_confidence": 0.9951135516166687,
-      "prediction_entropy": 0.036309462040662766,
-      "confidence_margin": 0.9920492768287659
+      "max_confidence": 0.9987926483154297,
+      "prediction_entropy": 0.011666389182209969,
+      "confidence_margin": 0.9981119632720947
     },
     {
       "text": "forward the text i just got from henry to giselle",
       "true_label_name": "oos",
       "predicted_label_name": "text",
-      "max_confidence": 0.9938867688179016,
-      "prediction_entropy": 0.05312560498714447,
-      "confidence_margin": 0.9923245906829834
+      "max_confidence": 0.9987873435020447,
+      "prediction_entropy": 0.012733571231365204,
+      "confidence_margin": 0.9985525012016296
+    },
+    {
+      "text": "what time is it in phoenix",
+      "true_label_name": "timezone",
+      "predicted_label_name": "time",
+      "max_confidence": 0.9986510872840881,
+      "prediction_entropy": 0.01174043770879507,
+      "confidence_margin": 0.9976226687431335
+    },
+    {
+      "text": "read text",
+      "true_label_name": "oos",
+      "predicted_label_name": "text",
+      "max_confidence": 0.9981685876846313,
+      "prediction_entropy": 0.014670876786112785,
+      "confidence_margin": 0.9965385794639587
+    },
+    {
+      "text": "accept incoming phone call",
+      "true_label_name": "oos",
+      "predicted_label_name": "make_call",
+      "max_confidence": 0.9981487989425659,
+      "prediction_entropy": 0.016828063875436783,
+      "confidence_margin": 0.9972854852676392
+    },
+    {
+      "text": "call an uber to take me to the closest grocery store",
+      "true_label_name": "oos",
+      "predicted_label_name": "uber",
+      "max_confidence": 0.9981446266174316,
+      "prediction_entropy": 0.014756805263459682,
+      "confidence_margin": 0.9964919686317444
+    },
+    {
+      "text": "deny incoming phone call",
+      "true_label_name": "oos",
+      "predicted_label_name": "make_call",
+      "max_confidence": 0.9980321526527405,
+      "prediction_entropy": 0.0177510604262352,
+      "confidence_margin": 0.9971038103103638
+    },
+    {
+      "text": "i don't want to forget to call mom",
+      "true_label_name": "reminder_update",
+      "predicted_label_name": "make_call",
+      "max_confidence": 0.9979006052017212,
+      "prediction_entropy": 0.01919221132993698,
+      "confidence_margin": 0.9966806769371033
+    },
+    {
+      "text": "when should i remove my snow tires",
+      "true_label_name": "oos",
+      "predicted_label_name": "tire_change",
+      "max_confidence": 0.9974141120910645,
+      "prediction_entropy": 0.02498641237616539,
+      "confidence_margin": 0.996576726436615
+    },
+    {
+      "text": "can you order some ointment for me",
+      "true_label_name": "oos",
+      "predicted_label_name": "order",
+      "max_confidence": 0.9971750974655151,
+      "prediction_entropy": 0.023172348737716675,
+      "confidence_margin": 0.9956833124160767
+    },
+    {
+      "text": "give me a recipe for tacos",
+      "true_label_name": "ingredients_list",
+      "predicted_label_name": "recipe",
+      "max_confidence": 0.9964855909347534,
+      "prediction_entropy": 0.03281024843454361,
+      "confidence_margin": 0.9956234097480774
+    },
+    {
+      "text": "who employs you",
+      "true_label_name": "who_do_you_work_for",
+      "predicted_label_name": "who_made_you",
+      "max_confidence": 0.9963486194610596,
+      "prediction_entropy": 0.02903108298778534,
+      "confidence_margin": 0.9939709305763245
+    },
+    {
+      "text": "who controls you",
+      "true_label_name": "who_do_you_work_for",
+      "predicted_label_name": "who_made_you",
+      "max_confidence": 0.9963486194610596,
+      "prediction_entropy": 0.02903108298778534,
+      "confidence_margin": 0.9939709305763245
+    },
+    {
+      "text": "order me a blue pin stripe suit from saville row",
+      "true_label_name": "oos",
+      "predicted_label_name": "pin_change",
+      "max_confidence": 0.9961856007575989,
+      "prediction_entropy": 0.03331294655799866,
+      "confidence_margin": 0.9947890043258667
+    },
+    {
+      "text": "save my text on my laptop hard drive",
+      "true_label_name": "oos",
+      "predicted_label_name": "text",
+      "max_confidence": 0.996060311794281,
+      "prediction_entropy": 0.03664489462971687,
+      "confidence_margin": 0.9952599406242371
+    },
+    {
+      "text": "look up the conversion rate for the euro to dollar exchange",
+      "true_label_name": "oos",
+      "predicted_label_name": "exchange_rate",
+      "max_confidence": 0.9956414699554443,
+      "prediction_entropy": 0.04419415444135666,
+      "confidence_margin": 0.9950575828552246
     }
   ],
   "high_confidence_threshold": 0.8,
